@@ -1,0 +1,28 @@
+name: WormholeXTreme
+main: com.wormhole_xtreme.WormholeXTreme
+version: 0.750
+author: By Lologarithm & alron
+description: >
+             Wormhole X-Treme! Wormholes as travel portals. Splash Effect, IDC,
+             Iris, configurable Wormhole materials, and much much more.
+             
+commands:
+   dial:
+     description: Dial a remote Stargate, unlock IDC with optional password.
+     usage: |
+            /<command> <stargate> [IDC]
+            Example: /<command> <GateName> 
+                     - Dial Stargate.
+            Example: /<command> <GateName> [GatePassword] 
+                     - Dial Iris locked Stargate.
+            
+   wormhole:
+     description: Wormhole related commands. Mostly configuration.
+     usage: |
+            /<command> <commandtype> [ARG1] [ARG2]
+            Example: /<command> complete <GateName> [IDC] 
+                     - IDC password optional.
+            Example: /<command> compass 
+                     - Use compass to target Nearest Stargate.
+            Example: /<command> remove <GateName> [all] 
+                     - Specify all to destroy materials.

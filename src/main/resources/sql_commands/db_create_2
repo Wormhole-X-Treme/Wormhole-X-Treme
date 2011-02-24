@@ -1,0 +1,17 @@
+CREATE TABLE StargateIndividualPermissions
+(
+	PlayerName VARCHAR(255),
+	Permission VARCHAR(255),
+	CONSTRAINT UNIQUE_PNAME UNIQUE (PlayerName)
+);
+
+CREATE TABLE StargateGroupPermissions
+(
+	GroupName VARCHAR(255),
+	Permission VARCHAR(255),
+	CONSTRAINT UNIQUE_GNAME UNIQUE (GroupName)
+);
+
+ALTER TABLE Stargates ADD COLUMN Network VARCHAR(255);
+
+INSERT INTO VersionInfo VALUES (2);

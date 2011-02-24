@@ -1,0 +1,3 @@
+ALTER TABLE Stargates ADD COLUMN GateShape VARCHAR(255) DEFAULT '';
+
+INSERT INTO VersionInfo VALUES (6);

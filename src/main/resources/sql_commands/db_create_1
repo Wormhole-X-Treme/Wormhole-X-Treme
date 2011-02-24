@@ -1,0 +1,14 @@
+CREATE TABLE Stargates
+(
+	Id INTEGER IDENTITY,
+	Name VARCHAR(128),
+	GateData BINARY,
+	CONSTRAINT UNIQUE_SNAME UNIQUE (Name)
+);
+
+CREATE TABLE VersionInfo
+(
+	Version INTEGER
+);
+
+INSERT INTO VersionInfo VALUES (1);

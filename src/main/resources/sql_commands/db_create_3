@@ -1,0 +1,7 @@
+CREATE TABLE Configurations
+(
+	Key VARCHAR(255),
+	Value VARCHAR(255)
+);
+
+INSERT INTO VersionInfo VALUES (3);

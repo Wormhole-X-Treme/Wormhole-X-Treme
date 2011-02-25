@@ -167,11 +167,11 @@ public class StargateManager
 				boolean exempt = ConfigManager.getIconomyOpsExcempt();
 				if ( !exempt || !p.isOp() )
 				{
-					int balance = iConomy.db.get_balance(p.getName());
-					int cost = ConfigManager.getIconomyWormholeBuildCost();
+					double balance = iConomy.db.getBalance(p.getName());
+					double cost = ConfigManager.getIconomyWormholeBuildCost();
 					if ( balance >= cost)
 					{
-						iConomy.db.set_balance(p.getName(), (balance - cost));
+						iConomy.db.setBalance(p.getName(), (balance - cost));
 						p.sendMessage("You were charged " + cost + " " + iConomy.currency + " to build wormhole." );
 					}
 					else
@@ -203,11 +203,11 @@ public class StargateManager
 				Boolean exempt = ConfigManager.getIconomyOpsExcempt();
 				if ( !exempt || !p.isOp() )
 				{
-					int balance = iConomy.db.get_balance(p.getName());
-					int cost = ConfigManager.getIconomyWormholeBuildCost();
+					double balance = iConomy.db.getBalance(p.getName());
+					double cost = ConfigManager.getIconomyWormholeBuildCost();
 					if ( balance >= cost)
 					{
-						iConomy.db.set_balance(p.getName(), balance - cost);
+						iConomy.db.setBalance(p.getName(), balance - cost);
 						p.sendMessage("You were charged " + cost + " " + iConomy.currency + " to build wormhole." );
 					}
 					else

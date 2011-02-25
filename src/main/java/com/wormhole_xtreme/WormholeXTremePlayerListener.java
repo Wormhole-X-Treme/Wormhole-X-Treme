@@ -65,17 +65,17 @@ public class WormholeXTremePlayerListener extends PlayerListener
 					boolean excempt = ConfigManager.getIconomyOpsExcempt();
 					if ( !excempt || !p.isOp() )
 						{
-							int balance = iConomy.db.get_balance(p.getName());
-							int cost = ConfigManager.getIconomyWormholeUseCost();
+							double balance = iConomy.db.getBalance(p.getName());
+							double cost = ConfigManager.getIconomyWormholeUseCost();
 							if ( balance >= cost)
 							{
-								iConomy.db.set_balance(p.getName(), balance - cost);
+								iConomy.db.setBalance(p.getName(), balance - cost);
 								p.sendMessage("You were charged " + cost + " " + iConomy.currency + " to use wormhole." );
 								double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
 								if ( owner_percent != 0.0 && st.Owner != null )
 								{
-									int owner_balance = iConomy.db.get_balance(st.Owner);
-									iConomy.db.set_balance(st.Owner, owner_balance + (int)(cost * owner_percent));
+									double owner_balance = iConomy.db.getBalance(st.Owner);
+									iConomy.db.setBalance(st.Owner, owner_balance + (int)(cost * owner_percent));
 								}
 							}
 							else

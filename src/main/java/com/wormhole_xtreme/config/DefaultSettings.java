@@ -50,13 +50,13 @@ public class DefaultSettings
 		),
 		new Setting(
 				ConfigKeys.ICONOMY_WORMHOLE_BUILD_COST, 
-				0, 
+				0.0, 
 				"Cost for users to build a wormhole.",
 				"WormholeXTreme"
 		),
 		new Setting(
 				ConfigKeys.ICONOMY_WORMHOLE_USE_COST, 
-				0, 
+				0.0, 
 				"Cost for users to use a wormhole (charged on teleport, not activation.)",
 				"WormholeXTreme"
 		),

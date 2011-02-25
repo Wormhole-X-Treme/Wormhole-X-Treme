@@ -1,3 +1,7 @@
+Changes 0.751 (2/25/11 @ 07:53 PST):
+
+- Initial support for iconomy 3.0
+
 Changes 0.750 (2/22/11 @ 22:19 PST):
 
 - Major refactoring and package name changes.

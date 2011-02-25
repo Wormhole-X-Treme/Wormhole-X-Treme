@@ -222,16 +222,16 @@ public class ConfigManager
 	 * Get iConomy wormhole use cost settings from ConfigKeys. Return sane integer value.
 	 * Return default value if key is missing or broken.
 	 */
-	public static int getIconomyWormholeUseCost()
+	public static double getIconomyWormholeUseCost()
 	{
 		Setting iwuc;
 		if ((iwuc = ConfigManager.configurations.get(ConfigKeys.ICONOMY_WORMHOLE_USE_COST)) != null)
 		{
-			return iwuc.getIntValue();
+			return iwuc.getDoubleValue();
 		}
 		else 
 		{
-			int i = 0;
+			double i = 0.0;
 			return i;
 		}
 	}
@@ -258,16 +258,16 @@ public class ConfigManager
 	 * Get iConomy wormhole build cost settings from ConfigKeys. Return sane int value.
 	 * Return default value if key is missing or broken.
 	 */
-	public static int getIconomyWormholeBuildCost()
+	public static double getIconomyWormholeBuildCost()
 	{
 		Setting iwbc;
 		if ((iwbc = ConfigManager.configurations.get(ConfigKeys.ICONOMY_WORMHOLE_BUILD_COST)) != null) 
 		{
-			return iwbc.getIntValue();
+			return iwbc.getDoubleValue();
 		}
 		else
 		{
-			int i = 0;
+			double i = 0.0;
 			return i;
 		}
 	}

@@ -75,7 +75,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 								if ( owner_percent != 0.0 && st.Owner != null )
 								{
 									double owner_balance = iConomy.db.getBalance(st.Owner);
-									iConomy.db.setBalance(st.Owner, owner_balance + (int)(cost * owner_percent));
+									iConomy.db.setBalance(st.Owner, owner_balance + (double)(cost * owner_percent));
 								}
 							}
 							else

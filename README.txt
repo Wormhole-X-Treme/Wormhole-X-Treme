@@ -20,7 +20,7 @@ To Update:
 5.3 (Optional) Start Server.
 6. Remove a gate with /wormhole remove <gatename>
 7. Re-add gate. 
-8. (ONLY IF UPGRADING TO iConomy 3.0) CHANGE YOUR SETTINGS FOR WORMHOLE COST TO DOUBLE VALUES. I.E. 0.0 or 1.0 or 10.0!!!
+8. CHANGE YOUR SETTINGS FOR WORMHOLE COST TO DOUBLE VALUES. I.E. 0.0 or 1.0 or 10.0!!! OR CRASH!
 8. Enjoy. 
 
 Permissions Plugin Nodes:

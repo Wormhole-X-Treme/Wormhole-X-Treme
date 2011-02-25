@@ -20,6 +20,7 @@ To Update:
 5.3 (Optional) Start Server.
 6. Remove a gate with /wormhole remove <gatename>
 7. Re-add gate. 
+8. (ONLY IF UPGRADING TO iConomy 3.0) CHANGE YOUR SETTINGS FOR WORMHOLE COST TO DOUBLE VALUES. I.E. 0.0 or 1.0 or 10.0!!!
 8. Enjoy. 
 
 Permissions Plugin Nodes:
@@ -36,9 +37,9 @@ To Build:
 
 -1. Install Maven and all of its dependencies. 
  0. Git clone the repo. (Or download the source zip)
- 1. Download iConomy version 2.2 or greater. Download Permissions version 2.1 or greater.
+ 1. Download iConomy version 3.0. Download Permissions version 2.1 or greater.
  2. Force iConomy and Permissions into your local repo. 
  2.1 (example commands) mvn install:install-file -Dfile=Permissions.jar -DgroupId=com.nijikokun.bukkit.Permissions -DartifactId=Permissions -Dversion=2.1 -Dpackaging=jar -DgeneratePom=true
- 2.2 (example commands) mvn install:install-file -Dfile=iConomy.jar -DgroupId=com.nijikokun.bukkit.iConomy -DartifactId=iConomy -Dversion=2.2 -Dpackaging=jar -DgeneratePom=true
+ 2.2 (example commands) mvn install:install-file -Dfile=iConomy.jar -DgroupId=com.nijikokun.bukkit.iConomy -DartifactId=iConomy -Dversion=3.0 -Dpackaging=jar -DgeneratePom=true
  3. Run a 'mvn install' in the directory you ran the git clone into (or unpacked the source zip). 
  4. Enjoy plugin that is now in target/. It will be a jar, a zip, and a tar.bz2.   

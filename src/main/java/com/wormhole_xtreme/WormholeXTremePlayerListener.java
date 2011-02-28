@@ -11,7 +11,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 import com.nijiko.coelho.iConomy.iConomy;
 import com.nijiko.coelho.iConomy.system.Account;
-import com.nijiko.coelho.iConomy.system.Bank;
 import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
@@ -64,30 +63,33 @@ public class WormholeXTremePlayerListener extends PlayerListener
 				Location target = st.Target.TeleportLocation;
 				if ( WormholeXTreme.Iconomy != null )
 				{
-					boolean excempt = ConfigManager.getIconomyOpsExcempt();
-					if ( !excempt || !p.isOp() )
+					boolean exempt = ConfigManager.getIconomyOpsExcempt();
+					if ( !exempt || !p.isOp() )
+					{
+						Account player_account = iConomy.getBank().getAccount(p.getName());
+						double balance = player_account.getBalance();
+						double cost = ConfigManager.getIconomyWormholeUseCost();
+						if ( balance >= cost)
 						{
-							Account player_account = iConomy.getBank().getAccount(p.getName());
-							double balance = player_account.getBalance();
-							double cost = ConfigManager.getIconomyWormholeUseCost();
-							if ( balance >= cost)
+							player_account.subtract(cost);
+							player_account.save();
+							p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
+							double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
+							
+							if ( owner_percent != 0.0 && st.Owner != null )
 							{
-								player_account.subtract(cost);
-								p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
-								double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
-								
-								if ( owner_percent != 0.0 && st.Owner != null )
-								{
-									iConomy.getBank().getAccount(st.Owner).add(cost * owner_percent);
-								}
-							}
-							else
-							{
-								p.sendMessage("Not enough " + iConomy.currency + " to use - requires: " + cost);
-								target = st.TeleportLocation;
+								iConomy.getBank().getAccount(st.Owner).add(cost * owner_percent);
+								iConomy.getBank().getAccount(st.Owner).save();
 							}
 						}
+						else
+						{
+							p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
+							target = st.TeleportLocation;
+						}
 					}
+				}
+				
 					//Block target_block = target.getWorld().getBlockAt(target.getBlockX(), target.getBlockY(), target.getBlockZ());
 					//while ( target_block.getType() != Material.AIR && target_block.getType() != Material.WATER  )
 					//{

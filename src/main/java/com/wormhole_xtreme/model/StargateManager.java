@@ -10,7 +10,8 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import com.nijikokun.bukkit.iConomy.iConomy;
+import com.nijiko.coelho.iConomy.iConomy;
+import com.nijiko.coelho.iConomy.system.Account;
 import com.wormhole_xtreme.WormholeXTreme;
 import com.wormhole_xtreme.config.ConfigManager;
 
@@ -167,16 +168,18 @@ public class StargateManager
 				boolean exempt = ConfigManager.getIconomyOpsExcempt();
 				if ( !exempt || !p.isOp() )
 				{
-					double balance = iConomy.db.getBalance(p.getName());
+					Account player_account = iConomy.getBank().getAccount(p.getName());
+					double balance = player_account.getBalance();
 					double cost = ConfigManager.getIconomyWormholeBuildCost();
 					if ( balance >= cost)
 					{
-						iConomy.db.setBalance(p.getName(), (balance - cost));
-						p.sendMessage("You were charged " + cost + " " + iConomy.currency + " to build wormhole." );
+						player_account.subtract(cost);
+						player_account.save();
+						p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to build a wormhole." );
 					}
 					else
 					{
-						p.sendMessage("Not enough " + iConomy.currency + " to build - requires: " + cost);
+						p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to build - requires: " + cost);
 						return false;
 					}
 				}
@@ -200,19 +203,21 @@ public class StargateManager
 		{
 			if ( WormholeXTreme.Iconomy != null )
 			{
-				Boolean exempt = ConfigManager.getIconomyOpsExcempt();
+				boolean exempt = ConfigManager.getIconomyOpsExcempt();
 				if ( !exempt || !p.isOp() )
 				{
-					double balance = iConomy.db.getBalance(p.getName());
+					Account player_account = iConomy.getBank().getAccount(p.getName());
+					double balance = player_account.getBalance();
 					double cost = ConfigManager.getIconomyWormholeBuildCost();
 					if ( balance >= cost)
 					{
-						iConomy.db.setBalance(p.getName(), balance - cost);
-						p.sendMessage("You were charged " + cost + " " + iConomy.currency + " to build wormhole." );
+						player_account.subtract(cost);
+						player_account.save();
+						p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to build a wormhole." );
 					}
 					else
 					{
-						p.sendMessage("Not enough " + iConomy.currency + " to build - requires: " + cost);
+						p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to build - requires: " + cost);
 						return false;
 					}
 				}

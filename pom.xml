@@ -86,7 +86,7 @@
 		<dependency>
 			<groupId>com.nijikokun.bukkit.iConomy</groupId>
 			<artifactId>iConomy</artifactId>
-			<version>3.0</version>
+			<version>4.0</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>

@@ -16,7 +16,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin; 
 
 
-import com.nijikokun.bukkit.iConomy.iConomy;
+import com.nijiko.coelho.iConomy.iConomy;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.nijiko.permissions.PermissionHandler;
 import com.wormhole_xtreme.config.ConfigManager;
@@ -76,7 +76,6 @@ public class WormholeXTreme extends JavaPlugin
 		try
 		{
 			setupPermissions();
-			setupIconomy();
 		}
 		catch ( Exception e)
 		{
@@ -134,25 +133,6 @@ public class WormholeXTreme extends JavaPlugin
     	    else 
     	    {
     			prettyLog(Level.WARNING, false, "Failed to load Permission Plugin. Defaulting to built-in permissions.");
-    	    }
-    	}
-    }
-    
-    public void setupIconomy() 
-    {
-    	Plugin test = this.getServer().getPluginManager().getPlugin("iConomy");
-
-
-    	if(Iconomy == null) 
-    	{
-    	    if(test != null) 
-    	    {
-    	    	Iconomy = ((iConomy)test);
-    	    } 
-    	    else 
-    	    {
-    			prettyLog(Level.WARNING, false, "Failed to load iConomy Plugin - there will be no iConomy integration.");
-    	    	//this.getServer().getPluginManager().disablePlugin(this);
     	    }
     	}
     }

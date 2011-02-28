@@ -9,7 +9,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerListener; 
 import org.bukkit.event.player.PlayerMoveEvent; 
 
-import com.nijikokun.bukkit.iConomy.iConomy;
+import com.nijiko.coelho.iConomy.iConomy;
+import com.nijiko.coelho.iConomy.system.Account;
+import com.nijiko.coelho.iConomy.system.Bank;
 import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
@@ -65,17 +67,18 @@ public class WormholeXTremePlayerListener extends PlayerListener
 					boolean excempt = ConfigManager.getIconomyOpsExcempt();
 					if ( !excempt || !p.isOp() )
 						{
-							double balance = iConomy.db.getBalance(p.getName());
+							Account player_account = iConomy.getBank().getAccount(p.getName());
+							double balance = player_account.getBalance();
 							double cost = ConfigManager.getIconomyWormholeUseCost();
 							if ( balance >= cost)
 							{
-								iConomy.db.setBalance(p.getName(), balance - cost);
-								p.sendMessage("You were charged " + cost + " " + iConomy.currency + " to use wormhole." );
+								player_account.subtract(cost);
+								p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
 								double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
+								
 								if ( owner_percent != 0.0 && st.Owner != null )
 								{
-									double owner_balance = iConomy.db.getBalance(st.Owner);
-									iConomy.db.setBalance(st.Owner, owner_balance + (double)(cost * owner_percent));
+									iConomy.getBank().getAccount(st.Owner).add(cost * owner_percent);
 								}
 							}
 							else

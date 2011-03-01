@@ -115,6 +115,8 @@ public class WormholeXTreme extends JavaPlugin
 		
 		// Listen for enable events.
 		pm.registerEvent(Event.Type.PLUGIN_ENABLE, serverListener, Priority.Monitor, this);
+		// Listen for disable events.
+		pm.registerEvent(Event.Type.PLUGIN_DISABLE, serverListener, Priority.Monitor, this);
 	}
 
 	public void setupPermissions() 

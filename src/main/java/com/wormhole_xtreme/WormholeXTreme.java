@@ -130,6 +130,7 @@ public class WormholeXTreme extends JavaPlugin
     	    	try
     	    	{
     	    		Permissions = ((Permissions)test).getHandler();
+    	    		prettyLog(Level.INFO, false, "Permissions attached.");
     	    	}
     	    	catch ( Exception e)
     	    	{
@@ -153,6 +154,7 @@ public class WormholeXTreme extends JavaPlugin
     	    if(test != null) 
     	    {
     	    	Iconomy = ((iConomy)test);
+    	    	prettyLog(Level.INFO, false, "iConomy attached.");
     	    } 
     	    else 
     	    {

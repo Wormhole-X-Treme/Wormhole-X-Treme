@@ -92,17 +92,14 @@ public class WormholeXTreme extends JavaPlugin
     private void registerEvents() 
     {
 		PluginManager pm = getServer().getPluginManager(); 
-		// To create/activate/deactivate stargates.
-		pm.registerEvent(Event.Type.BLOCK_RIGHTCLICKED, blockListener, Priority.High, this);
-		// To stop the water in the portal from flowing.
-		pm.registerEvent(Event.Type.BLOCK_FLOW, blockListener, Priority.Highest, this);
-		// Prevent dmg to stargates and check for removal
-		pm.registerEvent(Event.Type.BLOCK_DAMAGED, blockListener, Priority.High, this);
+		
+		//Listen for Interact, Physics, Break, Flow, and RightClick evebts. Pass to blockListener
 		pm.registerEvent(Event.Type.BLOCK_INTERACT, blockListener, Priority.High, this);
 		pm.registerEvent(Event.Type.BLOCK_PHYSICS, blockListener, Priority.Highest, this);
-
-		// To handle commands
-		// pm.registerEvent(Event.Type.PLAYER_COMMAND, playerListener, Priority.Normal, this);
+		pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.High, this);
+		pm.registerEvent(Event.Type.BLOCK_FLOW, blockListener, Priority.Highest, this);
+		pm.registerEvent(Event.Type.BLOCK_RIGHTCLICKED, blockListener, Priority.High, this);
+		
 		// To handle teleporting when walking into a gate.
 		pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.High, this);
 		// Handle removing player data

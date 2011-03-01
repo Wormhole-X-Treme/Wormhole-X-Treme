@@ -1,6 +1,13 @@
-Changes 0.752 (2/28/11 @ 17:14 PST):
+Changes 0.752 (2/28/11 @ 20:57 PST):
 
 - Initial iConomy 4.1 Support 
+
+- Initial Permissions 2.5 Support (should just be drop in)
+
+- Fixed Stargate destruction detection. Removed blockDamageEvent detection and
+  added blockBreakEvent detection in its place.
+
+- Removed dead/unused code.
 
 Changes 0.751 (2/25/11 @ 07:53 PST):
 

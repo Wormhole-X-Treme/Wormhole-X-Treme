@@ -40,6 +40,6 @@ To Build:
  1. Download iConomy version 3.0. Download Permissions version 2.1 or greater.
  2. Force iConomy and Permissions into your local repo. 
  2.1 (example commands) mvn install:install-file -Dfile=Permissions.jar -DgroupId=com.nijikokun.bukkit.Permissions -DartifactId=Permissions -Dversion=2.1 -Dpackaging=jar -DgeneratePom=true
- 2.2 (example commands) mvn install:install-file -Dfile=iConomy.jar -DgroupId=com.nijikokun.bukkit.iConomy -DartifactId=iConomy -Dversion=3.0 -Dpackaging=jar -DgeneratePom=true
+ 2.2 (example commands) mvn install:install-file -Dfile=iConomy.jar -DgroupId=com.nijiko.coelho.iConomy -DartifactId=iConomy -Dversion=4.1 -Dpackaging=jar -DgeneratePom=true
  3. Run a 'mvn install' in the directory you ran the git clone into (or unpacked the source zip). 
  4. Enjoy plugin that is now in target/. It will be a jar, a zip, and a tar.bz2.   

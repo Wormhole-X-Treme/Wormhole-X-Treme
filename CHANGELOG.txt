@@ -1,3 +1,7 @@
+Changes 0.752 (2/28/11 @ 17:14 PST):
+
+- Initial iConomy 4.1 Support 
+
 Changes 0.751 (2/25/11 @ 07:53 PST):
 
 - Initial support for iconomy 3.0

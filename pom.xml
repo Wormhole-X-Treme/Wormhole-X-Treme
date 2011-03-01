@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.wormhole_xtreme</groupId>
-	<version>0.751</version>
+	<version>0.752</version>
 	<artifactId>WormholeXTreme</artifactId>
 	<packaging>jar</packaging>
 	<name>Wormhole-X-Treme</name>
@@ -84,18 +84,18 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.nijikokun.bukkit.iConomy</groupId>
+			<groupId>com.nijiko.coelho.iConomy</groupId>
 			<artifactId>iConomy</artifactId>
-			<version>4.0</version>
+			<version>4.1</version>
 			<type>jar</type>
-			<scope>compile</scope>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.nijikokun.bukkit.Permissions</groupId>
 			<artifactId>Permissions</artifactId>
 			<version>2.1</version>
 			<type>jar</type>
-			<scope>compile</scope>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>

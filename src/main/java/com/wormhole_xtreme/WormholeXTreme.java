@@ -124,10 +124,12 @@ public class WormholeXTreme extends JavaPlugin
     	{
     	    if(test != null)
     	    {
+    	    	String v = test.getDescription().getVersion();
+    	    	serverListener.CheckPermissionsVersion(v);
     	    	try
     	    	{
     	    		Permissions = ((Permissions)test).getHandler();
-    	    		prettyLog(Level.INFO, false, "Permissions attached.");
+    	            WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Attached to Permissions version " + v);
     	    	}
     	    	catch ( Exception e)
     	    	{
@@ -148,10 +150,19 @@ public class WormholeXTreme extends JavaPlugin
 
     	if(Iconomy == null) 
     	{
-    	    if(test != null) 
+    		if(test != null) 
     	    {
-    	    	Iconomy = ((iConomy)test);
-    	    	prettyLog(Level.INFO, false, "iConomy attached.");
+        		String v = test.getDescription().getVersion();
+        		serverListener.CheckIconomyVersion(v);
+        		try
+        		{
+	    	    	Iconomy = ((iConomy)test);
+	                WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Attached to iConomy version " + v);
+        		}
+        		catch ( Exception e)
+        		{
+        			prettyLog(Level.WARNING, false, "Failed to get cast to iConomy. Defaulting to built-in permissions.");
+        		}
     	    } 
     	    else 
     	    {

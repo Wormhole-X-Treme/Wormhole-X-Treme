@@ -37,7 +37,7 @@ To Build:
 
 -1. Install Maven and all of its dependencies. 
  0. Git clone the repo. (Or download the source zip)
- 1. Download iConomy version 3.0. Download Permissions version 2.1 or greater.
+ 1. Download iConomy version 4.1. Download Permissions version 2.5 or greater.
  2. Force iConomy and Permissions into your local repo. 
  2.1 (example commands) mvn install:install-file -Dfile=Permissions.jar -DgroupId=com.nijikokun.bukkit.Permissions -DartifactId=Permissions -Dversion=2.5 -Dpackaging=jar -DgeneratePom=true
    - http://www.theyeticave.net/downloads/permissions/2.5/Permissions.jar

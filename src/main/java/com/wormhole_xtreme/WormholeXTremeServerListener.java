@@ -26,7 +26,7 @@ public class WormholeXTremeServerListener extends ServerListener
     		{
     		    Plugin p = event.getPlugin();
     		    String v = event.getPlugin().getDescription().getVersion();
-    		    this.CheckIconomyVersion(v);
+    		    this.checkIconomyVersion(v);
     		    try
     		    {
     		        WormholeXTreme.Iconomy = (iConomy)p;
@@ -46,7 +46,7 @@ public class WormholeXTremeServerListener extends ServerListener
     		{
     		    Plugin p = event.getPlugin();
     		    String v = event.getPlugin().getDescription().getVersion();
-    		    this.CheckPermissionsVersion(v);
+    		    this.checkPermissionsVersion(v);
     		    try
         	    {
         	        WormholeXTreme.Permissions = ((Permissions)p).getHandler();
@@ -60,7 +60,7 @@ public class WormholeXTremeServerListener extends ServerListener
         }
     }
     
-    public void CheckPermissionsVersion(String version)
+    public void checkPermissionsVersion(String version)
     {
         if ( !version.equals("2.4") && !version.equals("2.5") )
         {
@@ -69,7 +69,7 @@ public class WormholeXTremeServerListener extends ServerListener
        
     }
     
-    public void CheckIconomyVersion(String version)
+    public void checkIconomyVersion(String version)
     {
         if ( !version.equals("4.0") && !version.equals("4.1") )
         {

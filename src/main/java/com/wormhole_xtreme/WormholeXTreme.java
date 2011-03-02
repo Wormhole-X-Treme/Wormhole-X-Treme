@@ -125,7 +125,7 @@ public class WormholeXTreme extends JavaPlugin
     	    if(test != null)
     	    {
     	    	String v = test.getDescription().getVersion();
-    	    	serverListener.CheckPermissionsVersion(v);
+    	    	serverListener.checkPermissionsVersion(v);
     	    	try
     	    	{
     	    		Permissions = ((Permissions)test).getHandler();
@@ -153,7 +153,7 @@ public class WormholeXTreme extends JavaPlugin
     		if(test != null) 
     	    {
         		String v = test.getDescription().getVersion();
-        		serverListener.CheckIconomyVersion(v);
+        		serverListener.checkIconomyVersion(v);
         		try
         		{
 	    	    	Iconomy = ((iConomy)test);

@@ -138,7 +138,7 @@ public class WormholeXTreme extends JavaPlugin
     	    } 
     	    else 
     	    {
-    			prettyLog(Level.WARNING, false, "Failed to load Permission Plugin. Defaulting to built-in permissions.");
+    			prettyLog(Level.WARNING, false, "Permission Plugin not yet available. Defaulting to built-in permissions until Permissions is loaded.");
     	    }
     	}
     }
@@ -166,7 +166,7 @@ public class WormholeXTreme extends JavaPlugin
     	    } 
     	    else 
     	    {
-    			prettyLog(Level.WARNING, false, "Failed to load iConomy Plugin - there will be no iConomy integration.");
+    			prettyLog(Level.WARNING, false, "iConomy Plugin not yet available - there will be no iConomy integration until loaded.");
     	    	//this.getServer().getPluginManager().disablePlugin(this);
     	    }
     	}

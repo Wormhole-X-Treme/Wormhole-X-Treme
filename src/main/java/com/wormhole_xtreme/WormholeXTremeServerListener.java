@@ -8,6 +8,8 @@ import org.bukkit.plugin.Plugin;
 
 import com.nijiko.coelho.iConomy.iConomy;
 import com.nijiko.permissions.PermissionHandler;
+import com.nijikokun.bukkit.Permissions.Permissions;
+
 
 public class WormholeXTremeServerListener extends ServerListener 
 {
@@ -21,33 +23,41 @@ public class WormholeXTremeServerListener extends ServerListener
     {
         if(event.getPlugin().getDescription().getName().equals("iConomy")) 
         {
-    		String v = event.getPlugin().getDescription().getVersion();
-    		this.CheckIconomyVersion(v);
-    		
-        	try
-        	{
-	            WormholeXTreme.Iconomy = (iConomy)event.getPlugin();
-	            WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Attached to iConomy version " + v);
-	    	}
-	    	catch ( Exception e)
-	    	{
-	    		WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Failed to attach to iConomy: " + e.getMessage());
-	    	}
+    		if (WormholeXTreme.Iconomy.equals(null))
+    		{
+    		    Plugin p = event.getPlugin().getServer().getPluginManager().getPlugin("iConomy");
+    		    String v = event.getPlugin().getDescription().getVersion();
+    		    this.CheckIconomyVersion(v);
+    		    try
+    		    {
+    		        WormholeXTreme.Iconomy = (iConomy)p;
+	                WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Attached to iConomy version " + v);
+    		    }
+    		    catch ( Exception e)
+    		    {
+    		        WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Failed to attach to iConomy: " + e.getMessage());
+    		    }
+    		}
+
         }
         if(event.getPlugin().getDescription().getName().equals("Permissions"))
         {
-    		String v = event.getPlugin().getDescription().getVersion();
-    		this.CheckPermissionsVersion(v);
-
-        	try
-        	{
-	            WormholeXTreme.Permissions = (PermissionHandler)event.getPlugin();
-	            WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Attached to Permissions version " + v);
-        	}
-        	catch ( Exception e)
-        	{
-        		WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Failed to attach to Permissions: " + e.getMessage());
-        	}
+    		
+    		if (WormholeXTreme.Permissions.equals(null)) 
+    		{
+    		    Plugin p = event.getPlugin().getServer().getPluginManager().getPlugin("Permissions");
+    		    String v = event.getPlugin().getDescription().getVersion();
+    		    this.CheckPermissionsVersion(v);
+    		    try
+        	    {
+        	        WormholeXTreme.Permissions = ((Permissions)p).getHandler();
+	                WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Attached to Permissions version " + v);
+        	    }
+        	    catch ( Exception e)
+        	    {
+        		    WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Failed to attach to Permissions: " + e.getMessage());
+        	    }
+    		}
         }
     }
     

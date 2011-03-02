@@ -83,15 +83,21 @@ public class WormholeXTremeServerListener extends ServerListener
     {
         if(event.getPlugin().getDescription().getName().equals("iConomy"))
         {
-            String v = event.getPlugin().getDescription().getVersion();
-            WormholeXTreme.Iconomy = null;
-            WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Detached from iConomy version " + v);
+            if (!WormholeXTreme.Iconomy.equals(null))
+            {
+                String v = event.getPlugin().getDescription().getVersion();
+                WormholeXTreme.Iconomy = null;
+                WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Detached from iConomy version " + v);
+            }
         }
         if(event.getPlugin().getDescription().getName().equals("Permissions"))
         {
-            String v = event.getPlugin().getDescription().getVersion();
-            WormholeXTreme.Permissions = null;
-            WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Detached from Permissions version " + v);
+            if (!WormholeXTreme.Permissions.equals(null))
+            {
+                String v = event.getPlugin().getDescription().getVersion();
+                WormholeXTreme.Permissions = null;
+                WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Detached from Permissions version " + v);
+            }
         }
     }
 }

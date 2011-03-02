@@ -7,7 +7,6 @@ import org.bukkit.event.server.ServerListener;
 import org.bukkit.plugin.Plugin;
 
 import com.nijiko.coelho.iConomy.iConomy;
-import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
 
@@ -25,7 +24,7 @@ public class WormholeXTremeServerListener extends ServerListener
         {
     		if (WormholeXTreme.Iconomy.equals(null))
     		{
-    		    Plugin p = event.getPlugin().getServer().getPluginManager().getPlugin("iConomy");
+    		    Plugin p = event.getPlugin();
     		    String v = event.getPlugin().getDescription().getVersion();
     		    this.CheckIconomyVersion(v);
     		    try
@@ -45,7 +44,7 @@ public class WormholeXTremeServerListener extends ServerListener
     		
     		if (WormholeXTreme.Permissions.equals(null)) 
     		{
-    		    Plugin p = event.getPlugin().getServer().getPluginManager().getPlugin("Permissions");
+    		    Plugin p = event.getPlugin();
     		    String v = event.getPlugin().getDescription().getVersion();
     		    this.CheckPermissionsVersion(v);
     		    try

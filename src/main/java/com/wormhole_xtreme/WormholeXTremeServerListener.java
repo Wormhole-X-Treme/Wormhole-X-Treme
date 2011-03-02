@@ -22,7 +22,7 @@ public class WormholeXTremeServerListener extends ServerListener
     {
         if(event.getPlugin().getDescription().getName().equals("iConomy")) 
         {
-    		if (WormholeXTreme.Iconomy.equals(null))
+    		if (WormholeXTreme.Iconomy == null)
     		{
     		    Plugin p = event.getPlugin();
     		    String v = event.getPlugin().getDescription().getVersion();
@@ -42,7 +42,7 @@ public class WormholeXTremeServerListener extends ServerListener
         if(event.getPlugin().getDescription().getName().equals("Permissions"))
         {
     		
-    		if (WormholeXTreme.Permissions.equals(null)) 
+    		if (WormholeXTreme.Permissions == null) 
     		{
     		    Plugin p = event.getPlugin();
     		    String v = event.getPlugin().getDescription().getVersion();
@@ -83,7 +83,7 @@ public class WormholeXTremeServerListener extends ServerListener
     {
         if(event.getPlugin().getDescription().getName().equals("iConomy"))
         {
-            if (!WormholeXTreme.Iconomy.equals(null))
+            if (!(WormholeXTreme.Iconomy == null))
             {
                 String v = event.getPlugin().getDescription().getVersion();
                 WormholeXTreme.Iconomy = null;
@@ -92,7 +92,7 @@ public class WormholeXTremeServerListener extends ServerListener
         }
         if(event.getPlugin().getDescription().getName().equals("Permissions"))
         {
-            if (!WormholeXTreme.Permissions.equals(null))
+            if (!(WormholeXTreme.Permissions == null))
             {
                 String v = event.getPlugin().getDescription().getVersion();
                 WormholeXTreme.Permissions = null;

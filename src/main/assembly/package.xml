@@ -18,6 +18,13 @@
                 <include>CHANGELOG*</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/GateShapes/</directory>
+            <outputDirectory>/GateShapes/</outputDirectory>
+            <includes>
+                <include>*.shape</include>
+            </includes>
+        </fileSet>
     </fileSets>
     <files>
         <file>

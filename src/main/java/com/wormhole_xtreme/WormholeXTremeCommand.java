@@ -538,18 +538,18 @@ public class WormholeXTremeCommand {
 		if ( playerCheck(sender) )
 		{
 			Player p = (Player) sender;
-			if ( message_parts.length > 2 )
+			if ( message_parts.length > 1 )
 			{
 				if ( p.isOp() || WormholeXTreme.Permissions.has(p, "wormhole.config") )
 				{
-					StargateShape shape = StargateHelper.getShape(message_parts[2]);
+					StargateShape shape = StargateHelper.getShape(message_parts[1]);
 					if  ( shape != null)
 					{
 						StargateManager.AddPlayerBuilderShape(p, shape);
 					}
 					else
 					{
-						p.sendMessage("Invalid shape: " + message_parts[2]);
+						p.sendMessage("Invalid shape: " + message_parts[1]);
 					}
 				}
 				else

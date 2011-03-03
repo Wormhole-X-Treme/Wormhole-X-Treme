@@ -12,6 +12,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.material.MaterialData;
 
 import com.wormhole_xtreme.WormholeXTreme;
 import com.wormhole_xtreme.config.ConfigManager;
@@ -477,40 +478,49 @@ public class Stargate
 		// 1. Setup Name Sign
 		if ( this.NameBlockHolder != null )
 		{
-			Block name_sign = this.NameBlockHolder.getFace(Facing);
-			name_sign.setType(Material.WALL_SIGN);
-			
-			Sign sign = (Sign)name_sign.getState();
-			sign.setLine(0, "-" + this.Name + "-");
-	
-			if ( this.Network != null )
-				sign.setLine(1, "N:" + this.Network.netName);
-			
-			if ( this.Owner != null )
-				sign.setLine(2, "O:" + this.Owner);
-	
-			switch ( Facing )
-			{
-			case NORTH:
-				name_sign.setData((byte)4);
-				break;
-			case SOUTH:
-				name_sign.setData((byte)5);
-				break;
-			case EAST:
-				name_sign.setData((byte)2);
-				break;
-			case WEST:
-				name_sign.setData((byte)3);
-				break;
-			}
-	
-			sign.update();		
+		    this.SetupGateSign();
 		}
 		// 2. Set up Iris stuff
 		SetIrisDeactivationCode(idc);
 	}
 	
+	/*
+	 * Deal with initial gate sign placement, orientation and text for name, network, and owner.
+	 */
+	public void SetupGateSign()
+	{
+	    	Block name_sign = this.NameBlockHolder.getFace(Facing);
+			name_sign.setType(Material.WALL_SIGN);
+			switch ( Facing )
+			{
+			    case NORTH:
+			        name_sign.setData((byte)0x04);
+			        break;
+			    case SOUTH:
+			        name_sign.setData((byte)0x05);
+			        break;
+			    case EAST:
+			        name_sign.setData((byte)0x02);
+			        break;
+			    case WEST:
+			        name_sign.setData((byte)0x03);
+			        break;
+			}
+			name_sign.getState().setData(new MaterialData(Material.WALL_SIGN));		
+			Sign sign = (Sign)name_sign.getState();
+			sign.setLine(0, "-" + this.Name + "-");
+	
+			if ( this.Network != null )
+			{
+				sign.setLine(1, "N:" + this.Network.netName);
+			}
+			
+			if ( this.Owner != null )
+			{
+				sign.setLine(2, "O:" + this.Owner);
+			}
+	        sign.update(true);
+	}
 	public void SetIrisDeactivationCode ( String idc )
 	{
 		if ( ! idc.equals("") )

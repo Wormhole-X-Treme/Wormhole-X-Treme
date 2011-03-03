@@ -1,3 +1,16 @@
+Changes 0.753 (3/2/11 @ 19:27 PST):
+
+- Fixed Gate Sign placement. Now no longer at right angles to the gatesign block.
+
+- Updated serverListener onPluginEnabled checks for iConomy and Permissions to
+  only go off if the plugin is not already bound to. No more multiple
+  notifications about attaching to Permissions. Also fixed a minor casting issue
+  in the Permissions plugins attach section of onPluginEnabled. No more casting 
+  error.
+  
+- Error messages for onEnable checks for iConomy and Permissions should be a bit 
+  useful now as we may have been loaded before Permissions.
+
 Changes 0.752 (2/28/11 @ 20:57 PST):
 
 - Initial iConomy 4.1 Support 

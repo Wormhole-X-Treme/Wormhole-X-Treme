@@ -521,15 +521,39 @@ public class Stargate
 			}
 	        sign.update(true);
 	}
+	
+	/*
+	 * Setup Levers for IRIS control when IDC is set.
+	 */
+	public void SetupIrisLever()
+	{
+	    	Block iris_block = this.ActivationBlock.getFace(BlockFace.DOWN);
+			this.IrisActivationBlock = iris_block;
+			this.Blocks.add(IrisActivationBlock.getLocation());
+			this.IrisActivationBlock.setType(Material.LEVER);
+			switch (Facing)
+			{
+			    case SOUTH:
+			        IrisActivationBlock.setData((byte)0x01);
+			        break;
+			    case NORTH:
+			        IrisActivationBlock.setData((byte)0x02);
+			        break;
+			    case WEST:
+			        IrisActivationBlock.setData((byte)0x03);
+			        break;
+			    case EAST:
+			        IrisActivationBlock.setData((byte)0x04);
+			        break;   
+			}
+			IrisActivationBlock.getState().setData(new MaterialData(Material.LEVER));
+	}
 	public void SetIrisDeactivationCode ( String idc )
 	{
 		if ( ! idc.equals("") )
 		{
 			// 1. Add iris switch
-			Block iris_block = this.ActivationBlock.getFace(BlockFace.DOWN);
-			this.IrisActivationBlock = iris_block;
-			this.Blocks.add(IrisActivationBlock.getLocation());
-			this.IrisActivationBlock.setType(Material.LEVER);
+		    this.SetupIrisLever();
 			// 2. Set Iris IDC
 			this.IrisDeactivationCode = idc;
 			

@@ -4,6 +4,10 @@ Changes 0.7xx:
   This of course means that users with 'wormhole.build' permissions can use 
   '/wormhole build <gateshape>' after building a DHD, and press the button to 
   instantly generate a StarGate in the shape specified.
+  
+- Levers got the same treatment as signs now. No more wacky floating levers on
+  idc enabled gates. Lever creation code broken out into own method. Stargate
+  regeneration command is going to use this.
 
 Changes 0.753 (3/2/11 @ 19:27 PST):
 

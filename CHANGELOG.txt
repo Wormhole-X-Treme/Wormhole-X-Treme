@@ -1,4 +1,11 @@
-Changes 0.7xx:
+Changes 0.754 (3/3/11 @ 00:54 PST):
+
+- Iris activation levers are now destroyed when a stargate is removed. Also if
+  anything is in the iris activation lever block location when creating an 
+  ICD protected gate it will be destroyed properly before lever is placed.
+  
+- We now properly destroy all name signs before replacing them with new name sign.
+  Was not checking before causing a NPE. 
 
 - Fixed '/wormhole build <gateshape>' to use the proper argument for <gateshape>
   This of course means that users with 'wormhole.build' permissions can use 

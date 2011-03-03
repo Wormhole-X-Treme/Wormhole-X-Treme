@@ -489,7 +489,12 @@ public class Stargate
 	 */
 	public void SetupGateSign()
 	{
-	    	Block name_sign = this.NameBlockHolder.getFace(Facing);
+	      
+	        Block name_sign = this.NameBlockHolder.getFace(Facing);
+	        if ( name_sign != null)
+	        {
+	            name_sign.setType(Material.AIR);
+	        }
 			name_sign.setType(Material.WALL_SIGN);
 			switch ( Facing )
 			{
@@ -528,25 +533,29 @@ public class Stargate
 	public void SetupIrisLever()
 	{
 	    	Block iris_block = this.ActivationBlock.getFace(BlockFace.DOWN);
-			this.IrisActivationBlock = iris_block;
+	    	this.IrisActivationBlock = iris_block;
 			this.Blocks.add(IrisActivationBlock.getLocation());
+			if (IrisActivationBlock != null)
+			{
+			    this.IrisActivationBlock.setType(Material.AIR);
+			}
 			this.IrisActivationBlock.setType(Material.LEVER);
 			switch (Facing)
 			{
 			    case SOUTH:
-			        IrisActivationBlock.setData((byte)0x01);
+			        this.IrisActivationBlock.setData((byte)0x01);
 			        break;
 			    case NORTH:
-			        IrisActivationBlock.setData((byte)0x02);
+			        this.IrisActivationBlock.setData((byte)0x02);
 			        break;
 			    case WEST:
-			        IrisActivationBlock.setData((byte)0x03);
+			        this.IrisActivationBlock.setData((byte)0x03);
 			        break;
 			    case EAST:
-			        IrisActivationBlock.setData((byte)0x04);
+			        this.IrisActivationBlock.setData((byte)0x04);
 			        break;   
 			}
-			IrisActivationBlock.getState().setData(new MaterialData(Material.LEVER));
+			// IrisActivationBlock.getState().setData(new MaterialData(Material.LEVER));
 	}
 	public void SetIrisDeactivationCode ( String idc )
 	{
@@ -824,5 +833,16 @@ public class Stargate
 			this.TeleportSign.setLine(3, "");
 		}
 		
+	}
+	
+	/*
+	 * Delete Iris Lever
+	 */
+	public void DeleteIrisLever()
+	{
+        if (this.IrisActivationBlock != null)
+        {
+            this.IrisActivationBlock.setType(Material.AIR);
+        }
 	}
 }

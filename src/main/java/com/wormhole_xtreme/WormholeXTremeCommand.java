@@ -212,6 +212,10 @@ public class WormholeXTremeCommand {
 				{
 					s.DeleteNameSign();
 					s.ResetTeleportSign();
+					if (!s.IrisDeactivationCode.equals(""))
+					{
+					    s.DeleteIrisLever();
+					}
 					if ( args.length >= 3 && args[2].equals("all") )
 					{
 						s.DeleteNameSign();

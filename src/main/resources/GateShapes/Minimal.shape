@@ -29,9 +29,9 @@ GateShape=
 # These values are the relative positions of the button to the lower right corner of the design.
 # In the standard gate the corner is 1 down (-1 up) from the button, 1 to the right of the button, and 4 away. 
 # Note that the DHD counts as a block, so in the standard gate there is the DHD block + 3 = total of 4 away.
-BUTTON_UP=-1
-BUTTON_RIGHT=1
-BUTTON_AWAY=4
+BUTTON_UP=-2
+BUTTON_RIGHT=-1
+BUTTON_AWAY=2
 
 #Woosh depth is how many blocks of portal material shoot out when gate is activated
 WOOSH_DEPTH=0

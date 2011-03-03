@@ -186,12 +186,30 @@ public class WormholeXTremeCommand {
 			}
 		}
 	}
-	private static void doGateRemove(CommandSender sender, String[] args)
+	private static boolean doGateRemove(CommandSender sender, String[] args, boolean root_command)
 	{
 		
-		if ( args.length >= 2)
+		if ( (root_command && args.length >=1) || (!root_command && args.length >= 2) )
 		{
-			Stargate s = StargateManager.GetStargate(args[1]);
+		    String mpa;
+		    String mpb;
+
+		    if (root_command)
+		    {
+		        mpa = args[0];
+		        mpb = args[1];
+		    }
+		    else
+		    {
+		        mpa = args[1];
+		        mpb = args[2];
+		    }
+
+		    if (mpa.equals("-all"))
+		    {
+		        return false;
+		    }
+			Stargate s = StargateManager.GetStargate(mpa);
 			if ( s != null )
 			{
 				boolean allowed = false;
@@ -216,7 +234,7 @@ public class WormholeXTremeCommand {
 					{
 					    s.DeleteIrisLever();
 					}
-					if ( args.length >= 3 && args[2].equals("all") )
+					if ( ((root_command && args.length == 2) || (!root_command && args.length == 3 )) && mpb.equals("-all") )
 					{
 						s.DeleteNameSign();
 						s.DeleteGateBlocks();
@@ -226,22 +244,26 @@ public class WormholeXTremeCommand {
 					}
 					StargateManager.RemoveStargate(s);
 					sender.sendMessage("Wormhole Removed: " + s.Name);
+					return true;
 				}
 				else
 				{
 					sender.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+					return true;
 				}
 					
 			}
 			else
 			{
-				sender.sendMessage("Gate does not exist: " + args[1] + ". Remember proper capitalization.");
+				sender.sendMessage("Gate does not exist: " + mpa + ". Remember proper capitalization.");
+
 			}
 		}
 		else
 		{
 			sender.sendMessage("You did not enter a gate name");
 		}
+		return false;
 	}
 	private static void doMaterial(CommandSender s, String[] args)
 	{
@@ -537,27 +559,41 @@ public class WormholeXTremeCommand {
 		}
 	}
 	
-	private static void doAddPlayerBuilder(CommandSender sender, String[] message_parts) 
+	private static boolean doAddPlayerBuilder(CommandSender sender, String[] message_parts, boolean root_command) 
 	{
 		if ( playerCheck(sender) )
 		{
 			Player p = (Player) sender;
-			if ( message_parts.length > 1 )
+			if ( (root_command && message_parts.length >= 1) || (!root_command && message_parts.length >= 2) )
 			{
+			    String mp;
+			    if (root_command)
+			    {
+			        mp = message_parts[0];
+			    }
+			    else
+			    {
+			        mp = message_parts[1];
+			    } 
 				if ( p.isOp() || WormholeXTreme.Permissions.has(p, "wormhole.config") )
 				{
-					StargateShape shape = StargateHelper.getShape(message_parts[1]);
+					StargateShape shape = StargateHelper.getShape(mp);
 					if  ( shape != null)
 					{
 						StargateManager.AddPlayerBuilderShape(p, shape);
+						p.sendMessage("Press Activation button on new DHD to autobuild Stargate in the shape of: " + mp );
+						return true;
 					}
 					else
 					{
-						p.sendMessage("Invalid shape: " + message_parts[1]);
+						p.sendMessage("Invalid shape: " + mp);
 					}
 				}
 				else
+				{
 					p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+					return true;
+				}
 			}
 			else
 			{
@@ -566,8 +602,10 @@ public class WormholeXTremeCommand {
 		}
 		else
 		{
+		    return true;
 			 //("Cannot use this command without being a player.")
 		}
+		return false;
 	}
 	
 	public static boolean commandWormhole(CommandSender sender, String[] args)
@@ -608,7 +646,7 @@ public class WormholeXTremeCommand {
 		}
 		else if ( message_parts[0].equalsIgnoreCase("remove") )
 		{
-			doGateRemove(sender,message_parts);
+			return doGateRemove(sender,message_parts,false);
 		}
 		else if ( message_parts[0].equalsIgnoreCase("perm") || message_parts[0].equalsIgnoreCase("perms"))
 		{
@@ -632,7 +670,7 @@ public class WormholeXTremeCommand {
 		}
 		else if ( message_parts[0].equalsIgnoreCase("build") )
 		{
-			doAddPlayerBuilder(sender,message_parts);
+			return doAddPlayerBuilder(sender,message_parts,false);
 		}
 		else if (p != null)
 			{
@@ -672,5 +710,29 @@ public class WormholeXTremeCommand {
 		
 		doDial(player,args);
 		return true;
+	}
+	
+	/*
+	 * List Stargates
+	 */
+	public static boolean commandList(CommandSender sender, String[] args)
+	{
+	    doGateList(sender);
+	    return true;
+	}
+	
+	/*
+	 * Build Stargate
+	 */
+	public static boolean commandBuildGate(CommandSender sender, String[] args)
+	{	    
+	    return doAddPlayerBuilder(sender, args,true);
+	}
+	/*
+	 * Remove stargate (and delete gate blocks too)
+	 */
+	public static boolean commandRemoveGate(CommandSender sender, String[] args)
+	{
+	    return doGateRemove(sender, args, true);
 	}
 }

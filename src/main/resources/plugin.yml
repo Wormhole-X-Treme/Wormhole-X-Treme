@@ -1,6 +1,6 @@
 name: WormholeXTreme
 main: com.wormhole_xtreme.WormholeXTreme
-version: 0.754
+version: 0.755
 author: By Lologarithm & alron
 description: >
              Wormhole X-Treme! Wormholes as travel portals. Splash Effect, IDC,
@@ -24,5 +24,24 @@ commands:
                      - IDC password optional.
             Example: /<command> compass 
                      - Use compass to target Nearest Stargate.
-            Example: /<command> remove <GateName> [all] 
+            Example: /<command> remove <GateName> [-all] 
                      - Specify all to destroy materials.
+
+   wxlist:
+     description: List all built Stargates.
+     usage: |
+            /<command> - List all active stargates.
+            
+   wxbuild:
+     description: Automatically Build Stargate.
+     usage: |
+            /<command> <GateShape>
+            - After placing a DHD with a button (and sign if wanted) running this command then pressing the button will cause the specified stargate to be built.
+            
+   wxremove:
+     description: Remove a stargate, optionally destroy its blocks.
+     usage: |
+            /<command> <GateName> [-all]
+            Example: /<command> testgate -all
+            - -all destroys gate blocks.
+            

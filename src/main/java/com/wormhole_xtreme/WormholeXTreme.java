@@ -210,6 +210,14 @@ public class WormholeXTreme extends JavaPlugin
 		{
 			return WormholeXTremeCommand.commandDial(sender, args);
 		}
+		else if (commandName.equals("wxlist"))
+		{
+		    return WormholeXTremeCommand.commandList(sender, args);
+		}
+		else if (commandName.equals("wxbuild"))
+		{
+		    return WormholeXTremeCommand.commandBuildGate(sender, args);
+		}
 		return false;
 	}
 

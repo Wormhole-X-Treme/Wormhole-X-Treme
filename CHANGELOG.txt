@@ -1,3 +1,10 @@
+Changes 0.7xx:
+
+- Fixed '/wormhole build <gateshape>' to use the proper argument for <gateshape>
+  This of course means that users with 'wormhole.build' permissions can use 
+  '/wormhole build <gateshape>' after building a DHD, and press the button to 
+  instantly generate a StarGate in the shape specified.
+
 Changes 0.753 (3/2/11 @ 19:27 PST):
 
 - Fixed Gate Sign placement. Now no longer at right angles to the gatesign block.

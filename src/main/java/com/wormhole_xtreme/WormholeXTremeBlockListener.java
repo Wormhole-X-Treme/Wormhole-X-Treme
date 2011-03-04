@@ -337,7 +337,8 @@ public class WormholeXTremeBlockListener extends BlockListener
 					{
 						// Print to player that it was successful!
 						p.sendMessage("Stargate Design Valid.");
-						p.sendMessage("To complete type: /wormhole complete <name> <optional_idc>");
+						p.sendMessage("To complete type: /wormhole complete <name> idc=[IDC] net=[NET]");
+						p.sendMessage("IDC and NET are optional.");
 						// Add gate to unnamed gates.
 						StargateManager.AddIncompleteStargate(p, new_gate);
 					}

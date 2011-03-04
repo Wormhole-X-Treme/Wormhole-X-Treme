@@ -98,6 +98,19 @@ public class StargateManager
 			synchronized (s.Network.gateLock)
 			{
 				s.Network.gate_list.remove(s);
+				
+				for ( Stargate s2 : s.Network.gate_list)
+				{
+					if ( s2.SignTarget.GateId == s.GateId && s2.IsSignPowered)
+					{
+						s2.SignTarget = null;
+						if ( s.Network.gate_list.size() > 1 )
+						{
+							s2.SignIndex = 0;
+							s2.TeleportSignClicked();
+						}
+					}
+				}
 			}
 		}
 

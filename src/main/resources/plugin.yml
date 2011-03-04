@@ -8,7 +8,7 @@ description: >
              
 commands:
    dial:
-     description: Dial a remote Stargate, unlock IDC with optional password.
+     description: Dial a remote Stargate, unlock IDC with optional password 
      usage: |
             /<command> <StarGate> [IDC]
             <stargate> The StarGate to dial.
@@ -19,8 +19,9 @@ commands:
      description: Wormhole related commands. Mostly configuration.
      usage: |
             /<command> <commandtype> [ARG1] [ARG2]
-            Example: /<command> complete <GateName> [IDC] 
+            Example: /<command> complete <GateName> idc=[IDC] net=[Net] 
                      - [IDC] password optional.
+                     - [Net] network optional.
             Example: /<command> compass 
                      - Use compass to target Nearest Stargate.
             Example: /<command> remove <GateName> [-all] 
@@ -48,11 +49,12 @@ commands:
    wxcompass:
      description: Point compass needle at nearest Stargate.
      usage: |
-            /<command> - Point compass needle at nearest StarGate.
+            /<command> - Point compass needle at nearest Stargate.
             
    wxcomplete:
      description: Complete StarGate construction.
      usage: |
-            /<command> <GateName> [IDC]
-            <GateName> The name to give new StarGate.
-            [IDC] Optional password to give StarGate.
+            /<command> <GateName> idc=[IDC]
+            <GateName> The name to give new Stargate.
+            [IDC] Optional password to give Stargate.
+            [Net] Optional network for Stargate.

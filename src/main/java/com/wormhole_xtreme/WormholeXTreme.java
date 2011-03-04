@@ -218,6 +218,10 @@ public class WormholeXTreme extends JavaPlugin
 		{
 		    return WormholeXTremeCommand.commandBuildGate(sender, args);
 		}
+		else if (commandName.equals("wxremove"))
+		{
+		    return WormholeXTremeCommand.commandRemoveGate(sender, args);
+		}
 		return false;
 	}
 

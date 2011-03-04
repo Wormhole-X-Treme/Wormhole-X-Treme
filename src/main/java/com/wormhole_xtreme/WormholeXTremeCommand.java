@@ -4,6 +4,7 @@
 package com.wormhole_xtreme;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 
 import org.bukkit.Location;
@@ -188,28 +189,26 @@ public class WormholeXTremeCommand {
 	}
 	private static boolean doGateRemove(CommandSender sender, String[] args, boolean root_command)
 	{
-		
-		if ( (root_command && args.length >=1) || (!root_command && args.length >= 2) )
+		if ( (root_command && args.length >=1) || ((!root_command) && args.length >= 2) )
 		{
-		    String mpa;
-		    String mpb;
-
+		    Stargate s;
 		    if (root_command)
 		    {
-		        mpa = args[0];
-		        mpb = args[1];
+		        if (args[0].equals("-all"))
+		        {
+		            return false;
+		        }
+		        s = StargateManager.GetStargate(args[0]);
 		    }
 		    else
 		    {
-		        mpa = args[1];
-		        mpb = args[2];
+		        if (args[1].equals("-all"))
+		        {
+		            return false;
+		        }
+		        s = StargateManager.GetStargate(args[1]);
 		    }
-
-		    if (mpa.equals("-all"))
-		    {
-		        return false;
-		    }
-			Stargate s = StargateManager.GetStargate(mpa);
+			
 			if ( s != null )
 			{
 				boolean allowed = false;
@@ -234,7 +233,7 @@ public class WormholeXTremeCommand {
 					{
 					    s.DeleteIrisLever();
 					}
-					if ( ((root_command && args.length == 2) || (!root_command && args.length == 3 )) && mpb.equals("-all") )
+					if ((root_command && args.length >= 2 && args[1].equals("-all")) || (!root_command && args.length >= 3 && args[2].equals("-all")))
 					{
 						s.DeleteNameSign();
 						s.DeleteGateBlocks();
@@ -255,8 +254,16 @@ public class WormholeXTremeCommand {
 			}
 			else
 			{
-				sender.sendMessage("Gate does not exist: " + mpa + ". Remember proper capitalization.");
-
+			    if (root_command)
+			    {
+			        sender.sendMessage("Gate does not exist: " + args[0] + ". Remember proper capitalization.");
+			        return true;
+			    }
+			    else
+			    {
+			        sender.sendMessage("Gate does not exist: " + args[1] + ". Remember proper capitalization.");
+			        return true;
+			    }
 			}
 		}
 		else
@@ -726,13 +733,23 @@ public class WormholeXTremeCommand {
 	 */
 	public static boolean commandBuildGate(CommandSender sender, String[] args)
 	{	    
-	    return doAddPlayerBuilder(sender, args,true);
+        String[] message_parts = commandEscaper(args);
+        if ((message_parts.length > 2) || (message_parts.length == 0 ))
+        {
+            return false;
+        }
+	    return doAddPlayerBuilder(sender, message_parts,true);
 	}
 	/*
 	 * Remove stargate (and delete gate blocks too)
 	 */
 	public static boolean commandRemoveGate(CommandSender sender, String[] args)
 	{
-	    return doGateRemove(sender, args, true);
+	    String[] message_parts = commandEscaper(args);
+	    if ((message_parts.length > 2) || (message_parts.length == 0 ))
+	    {
+	        return false;
+	    }
+	    return doGateRemove(sender, message_parts, true);
 	}
 }

@@ -70,9 +70,10 @@ public class Configuration
 
 	private static boolean invalidFile(File file, PluginDescriptionFile desc) 
 	{
-		try 
+		BufferedReader bufferedreader = null;
+	    try 
 		{
-			BufferedReader bufferedreader = new BufferedReader(new FileReader(file));
+			bufferedreader = new BufferedReader(new FileReader(file));
 			for (String s = ""; (s = bufferedreader.readLine()) != null; ) 
 			{
 				if (s.indexOf(desc.getVersion()) > -1) 
@@ -80,11 +81,24 @@ public class Configuration
 					return false;
 				}
 			}
-			bufferedreader.close();
 		}
 		catch (IOException exception)
 		{
 			return true;
+		}
+		finally 
+		{
+		    try 
+		    {
+		        if (bufferedreader != null)
+		        {
+		            bufferedreader.close();
+		        }
+		    }
+		    catch (IOException e) 
+		    { 
+		        WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Failure to close stream: " + e.getMessage()); 
+		    }
 		}
 		return true;
 	}

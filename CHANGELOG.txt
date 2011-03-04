@@ -5,6 +5,11 @@ Changes 0.755 (x/x/11):
   
 - Added /wxcompass and /wxcomplete.
 
+- /wormhole complete and /wxcomplete optional arguments require key=value
+  * To add IDC you do idc=<value>
+  * To add a network you would do net=<value>
+  * Example: /wxcomplete MyGate idc=Haha net=Awesome
+
 
 Changes 0.754 (3/3/11 @ 00:54 PST):
 

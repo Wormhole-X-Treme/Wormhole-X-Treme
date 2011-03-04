@@ -21,7 +21,7 @@ To Update:
 6. Remove a gate with /wormhole remove <gatename>
 7. Re-add gate. 
 8. CHANGE YOUR SETTINGS FOR WORMHOLE COST TO DOUBLE VALUES. I.E. 0.0 or 1.0 or 10.0!!! OR CRASH!
-8. Enjoy. 
+9. Enjoy. 
 
 Permissions Plugin Nodes:
 

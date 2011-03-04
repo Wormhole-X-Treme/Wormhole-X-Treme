@@ -536,34 +536,42 @@ public class WormholeXTremeCommand {
 				if ( !start.Name.equals(args[0]) )
 				{
 					Stargate target = StargateManager.GetStargate(args[0]);
-					if ( target != null)
+					// No target
+					if ( target == null)
 					{
-						if (!target.IrisDeactivationCode.equals("") && target.IrisActive)
+						start.UnLightStargate();
+						p.sendMessage(ConfigManager.output_strings.get(StringTypes.TARGET_INVALID));
+						return;
+					}
+					
+					// Not on same network
+					if ( start.Network != null && !target.Network.netName.equals(start.Network.netName) )
+					{
+						start.UnLightStargate();
+						p.sendMessage(ConfigManager.output_strings.get(StringTypes.TARGET_INVALID) + " Not on same network.");
+						return;
+					}
+						
+					if (!target.IrisDeactivationCode.equals("") && target.IrisActive)
+					{
+						if ( args.length >= 2 && target.IrisDeactivationCode.equals(args[1]))
 						{
-							if ( args.length >= 2 && target.IrisDeactivationCode.equals(args[1]))
+							if ( target.IrisActive )
 							{
-								if ( target.IrisActive )
-								{
-									target.ToggleIrisActive();
-									p.sendMessage("IDC accepted and Iris has been deactivated.");
-								}
+								target.ToggleIrisActive();
+								p.sendMessage("IDC accepted and Iris has been deactivated.");
 							}
 						}
-						
-						if ( start.DialStargate(target) ) 
-						{
-							p.sendMessage("Stargates connected!");
-						}
-						else
-						{
-							start.UnLightStargate();
-							p.sendMessage(ConfigManager.output_strings.get(StringTypes.TARGET_IS_ACTIVE));
-						}
+					}
+					
+					if ( start.DialStargate(target) ) 
+					{
+						p.sendMessage("Stargates connected!");
 					}
 					else
 					{
 						start.UnLightStargate();
-						p.sendMessage(ConfigManager.output_strings.get(StringTypes.TARGET_INVALID));
+						p.sendMessage(ConfigManager.output_strings.get(StringTypes.TARGET_IS_ACTIVE));
 					}
 				}
 				else

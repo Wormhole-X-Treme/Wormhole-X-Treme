@@ -4,6 +4,7 @@ import java.util.logging.Level;
 
 
 import org.bukkit.Location; 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerListener; 
@@ -43,9 +44,17 @@ public class WormholeXTremePlayerListener extends PlayerListener
 		Player p = event.getPlayer();
 		Location l = event.getTo();
 		Block ch = l.getWorld().getBlockAt( l.getBlockX(), l.getBlockY(), l.getBlockZ());
+		Material ch_m = ch.getType();
 		Stargate st = null;
-		if ( ch.getType().equals(ConfigManager.getPortalMaterial()) && ((st = StargateManager.getGateFromBlock( ch )) != null ))
+		
+		if ( ch_m.equals(ConfigManager.getPortalMaterial()) )
 		{
+			if( ((st = StargateManager.getGateFromBlock( ch )) == null ))
+			{
+				//wxt.prettyLog(Level.FINER, false, "Player entered portal material but no gate was found.");
+				return;
+			}
+			
 		    wxt.prettyLog(Level.FINE, false, p.getName() + " entered portal material.");
 
 			if ( st != null && st.Active && st.Target != null )
@@ -78,8 +87,12 @@ public class WormholeXTremePlayerListener extends PlayerListener
 							
 							if ( owner_percent != 0.0 && st.Owner != null )
 							{
-								iConomy.getBank().getAccount(st.Owner).add(cost * owner_percent);
-								iConomy.getBank().getAccount(st.Owner).save();
+								if ( st.Owner != null && iConomy.getBank().hasAccount(st.Owner))
+								{
+									Account own_acc = iConomy.getBank().getAccount(st.Owner);
+									own_acc.add(cost * owner_percent);
+									own_acc.save();
+								}
 							}
 						}
 						else

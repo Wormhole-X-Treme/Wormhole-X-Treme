@@ -44,3 +44,15 @@ commands:
             /<command> <GateName> [-all]
             <GateName> The GateName to remove.
             [-all] destroys gate blocks too.
+
+   wxcompass:
+     description: Point compass needle at nearest Stargate.
+     usage: |
+            /<command> - Point compass needle at nearest StarGate.
+            
+   wxcomplete:
+     description: Complete StarGate construction.
+     usage: |
+            /<command> <GateName> [IDC]
+            <GateName> The name to give new StarGate.
+            [IDC] Optional password to give StarGate.

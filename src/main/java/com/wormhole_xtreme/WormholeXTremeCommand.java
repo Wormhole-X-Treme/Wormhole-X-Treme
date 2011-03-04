@@ -4,9 +4,6 @@
 package com.wormhole_xtreme;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -149,24 +146,46 @@ public class WormholeXTremeCommand {
 			s.sendMessage(sb.toString());
 		}
 	}
-	private static void doGateComplete(Player p, String[] args)
+	private static boolean doGateComplete(Player p, String[] args, boolean root_command)
 	{
 		
-		if ( args.length >= 2)
+		if ( (root_command && args.length >= 1) || (!root_command && args.length >= 2))
 		{
-			if ( args[1].length() < 12 )
+			if ( (root_command && args[0].length() < 12) || (!root_command && args[1].length() < 12 ))
 			{
-				args[1] = args[1].trim().replace("\n", "").replace("\r", "");
+			    Stargate dup_name;
+			    if (root_command)
+			    {
+			        args[0] = args[0].trim().replace("\n", "").replace("\r", "");
+			        dup_name = StargateManager.GetStargate( args[0] );
+			    }
+			    else
+			    {
+			        args[1] = args[1].trim().replace("\n", "").replace("\r", "");
+			        dup_name = StargateManager.GetStargate( args[1] );
+			    }
+				
 				String idc = "";
-				if (  args.length == 3)
+				if (root_command && args.length == 2)
+				{
+				    idc = args[1];
+				}
+				else if (!root_command && args.length == 3)
 				{
 					idc = args[2];
 				}
-				Stargate dup_name = StargateManager.GetStargate( args[1] );
+				
 				if ( dup_name == null )
 				{
-					boolean success = StargateManager.CompleteStargate(p, args[1], idc);
-					
+				    boolean success;
+				    if (root_command)
+				    {
+				        success = StargateManager.CompleteStargate(p, args[0], idc);
+				    }
+				    else 
+				    {
+				        success = StargateManager.CompleteStargate(p, args[1], idc);
+				    }
 					if ( success )
 					{
 						p.sendMessage( ConfigManager.output_strings.get(StringTypes.CONSTRUCT_SUCCESS) );
@@ -180,13 +199,17 @@ public class WormholeXTremeCommand {
 				{
 					p.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_TAKEN));
 				}
+				return true;
 			}
 			else
 			{
 				p.sendMessage( ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_TOO_LONG) );
+				return true;
 			}
 		}
+		return false;
 	}
+	
 	private static boolean doGateRemove(CommandSender sender, String[] args, boolean root_command)
 	{
 		if ( (root_command && args.length >=1) || ((!root_command) && args.length >= 2) )
@@ -629,7 +652,7 @@ public class WormholeXTremeCommand {
 
 		if( message_parts[0].equalsIgnoreCase("complete") && p != null )
 		{
-			doGateComplete(p, message_parts);
+			return doGateComplete(p, message_parts,false);
 		}
 		else if ( message_parts[0].equalsIgnoreCase("compass") && p != null)
 		{
@@ -638,10 +661,6 @@ public class WormholeXTremeCommand {
 		else if (message_parts[0].equalsIgnoreCase("go") && p != null )
 		{
 			doGo(p,message_parts);
-		}
-		else if ( message_parts[0].equalsIgnoreCase("dial") && p != null)
-		{
-			doDial(p,message_parts);
 		}
 		else if ( message_parts[0].equalsIgnoreCase("list") )
 		{
@@ -715,7 +734,7 @@ public class WormholeXTremeCommand {
 			return false;
 		}
 		
-		doDial(player,args);
+		doDial(player,message_parts);
 		return true;
 	}
 	
@@ -727,7 +746,45 @@ public class WormholeXTremeCommand {
 	    doGateList(sender);
 	    return true;
 	}
+	/*
+	 * Point compass at nearest Stargate
+	 */
+	public static boolean commandCompass(CommandSender sender, String[] args)
+	{
+	    Player p = null;
+	    if (!playerCheck(sender))
+	    {
+	        return true;
+	    }
+	    else 
+	    {
+	        p = (Player) sender;
+	    }
+	    doCompassPoint(p);
+	    return true;
+	}
 	
+	/*
+	 * Complete Stargate
+	 */
+	public static boolean commandCompleteGate(CommandSender sender, String[] args)
+	{
+        Player p = null;
+        if (!playerCheck(sender))
+        {
+            return true;
+        }
+        else 
+        {
+            p = (Player) sender;
+        }
+        String[] message_parts = commandEscaper(args);
+        if ((message_parts.length > 2) || (message_parts.length == 0 ))
+        {
+            return false;
+        }        
+        return doGateComplete(p, message_parts,true);
+	}
 	/*
 	 * Build Stargate
 	 */

@@ -3,6 +3,9 @@ Changes 0.755 (x/x/11):
 - Added /wxbuild, /wxlist, and /wxremove commands as short form of their /wormhole 
   counterparts.
   
+- Added /wxcompass and /wxcomplete.
+
+
 Changes 0.754 (3/3/11 @ 00:54 PST):
 
 - Iris activation levers are now destroyed when a stargate is removed. Also if

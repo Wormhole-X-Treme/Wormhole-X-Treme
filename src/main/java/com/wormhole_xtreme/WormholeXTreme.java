@@ -222,6 +222,14 @@ public class WormholeXTreme extends JavaPlugin
 		{
 		    return WormholeXTremeCommand.commandRemoveGate(sender, args);
 		}
+		else if (commandName.equals("wxcompass"))
+		{
+		    return WormholeXTremeCommand.commandCompass(sender, args);
+		}
+		else if (commandName.equals("wxcomplete"))
+		{
+		    return WormholeXTremeCommand.commandCompleteGate(sender, args);
+		}
 		return false;
 	}
 

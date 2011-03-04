@@ -1,8 +1,11 @@
 package com.wormhole_xtreme.logic;
 
 
+import java.util.logging.Level;
+
 import org.bukkit.entity.Player;
 
+import com.wormhole_xtreme.WormholeXTreme;
 import com.wormhole_xtreme.model.Stargate;
 
 
@@ -31,8 +34,9 @@ public class StargateUpdateRunnable implements Runnable
 	@Override
 	public void run()
 	{
+	    WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Run Action \"" + this.action + "\" Stargate \"" + this.stargate.Name + "\"");
 		if ( this.action == ActionToTake.SHUTDOWN )
-		{
+		{    
 			stargate.ShutdownStargate();
 		}
 		else if ( this.action == ActionToTake.ANIMATE_OPENING )

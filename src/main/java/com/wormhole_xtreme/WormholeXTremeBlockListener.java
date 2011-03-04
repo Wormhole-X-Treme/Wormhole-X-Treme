@@ -1,6 +1,8 @@
 package com.wormhole_xtreme; 
  
 
+import java.util.logging.Level;
+
 import org.bukkit.block.*; 
 import org.bukkit.Material; 
 import org.bukkit.entity.Player; 
@@ -354,6 +356,10 @@ public class WormholeXTremeBlockListener extends BlockListener
 					p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
 				}	
 				return true;
+			}
+			else
+			{
+				WormholeXTreme.ThisPlugin.prettyLog(Level.FINEST, false, p.getName() + " has pressed a button or level but did not find any properly created gates.");
 			}
 		}
 		

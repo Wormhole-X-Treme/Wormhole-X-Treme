@@ -62,18 +62,18 @@ public class WormholeXTremeServerListener extends ServerListener
     
     public void checkPermissionsVersion(String version)
     {
-        if ( !version.equals("2.4") && !version.equals("2.5") )
+        if ( !version.equals("2.4") && !version.startsWith("2.5"))
         {
-        	WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Not a supported version of Permissions. Recommended is 2.5" );
+        	WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Not a supported version of Permissions. Recommended is 2.5.2" );
         }
        
     }
     
     public void checkIconomyVersion(String version)
     {
-        if ( !version.equals("4.0") && !version.equals("4.1") )
+        if ( !version.equals("4.0") && !version.equals("4.1") && !version.startsWith("4.2") && !version.startsWith("4.3"))
         {
-        	WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Not a supported version of iConomy. Recommended is 4.1" );
+        	WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Not a supported version of iConomy. Recommended is 4.3" );
         }
        
     }

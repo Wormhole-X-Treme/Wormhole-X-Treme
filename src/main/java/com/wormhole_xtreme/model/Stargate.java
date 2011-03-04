@@ -26,9 +26,7 @@ import com.wormhole_xtreme.utils.WorldUtils;
  * @author Ben Echols (Lologarithm) 
  */ 
 public class Stargate 
-{
-	private static final WormholeXTreme wxt = WormholeXTreme.ThisPlugin;
-	
+{	
 	// Used to parse
 	public byte LoadedVersion = -1;
 	public long GateId = -1;
@@ -249,12 +247,14 @@ public class Stargate
 		
 		int timeout = ConfigManager.getTimeoutActivate() * 20;
 		this.ActivateTaskId = WormholeXTreme.Scheduler.scheduleSyncDelayedTask(WormholeXTreme.ThisPlugin, new StargateUpdateRunnable(this, p, ActionToTake.DEACTIVATE), timeout);
+		WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Wormhole \""+ this.Name + "\" ActivateTaskID \"" + this.ActivateTaskId + "\" created.");
 	}
 
 	public void StopActivationTimer(Player p)
 	{
 		if ( this.ActivateTaskId >= 0)
 		{
+		    WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Wormhole \""+ this.Name + "\" ActivateTaskID \"" + this.ActivateTaskId + "\" cancelled.");
 			WormholeXTreme.Scheduler.cancelTask(this.ActivateTaskId);
 			this.ActivateTaskId = -1;
 		}
@@ -263,8 +263,10 @@ public class Stargate
 	public void TimeoutStargate(Player p)
 	{
 		if ( this.ActivateTaskId >= 0 )
+		{
+		    WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Wormhole \""+ this.Name + "\" ActivateTaskID \"" + this.ActivateTaskId + "\" timed out.");
 			this.ActivateTaskId = -1;
-		
+		}
 		// Deactivate if player still hasn't picked a target.
 		Stargate s = null;
 		if ( p != null)
@@ -329,15 +331,15 @@ public class Stargate
 		if ( timeout > 0 )
 		{
 			this.ShutdownTaskId = WormholeXTreme.Scheduler.scheduleSyncDelayedTask(WormholeXTreme.ThisPlugin, new StargateUpdateRunnable(this, ActionToTake.SHUTDOWN), timeout);
-			wxt.prettyLog(Level.FINE, false, "Wormhole Closure Task ID: " + this.ShutdownTaskId + " created." );
+			WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" ShutdownTaskID \"" + this.ShutdownTaskId + "\" created." );
 			if (this.ShutdownTaskId == -1 ) 
 			{ 
-				wxt.prettyLog(Level.WARNING,false,"Failed to schdule wormhole shutdown timeout: " + timeout + " Received task id of -1. Attempting again.");
+				WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING,false,"Failed to schdule wormhole shutdown timeout: " + timeout + " Received task id of -1. Attempting again.");
 				this.ShutdownTaskId = WormholeXTreme.Scheduler.scheduleSyncDelayedTask(WormholeXTreme.ThisPlugin, new StargateUpdateRunnable(this, ActionToTake.SHUTDOWN), timeout);
 				if (this.ShutdownTaskId == -1 ) 
 				{
 					ShutdownStargate();
-					wxt.prettyLog(Level.SEVERE,false,"Failed to schdule wormhole shutdown timeout: " + timeout + " Received task id of -1. Wormhole forced closed NOW.");
+					WormholeXTreme.ThisPlugin.prettyLog(Level.SEVERE,false,"Failed to schdule wormhole shutdown timeout: " + timeout + " Received task id of -1. Wormhole forced closed NOW.");
 				}
 			}
 		}
@@ -364,7 +366,7 @@ public class Stargate
 		}
 		else 
 		{
-			wxt.prettyLog(Level.WARNING, false, "No wormhole. No visual events.");
+			WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "No wormhole. No visual events.");
 		}
 	}
 	
@@ -393,12 +395,12 @@ public class Stargate
 			else if ((this.Active) && (!this.Target.Active))
 			{
 				this.ShutdownStargate();
-				wxt.prettyLog(Level.WARNING, false, "Far wormhole failed to open. Closing local wormhole for safety sake.");
+				WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Far wormhole failed to open. Closing local wormhole for safety sake.");
 			} 
 			else if ((!this.Active) && (target.Active))
 			{
 				target.ShutdownStargate();
-				wxt.prettyLog(Level.WARNING,false, "Local wormhole failed to open. Closing far end wormhole for safety sake.");
+				WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING,false, "Local wormhole failed to open. Closing far end wormhole for safety sake.");
 			}
 		}
 		
@@ -430,12 +432,12 @@ public class Stargate
 			else if ((this.Active) && (!target.Active))
 			{
 				this.ShutdownStargate();
-				wxt.prettyLog(Level.WARNING, false, "Far wormhole failed to open. Closing local wormhole for safety sake.");
+				WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Far wormhole failed to open. Closing local wormhole for safety sake.");
 			} 
 			else if ((!this.Active) && (target.Active))
 			{
 				target.ShutdownStargate();
-				wxt.prettyLog(Level.WARNING,false, "Local wormhole failed to open. Closing far end wormhole for safety sake.");
+				WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING,false, "Local wormhole failed to open. Closing far end wormhole for safety sake.");
 			}
 		//}
 		
@@ -446,6 +448,7 @@ public class Stargate
 	{
 		if ( this.ShutdownTaskId >= 0 )
 		{
+		    WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" ShutdownTaskID \"" + this.ShutdownTaskId + "\" cancelled.");
 			WormholeXTreme.Scheduler.cancelTask(this.ShutdownTaskId);
 			this.ShutdownTaskId = -1;
 		}
@@ -491,11 +494,7 @@ public class Stargate
 	{
 	      
 	        Block name_sign = this.NameBlockHolder.getFace(Facing);
-	        if ( name_sign != null)
-	        {
-	            name_sign.setType(Material.AIR);
-	        }
-			name_sign.setType(Material.WALL_SIGN);
+			name_sign.setType(Material.WALL_SIGN);		
 			switch ( Facing )
 			{
 			    case NORTH:
@@ -524,7 +523,7 @@ public class Stargate
 			{
 				sign.setLine(2, "O:" + this.Owner);
 			}
-	        sign.update(true);
+	        sign.update();
 	}
 	
 	/*
@@ -535,10 +534,6 @@ public class Stargate
 	    	Block iris_block = this.ActivationBlock.getFace(BlockFace.DOWN);
 	    	this.IrisActivationBlock = iris_block;
 			this.Blocks.add(IrisActivationBlock.getLocation());
-			if (IrisActivationBlock != null)
-			{
-			    this.IrisActivationBlock.setType(Material.AIR);
-			}
 			this.IrisActivationBlock.setType(Material.LEVER);
 			switch (Facing)
 			{
@@ -555,7 +550,6 @@ public class Stargate
 			        this.IrisActivationBlock.setData((byte)0x04);
 			        break;   
 			}
-			// IrisActivationBlock.getState().setData(new MaterialData(Material.LEVER));
 	}
 	public void SetIrisDeactivationCode ( String idc )
 	{

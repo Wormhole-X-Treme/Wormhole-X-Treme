@@ -47,11 +47,11 @@ public class WormholeXTreme extends JavaPlugin
 
 	
 	public static volatile PermissionHandler Permissions = null;
-	public static iConomy Iconomy = null;
+	public static volatile iConomy Iconomy = null;
 	public static BukkitScheduler Scheduler = null;
 	public static WormholeXTreme ThisPlugin = null;
-	
-	public static Logger log;
+	 
+	private static Logger log;
  
 	@Override
     public void onEnable()

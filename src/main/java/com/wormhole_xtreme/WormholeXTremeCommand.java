@@ -148,44 +148,50 @@ public class WormholeXTremeCommand {
 	}
 	private static boolean doGateComplete(Player p, String[] args, boolean root_command)
 	{
-		
 		if ( (root_command && args.length >= 1) || (!root_command && args.length >= 2))
 		{
-			if ( (root_command && args[0].length() < 12) || (!root_command && args[1].length() < 12 ))
+			String name = "";
+			if ( root_command )
 			{
-			    Stargate dup_name;
-			    if (root_command)
-			    {
-			        args[0] = args[0].trim().replace("\n", "").replace("\r", "");
-			        dup_name = StargateManager.GetStargate( args[0] );
-			    }
-			    else
-			    {
-			        args[1] = args[1].trim().replace("\n", "").replace("\r", "");
-			        dup_name = StargateManager.GetStargate( args[1] );
-			    }
+				name = args[0].trim().replace("\n", "").replace("\r", "");
+			}
+			else
+			{
+				name = args[1].trim().replace("\n", "").replace("\r", "");
+			}
+				            
+			if ( name.length() < 12)
+			{
+			    Stargate dup_name = StargateManager.GetStargate( name );
 				
 				String idc = "";
-				if (root_command && args.length == 2)
+				String network = "";
+				int start_index = 1;
+				if ( !root_command )
 				{
-				    idc = args[1];
+					start_index = 2;
 				}
-				else if (!root_command && args.length == 3)
+				
+				if ( start_index < args.length )
 				{
-					idc = args[2];
+					for ( int i = start_index; i < args.length; i++ )
+					{
+						String[] key_value_string = args[i].split("=");
+						if ( key_value_string[0].equals("idc") )
+						{
+							idc = key_value_string[1];
+						}
+						else if ( key_value_string[0].equals("net") )
+						{
+							network = key_value_string[1];
+						}
+					}
 				}
 				
 				if ( dup_name == null )
 				{
-				    boolean success;
-				    if (root_command)
-				    {
-				        success = StargateManager.CompleteStargate(p, args[0], idc);
-				    }
-				    else 
-				    {
-				        success = StargateManager.CompleteStargate(p, args[1], idc);
-				    }
+				    boolean success = StargateManager.CompleteStargate(p, name, idc, network);
+
 					if ( success )
 					{
 						p.sendMessage( ConfigManager.output_strings.get(StringTypes.CONSTRUCT_SUCCESS) );

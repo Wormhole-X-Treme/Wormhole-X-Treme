@@ -157,7 +157,7 @@ public class StargateManager
 		incomplete_stargates.remove(p);
 	}
 
-	public static boolean CompleteStargate(Player p, String name, String idc)
+	public static boolean CompleteStargate(Player p, String name, String idc, String network)
 	{
 		Stargate complete = incomplete_stargates.remove(p);
 		
@@ -183,6 +183,15 @@ public class StargateManager
 						return false;
 					}
 				}
+			}
+			
+			if ( !network.equals("") )
+			{
+				StargateNetwork	net = StargateManager.GetStargateNetwork(network);
+				if ( net == null )
+					net = StargateManager.AddStargateNetwork(network);
+				StargateManager.AddGateToNetwork(complete, network);
+				complete.Network = net;
 			}
 			
 			complete.Owner = p.getName();

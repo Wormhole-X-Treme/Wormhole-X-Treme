@@ -331,7 +331,7 @@ public class Stargate
 		if ( timeout > 0 )
 		{
 			this.ShutdownTaskId = WormholeXTreme.Scheduler.scheduleSyncDelayedTask(WormholeXTreme.ThisPlugin, new StargateUpdateRunnable(this, ActionToTake.SHUTDOWN), timeout);
-			WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Wormhole Closure Task ID: " + this.ShutdownTaskId + " created." );
+			WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" ShutdownTaskID \"" + this.ShutdownTaskId + "\" created." );
 			if (this.ShutdownTaskId == -1 ) 
 			{ 
 				WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING,false,"Failed to schdule wormhole shutdown timeout: " + timeout + " Received task id of -1. Attempting again.");
@@ -448,6 +448,7 @@ public class Stargate
 	{
 		if ( this.ShutdownTaskId >= 0 )
 		{
+		    WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" ShutdownTaskID \"" + this.ShutdownTaskId + "\" cancelled.");
 			WormholeXTreme.Scheduler.cancelTask(this.ShutdownTaskId);
 			this.ShutdownTaskId = -1;
 		}
@@ -493,11 +494,7 @@ public class Stargate
 	{
 	      
 	        Block name_sign = this.NameBlockHolder.getFace(Facing);
-	        if ( name_sign != null)
-	        {
-	            name_sign.setType(Material.AIR);
-	        }
-			name_sign.setType(Material.WALL_SIGN);
+			name_sign.setType(Material.WALL_SIGN);		
 			switch ( Facing )
 			{
 			    case NORTH:
@@ -537,10 +534,6 @@ public class Stargate
 	    	Block iris_block = this.ActivationBlock.getFace(BlockFace.DOWN);
 	    	this.IrisActivationBlock = iris_block;
 			this.Blocks.add(IrisActivationBlock.getLocation());
-			if (IrisActivationBlock != null)
-			{
-			    this.IrisActivationBlock.setType(Material.AIR);
-			}
 			this.IrisActivationBlock.setType(Material.LEVER);
 			switch (Facing)
 			{
@@ -557,7 +550,6 @@ public class Stargate
 			        this.IrisActivationBlock.setData((byte)0x04);
 			        break;   
 			}
-			// IrisActivationBlock.getState().setData(new MaterialData(Material.LEVER));
 	}
 	public void SetIrisDeactivationCode ( String idc )
 	{

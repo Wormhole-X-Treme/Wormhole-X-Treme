@@ -1,4 +1,4 @@
-Changes 0.755 (x/x/11):
+Changes 0.755 (3/4/11 @ 16:51PST):
 
 - Added /wxbuild, /wxlist, and /wxremove commands as short form of their /wormhole 
   counterparts.
@@ -9,6 +9,22 @@ Changes 0.755 (x/x/11):
   * To add IDC you do idc=<value>
   * To add a network you would do net=<value>
   * Example: /wxcomplete MyGate idc=Haha net=Awesome
+
+- Fixed bug in database code which was pushing data to wrong fields.
+
+- Minor rework in PlayerListener code pretaining to players entering stargates.
+
+- No longer scream about iConomy 4.2 or 4.3 being unsupported.
+
+- No longer scream about Permissions 2.5.x being unsupported.
+
+- Reduced potential thread safety issue when accessing Iconomy.
+
+- Lots of logging added at Level.FINE and Level.FINEST for stargate operations. 
+  Most useful for debugging.
+  
+- Closed a potential file descriptor leak in configuration code.
+
 
 
 Changes 0.754 (3/3/11 @ 00:54 PST):

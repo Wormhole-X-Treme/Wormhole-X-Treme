@@ -224,10 +224,11 @@ public class StargateDBManager
 				StoreStatement.setLong(4, s.MyWorld.getId());
 				StoreStatement.setString(5, s.MyWorld.getName());
 				StoreStatement.setString(6, s.MyWorld.getEnvironment().toString());
-				StoreStatement.setString(7, s.GateShape.shapeName);
+				StoreStatement.setString(7, s.Owner);
+				StoreStatement.setString(8, s.GateShape.shapeName);
 				
 				StoreStatement.executeUpdate();
-		
+
 				GetGateStatement.setString(1, s.Name);
 				gates_data = GetGateStatement.executeQuery();
 				if ( gates_data.next() )

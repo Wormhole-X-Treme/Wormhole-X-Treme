@@ -37,13 +37,11 @@ To Build:
 
 -1. Install Maven and all of its dependencies. 
  0. Git clone the repo. (Or download the source zip)
- 1. Download iConomy version 4.1. Download Permissions version 2.5 or greater.
+ 1. Download iConomy version 4.3. Download Permissions version 2.5.3 or greater.
  2. Force iConomy and Permissions into your local repo. 
- 2.1 (example commands) mvn install:install-file -Dfile=Permissions.jar -DgroupId=com.nijikokun.bukkit.Permissions -DartifactId=Permissions -Dversion=2.5 -Dpackaging=jar -DgeneratePom=true
-   - http://www.theyeticave.net/downloads/permissions/2.5/Permissions.jar
+ 2.1 (example commands) mvn install:install-file -Dfile=Permissions.jar -DgroupId=com.nijikokun.bukkit.Permissions -DartifactId=Permissions -Dversion=2.5.3 -Dpackaging=jar -DgeneratePom=true
    - http://forums.bukkit.org/threads/5974/
- 2.2 (example commands) mvn install:install-file -Dfile=iConomy.jar -DgroupId=com.nijiko.coelho.iConomy -DartifactId=iConomy -Dversion=4.1 -Dpackaging=jar -DgeneratePom=true
-   - http://www.iscoelho.com/bukkit/iConomy4.1.zip
+ 2.2 (example commands) mvn install:install-file -Dfile=iConomy.jar -DgroupId=com.nijiko.coelho.iConomy -DartifactId=iConomy -Dversion=4.3 -Dpackaging=jar -DgeneratePom=true
    - http://forums.bukkit.org/threads/40/
  3. Run a 'mvn install' in the directory you ran the git clone into (or unpacked the source zip). 
  4. Enjoy plugin that is now in target/. It will be a jar, a zip, and a tar.bz2.   

@@ -47,7 +47,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 		Material ch_m = ch.getType();
 		Stargate st = null;
 		
-		if ( ch_m.equals(ConfigManager.getPortalMaterial()) )
+		if ( ch_m == ConfigManager.getPortalMaterial() )
 		{
 			if( ((st = StargateManager.getGateFromBlock( ch )) == null ))
 			{

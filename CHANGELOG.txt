@@ -19,6 +19,8 @@ Changes 0.xxx
 
 - Fixed the gate active but no teleport bug (for real). 
 
+- Fixed Iris to auto-open when dialing out. 
+    * Dial gates iris will stay closed until actually connected.
 
 Changes 0.755 (3/4/11 @ 16:51PST):
 

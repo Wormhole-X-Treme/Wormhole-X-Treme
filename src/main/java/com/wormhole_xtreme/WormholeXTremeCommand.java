@@ -150,13 +150,19 @@ public class WormholeXTremeCommand {
 		if (  !playerCheck(s) || allowed )
 		{
 			ArrayList<Stargate> gates = StargateManager.GetAllGates();
-			StringBuilder sb = new StringBuilder("List of all gates: ");
+			StringBuilder sb = new StringBuilder("\u00A73:: \u00A75available gates \u00A73:: \u00A77\n");
 			for ( int i = 0; i < gates.size(); i++)
 			{
-				sb.append(gates.get(i).Name);
+				sb.append("\u00A77" + gates.get(i).Name);
 				
 				if ( i != gates.size() - 1)
-					sb.append(",");
+				{
+					sb.append("\u00A78,");
+					if ( ( i + 1 ) % 3 == 0 ) 
+					{ 
+					    sb.append ( "\r\n" );
+					}
+				}
 			}
 			s.sendMessage(sb.toString());
 		}
@@ -286,7 +292,7 @@ public class WormholeXTremeCommand {
 						s.DeleteNameBlock();
 					}
 					StargateManager.RemoveStargate(s);
-					sender.sendMessage("Wormhole Removed: " + s.Name);
+					sender.sendMessage("\u00A73:: \u00a75Wormhole Removed: \u00a77" + s.Name);
 					return true;
 				}
 				else
@@ -300,19 +306,19 @@ public class WormholeXTremeCommand {
 			{
 			    if (root_command)
 			    {
-			        sender.sendMessage("Gate does not exist: " + args[0] + ". Remember proper capitalization.");
+			        sender.sendMessage("\u00A73:: \u00A75error \u00A73:: \u00A77Gate does not exist: " + args[0] + ". Remember proper capitalization.");
 			        return true;
 			    }
 			    else
 			    {
-			        sender.sendMessage("Gate does not exist: " + args[1] + ". Remember proper capitalization.");
+			        sender.sendMessage("\u00A73:: \u00A75error \u00A73:: \u00A77Gate does not exist: " + args[1] + ". Remember proper capitalization.");
 			        return true;
 			    }
 			}
 		}
 		else
 		{
-			sender.sendMessage("You did not enter a gate name");
+			sender.sendMessage("\u00A73:: \u00a75You did not enter a gate name.");
 		}
 		return false;
 	}
@@ -486,7 +492,7 @@ public class WormholeXTremeCommand {
 				}
 				else
 				{
-					p.sendMessage("Gate does not exist: " + args[1]);
+					p.sendMessage("\u00A73:: \u00A75error \u00A73:: \u00A77Gate does not exist: " + args[1]);
 				}
 			}
 		}
@@ -513,11 +519,11 @@ public class WormholeXTremeCommand {
 						s.Owner = args[2];
 					}
 					
-					sender.sendMessage("Gate: " + s.Name + " Owned by:" + s.Owner);
+					sender.sendMessage("\u00A73:: \u00a75Gate: \u00a77" + s.Name + " \u00a75Owned by: \u00a77" + s.Owner);
 				}
 				else
 				{
-					sender.sendMessage("Invalid gate name.");
+					sender.sendMessage("\u00A73:: \u00A75error \u00A73:: \u00A77Invalid gate name.");
 				}
 			}
 			else
@@ -574,14 +580,14 @@ public class WormholeXTremeCommand {
 							if ( target.IrisActive )
 							{
 								target.ToggleIrisActive();
-								p.sendMessage("IDC accepted and Iris has been deactivated.");
+								p.sendMessage("\u00A73:: \u00A75IDC accepted. Iris has been deactivated.");
 							}
 						}
 					}
 					
 					if ( start.DialStargate(target) ) 
 					{
-						p.sendMessage("Stargates connected!");
+						p.sendMessage("\u00A73:: \u00A75Stargates connected!");
 					}
 					else
 					{

@@ -75,30 +75,33 @@ public class WormholeXTremePlayerListener extends PlayerListener
 					boolean exempt = ConfigManager.getIconomyOpsExcempt();
 					if ( !exempt || !p.isOp() )
 					{
-						Account player_account = iConomy.getBank().getAccount(p.getName());
-						double balance = player_account.getBalance();
 						double cost = ConfigManager.getIconomyWormholeUseCost();
-						if ( balance >= cost)
+						if (cost != 0.0) 
 						{
-							player_account.subtract(cost);
-							player_account.save();
-							p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
-							double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
+						    Account player_account = iConomy.getBank().getAccount(p.getName());
+						    double balance = player_account.getBalance();
+						    if ( balance >= cost )
+						    {
+							    player_account.subtract(cost);
+							    player_account.save();
+							    p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
+							    double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
 							
-							if ( owner_percent != 0.0 && st.Owner != null )
-							{
-								if ( st.Owner != null && iConomy.getBank().hasAccount(st.Owner))
-								{
-									Account own_acc = iConomy.getBank().getAccount(st.Owner);
-									own_acc.add(cost * owner_percent);
-									own_acc.save();
-								}
-							}
-						}
-						else
-						{
-							p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
-							target = st.TeleportLocation;
+							    if ( owner_percent != 0.0 && st.Owner != null )
+							    {
+								    if ( st.Owner != null && iConomy.getBank().hasAccount(st.Owner))
+								    {
+									    Account own_acc = iConomy.getBank().getAccount(st.Owner);
+									    own_acc.add(cost * owner_percent);
+									    own_acc.save();
+								    }
+							    }
+						    }
+						    else
+						    {
+							    p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
+							    target = st.TeleportLocation;
+						    }
 						}
 					}
 				}

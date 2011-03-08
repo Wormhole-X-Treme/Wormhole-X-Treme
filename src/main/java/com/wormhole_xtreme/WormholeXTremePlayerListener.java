@@ -85,7 +85,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 						    {
 							    player_account.subtract(cost);
 							    player_account.save();
-							    p.sendMessage("\u00A73:: \u00A77Wormhole Use \u00A7F- \u00A72" + cost + " " + currency );
+							    p.sendMessage("\u00A73:: \u00A77Wormhole Use \u00A7F- \u00A72" + cost + " \u00A77" + currency );
 							    double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
 							
 							    if ( owner_percent != 0.0 && st.Owner != null )
@@ -100,7 +100,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 						    }
 						    else
 						    {
-							    p.sendMessage("\u00A73:: \u00A77Not enough " + currency  + "! - Requires: \u00A72" + cost + " \u00A77Available: \u00A74" + player_account.getBalance() + " " + currency);
+							    p.sendMessage("\u00A73:: \u00A77Not enough " + currency  + "! - Requires: \u00A72" + cost + " \u00A77- Available: \u00A74" + player_account.getBalance() + " \u00A77" + currency);
 							    target = st.TeleportLocation;
 						    }
 						}

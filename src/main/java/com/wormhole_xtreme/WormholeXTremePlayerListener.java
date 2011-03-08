@@ -43,12 +43,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 		Player p = event.getPlayer();
 		Location l = event.getTo();
 		Block ch = l.getWorld().getBlockAt( l.getBlockX(), l.getBlockY(), l.getBlockZ());
-		Stargate st = null;
-
-		if( ((st = StargateManager.getGateFromBlock( ch )) == null ))
-		{
-			return;
-		}
+		Stargate st = StargateManager.getGateFromBlock( ch );
 
 		if ( st != null && st.Active && st.Target != null )
 		{

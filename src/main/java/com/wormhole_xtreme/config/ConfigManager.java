@@ -29,20 +29,20 @@ public class ConfigManager
 	// Used so that I don't have to retype strings over and over again.
 	private static void setupStrings() 
 	{
-		output_strings.put(StringTypes.PERMISSION_NO, "You do not have permission to do this.");
-		output_strings.put(StringTypes.TARGET_IS_SELF, "Can't dial back to your own gate (without a solar flare).");
-		output_strings.put(StringTypes.TARGET_INVALID, "Invalid target to dial.");
-		output_strings.put(StringTypes.TARGET_IS_ACTIVE, "Target gate is currently active.");
-		output_strings.put(StringTypes.GATE_NOT_ACTIVE, "No gate activated to dial.");
-		output_strings.put(StringTypes.GATE_REMOTE_ACTIVE, "Gate remotely activated.");
-		output_strings.put(StringTypes.GATE_SHUTDOWN, "Gate successfully shutdown.");
-		output_strings.put(StringTypes.GATE_ACTIVATED, "Gate successfully activated.");
-		output_strings.put(StringTypes.GATE_DEACTIVATED, "Gate successfully deactivated.");
-		output_strings.put(StringTypes.GATE_DIALED, "Gate successfully dialed.");
-		output_strings.put(StringTypes.CONSTRUCT_SUCCESS, "Gate successfully constructed.");
-		output_strings.put(StringTypes.CONSTRUCT_NAME_INVALID, "Gate name invalid.");
-		output_strings.put(StringTypes.CONSTRUCT_NAME_TOO_LONG, "Gate name too long.");
-		output_strings.put(StringTypes.REQUEST_INVALID, "Invalid Request.");
+		output_strings.put(StringTypes.PERMISSION_NO, "\u00A73:: \u00A75error \u00A73:: \u00A77You lack the permissions to do this.");
+		output_strings.put(StringTypes.TARGET_IS_SELF, "\u00A73:: \u00A75error \u00A73:: \u00A77Can't dial own gate without solar flare");
+		output_strings.put(StringTypes.TARGET_INVALID, "\u00A73:: \u00A75error \u00A73:: \u00A77Invalid remote gate target.");
+		output_strings.put(StringTypes.TARGET_IS_ACTIVE, "\u00A73:: \u00A75error \u00A73:: \u00A77Target gate is currently active.");
+		output_strings.put(StringTypes.GATE_NOT_ACTIVE, "\u00A73:: \u00A75error \u00A73:: \u00A77No gate activated to dial.");
+		output_strings.put(StringTypes.GATE_REMOTE_ACTIVE, "\u00A73:: \u00A75error \u00A73:: \u00A77Gate remotely activated.");
+		output_strings.put(StringTypes.GATE_SHUTDOWN, "\u00A73:: \u00A77Gate successfully shutdown.");
+		output_strings.put(StringTypes.GATE_ACTIVATED, "\u00A73:: \u00A77Gate successfully activated.");
+		output_strings.put(StringTypes.GATE_DEACTIVATED, "\u00A73:: \u00A77Gate successfully deactivated.");
+		output_strings.put(StringTypes.GATE_DIALED, "\u00A73:: \u00A77Gate successfully dialed.");
+		output_strings.put(StringTypes.CONSTRUCT_SUCCESS, "\u00A73:: \u00A77Gate successfully constructed.");
+		output_strings.put(StringTypes.CONSTRUCT_NAME_INVALID, "\u00A73:: \u00A75error \u00A73:: \u00A77Gate name invalid.");
+		output_strings.put(StringTypes.CONSTRUCT_NAME_TOO_LONG, "\u00A73:: \u00A75error \u00A73:: \u00A77Gate name too long.");
+		output_strings.put(StringTypes.REQUEST_INVALID, "\u00A73:: \u00A75error \u00A73:: \u00A77Invalid Request.");
 	}
 	
 	public static void setConfigValue(ConfigKeys key, Object value)
@@ -201,7 +201,7 @@ public class ConfigManager
 		return Material.GLOWSTONE;
 	}
 	
-	/*
+	/**
 	 * Get iConomy Op Excempt settings from ConfigKeys. Return sane boolean value.
 	 * Return default value if key is missing or broken.
 	 */
@@ -218,7 +218,7 @@ public class ConfigManager
 		}
 	}
 	
-	/*
+	/**
 	 * Get iConomy wormhole use cost settings from ConfigKeys. Return sane integer value.
 	 * Return default value if key is missing or broken.
 	 */
@@ -236,7 +236,7 @@ public class ConfigManager
 		}
 	}
 	
-	/*
+	/**
 	 * Get iConomy wormhole owner percent settings from ConfigKeys. Return sane double value.
 	 * Return default value if key is missing or broken.
 	 */
@@ -254,7 +254,7 @@ public class ConfigManager
 		}
 	}
 	
-	/*
+	/**
 	 * Get iConomy wormhole build cost settings from ConfigKeys. Return sane int value.
 	 * Return default value if key is missing or broken.
 	 */
@@ -272,7 +272,7 @@ public class ConfigManager
 		}
 	}
 	
-	/*
+	/**
 	 * Get Built in permissions enabled settings from ConfigKeys. Return sane boolean value.
 	 * Return default value if key is missing or broken.
 	 */
@@ -289,7 +289,7 @@ public class ConfigManager
 		}
 	}
 	
-	/*
+	/**
 	 * Get Built in default permission level settings from ConfigKeys. Return sane PermissionLevel.
 	 * Return default value if key is missing or broken.
 	 */
@@ -306,7 +306,7 @@ public class ConfigManager
 		}
 	}
 	
-	/*
+	/**
 	 * Get Log Level setting from ConfigKeys. Return sane Level value.
 	 * Return default value if key is missing or broken.
 	 */
@@ -322,6 +322,24 @@ public class ConfigManager
 			return Level.INFO;
 		}
 	}
+	
+	/*
+	 * Get Built in permissions enabled settings from ConfigKeys. Return sane boolean value.
+	 * Return default value if key is missing or broken.
+	 */
+	public static boolean getWormholeUseIsTeleport()
+	{
+		Setting bipe;
+		if ((bipe = ConfigManager.configurations.get(ConfigKeys.WORMHOLE_USE_IS_TELEPORT)) != null)
+		{
+			return bipe.getBooleanValue();
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
 	public enum StringTypes
 	{
 		PERMISSION_NO,

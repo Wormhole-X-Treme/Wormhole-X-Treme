@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import com.nijiko.coelho.iConomy.iConomy;
 import com.nijiko.coelho.iConomy.system.Account;
 import com.wormhole_xtreme.config.ConfigManager;
+import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
 
@@ -29,7 +30,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	{ 
 		//plugin = instance; 
 		wxt = instance;
-	} 
+	}
  
 
 //	private void PrintHelpFile(Player player) 
@@ -48,9 +49,28 @@ public class WormholeXTremePlayerListener extends PlayerListener
 		if ( st != null && st.Active && st.Target != null )
 		{
 			wxt.prettyLog(Level.FINE, false, "Player in gate:" + st.Name + " gate Active: " + st.Active + " Target Gate: " + st.Target.Name);
+			
+			// If use permission is also teleport permission we should check here:
+			if ( ConfigManager.getWormholeUseIsTeleport() )
+			{
+				if ( st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.sign") )
+				{
+					// This means that the user doesn't have permission to use sign gates.
+					p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+					return;
+				}
+				else if ( !st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.dialer"))
+				{
+					// This means that the user doesn't have access to dialer gates
+					p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+					return;
+				}
+			}
+			
 			if ( st.Target.IrisActive )
 			{
-				p.sendMessage("Remote Iris is active - unable to teleport!");
+				p.sendMessage("\u00A73:: \u00A75error \u00A73:: \u00A77Remote Iris is locked!");
+				//p.sendMessage("Remote Iris is active - unable to teleport!");
 				event.setFrom(st.TeleportLocation);
 				event.setTo(st.TeleportLocation);
 				p.teleportTo(st.TeleportLocation);
@@ -68,11 +88,13 @@ public class WormholeXTremePlayerListener extends PlayerListener
 					{
 						Account player_account = iConomy.getBank().getAccount(p.getName());
 						double balance = player_account.getBalance();
+						String currency = iConomy.getBank().getCurrency();
 					    if ( balance >= cost )
 					    {
 						    player_account.subtract(cost);
 						    player_account.save();
-						    p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
+						    p.sendMessage("\u00A73:: \u00A77Wormhole Use \u00A7F- \u00A72" + cost + " \u00A77" + currency );
+						    //p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
 						    double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
 						
 						    if ( owner_percent != 0.0 && st.Owner != null )
@@ -87,7 +109,8 @@ public class WormholeXTremePlayerListener extends PlayerListener
 					    }
 					    else
 					    {
-						    p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
+						    p.sendMessage("\u00A73:: \u00A77Not enough " + currency  + "! - Requires: \u00A72" + cost + " \u00A77- Available: \u00A74" + player_account.getBalance() + " \u00A77" + currency);
+						    //p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
 						    target = st.TeleportLocation;
 					    }
 					}

@@ -150,21 +150,26 @@ public class WormholeXTremeCommand {
 		if (  !playerCheck(s) || allowed )
 		{
 			ArrayList<Stargate> gates = StargateManager.GetAllGates();
-			StringBuilder sb = new StringBuilder("\u00A73:: \u00A75available gates \u00A73:: \u00A77\n");
+			s.sendMessage("\u00A73:: \u00A75available gates \u00A73::");
+			StringBuilder sb = new StringBuilder();
 			for ( int i = 0; i < gates.size(); i++)
 			{
 				sb.append("\u00A77" + gates.get(i).Name);
-				
 				if ( i != gates.size() - 1)
 				{
-					sb.append("\u00A78,");
-					if ( ( i + 1 ) % 3 == 0 ) 
-					{ 
-					    sb.append ( "\r\n" );
-					}
+					sb.append("\u00A78, ");
+				}
+				if (sb.toString().length() >= 68 )
+				{
+				    s.sendMessage(sb.toString());
+				    sb = new StringBuilder();
 				}
 			}
-			s.sendMessage(sb.toString());
+			if (sb.toString() != "")
+			{
+			    s.sendMessage(sb.toString());
+			}
+			
 		}
 	}
 	private static boolean doGateComplete(Player p, String[] args, boolean root_command)

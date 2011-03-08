@@ -29,20 +29,20 @@ public class ConfigManager
 	// Used so that I don't have to retype strings over and over again.
 	private static void setupStrings() 
 	{
-		output_strings.put(StringTypes.PERMISSION_NO, "\u00A73:: \u00A75error \u00A73:: You lack the permissions to do this.");
-		output_strings.put(StringTypes.TARGET_IS_SELF, "\u00A73:: \u00A75error \u00A73:: Can't dial own gate without solar flare");
-		output_strings.put(StringTypes.TARGET_INVALID, "\u00A73:: \u00A75error \u00A73:: Invalid target to dial.");
-		output_strings.put(StringTypes.TARGET_IS_ACTIVE, "\u00A73:: \u00A75error \u00A73:: Target gate is currently active.");
-		output_strings.put(StringTypes.GATE_NOT_ACTIVE, "\u00A73:: \u00A75error \u00A73:: No gate activated to dial.");
-		output_strings.put(StringTypes.GATE_REMOTE_ACTIVE, "\u00A73:: \u00A75error \u00A73:: Gate remotely activated.");
-		output_strings.put(StringTypes.GATE_SHUTDOWN, "\u00A73:: \u00A75Gate successfully shutdown.");
-		output_strings.put(StringTypes.GATE_ACTIVATED, "\u00A73:: \u00A75Gate successfully activated.");
-		output_strings.put(StringTypes.GATE_DEACTIVATED, "\u00A73:: \u00A75Gate successfully deactivated.");
-		output_strings.put(StringTypes.GATE_DIALED, "\u00A73:: \u00A75Gate successfully dialed.");
-		output_strings.put(StringTypes.CONSTRUCT_SUCCESS, "\u00A73:: \u00A75Gate successfully constructed.");
-		output_strings.put(StringTypes.CONSTRUCT_NAME_INVALID, "\u00A73:: \u00A75error \u00A73:: Gate name invalid.");
-		output_strings.put(StringTypes.CONSTRUCT_NAME_TOO_LONG, "\u00A73:: \u00A75error \u00A73:: Gate name too long.");
-		output_strings.put(StringTypes.REQUEST_INVALID, "\u00A73:: \u00A75error \u00A73:: Invalid Request.");
+		output_strings.put(StringTypes.PERMISSION_NO, "\u00A73:: \u00A75error \u00A73:: \u00A77You lack the permissions to do this.");
+		output_strings.put(StringTypes.TARGET_IS_SELF, "\u00A73:: \u00A75error \u00A73:: \u00A77Can't dial own gate without solar flare");
+		output_strings.put(StringTypes.TARGET_INVALID, "\u00A73:: \u00A75error \u00A73:: \u00A77Invalid remote gate target.");
+		output_strings.put(StringTypes.TARGET_IS_ACTIVE, "\u00A73:: \u00A75error \u00A73:: \u00A77Target gate is currently active.");
+		output_strings.put(StringTypes.GATE_NOT_ACTIVE, "\u00A73:: \u00A75error \u00A73:: \u00A77No gate activated to dial.");
+		output_strings.put(StringTypes.GATE_REMOTE_ACTIVE, "\u00A73:: \u00A75error \u00A73:: \u00A77Gate remotely activated.");
+		output_strings.put(StringTypes.GATE_SHUTDOWN, "\u00A73:: \u00A77Gate successfully shutdown.");
+		output_strings.put(StringTypes.GATE_ACTIVATED, "\u00A73:: \u00A77Gate successfully activated.");
+		output_strings.put(StringTypes.GATE_DEACTIVATED, "\u00A73:: \u00A77Gate successfully deactivated.");
+		output_strings.put(StringTypes.GATE_DIALED, "\u00A73:: \u00A77Gate successfully dialed.");
+		output_strings.put(StringTypes.CONSTRUCT_SUCCESS, "\u00A73:: \u00A77Gate successfully constructed.");
+		output_strings.put(StringTypes.CONSTRUCT_NAME_INVALID, "\u00A73:: \u00A75error \u00A73:: \u00A77Gate name invalid.");
+		output_strings.put(StringTypes.CONSTRUCT_NAME_TOO_LONG, "\u00A73:: \u00A75error \u00A73:: \u00A77Gate name too long.");
+		output_strings.put(StringTypes.REQUEST_INVALID, "\u00A73:: \u00A75error \u00A73:: \u00A77Invalid Request.");
 	}
 	
 	public static void setConfigValue(ConfigKeys key, Object value)

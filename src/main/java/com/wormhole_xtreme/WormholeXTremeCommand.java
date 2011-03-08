@@ -619,7 +619,15 @@ public class WormholeXTremeCommand {
 			    {
 			        mp = message_parts[1];
 			    } 
-				if ( p.isOp() || WormholeXTreme.Permissions.has(p, "wormhole.config") )
+			    boolean allowed = false;
+	            if (WormholeXTreme.Permissions != null)
+	            {
+	                if (WormholeXTreme.Permissions.has(p, "wormhole.config"))
+	                {
+	                    allowed = true;
+	                }
+	            }
+				if ( p.isOp() || allowed )
 				{
 					StargateShape shape = StargateHelper.getShape(mp);
 					if  ( shape != null)

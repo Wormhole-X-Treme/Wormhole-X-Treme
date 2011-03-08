@@ -44,87 +44,80 @@ public class WormholeXTremePlayerListener extends PlayerListener
 		Player p = event.getPlayer();
 		Location l = event.getTo();
 		Block ch = l.getWorld().getBlockAt( l.getBlockX(), l.getBlockY(), l.getBlockZ());
-		Material ch_m = ch.getType();
 		Stargate st = null;
-		
-		if ( ch_m == ConfigManager.getPortalMaterial() )
+
+		if( ((st = StargateManager.getGateFromBlock( ch )) == null ))
 		{
-			if( ((st = StargateManager.getGateFromBlock( ch )) == null ))
+			return;
+		}
+
+		if ( st != null && st.Active && st.Target != null )
+		{
+			wxt.prettyLog(Level.FINE, false, "Player in gate:" + st.Name + " gate Active: " + st.Active + " Target Gate: " + st.Target.Name);
+			if ( st.Target.IrisActive )
 			{
-				//wxt.prettyLog(Level.FINER, false, "Player entered portal material but no gate was found.");
+				p.sendMessage("Remote Iris is active - unable to teleport!");
+				event.setFrom(st.TeleportLocation);
+				event.setTo(st.TeleportLocation);
+				p.teleportTo(st.TeleportLocation);
 				return;
 			}
-			
-		    wxt.prettyLog(Level.FINE, false, p.getName() + " entered portal material.");
-
-			if ( st != null && st.Active && st.Target != null )
+		
+			Location target = st.Target.TeleportLocation;
+			if ( WormholeXTreme.Iconomy != null )
 			{
-				wxt.prettyLog(Level.FINE, false, "Player in gate:" + st.Name + " gate Active: " + st.Active + " Target Gate: " + st.Target.Name);
-				if ( st.Target.IrisActive )
+				boolean exempt = ConfigManager.getIconomyOpsExcempt();
+				if ( !exempt || !p.isOp() )
 				{
-					p.sendMessage("Remote Iris is active - unable to teleport!");
-					event.setFrom(st.TeleportLocation);
-					event.setTo(st.TeleportLocation);
-					p.teleportTo(st.TeleportLocation);
-					return;
-				}
-			
-				Location target = st.Target.TeleportLocation;
-				if ( WormholeXTreme.Iconomy != null )
-				{
-					boolean exempt = ConfigManager.getIconomyOpsExcempt();
-					if ( !exempt || !p.isOp() )
+					Account player_account = iConomy.getBank().getAccount(p.getName());
+					double balance = player_account.getBalance();
+					double cost = ConfigManager.getIconomyWormholeUseCost();
+					if ( balance >= cost)
 					{
-						Account player_account = iConomy.getBank().getAccount(p.getName());
-						double balance = player_account.getBalance();
-						double cost = ConfigManager.getIconomyWormholeUseCost();
-						if ( balance >= cost)
+						player_account.subtract(cost);
+						player_account.save();
+						p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
+						double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
+						
+						if ( owner_percent != 0.0 && st.Owner != null )
 						{
-							player_account.subtract(cost);
-							player_account.save();
-							p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
-							double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
-							
-							if ( owner_percent != 0.0 && st.Owner != null )
+							if ( st.Owner != null && iConomy.getBank().hasAccount(st.Owner))
 							{
-								if ( st.Owner != null && iConomy.getBank().hasAccount(st.Owner))
-								{
-									Account own_acc = iConomy.getBank().getAccount(st.Owner);
-									own_acc.add(cost * owner_percent);
-									own_acc.save();
-								}
+								Account own_acc = iConomy.getBank().getAccount(st.Owner);
+								own_acc.add(cost * owner_percent);
+								own_acc.save();
 							}
 						}
-						else
-						{
-							p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
-							target = st.TeleportLocation;
-						}
+					}
+					else
+					{
+						p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
+						target = st.TeleportLocation;
 					}
 				}
-				
-					//Block target_block = target.getWorld().getBlockAt(target.getBlockX(), target.getBlockY(), target.getBlockZ());
-					//while ( target_block.getType() != Material.AIR && target_block.getType() != Material.WATER  )
-					//{
-					//	target_block = target_block.getFace(BlockFace.UP);
-					//	target.setY(target.getY() + 1.0);
-					//}
-				
-				event.setFrom(target);
-				event.setTo(target);
-				p.teleportTo(target);
-				event.setCancelled(true);
-				if ( target == st.Target.TeleportLocation )
-					wxt.prettyLog(Level.INFO,false, p.getDisplayName() + " used a wormhole to go to: " + st.Target.Name);
-				
-				if ( ConfigManager.getTimeoutShutdown() == 0 )
-				{
-					st.ShutdownStargate();
-				}
 			}
-			else if ( st != null )
-				wxt.prettyLog(Level.FINE, false, "Player entered gate but wasn't active or didn't have a target.");
+			
+				//Block target_block = target.getWorld().getBlockAt(target.getBlockX(), target.getBlockY(), target.getBlockZ());
+				//while ( target_block.getType() != Material.AIR && target_block.getType() != Material.WATER  )
+				//{
+				//	target_block = target_block.getFace(BlockFace.UP);
+				//	target.setY(target.getY() + 1.0);
+				//}
+			
+			event.setFrom(target);
+			event.setTo(target);
+			p.teleportTo(target);
+			event.setCancelled(true);
+			if ( target == st.Target.TeleportLocation )
+				wxt.prettyLog(Level.INFO,false, p.getDisplayName() + " used a wormhole to go to: " + st.Target.Name);
+			
+			if ( ConfigManager.getTimeoutShutdown() == 0 )
+			{
+				st.ShutdownStargate();
+			}
 		}
+		else if ( st != null )
+			wxt.prettyLog(Level.FINE, false, "Player entered gate but wasn't active or didn't have a target.");
 	}
 } 
  

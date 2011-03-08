@@ -1,5 +1,9 @@
 Changes 0.xxx
 
+- Added pretty format messages! [dh/gyoza]
+
+- Revamped the wormhole list and how it displays items. 
+
 - Wormhole use cost of 0.0 no longer tells users that they were charged 0.0 when 
   using a gate. Also no longer bothers doing the iConomy calls with a 0.0 value.
   

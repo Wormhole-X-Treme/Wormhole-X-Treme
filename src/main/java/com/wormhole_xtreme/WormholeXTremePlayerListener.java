@@ -62,7 +62,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 				wxt.prettyLog(Level.FINE, false, "Player in gate:" + st.Name + " gate Active: " + st.Active + " Target Gate: " + st.Target.Name);
 				if ( st.Target.IrisActive )
 				{
-					p.sendMessage("Remote Iris is active - unable to teleport!");
+					p.sendMessage("\u00A73:: \u00A75error \u00A73:: \u00A77Remote Iris is locked!");
 					event.setFrom(st.TeleportLocation);
 					event.setTo(st.TeleportLocation);
 					p.teleportTo(st.TeleportLocation);
@@ -80,11 +80,12 @@ public class WormholeXTremePlayerListener extends PlayerListener
 						{
 						    Account player_account = iConomy.getBank().getAccount(p.getName());
 						    double balance = player_account.getBalance();
+						    String currency = iConomy.getBank().getCurrency();
 						    if ( balance >= cost )
 						    {
 							    player_account.subtract(cost);
 							    player_account.save();
-							    p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
+							    p.sendMessage("\u00A73:: \u00A75iConomy \u00A73:: \u00A7Wormhole Use \u00A7f- \u00A72" + cost + " " + currency + "\u00A74-" );
 							    double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
 							
 							    if ( owner_percent != 0.0 && st.Owner != null )
@@ -99,7 +100,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 						    }
 						    else
 						    {
-							    p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
+							    p.sendMessage("\u00A73:: \u00A75iConomy \u00A73:: \u00A7Not enough " + currency  + "! - Requires: \u00A72" + cost + " \u00A77Your Balance: \u00A74" + player_account.getBalance() + currency);
 							    target = st.TeleportLocation;
 						    }
 						}

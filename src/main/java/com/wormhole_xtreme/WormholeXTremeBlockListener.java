@@ -317,10 +317,10 @@ public class WormholeXTremeBlockListener extends BlockListener
 				{
 					if ( new_gate.IsSignPowered )
 					{
-						p.sendMessage("Stargate Design Valid with Sign Nav.");
+						p.sendMessage("\u00A73:: \u00A75completed \u00A73:: \u00A77Stargate Design Valid with Sign Nav.");
 						if ( new_gate.Name.equals("") )
 						{
-							p.sendMessage("Stargate name invalid. Replace sign and try again.");
+							p.sendMessage("\u00A73:: \u00A74ERROR \u00A73:: \u00A77Stargate name invalid. Replace sign and try again.");
 							p.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_INVALID));
 						}
 						else
@@ -338,9 +338,8 @@ public class WormholeXTremeBlockListener extends BlockListener
 					else
 					{
 						// Print to player that it was successful!
-						p.sendMessage("Stargate Design Valid.");
-						p.sendMessage("To complete type: /wormhole complete <name> idc=[IDC] net=[NET]");
-						p.sendMessage("IDC and NET are optional.");
+						p.sendMessage("\u00A73:: \u00A75Valid Stargate Design! \u00A73:: \u00A7B<required> \u00A78[optional]");
+						p.sendMessage("\u00A73:: \u00A77Type \'\u00A7f/wxcomplete \u00A7B<name> \u00A78[idc=IDC] [net=NET]\' to complete.");
 						// Add gate to unnamed gates.
 						StargateManager.AddIncompleteStargate(p, new_gate);
 					}
@@ -426,7 +425,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 					{
 						if ( s.DialStargate(s.SignTarget) )
 						{
-							p.sendMessage("Stargates connected!");
+							p.sendMessage("\u00A73:: \u00A75Stargates connected!");
 						}
 						else
 						{
@@ -447,7 +446,8 @@ public class WormholeXTremeBlockListener extends BlockListener
 			{
 				//Activate Stargate
 				p.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_ACTIVATED));
-				p.sendMessage("To dial type: /dial <gatename>");
+				p.sendMessage("\u00A73:: \u00A75Chevrons Locked! \u00A73:: \u00A7B<required> \u00A78[optional]");
+				p.sendMessage("\u00A73:: \u00A77Type \u00A7f/dial \u00A7b<gatename> \u00A78[idc] \u00A78[net]");
 				StargateManager.AddActivatedStargate(p, s);
 				s.StartActivationTimer(p);
 				s.LightStargate();

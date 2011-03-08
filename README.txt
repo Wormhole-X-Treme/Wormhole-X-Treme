@@ -27,6 +27,7 @@ Permissions Plugin Nodes:
 
 wormhole.use.sign - lets a user use sign gates.
 wormhole.use.dialer - lets a user use /dial gates
+wormhole.use.compass - lets a user use /wxcompass (/wormhole compass)
 wormhole.remove.own - lets a user remove a gate that they own
 wormhole.remove.all - lets a user remove any gate
 wormhole.build - Able to build new wormholes

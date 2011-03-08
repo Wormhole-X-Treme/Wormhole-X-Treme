@@ -90,33 +90,48 @@ public class WormholeXTremeCommand {
 	
 	private static void doCompassPoint(Player p)
 	{
-		Location current = p.getLocation();
-		// HaNieL from Bukkit.org gave me this!
-		ArrayList<Stargate> gates = StargateManager.GetAllGates();
-        double man = Double.MAX_VALUE;
-        Stargate closest = null;
-        
-        for(Stargate s : gates)
+	    boolean allowed = false;
+        if (WormholeXTreme.Permissions != null)
         {
-            Location t = s.TeleportLocation;
-            double distance = Math.sqrt( Math.pow(current.getX() - t.getX(), 2) + 
-            							Math.pow(current.getY() - t.getY(), 2) +
-            							Math.pow(current.getZ() - t.getZ(), 2) );
-            if(distance < man)
+            if (WormholeXTreme.Permissions.has(p, "wormhole.use.compass"))
             {
-                man = distance;
-                closest = s;
+                allowed = true;
             }
         }
+        if (p.isOp() || allowed )
+        {
+            Location current = p.getLocation();
+            // HaNieL from Bukkit.org gave me this!
+            ArrayList<Stargate> gates = StargateManager.GetAllGates();
+            double man = Double.MAX_VALUE;
+            Stargate closest = null;
         
-        if(closest != null)
-        {
-            p.setCompassTarget(closest.TeleportLocation);
-            p.sendMessage("Compass set to wormhole: " + closest.Name);
+            for(Stargate s : gates)
+            {
+                Location t = s.TeleportLocation;
+                double distance = Math.sqrt( Math.pow(current.getX() - t.getX(), 2) + 
+                                             Math.pow(current.getY() - t.getY(), 2) +
+                                             Math.pow(current.getZ() - t.getZ(), 2) );
+                if(distance < man)
+                {
+                    man = distance;
+                    closest = s;
+                }
+            }
+        
+            if(closest != null)
+            {
+                p.setCompassTarget(closest.TeleportLocation);
+                p.sendMessage("Compass set to wormhole: " + closest.Name);
+            }
+            else
+            {
+                p.sendMessage("No wormholes to track!");
+            }
         }
-        else
+        else 
         {
-        	p.sendMessage("No wormholes to track!");
+            p.sendMessage( ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
         }
 	}
 	

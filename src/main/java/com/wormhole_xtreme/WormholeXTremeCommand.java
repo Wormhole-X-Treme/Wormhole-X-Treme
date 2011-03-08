@@ -533,7 +533,7 @@ public class WormholeXTremeCommand {
 			boolean allowed = false;
 			if (WormholeXTreme.Permissions != null)
 			{
-				if (WormholeXTreme.Permissions.has(p, "wormhole.use.dialer"))
+				if (WormholeXTreme.Permissions.has(p, "wormhole.use.dialer") && (start.Network.netName == "Public" || (start.Network.netName != "Public" && WormholeXTreme.Permissions.has(p, "wormhole.network.use." + start.Network.netName))))
 				{
 					allowed = true;
 				}
@@ -546,7 +546,7 @@ public class WormholeXTremeCommand {
 				}
 			}
 			
-			if ( allowed )
+			if ( p.isOp() || allowed )
 			{
 				if ( !start.Name.equals(args[0]) )
 				{

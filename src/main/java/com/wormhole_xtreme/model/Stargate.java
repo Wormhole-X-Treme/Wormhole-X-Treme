@@ -354,7 +354,8 @@ public class Stargate
 			{
 				LightStargate();
 			}
-			if ( !this.IrisActive )
+			// Show water if you are dialing out OR if the iris isn't active
+			if ( this.Target != null || !this.IrisActive )
 			{
 				FillGateWater();
 				
@@ -589,7 +590,14 @@ public class Stargate
 		}
 		else
 		{
-			EmptyGateWater();
+			if ( Active )
+			{
+				FillGateWater();
+			}
+			else
+			{
+				EmptyGateWater();
+			}
 		}		
 	}
 	

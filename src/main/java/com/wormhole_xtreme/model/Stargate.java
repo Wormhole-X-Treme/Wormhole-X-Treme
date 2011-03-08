@@ -562,7 +562,7 @@ public class Stargate
 			this.IrisDeactivationCode = idc;
 			
 			// 3. Set Iris is not currently active.
-			this.IrisActive = false;
+			this.SetIrisActive(false);
 		}
 	}
 	

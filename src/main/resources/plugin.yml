@@ -58,3 +58,9 @@ commands:
             <GateName> The name to give new Stargate.
             [IDC] Optional password to give Stargate.
             [Net] Optional network for Stargate.
+            
+   wxidc:
+     description: Gets or sets a gates IDC code.
+     usage: |
+            /<command> <GateName> <optional_set_idc>
+            Must be either owner or have wormhole.config

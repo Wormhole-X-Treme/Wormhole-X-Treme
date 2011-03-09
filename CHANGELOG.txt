@@ -32,6 +32,9 @@ Changes 0.xxx
 
 - /wormhole go now has the permissions node 'wormhole.go'
 
+- Check for WORMHOLE_USE_IS_TELEPORT in conjunction with 'wormhole.network.use.*'
+  permissions node to disallow users who don't meet permissions requirements.
+
 
 Changes 0.755 (3/4/11 @ 16:51PST):
 

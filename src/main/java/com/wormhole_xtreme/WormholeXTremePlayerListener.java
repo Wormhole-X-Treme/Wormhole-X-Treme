@@ -45,23 +45,29 @@ public class WormholeXTremePlayerListener extends PlayerListener
 		Location l = event.getTo();
 		Block ch = l.getWorld().getBlockAt( l.getBlockX(), l.getBlockY(), l.getBlockZ());
 		Stargate st = StargateManager.getGateFromBlock( ch );
+		 
+		
 
 		if ( st != null && st.Active && st.Target != null )
 		{
-			wxt.prettyLog(Level.FINE, false, "Player in gate:" + st.Name + " gate Active: " + st.Active + " Target Gate: " + st.Target.Name);
+		    String gatenetwork;
+		    if (st.Network != null )
+		    {
+		        gatenetwork = st.Network.netName;
+		    }
+		    else
+		    {
+		        gatenetwork = "Public";
+		    }
+			wxt.prettyLog(Level.FINE, false, "Player in gate:" + st.Name + " gate Active: " + st.Active + " Target Gate: " + st.Target.Name + " Network: " + gatenetwork );
 			
-			// If use permission is also teleport permission we should check here:
-			if ( ConfigManager.getWormholeUseIsTeleport() )
+			if ( WormholeXTreme.Permissions != null)
 			{
-				if ( st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.sign") )
+			    // If use permission is also teleport permission we should check here:
+				if (ConfigManager.getWormholeUseIsTeleport() && ((st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.sign")) || ( !st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.dialer"))
+				    || (gatenetwork != "Public" && WormholeXTreme.Permissions.has(p, "wormhole.network.use." + gatenetwork))))
 				{
-					// This means that the user doesn't have permission to use sign gates.
-					p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
-					return;
-				}
-				else if ( !st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.dialer"))
-				{
-					// This means that the user doesn't have access to dialer gates
+					// This means that the user doesn't have permission to use.
 					p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
 					return;
 				}

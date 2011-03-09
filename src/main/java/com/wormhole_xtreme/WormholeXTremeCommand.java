@@ -4,6 +4,8 @@
 package com.wormhole_xtreme;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -213,25 +215,40 @@ public class WormholeXTremeCommand {
 						}
 					}
 				}
-				
-				if ( dup_name == null )
-				{
-				    boolean success = StargateManager.CompleteStargate(p, name, idc, network);
+				boolean allowed = false;
+	            if (WormholeXTreme.Permissions != null)
+	            {
+	                if (WormholeXTreme.Permissions.has(p, "wormhole.build") && ((network == "" || network == "Public" ) || (network != "" && WormholeXTreme.Permissions.has(p, "wormhole.network.build." + network))))
+	                {
+	                    allowed = true;
+	                }
+	            }
+	            if (p.isOp() || allowed )
+	            {
+	                if ( dup_name == null )
+				    {
+				        boolean success = StargateManager.CompleteStargate(p, name, idc, network);
 
-					if ( success )
-					{
-						p.sendMessage( ConfigManager.output_strings.get(StringTypes.CONSTRUCT_SUCCESS) );
-					}
-					else
-					{
-						p.sendMessage( "Construction Failed!?" );
-					}
-				}
-				else
-				{
-					p.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_TAKEN));
-				}
-				return true;
+					    if ( success )
+					    {
+						    p.sendMessage( ConfigManager.output_strings.get(StringTypes.CONSTRUCT_SUCCESS) );
+					    }
+					    else
+					    {
+						    p.sendMessage( "Construction Failed!?" );
+					    }
+				    }
+				    else
+				    {
+					    p.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_TAKEN));
+				    }
+				    return true;
+	            }
+	            else 
+	            {
+	                p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+                    return true;
+	            }
 			}
 			else
 			{
@@ -540,11 +557,21 @@ public class WormholeXTremeCommand {
 	{
 		Stargate start = StargateManager.RemoveActivatedStargate(p);
 		if (start != null)
-		{
+		{			    
+		    String startnetwork;
+			if (start.Network != null)
+			{
+			    startnetwork = start.Network.netName;
+			}
+			else 
+			{
+			    startnetwork = "Public";
+			}
 			boolean allowed = false;
 			if (WormholeXTreme.Permissions != null)
 			{
-				if (WormholeXTreme.Permissions.has(p, "wormhole.use.dialer") && (start.Network.netName == "Public" || (start.Network.netName != "Public" && WormholeXTreme.Permissions.has(p, "wormhole.network.use." + start.Network.netName))))
+			    WormholeXTreme.ThisPlugin.prettyLog(Level.FINEST, false, "Dial Start - Gate: \""+ start.Name +" \"Network: \"" + startnetwork + "\"");
+				if (WormholeXTreme.Permissions.has(p, "wormhole.use.dialer") && (startnetwork == "Public" || (startnetwork != "Public" && WormholeXTreme.Permissions.has(p, "wormhole.network.use." + startnetwork))))
 				{
 					allowed = true;
 				}
@@ -565,14 +592,27 @@ public class WormholeXTremeCommand {
 					// No target
 					if ( target == null)
 					{
+					    start.StopActivationTimer(p);
+					    start.DeActivateStargate();
 						start.UnLightStargate();
 						p.sendMessage(ConfigManager.output_strings.get(StringTypes.TARGET_INVALID));
 						return;
 					}
-					
-					// Not on same network
-					if ( start.Network != null && !target.Network.netName.equals(start.Network.netName) )
+					String targetnetwork;
+					if (target.Network.netName != null)
 					{
+					    targetnetwork = target.Network.netName;
+					}
+					else 
+					{
+					    targetnetwork = "Public";
+					}
+					WormholeXTreme.ThisPlugin.prettyLog(Level.FINEST, false, "Dial Target - Gate: \"" + target.Name + "\" Network: \"" + targetnetwork + "\"");
+					// Not on same network
+					if (!startnetwork.equals(targetnetwork))
+					{
+					    start.StopActivationTimer(p);
+                        start.DeActivateStargate();
 						start.UnLightStargate();
 						p.sendMessage(ConfigManager.output_strings.get(StringTypes.TARGET_INVALID) + " Not on same network.");
 						return;
@@ -596,12 +636,16 @@ public class WormholeXTremeCommand {
 					}
 					else
 					{
+					    start.StopActivationTimer(p);
+                        start.DeActivateStargate();
 						start.UnLightStargate();
 						p.sendMessage(ConfigManager.output_strings.get(StringTypes.TARGET_IS_ACTIVE));
 					}
 				}
 				else
 				{
+				    start.StopActivationTimer(p);
+                    start.DeActivateStargate();
 					start.UnLightStargate();
 					p.sendMessage(ConfigManager.output_strings.get(StringTypes.TARGET_IS_SELF));
 				}

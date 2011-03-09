@@ -1,4 +1,4 @@
-Changes 0.xxx
+Changes 0.800
 
 - Added pretty format messages! [dh/gyoza]
 

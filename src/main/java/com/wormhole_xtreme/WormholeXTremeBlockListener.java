@@ -55,10 +55,19 @@ public class WormholeXTremeBlockListener extends BlockListener
 			
 			if ( s != null )
 			{
+			    String signnetwork;
+	            if (s.Network != null )
+	            {
+	                signnetwork = s.Network.netName;
+	            }
+	            else
+	            {
+	                signnetwork = "Public";
+	            }
 				Boolean allowed = false;
 				if ( WormholeXTreme.Permissions != null )
 				{
-					if ( WormholeXTreme.Permissions.has(p, "wormhole.use.sign"))
+					if ( WormholeXTreme.Permissions.has(p, "wormhole.use.sign") && (signnetwork.equals("Public") || (!signnetwork.equals("Public") && WormholeXTreme.Permissions.has(p, "wormhole.network.use." + signnetwork))))
 						allowed = true;
 				}
 				else 

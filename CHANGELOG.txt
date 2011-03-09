@@ -28,7 +28,9 @@ Changes 0.xxx
     are enabled. The network 'Public' is always assumed to be just that. Public.
   
 - /dial now properly kills timers associated with start gate when failing a dial.
-  Instead of just the lights going out, and everything waiting for timers to finish. 
+  Instead of just the lights going out, and everything waiting for timers to finish.
+
+- /wormhole go now has the permissions node 'wormhole.go'
 
 
 Changes 0.755 (3/4/11 @ 16:51PST):

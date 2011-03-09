@@ -218,7 +218,7 @@ public class WormholeXTremeCommand {
 				boolean allowed = false;
 	            if (WormholeXTreme.Permissions != null)
 	            {
-	                if (WormholeXTreme.Permissions.has(p, "wormhole.build") && ((network == "" || network == "Public" ) || (network != "" && WormholeXTreme.Permissions.has(p, "wormhole.network.build." + network))))
+	                if (WormholeXTreme.Permissions.has(p, "wormhole.build") && ((network == "" || network == "Public" ) || (network != ""  && network != "Public" && WormholeXTreme.Permissions.has(p, "wormhole.network.build." + network))))
 	                {
 	                    allowed = true;
 	                }
@@ -503,7 +503,12 @@ public class WormholeXTremeCommand {
 	
 	private static void doGo(Player p, String[] args)
 	{
-		if (p.isOp())
+	    boolean allowed = false;
+	    if ( p.isOp() || ( WormholeXTreme.Permissions != null && WormholeXTreme.Permissions.has(p, "wormhole.go")))
+        {
+            allowed = true;
+        }
+		if (allowed)
 		{
 			if ( args.length == 2)
 			{

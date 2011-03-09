@@ -35,6 +35,7 @@ wormhole.config - Able to configure settings like material and timeout
 wormhole.list - Able to list wormholes
 wormhole.network.use.NETWORKNAME - Able to use wormholes on NETWORKNAME
 wormhole.network.build.NETWORKNAME - Able to build wormholes on NETWORKNAME
+wormhole.go - allows user to use '/wormhole go' command.
 
 To Build:
 

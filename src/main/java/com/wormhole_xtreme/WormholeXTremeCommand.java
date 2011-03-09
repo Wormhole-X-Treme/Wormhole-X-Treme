@@ -604,7 +604,7 @@ public class WormholeXTremeCommand {
 						return;
 					}
 					String targetnetwork;
-					if (target.Network.netName != null)
+					if (target.Network != null)
 					{
 					    targetnetwork = target.Network.netName;
 					}

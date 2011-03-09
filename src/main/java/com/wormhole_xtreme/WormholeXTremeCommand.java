@@ -906,4 +906,10 @@ public class WormholeXTremeCommand {
 	    }
 	    return doGateRemove(sender, message_parts, true);
 	}
+
+	public static boolean commandIDC(CommandSender sender, String[] args) 
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

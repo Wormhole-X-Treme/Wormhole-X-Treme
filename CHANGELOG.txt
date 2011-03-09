@@ -37,6 +37,9 @@ Changes 0.800
 
 - Check for 'wormhole.network.use.*' permissions node on stargate activation 
   button/lever toggle.
+  
+- Fixed Iris to auto-open when dialing out. 
+    * Dial gates iris will stay closed until actually connected.
 
 Changes 0.755 (3/4/11 @ 16:51PST):
 

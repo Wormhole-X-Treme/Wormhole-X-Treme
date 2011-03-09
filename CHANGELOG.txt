@@ -35,6 +35,8 @@ Changes 0.xxx
 - Check for WORMHOLE_USE_IS_TELEPORT in conjunction with 'wormhole.network.use.*'
   permissions node to disallow users who don't meet permissions requirements.
 
+- Check for 'wormhole.network.use.*' permissions node on stargate activation 
+  button/lever toggle.
 
 Changes 0.755 (3/4/11 @ 16:51PST):
 

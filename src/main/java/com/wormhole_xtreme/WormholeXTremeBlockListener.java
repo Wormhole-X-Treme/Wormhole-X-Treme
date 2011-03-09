@@ -220,22 +220,26 @@ public class WormholeXTremeBlockListener extends BlockListener
 		if ( s != null  )
 		{
 			PermissionLevel lvl = PermissionsManager.getPermissionLevel(p, s);
-			String gatenetwork;
-			if (s.Network != null)
-			{
-			    gatenetwork = s.Network.netName;
-			}
-			else
-			{
-			    gatenetwork = "Public";
-			}
+			
+			
 			boolean allowed = false;
 			if ( WormholeXTreme.Permissions != null )
 			{
-				if ( (gatenetwork == "Public" || (gatenetwork != "Public" && WormholeXTreme.Permissions.has(p, "wormhole.network.use." + gatenetwork))) 
-				    && (WormholeXTreme.Permissions.has(p, "wormhole.use.sign") || WormholeXTreme.Permissions.has(p, "wormhole.use.dialer")))
-				{
-					allowed = true;
+			    String gatenetwork;
+			    if (s.Network != null)
+			    {
+			        gatenetwork = s.Network.netName;
+			    }
+			    else
+			    {
+			        gatenetwork = "Public";
+			    }
+				if ( gatenetwork.equals("Public") || !gatenetwork.equals("Public") && WormholeXTreme.Permissions.has(p, "wormhole.network.use." + gatenetwork))
+				{    
+				    if(WormholeXTreme.Permissions.has(p, "wormhole.use.sign") || WormholeXTreme.Permissions.has(p, "wormhole.use.dialer"))
+				    {
+				        allowed = true;
+				    }
 				}
 			}
 			else if ( ( lvl == PermissionLevel.WORMHOLE_CREATE_PERMISSION || lvl == PermissionLevel.WORMHOLE_USE_PERMISSION || lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION ) )

@@ -65,7 +65,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 			{
 			    // If use permission is also teleport permission we should check here:
 				if (ConfigManager.getWormholeUseIsTeleport() && ((st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.sign")) || ( !st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.dialer"))
-				    || (gatenetwork != "Public" && WormholeXTreme.Permissions.has(p, "wormhole.network.use." + gatenetwork))))
+				    || (!gatenetwork.equals("Public") && WormholeXTreme.Permissions.has(p, "wormhole.network.use." + gatenetwork))))
 				{
 					// This means that the user doesn't have permission to use.
 					p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));

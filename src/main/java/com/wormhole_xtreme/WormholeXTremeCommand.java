@@ -218,7 +218,7 @@ public class WormholeXTremeCommand {
 				boolean allowed = false;
 	            if (WormholeXTreme.Permissions != null)
 	            {
-	                if (WormholeXTreme.Permissions.has(p, "wormhole.build") && ((network == "" || network == "Public" ) || (network != ""  && network != "Public" && WormholeXTreme.Permissions.has(p, "wormhole.network.build." + network))))
+	                if (WormholeXTreme.Permissions.has(p, "wormhole.build") && ((network.equals("") || network.equals("Public") ) || (!network.equals("") && !network.equals("Public") && WormholeXTreme.Permissions.has(p, "wormhole.network.build." + network))))
 	                {
 	                    allowed = true;
 	                }
@@ -576,7 +576,7 @@ public class WormholeXTremeCommand {
 			if (WormholeXTreme.Permissions != null)
 			{
 			    WormholeXTreme.ThisPlugin.prettyLog(Level.FINEST, false, "Dial Start - Gate: \""+ start.Name +" \"Network: \"" + startnetwork + "\"");
-				if (WormholeXTreme.Permissions.has(p, "wormhole.use.dialer") && (startnetwork == "Public" || (startnetwork != "Public" && WormholeXTreme.Permissions.has(p, "wormhole.network.use." + startnetwork))))
+				if (WormholeXTreme.Permissions.has(p, "wormhole.use.dialer") && (startnetwork.equals("Public") || (!startnetwork.equals("Public") && WormholeXTreme.Permissions.has(p, "wormhole.network.use." + startnetwork))))
 				{
 					allowed = true;
 				}

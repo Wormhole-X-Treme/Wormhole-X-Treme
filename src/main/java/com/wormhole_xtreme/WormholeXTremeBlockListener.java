@@ -469,7 +469,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 				//Activate Stargate
 				p.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_ACTIVATED));
 				p.sendMessage("\u00A73:: \u00A75Chevrons Locked! \u00A73:: \u00A7B<required> \u00A76[optional]");
-				p.sendMessage("\u00A73:: \u00A77Type \'\u00A7F/dial \u00A7B<gatename> \u00A76[idc] [net]\u00A77\'");
+				p.sendMessage("\u00A73:: \u00A77Type \'\u00A7F/dial \u00A7B<gatename> \u00A76[idc]\u00A77\'");
 				StargateManager.AddActivatedStargate(p, s);
 				s.StartActivationTimer(p);
 				s.LightStargate();

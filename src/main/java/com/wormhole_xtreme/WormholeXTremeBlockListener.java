@@ -214,11 +214,11 @@ public class WormholeXTremeBlockListener extends BlockListener
 	{
 		if ( StargateManager.isBlockInGate(event.getBlock())) 
 		{
-			Material m = event.getBlock().getType();
-			if ( m.equals(ConfigManager.getPortalMaterial()))
-			{
+			//Material m = event.getBlock().getType();
+			//if ( m.equals(ConfigManager.getPortalMaterial()))
+			//{
 				event.setCancelled(true);
-			}
+			//}
 		}
 	}
 	

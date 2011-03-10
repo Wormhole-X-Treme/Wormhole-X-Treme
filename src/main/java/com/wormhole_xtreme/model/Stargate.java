@@ -557,8 +557,11 @@ public class Stargate
 		}
 		else
 		{
-			Blocks.remove(this.IrisActivationBlock.getLocation());
-			this.IrisActivationBlock.setType(Material.AIR);
+			if ( this.IrisActivationBlock != null )
+			{
+				Blocks.remove(this.IrisActivationBlock.getLocation());
+				this.IrisActivationBlock.setType(Material.AIR);			
+			}
 		}
 		
 	}

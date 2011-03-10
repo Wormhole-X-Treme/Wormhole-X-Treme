@@ -167,7 +167,7 @@ public class WormholeXTremeCommand {
 				    sb = new StringBuilder();
 				}
 			}
-			if (sb.toString() != "")
+			if (sb.toString().equals(""))
 			{
 			    s.sendMessage(sb.toString());
 			}

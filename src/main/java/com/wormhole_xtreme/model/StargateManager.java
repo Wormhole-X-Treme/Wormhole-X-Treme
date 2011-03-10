@@ -58,6 +58,32 @@ public class StargateManager
 	}
 	
 	/**
+	 * This method adds an index mapping block location to stargate.
+	 * NOTE: This method does not verify that the block is part of the gate, 
+	 * so it may not persist and won't be removed by removing the stargate. This can cause a gate to stay in memory!!!
+	 * @param b
+	 * @param s
+	 */
+	public static void AddBlockIndex(Block b, Stargate s)
+	{
+		if ( b != null && s != null)
+			all_gate_blocks.put(b.getLocation(), s);
+	}
+
+	/**
+	 * This method removes an index mapping block location to stargate.
+	 * NOTE: This method does not verify that the block has actually been removed from a gate 
+	 * so it may not persist and can be readded when server is restarted.
+	 * @param b
+	 * @param s
+	 */
+	public static void RemoveBlockIndex(Block b)
+	{
+		if ( b != null)
+			all_gate_blocks.remove(b.getLocation());
+	}
+	
+	/**
 	 * Gets a stargate based on the name passed in. Returns null if there is no gate by that name.
 	 * @param name String name of the Stargate you want returned.
 	 * @return Stargate requested. Null if no stargate by that name.

@@ -530,11 +530,14 @@ public class Stargate
 	/*
 	 * Setup Levers for IRIS control when IDC is set.
 	 */
-	public void SetupIrisLever()
+	public void SetupIrisLever(boolean add)
 	{
+		if ( add )
+		{
 	    	Block iris_block = this.ActivationBlock.getFace(BlockFace.DOWN);
 	    	this.IrisActivationBlock = iris_block;
 			this.Blocks.add(IrisActivationBlock.getLocation());
+			
 			this.IrisActivationBlock.setType(Material.LEVER);
 			switch (Facing)
 			{
@@ -551,17 +554,27 @@ public class Stargate
 			        this.IrisActivationBlock.setData((byte)0x04);
 			        break;   
 			}
+		}
+		else
+		{
+			Blocks.remove(this.IrisActivationBlock.getLocation());
+			this.IrisActivationBlock.setType(Material.AIR);
+		}
+		
 	}
 	public void SetIrisDeactivationCode ( String idc )
 	{
-		if ( ! idc.equals("") )
+		this.IrisDeactivationCode = idc;
+		this.SetIrisActive(false);
+		
+		// If empty string make sure to make lever area air instead of lever.
+		if ( !idc.equals("") )
 		{
-			// 1. Add iris switch
-		    this.SetupIrisLever();
-			// 2. Set Iris IDC
-			this.IrisDeactivationCode = idc;
-			
-			// 3. Set Iris is not currently active.
+		    this.SetupIrisLever(true);
+		}
+		else
+		{
+			this.SetupIrisLever(false);
 			this.SetIrisActive(false);
 		}
 	}
@@ -573,7 +586,6 @@ public class Stargate
 	public void ToggleIrisLever()
 	{
 		ToggleIrisActive();
-		
 		IrisDefaultActive = IrisActive;
 	}
 	

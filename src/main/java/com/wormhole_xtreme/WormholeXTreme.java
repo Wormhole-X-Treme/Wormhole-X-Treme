@@ -230,6 +230,10 @@ public class WormholeXTreme extends JavaPlugin
 		{
 		    return WormholeXTremeCommand.commandCompleteGate(sender, args);
 		}
+		else if ( commandName.equals("wxidc"))
+		{
+			return WormholeXTremeCommand.commandIDC(sender, args);
+		}
 		return false;
 	}
 

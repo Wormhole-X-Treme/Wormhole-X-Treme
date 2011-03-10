@@ -876,10 +876,10 @@ public class WormholeXTremeCommand {
             p = (Player) sender;
         }
         String[] message_parts = commandEscaper(args);
-        if ((message_parts.length > 2) || (message_parts.length == 0 ))
+        if ((message_parts.length > 3) || (message_parts.length == 0 ))
         {
             return false;
-        }        
+        }
         return doGateComplete(p, message_parts,true);
 	}
 	/*
@@ -909,9 +909,10 @@ public class WormholeXTremeCommand {
 
 	public static boolean commandIDC(CommandSender sender, String[] args) 
 	{
-		// 1. check for permission (config, owner, or OP)
+		args = commandEscaper(args);
+		
 		Player p = null;
-		boolean access = false;
+		boolean allowed = false;
 		
 		if ( playerCheck(sender) )
 		{
@@ -919,16 +920,77 @@ public class WormholeXTremeCommand {
 		}
 		
 		
-		if ( access || !playerCheck(sender) )
+		if ( args.length >= 1 )
 		{
-			if ( args.length >= 1 )
+			Stargate s = StargateManager.GetStargate(args[0]);
+			if ( s != null )
 			{
-				// 2. if args other than name - do a set				
+				// 1. check for permission (config, owner, or OP)
 				
-				// 3. always display current value at end.
-				
-				return true;
+				if ( playerCheck(sender))
+				{
+					if ( p.isOp() || 
+						(WormholeXTreme.Permissions != null && (WormholeXTreme.Permissions.has(p, "wormhole.config"))) ||
+						s.Owner.equals(p.getName()) )	
+					{
+						allowed = true;
+					}
+				}
+	
+	
+				if ( allowed || !playerCheck(sender) )
+				{
+					// 2. if args other than name - do a set				
+					if ( args.length >= 2 )
+					{
+						if ( args[1].equals("-clear") )
+						{
+							// Remove from big list of all blocks
+							StargateManager.RemoveBlockIndex(s.IrisActivationBlock);
+							// Set code to "" and then remove it from stargates block list
+							s.SetIrisDeactivationCode("");
+						}
+						else
+						{
+							// Set code
+							s.SetIrisDeactivationCode(args[1]);
+							// Make sure that block is in index
+							StargateManager.AddBlockIndex(s.IrisActivationBlock, s);
+						}
+					}
+						
+		
+					// 3. always display current value at end.
+					
+					String message = "IDC for gate: " + s.Name + " is:" + s.IrisDeactivationCode;
+					if ( p != null)
+					{
+						p.sendMessage(message);
+					}
+					else
+					{
+						WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, message);
+					}
+				}
+				else
+				{
+					p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+				}
 			}
+			else
+			{
+				String message = "Invalid Stargate: " + args[0];
+				
+				if ( p != null)
+				{
+					p.sendMessage(message);
+				}
+				else
+				{
+					WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, message);
+				}
+			}
+			return true;
 		}
 		
 		return false;

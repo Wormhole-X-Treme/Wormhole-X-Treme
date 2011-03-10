@@ -414,7 +414,7 @@ public class WormholeXTremeCommand {
 			}
 
 			s.sendMessage("Iris material is currently: " + ConfigManager.getIrisMaterial());
-			s.sendMessage("Valid materials are: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK");
+			s.sendMessage("Valid materials are: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, and LAPIS_BLOCK");
 		}
 		else
 		{

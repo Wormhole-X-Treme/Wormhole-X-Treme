@@ -1,4 +1,4 @@
-Changes 0.xxx
+Changes 0.800
 
 - Added pretty format messages! [dh/gyoza]
 
@@ -14,13 +14,32 @@ Changes 0.xxx
   Ops also can use the compass by default.
 
 - New config value "WORMHOLE_USE_IS_TELEPORT"
-    * Default is false (which doesn't change anything) (wormhole.use means a user can activate a gate, but others can still teleport form an active gate)
-    * If set to true then users without wormhole.use will be unable to activate a gate OR TELEPORT from a gate.
+    * Default is false (which doesn't change anything) (wormhole.use means a user
+      can activate a gate, but others can still teleport form an active gate)
+    * If set to true then users without wormhole.use will be unable to activate
+      a gate OR TELEPORT from a gate.
 
 - Fixed the gate active but no teleport bug (for real). 
 
 - Fixed Iris to auto-open when dialing out. 
     * Dial gates iris will stay closed until actually connected.
+
+- /wxcomplete properly checks for 'wormhole.network.build.NETNAME' permissions, 
+  if permissions are enabled. 
+
+- /dial now checks for 'wormhole.network.use.NETNAME' permissions if permissions 
+    are enabled. The network 'Public' is always assumed to be just that. Public.
+  
+- /dial now properly kills timers associated with start gate when failing a dial.
+  Instead of just the lights going out, and everything waiting for timers to finish.
+
+- /wormhole go now has the permissions node 'wormhole.go'
+
+- Check for WORMHOLE_USE_IS_TELEPORT in conjunction with 'wormhole.network.use.*'
+  permissions node to disallow users who don't meet permissions requirements.
+
+- Check for 'wormhole.network.use.*' permissions node on stargate activation 
+  button/lever toggle.
 
 Changes 0.755 (3/4/11 @ 16:51PST):
 

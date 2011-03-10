@@ -55,10 +55,19 @@ public class WormholeXTremeBlockListener extends BlockListener
 			
 			if ( s != null )
 			{
+			    String signnetwork;
+	            if (s.Network != null )
+	            {
+	                signnetwork = s.Network.netName;
+	            }
+	            else
+	            {
+	                signnetwork = "Public";
+	            }
 				Boolean allowed = false;
 				if ( WormholeXTreme.Permissions != null )
 				{
-					if ( WormholeXTreme.Permissions.has(p, "wormhole.use.sign"))
+					if ( WormholeXTreme.Permissions.has(p, "wormhole.use.sign") && (signnetwork.equals("Public") || (!signnetwork.equals("Public") && WormholeXTreme.Permissions.has(p, "wormhole.network.use." + signnetwork))))
 						allowed = true;
 				}
 				else 
@@ -220,13 +229,26 @@ public class WormholeXTremeBlockListener extends BlockListener
 		if ( s != null  )
 		{
 			PermissionLevel lvl = PermissionsManager.getPermissionLevel(p, s);
-
+			
+			
 			boolean allowed = false;
 			if ( WormholeXTreme.Permissions != null )
 			{
-				if ( WormholeXTreme.Permissions.has(p, "wormhole.use.sign") || WormholeXTreme.Permissions.has(p, "wormhole.use.dialer") )
-				{
-					allowed = true;
+			    String gatenetwork;
+			    if (s.Network != null)
+			    {
+			        gatenetwork = s.Network.netName;
+			    }
+			    else
+			    {
+			        gatenetwork = "Public";
+			    }
+				if ( gatenetwork.equals("Public") || !gatenetwork.equals("Public") && WormholeXTreme.Permissions.has(p, "wormhole.network.use." + gatenetwork))
+				{    
+				    if(WormholeXTreme.Permissions.has(p, "wormhole.use.sign") || WormholeXTreme.Permissions.has(p, "wormhole.use.dialer"))
+				    {
+				        allowed = true;
+				    }
 				}
 			}
 			else if ( ( lvl == PermissionLevel.WORMHOLE_CREATE_PERMISSION || lvl == PermissionLevel.WORMHOLE_USE_PERMISSION || lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION ) )

@@ -64,16 +64,16 @@ public class WormholeXTremeServerListener extends ServerListener
     {
         if ( !version.equals("2.4") && !version.startsWith("2.5"))
         {
-        	WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Not a supported version of Permissions. Recommended is 2.5.2" );
+        	WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Not a supported version of Permissions. Recommended is 2.5.4" );
         }
        
     }
     
     public void checkIconomyVersion(String version)
     {
-        if ( !version.equals("4.0") && !version.equals("4.1") && !version.startsWith("4.2") && !version.startsWith("4.3"))
+        if ( !version.equals("4.0") && !version.equals("4.1") && !version.startsWith("4.2") && !version.startsWith("4.3") && !version.startsWith("4.4"))
         {
-        	WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Not a supported version of iConomy. Recommended is 4.3" );
+        	WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Not a supported version of iConomy. Recommended is 4.4" );
         }
        
     }

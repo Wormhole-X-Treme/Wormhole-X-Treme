@@ -251,9 +251,9 @@ public class WormholeXTreme extends JavaPlugin
 	 * 
 	 * prettyLog: A quick and dirty way to make log output clean, unified, and versioning as needed.
 	 * 
-	 * @param Level severity in the form of INFO, WARNING, SEVERE, etc.
-	 * @param Boolean version true causes version display in log entries.
-	 * @param String message to prettyLog.
+	 * @param severity Level of severity in the form of INFO, WARNING, SEVERE, etc.
+	 * @param version true causes version display in log entries.
+	 * @param message to prettyLog.
 	 * 
 	 */
 	public void prettyLog(Level severity, boolean version, String message) 

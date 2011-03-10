@@ -158,7 +158,7 @@ public class StargateHelper
 
 	 * @param button_block
 	 * @param facing
-	 * @return
+	 * @return If successful returns completed gate, null otherwise
 	 */
 	public static Stargate checkStargate(Block button_block, BlockFace facing )
 	{

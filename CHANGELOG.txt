@@ -40,6 +40,8 @@ Changes 0.800
 
 - Check for 'wormhole.network.use.*' permissions node on stargate activation 
   button/lever toggle.
+  
+- LAPIS_BLOCK is now an allowed Iris material.
 
 Changes 0.755 (3/4/11 @ 16:51PST):
 

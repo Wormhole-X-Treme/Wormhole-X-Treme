@@ -844,8 +844,15 @@ public class Stargate
 	{
 		if ( this.TeleportSignBlock != null && this.TeleportSign != null)
 		{
-			this.TeleportSign.setLine(0,  this.Name );
-			this.TeleportSign.setLine(1, "");
+			this.TeleportSign.setLine(0, this.Name );
+			if (this.Network != null)
+			{
+			    this.TeleportSign.setLine(1, this.Network.netName );
+			}
+			else 
+			{
+			    this.TeleportSign.setLine(1, "");
+			}
 			this.TeleportSign.setLine(2, "");
 			this.TeleportSign.setLine(3, "");
 		}

@@ -161,13 +161,13 @@ public class WormholeXTremeCommand {
 				{
 					sb.append("\u00A78, ");
 				}
-				if (sb.toString().length() >= 68 )
+				if (sb.toString().length() >= 75 )
 				{
 				    s.sendMessage(sb.toString());
 				    sb = new StringBuilder();
 				}
 			}
-			if (sb.toString().equals(""))
+			if (!sb.toString().equals(""))
 			{
 			    s.sendMessage(sb.toString());
 			}
@@ -406,14 +406,15 @@ public class WormholeXTremeCommand {
 				{
 				}
 				
-				if ( m == Material.DIAMOND_BLOCK || m == Material.GLASS || m == Material.IRON_BLOCK || m == Material.BEDROCK || m == Material.STONE )
+				if ( m == Material.DIAMOND_BLOCK || m == Material.GLASS || m == Material.IRON_BLOCK || m == Material.BEDROCK || m == Material.STONE 
+				    || m == Material.LAPIS_BLOCK )
 				{
 					ConfigManager.setIrisMaterial(m);
 				}
 			}
 
 			s.sendMessage("Iris material is currently: " + ConfigManager.getIrisMaterial());
-			s.sendMessage("Valid materials are: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK");
+			s.sendMessage("Valid materials are: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, and LAPIS_BLOCK");
 		}
 		else
 		{

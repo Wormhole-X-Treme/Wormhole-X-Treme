@@ -81,7 +81,7 @@ public class DefaultSettings
 		new Setting(
 				ConfigKeys.IRIS_MATERIAL,
 				"STONE", 
-				"Material to be used for the gate Iris. Values are 'IRON_BLOCK', 'STONE', 'BEDROCK', 'GLASS', and 'DIAMOND_BLOCK'.",
+				"Material to be used for the gate Iris. Values are 'IRON_BLOCK', 'STONE', 'BEDROCK', 'GLASS', 'DIAMOND_BLOCK', and 'LAPIS_BLOCK'.",
 				"WormholeXTreme"
 		),
 		new Setting(

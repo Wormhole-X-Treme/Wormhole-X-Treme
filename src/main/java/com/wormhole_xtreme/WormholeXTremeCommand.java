@@ -406,7 +406,8 @@ public class WormholeXTremeCommand {
 				{
 				}
 				
-				if ( m == Material.DIAMOND_BLOCK || m == Material.GLASS || m == Material.IRON_BLOCK || m == Material.BEDROCK || m == Material.STONE )
+				if ( m == Material.DIAMOND_BLOCK || m == Material.GLASS || m == Material.IRON_BLOCK || m == Material.BEDROCK || m == Material.STONE 
+				    || m == Material.LAPIS_BLOCK )
 				{
 					ConfigManager.setIrisMaterial(m);
 				}

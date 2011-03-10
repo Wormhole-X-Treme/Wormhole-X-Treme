@@ -161,13 +161,13 @@ public class WormholeXTremeCommand {
 				{
 					sb.append("\u00A78, ");
 				}
-				if (sb.toString().length() >= 68 )
+				if (sb.toString().length() >= 75 )
 				{
 				    s.sendMessage(sb.toString());
 				    sb = new StringBuilder();
 				}
 			}
-			if (sb.toString().equals(""))
+			if (!sb.toString().equals(""))
 			{
 			    s.sendMessage(sb.toString());
 			}

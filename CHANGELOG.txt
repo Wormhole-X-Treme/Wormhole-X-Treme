@@ -1,4 +1,4 @@
-Changes 0.800
+Changes 0.800 (3/9/11 @ 23:33 PST):
 
 - Added pretty format messages! [dh/gyoza]
 
@@ -42,6 +42,8 @@ Changes 0.800
   button/lever toggle.
   
 - LAPIS_BLOCK is now an allowed Iris material.
+
+- Properly tag gate sign dial signs with network gate was on at removal/break time.
 
 Changes 0.755 (3/4/11 @ 16:51PST):
 

@@ -860,7 +860,28 @@ public class WormholeXTremeCommand {
 
 	public static boolean commandIDC(CommandSender sender, String[] args) 
 	{
-		// TODO Auto-generated method stub
+		// 1. check for permission (config, owner, or OP)
+		Player p = null;
+		boolean access = false;
+		
+		if ( playerCheck(sender) )
+		{
+			p = (Player) sender;
+		}
+		
+		
+		if ( access || !playerCheck(sender) )
+		{
+			if ( args.length >= 1 )
+			{
+				// 2. if args other than name - do a set				
+				
+				// 3. always display current value at end.
+				
+				return true;
+			}
+		}
+		
 		return false;
 	}
 }

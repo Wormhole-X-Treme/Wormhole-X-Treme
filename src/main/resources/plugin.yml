@@ -58,6 +58,7 @@ commands:
             <GateName> The name to give new Stargate.
             [IDC] Optional password to give Stargate.
             [Net] Optional network for Stargate.
+            [Net] Optional network for Stargate.
             
    wxidc:
      description: Gets or sets a gates IDC code.

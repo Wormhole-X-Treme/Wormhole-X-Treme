@@ -6,6 +6,9 @@
 	<artifactId>WormholeXTreme</artifactId>
 	<packaging>jar</packaging>
 	<name>Wormhole-X-Treme</name>
+	<properties>
+	   <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 	<url>http://www.wormhole-xtreme.com</url>
 	<build>
 		<plugins>

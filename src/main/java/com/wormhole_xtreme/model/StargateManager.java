@@ -127,7 +127,7 @@ public class StargateManager
 				
 				for ( Stargate s2 : s.Network.gate_list)
 				{
-					if ( s2.SignTarget.GateId == s.GateId && s2.IsSignPowered)
+					if ( s2.SignTarget != null && s2.SignTarget.GateId == s.GateId && s2.IsSignPowered)
 					{
 						s2.SignTarget = null;
 						if ( s.Network.gate_list.size() > 1 )

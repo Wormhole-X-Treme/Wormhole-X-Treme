@@ -524,6 +524,7 @@ public class Stargate
 			{
 				sign.setLine(2, "O:" + this.Owner);
 			}
+			sign.setData(sign.getData());
 	        sign.update();
 	}
 	
@@ -855,6 +856,8 @@ public class Stargate
 			}
 			this.TeleportSign.setLine(2, "");
 			this.TeleportSign.setLine(3, "");
+			this.TeleportSign.setData(this.TeleportSign.getData());
+			this.TeleportSign.update();
 		}
 		
 	}

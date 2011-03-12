@@ -5,13 +5,13 @@ import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
-
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import com.nijiko.coelho.iConomy.iConomy;
 import com.nijiko.coelho.iConomy.system.Account;
+
 import com.wormhole_xtreme.WormholeXTreme;
 import com.wormhole_xtreme.config.ConfigManager;
 
@@ -21,8 +21,6 @@ import com.wormhole_xtreme.config.ConfigManager;
  */ 
 public class StargateManager 
 {
-
-	private static final WormholeXTreme wxt = WormholeXTreme.ThisPlugin;
 	// A list of all blocks contained by all stargates. Makes for easy indexing when a player is trying
 	// to enter a gate or if water is trying to flow out, also will contain the stone buttons used to activate.
 	private static ConcurrentHashMap<Location, Stargate> all_gate_blocks = new ConcurrentHashMap<Location, Stargate>();
@@ -235,7 +233,7 @@ public class StargateManager
 			
 			complete.Owner = p.getName();
 			complete.CompleteGate(name, idc);
-			wxt.prettyLog(Level.INFO,false,"Player: " + p.getDisplayName() + " completed a wormhole: " + complete.Name);
+			WormholeXTreme.ThisPlugin.prettyLog(Level.INFO,false,"Player: " + p.getDisplayName() + " completed a wormhole: " + complete.Name);
 			AddStargate(complete);
 			StargateDBManager.StargateToSQL(complete);
 			return true;
@@ -273,7 +271,7 @@ public class StargateManager
 			
 			s.Owner = p.getName();			
 			s.CompleteGate(s.Name, "");
-			wxt.prettyLog(Level.INFO,false,"Player: " + p.getDisplayName() + " completed a wormhole: " + s.Name);
+			WormholeXTreme.ThisPlugin.prettyLog(Level.INFO,false,"Player: " + p.getDisplayName() + " completed a wormhole: " + s.Name);
 			AddStargate(s);
 			StargateDBManager.StargateToSQL(s);
 			return true;

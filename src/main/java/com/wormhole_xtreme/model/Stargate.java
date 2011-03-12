@@ -524,7 +524,6 @@ public class Stargate
 			{
 				sign.setLine(2, "O:" + this.Owner);
 			}
-			sign.setData(sign.getData());
 	        sign.update();
 	}
 	

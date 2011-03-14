@@ -160,7 +160,8 @@ public class WormholeXTremeBlockListener extends BlockListener
                         if (s.Active) 
                         {
                             s.DeActivateStargate();
-                            s.EmptyGateWater();
+                            //s.EmptyGateWater();
+                            s.FillGateInterior(Material.AIR);
                         }
                         if (s.LitGate) 
                         {
@@ -267,7 +268,8 @@ public class WormholeXTremeBlockListener extends BlockListener
 					this.HandleIrisActivationSwitch(s,p);
 					if ((s.Active) && (!s.IrisActive)) 
 					{
-						s.FillGateWater();
+						// s.FillGateWater();
+						s.FillGateInterior(ConfigManager.getPortalMaterial());
 					}
 				}
 			}

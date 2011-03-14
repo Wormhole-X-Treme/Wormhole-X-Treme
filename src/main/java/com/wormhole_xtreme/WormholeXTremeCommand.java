@@ -28,7 +28,7 @@ import com.wormhole_xtreme.permissions.PermissionsManager.PermissionLevel;
 public class WormholeXTremeCommand {
 
 
-	private static boolean playerCheck(CommandSender sender) {
+	public static boolean playerCheck(CommandSender sender) {
 		if (sender instanceof Player)
 		{
 			return true;

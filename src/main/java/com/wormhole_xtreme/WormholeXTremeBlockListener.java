@@ -160,7 +160,7 @@ public class WormholeXTremeBlockListener extends BlockListener
                         if (s.Active) 
                         {
                             s.DeActivateStargate();
-                            s.EmptyGateWater();
+                            s.FillGateInterior(Material.AIR);
                         }
                         if (s.LitGate) 
                         {
@@ -267,7 +267,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 					this.HandleIrisActivationSwitch(s,p);
 					if ((s.Active) && (!s.IrisActive)) 
 					{
-						s.FillGateWater();
+						s.FillGateInterior(ConfigManager.getPortalMaterial());
 					}
 				}
 			}
@@ -349,7 +349,12 @@ public class WormholeXTremeBlockListener extends BlockListener
 						{
 							boolean success = StargateManager.CompleteStargate(p, new_gate);
 							if ( success )
+							{
 								p.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_SUCCESS));
+								new_gate.TeleportSign.setLine(0, "-" + new_gate.Name + "-" );
+								new_gate.TeleportSign.setData(new_gate.TeleportSign.getData());
+								new_gate.TeleportSign.update();
+							}
 							else
 							{
 								p.sendMessage("Stargate constrution failed!?");
@@ -372,6 +377,12 @@ public class WormholeXTremeBlockListener extends BlockListener
 					{
 						new_gate.Network.gate_list.remove(new_gate);
 						new_gate.TeleportSign.setLine(0, new_gate.Name);
+						if (new_gate.Network != null)
+						{
+						    new_gate.TeleportSign.setLine(1, new_gate.Network.netName );
+						}
+						new_gate.TeleportSign.setData(new_gate.TeleportSign.getData());
+						new_gate.TeleportSign.update();
 					}
 					StargateManager.RemoveIncompleteStargate(p);
 					p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
@@ -469,7 +480,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 				//Activate Stargate
 				p.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_ACTIVATED));
 				p.sendMessage("\u00A73:: \u00A75Chevrons Locked! \u00A73:: \u00A7B<required> \u00A76[optional]");
-				p.sendMessage("\u00A73:: \u00A77Type \'\u00A7F/dial \u00A7B<gatename> \u00A76[idc] [net]\u00A77\'");
+				p.sendMessage("\u00A73:: \u00A77Type \'\u00A7F/dial \u00A7B<gatename> \u00A76[idc]\u00A77\'");
 				StargateManager.AddActivatedStargate(p, s);
 				s.StartActivationTimer(p);
 				s.LightStargate();

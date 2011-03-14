@@ -1,4 +1,16 @@
-Changes 0.800
+Changes 0.801:
+
+- Update to the way data is pushed to signs in gate destruction and creation.
+  Causes signs to update visually more reliably.
+  
+- Removed NPE during removal of sign gate if current sign gate's target doesn't
+  have a gate target. 
+  
+- Initial addition of '/wxforce <gate|drop>' command, used to globally close all 
+  gates and/or drop all irises temporarily (until they are dialed again). 
+  Uses the 'wormhole.config' or 'wormhole.remove.all' permission nodes.
+
+Changes 0.800 (3/9/11 @ 23:33 PST):
 
 - Added pretty format messages! [dh/gyoza]
 
@@ -42,6 +54,13 @@ Changes 0.800
   button/lever toggle.
   
 - LAPIS_BLOCK is now an allowed Iris material.
+
+- Properly tag gate sign dial signs with network gate was on at removal/break time.
+
+- New command "/wxidc <gatename> <optional_set_idc>". The set can be "-clear" which 
+  will clear the IDC. This command is available to OPs, wormhole.config, the console, 
+  and the owner of the gate.
+
 
 Changes 0.755 (3/4/11 @ 16:51PST):
 

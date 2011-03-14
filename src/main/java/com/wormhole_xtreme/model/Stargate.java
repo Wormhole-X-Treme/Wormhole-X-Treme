@@ -116,33 +116,14 @@ public class Stargate
 		ParseVersionedData(gate_data, w);
 	}*/
 	
-	public void FillGateWater()
-	{
-		Material m = ConfigManager.getPortalMaterial();
-		for( Location bc : this.WaterBlocks )
-		{
-			Block b = MyWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
-			b.setType(m);
-		}
-	}
 	
-	public void FillGateIris()
+	public void FillGateInterior(Material m)
 	{
-		Material m = ConfigManager.getIrisMaterial();
-		for( Location bc : this.WaterBlocks )
-		{
-			Block b = MyWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
-			b.setType(m);
-		}
-	}
-	
-	public void EmptyGateWater()
-	{
-		for( Location bc : this.WaterBlocks )
-		{
-			Block b = MyWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
-			b.setType(Material.AIR);
-		}		
+	        for( Location bc : this.WaterBlocks )
+	        {
+	            Block b = MyWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
+	            b.setType(m);
+	        }
 	}
 	
 	int animation_step = 0;
@@ -158,12 +139,12 @@ public class Stargate
 			for ( Location b : WaterBlocks )
 			{
 				Block r = MyWorld.getBlockAt(b.getBlockX(), b.getBlockY(), b.getBlockZ()).getRelative(Facing);
-				if ( r.getType() != ConfigManager.getStargateMaterial() )
-				{
+//				if ( r.getType() != ConfigManager.getStargateMaterial() )
+//				{
 					r.setType(woosh_material);
 					AnimatedBlocks.add(r);
 					StargateManager.opening_animation_blocks.put(r.getLocation(), r);
-				}
+//				}
 			}
 			
 			animation_step++;
@@ -179,12 +160,12 @@ public class Stargate
 			{
 				Block b = AnimatedBlocks.get(i);
 				Block r = b.getRelative(Facing);
-				if ( r.getType() != ConfigManager.getStargateMaterial() )
-				{
+//				if ( r.getType() != ConfigManager.getStargateMaterial() )
+//				{
 					r.setType(woosh_material);
 					AnimatedBlocks.add(r);
 					StargateManager.opening_animation_blocks.put(r.getLocation(), r);
-				}
+//				}
 			}
 			
 			animation_step++;
@@ -357,7 +338,7 @@ public class Stargate
 			// Show water if you are dialing out OR if the iris isn't active
 			if ( this.Target != null || !this.IrisActive )
 			{
-				FillGateWater();
+			    this.FillGateInterior(ConfigManager.getPortalMaterial());
 				
 				if (ConfigManager.getPortalWoosh())
 				{
@@ -471,7 +452,7 @@ public class Stargate
 		}
 		else if ( !this.IrisActive )
 		{
-			this.EmptyGateWater();
+		    this.FillGateInterior(Material.AIR);
 		}
 	}
 	
@@ -601,17 +582,17 @@ public class Stargate
 		
 		if ( IrisActive )
 		{
-			FillGateIris();
+		    this.FillGateInterior(ConfigManager.getIrisMaterial());
 		}
 		else
 		{
 			if ( Active )
 			{
-				FillGateWater();
+			    this.FillGateInterior(ConfigManager.getPortalMaterial());
 			}
 			else
 			{
-				EmptyGateWater();
+			    this.FillGateInterior(Material.AIR);
 			}
 		}		
 	}
@@ -625,11 +606,11 @@ public class Stargate
 		
 		if ( IrisActive )
 		{
-			FillGateIris();
+		    this.FillGateInterior(ConfigManager.getIrisMaterial());
 		}
 		else
 		{
-			EmptyGateWater();
+		    this.FillGateInterior(Material.AIR);
 		}		
 	}
 	
@@ -855,6 +836,8 @@ public class Stargate
 			}
 			this.TeleportSign.setLine(2, "");
 			this.TeleportSign.setLine(3, "");
+			this.TeleportSign.setData(this.TeleportSign.getData());
+			this.TeleportSign.update();
 		}
 		
 	}

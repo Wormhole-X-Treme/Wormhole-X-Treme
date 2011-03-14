@@ -73,7 +73,6 @@ public class StargateManager
 	 * NOTE: This method does not verify that the block has actually been removed from a gate 
 	 * so it may not persist and can be readded when server is restarted.
 	 * @param b
-	 * @param s
 	 */
 	public static void RemoveBlockIndex(Block b)
 	{

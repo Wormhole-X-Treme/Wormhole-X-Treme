@@ -66,3 +66,8 @@ commands:
             /<command> <GateName> <optional_set_idc>
             Requires being either owner or have wormhole.config
             set -clear to remove the IDC
+
+   wxforce:
+     description: Forcefully shut down all gates and/or open all iris
+     usage: |
+            /<command> <close|drop>

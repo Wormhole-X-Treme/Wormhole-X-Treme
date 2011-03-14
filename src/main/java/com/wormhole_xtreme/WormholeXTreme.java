@@ -27,6 +27,7 @@ import com.wormhole_xtreme.model.StargateDBManager;
 import com.wormhole_xtreme.model.StargateManager;
 import com.wormhole_xtreme.permissions.PermissionsManager;
 import com.wormhole_xtreme.utils.DBUpdateUtil;
+import com.wormhole_xtreme.command.*;
 
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -87,6 +88,8 @@ public class WormholeXTreme extends JavaPlugin
 		StargateDBManager.LoadStargates(getServer());
 		PermissionsManager.LoadPermissions();
 		prettyLog(Level.INFO, true, "Load Completed.");
+		
+		getCommand("wxforce").setExecutor(new WXForce(this));
 	}
 
     private void registerEvents() 

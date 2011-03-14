@@ -116,25 +116,6 @@ public class Stargate
 		ParseVersionedData(gate_data, w);
 	}*/
 	
-//	public void FillGateWater()
-//	{
-//		Material m = ConfigManager.getPortalMaterial();
-//		for( Location bc : this.WaterBlocks )
-//		{
-//			Block b = MyWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
-//			b.setType(m);
-//		}
-//	}
-	
-//	public void FillGateIris()
-//	{
-//		Material m = ConfigManager.getIrisMaterial();
-//		for( Location bc : this.WaterBlocks )
-//		{
-//			Block b = MyWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
-//			b.setType(m);
-//		}
-//	}
 	
 	public void FillGateInterior(Material m)
 	{
@@ -144,15 +125,6 @@ public class Stargate
 	            b.setType(m);
 	        }
 	}
-	
-//	public void EmptyGateWater()
-//	{
-//		for( Location bc : this.WaterBlocks )
-//		{
-//			Block b = MyWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
-//			b.setType(Material.AIR);
-//		}		
-//	}
 	
 	int animation_step = 0;
 	ArrayList<Block> AnimatedBlocks = new ArrayList<Block>();
@@ -366,7 +338,6 @@ public class Stargate
 			// Show water if you are dialing out OR if the iris isn't active
 			if ( this.Target != null || !this.IrisActive )
 			{
-				//FillGateWater();
 			    this.FillGateInterior(ConfigManager.getPortalMaterial());
 				
 				if (ConfigManager.getPortalWoosh())
@@ -481,7 +452,6 @@ public class Stargate
 		}
 		else if ( !this.IrisActive )
 		{
-			// this.EmptyGateWater();
 		    this.FillGateInterior(Material.AIR);
 		}
 	}
@@ -612,19 +582,16 @@ public class Stargate
 		
 		if ( IrisActive )
 		{
-			//FillGateIris();
 		    this.FillGateInterior(ConfigManager.getIrisMaterial());
 		}
 		else
 		{
 			if ( Active )
 			{
-				//FillGateWater();
 			    this.FillGateInterior(ConfigManager.getPortalMaterial());
 			}
 			else
 			{
-				//EmptyGateWater();
 			    this.FillGateInterior(Material.AIR);
 			}
 		}		
@@ -639,12 +606,10 @@ public class Stargate
 		
 		if ( IrisActive )
 		{
-			//FillGateIris();
 		    this.FillGateInterior(ConfigManager.getIrisMaterial());
 		}
 		else
 		{
-			//EmptyGateWater();
 		    this.FillGateInterior(Material.AIR);
 		}		
 	}

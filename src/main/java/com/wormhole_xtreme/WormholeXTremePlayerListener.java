@@ -4,7 +4,9 @@ import java.util.logging.Level;
 
 
 import org.bukkit.Location; 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerListener; 
 import org.bukkit.event.player.PlayerMoveEvent; 
@@ -65,8 +67,10 @@ public class WormholeXTremePlayerListener extends PlayerListener
 			if ( WormholeXTreme.Permissions != null)
 			{
 			    // If use permission is also teleport permission we should check here:
-				if (ConfigManager.getWormholeUseIsTeleport() && ((st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.sign")) || ( !st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.dialer"))
-				    || (!gatenetwork.equals("Public") && WormholeXTreme.Permissions.has(p, "wormhole.network.use." + gatenetwork))))
+				if (ConfigManager.getWormholeUseIsTeleport() && 
+					((st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.sign")) || 
+					(!st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.dialer")) || 
+					(!gatenetwork.equals("Public") && !WormholeXTreme.Permissions.has(p, "wormhole.network.use." + gatenetwork))))
 				{
 					// This means that the user doesn't have permission to use.
 					p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
@@ -124,12 +128,12 @@ public class WormholeXTremePlayerListener extends PlayerListener
 				}
 			}
 			
-				//Block target_block = target.getWorld().getBlockAt(target.getBlockX(), target.getBlockY(), target.getBlockZ());
-				//while ( target_block.getType() != Material.AIR && target_block.getType() != Material.WATER  )
-				//{
-				//	target_block = target_block.getFace(BlockFace.UP);
-				//	target.setY(target.getY() + 1.0);
-				//}
+			Block target_block = target.getWorld().getBlockAt(target.getBlockX(), target.getBlockY(), target.getBlockZ());
+			while ( target_block.getType() != Material.AIR && target_block.getType() != Material.WATER  )
+			{
+				target_block = target_block.getFace(BlockFace.UP);
+				target.setY(target.getY() + 1.0);
+			}
 			
 			event.setFrom(target);
 			event.setTo(target);

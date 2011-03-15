@@ -54,10 +54,9 @@ commands:
    wxcomplete:
      description: Complete StarGate construction.
      usage: |
-            /<command> <GateName> idc=[IDC]
+            /<command> <GateName> idc=[IDC] net=[Net]
             <GateName> The name to give new Stargate.
             [IDC] Optional password to give Stargate.
-            [Net] Optional network for Stargate.
             [Net] Optional network for Stargate.
             
    wxidc:

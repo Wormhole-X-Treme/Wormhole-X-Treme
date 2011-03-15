@@ -20,6 +20,7 @@ import com.wormhole_xtreme.permissions.PermissionsManager.PermissionLevel;
 /** 
  * WormholeXtreme Entity Listener 
  * @author Ben Echols (Lologarithm) 
+ * @author Dean Bailey (alron)
  */ 
 public class WormholeXTremeEntityListener extends EntityListener 
 { 

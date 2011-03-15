@@ -34,7 +34,8 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 /** 
  * WormholeXtreme for Bukkit 
- * @author Ben Echols (Lologarithm) 
+ * @author Ben Echols (Lologarithm)
+ * @author Dean Bailey (alron)
  */ 
 public class WormholeXTreme extends JavaPlugin
 {

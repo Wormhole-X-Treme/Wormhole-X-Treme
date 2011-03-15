@@ -28,7 +28,8 @@ import com.wormhole_xtreme.utils.WorldUtils;
  
 /** 
  * WormholeXTreme Block Listener
- * @author Ben Echols (Lologarithm) 
+ * @author Ben Echols (Lologarithm)
+ * @author Dean Bailey (alron)
  */ 
 public class WormholeXTremeBlockListener extends BlockListener
 {

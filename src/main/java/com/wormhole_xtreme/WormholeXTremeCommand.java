@@ -22,7 +22,9 @@ import com.wormhole_xtreme.permissions.PermissionsManager.PermissionLevel;
 
 
 /**
- * @author alron
+ * WormholeXTreme Commands
+ * @author Dean Bailey (alron)
+ * @author Ben Echols (Lologarithm)
  *
  */
 public class WormholeXTremeCommand {

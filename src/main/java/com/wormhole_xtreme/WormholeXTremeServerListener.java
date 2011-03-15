@@ -9,7 +9,11 @@ import org.bukkit.plugin.Plugin;
 import com.nijiko.coelho.iConomy.iConomy;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
-
+/**
+ * WormholeXTreme Server Listener
+ * @author Ben Echols (Lologarithm)
+ * @author Dean Bailey (alron)
+ */
 public class WormholeXTremeServerListener extends ServerListener 
 {
 	public WormholeXTremeServerListener(Plugin this_plugin)

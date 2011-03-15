@@ -22,6 +22,7 @@ import com.wormhole_xtreme.model.StargateManager;
 /** 
  * WormholeXtreme Vehicle Listener 
  * @author Ben Echols (Lologarithm) 
+ * @author Dean Bailey (alron)
  */ 
 public class WormholeXTremeVehicleListener extends VehicleListener 
 { 

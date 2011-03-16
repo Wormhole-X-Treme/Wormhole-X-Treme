@@ -160,98 +160,6 @@ public class WormholeXTremeCommand {
 		}
 	}
 	
-	/**
-	 * Do gate complete.
-	 *
-	 * @param p the p
-	 * @param args the args
-	 * @param root_command the root_command
-	 * @return true, if successful
-	 */
-	private static boolean doGateComplete(Player p, String[] args, boolean root_command)
-	{
-		if ( (root_command && args.length >= 1) || (!root_command && args.length >= 2))
-		{
-			String name = "";
-			if ( root_command )
-			{
-				name = args[0].trim().replace("\n", "").replace("\r", "");
-			}
-			else
-			{
-				name = args[1].trim().replace("\n", "").replace("\r", "");
-			}
-				            
-			if ( name.length() < 12)
-			{
-			    Stargate dup_name = StargateManager.GetStargate( name );
-				
-				String idc = "";
-				String network = "";
-				int start_index = 1;
-				if ( !root_command )
-				{
-					start_index = 2;
-				}
-				
-				if ( start_index < args.length )
-				{
-					for ( int i = start_index; i < args.length; i++ )
-					{
-						String[] key_value_string = args[i].split("=");
-						if ( key_value_string[0].equals("idc") )
-						{
-							idc = key_value_string[1];
-						}
-						else if ( key_value_string[0].equals("net") )
-						{
-							network = key_value_string[1];
-						}
-					}
-				}
-				boolean allowed = false;
-	            if (WormholeXTreme.Permissions != null)
-	            {
-	                if (WormholeXTreme.Permissions.has(p, "wormhole.build") && ((network.equals("") || network.equals("Public") ) || (!network.equals("") && !network.equals("Public") && WormholeXTreme.Permissions.has(p, "wormhole.network.build." + network))))
-	                {
-	                    allowed = true;
-	                }
-	            }
-	            if (p.isOp() || allowed )
-	            {
-	                if ( dup_name == null )
-				    {
-				        boolean success = StargateManager.CompleteStargate(p, name, idc, network);
-
-					    if ( success )
-					    {
-						    p.sendMessage( ConfigManager.output_strings.get(StringTypes.CONSTRUCT_SUCCESS) );
-					    }
-					    else
-					    {
-						    p.sendMessage( "Construction Failed!?" );
-					    }
-				    }
-				    else
-				    {
-					    p.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_TAKEN));
-				    }
-				    return true;
-	            }
-	            else 
-	            {
-	                p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
-                    return true;
-	            }
-			}
-			else
-			{
-				p.sendMessage( ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_TOO_LONG) );
-				return true;
-			}
-		}
-		return false;
-	}
 	
 	/**
 	 * Do gate remove.
@@ -821,11 +729,7 @@ public class WormholeXTremeCommand {
 			p = (Player) sender;
 		}
 
-		if( message_parts[0].equalsIgnoreCase("complete") && p != null )
-		{
-			return doGateComplete(p, message_parts,false);
-		}
-		else if (message_parts[0].equalsIgnoreCase("go") && p != null )
+		if (message_parts[0].equalsIgnoreCase("go") && p != null )
 		{
 			doGo(p,message_parts);
 		}
@@ -928,34 +832,7 @@ public class WormholeXTremeCommand {
 	    return true;
 	}
 	
-	/*
-	 * Complete Stargate
-	 */
-	/**
-	 * Command complete gate.
-	 *
-	 * @param sender the sender
-	 * @param args the args
-	 * @return true, if successful
-	 */
-	public static boolean commandCompleteGate(CommandSender sender, String[] args)
-	{
-        Player p = null;
-        if (!playerCheck(sender))
-        {
-            return true;
-        }
-        else 
-        {
-            p = (Player) sender;
-        }
-        String[] message_parts = commandEscaper(args);
-        if ((message_parts.length > 3) || (message_parts.length == 0 ))
-        {
-            return false;
-        }
-        return doGateComplete(p, message_parts,true);
-	}
+
 	/*
 	 * Build Stargate
 	 */

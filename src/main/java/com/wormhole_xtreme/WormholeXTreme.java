@@ -91,6 +91,7 @@ public class WormholeXTreme extends JavaPlugin
 		prettyLog(Level.INFO, true, "Load Completed.");
 		
 		getCommand("wxforce").setExecutor(new WXForce(this));
+		getCommand("wxidc").setExecutor(new WXIDC(this));
 	}
 
     private void registerEvents() 
@@ -234,10 +235,10 @@ public class WormholeXTreme extends JavaPlugin
 		{
 		    return WormholeXTremeCommand.commandCompleteGate(sender, args);
 		}
-		else if ( commandName.equals("wxidc"))
-		{
-			return WormholeXTremeCommand.commandIDC(sender, args);
-		}
+//		else if ( commandName.equals("wxidc"))
+//		{
+//			return WormholeXTremeCommand.commandIDC(sender, args);
+//		}
 		return false;
 	}
 

@@ -9,6 +9,9 @@ Changes 0.801:
 - Initial addition of '/wxforce <gate|drop>' command, used to globally close all 
   gates and/or drop all irises temporarily (until they are dialed again). 
   Uses the 'wormhole.config' or 'wormhole.remove.all' permission nodes.
+  
+- Fixed '/wxremove' so that the permissions check doesn't fall through to the built
+  in permissions check. :|
 
 Changes 0.800 (3/9/11 @ 23:33 PST):
 

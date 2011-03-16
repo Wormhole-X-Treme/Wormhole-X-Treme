@@ -24,14 +24,6 @@ import com.wormhole_xtreme.model.StargateManager;
 public class WXIDC implements CommandExecutor {
 
     /**
-     * 
-     */
-    public WXIDC() {
-        // TODO Auto-generated constructor stub
-    }
-
-
-    /**
      * @param wormholeXTreme
      */
     public WXIDC(WormholeXTreme wormholeXTreme) {

@@ -12,6 +12,8 @@ Changes 0.801:
   
 - Fixed '/wxremove' so that the permissions check doesn't fall through to the built
   in permissions check. :|
+  
+- Fixed permissions surrounding gate networks and WORMHOLE_USE_IS_TELEPORT
 
 Changes 0.800 (3/9/11 @ 23:33 PST):
 

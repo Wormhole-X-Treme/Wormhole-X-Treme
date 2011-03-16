@@ -289,10 +289,12 @@ public class WormholeXTremeCommand {
 				if (playerCheck(sender))
 				{
 					Player p = (Player) sender;
-					if  (WormholeXTreme.Permissions != null && (WormholeXTreme.Permissions.has(p, "wormhole.remove.all") || 
-						( s.Owner != null && s.Owner.equals(p.getName()) && WormholeXTreme.Permissions.has(p, "wormhole.remove.own"))))
-					{
-						allowed = true;
+					if  (WormholeXTreme.Permissions != null)
+					    {
+					    if (WormholeXTreme.Permissions.has(p, "wormhole.remove.all") || ( s.Owner != null && s.Owner.equals(p.getName()) && WormholeXTreme.Permissions.has(p, "wormhole.remove.own")))
+					    {
+					        allowed = true;
+					    }	
 					}
 					else if (PermissionsManager.getPermissionLevel(p, s) == PermissionsManager.PermissionLevel.WORMHOLE_FULL_PERMISSION )
 					{

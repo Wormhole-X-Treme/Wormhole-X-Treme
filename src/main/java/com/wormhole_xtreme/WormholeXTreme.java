@@ -129,10 +129,18 @@ public class WormholeXTreme extends JavaPlugin
 		PermissionsManager.LoadPermissions();
 		prettyLog(Level.INFO, true, "Load Completed.");
 		
-		getCommand("wxforce").setExecutor(new WXForce(this));
-		getCommand("wxidc").setExecutor(new WXIDC(this));
+		this.registerCommands();
 	}
-
+	
+	/**
+	 * Register commands.
+	 */
+	private void registerCommands()
+	{
+	    getCommand("wxforce").setExecutor(new WXForce(this));
+		getCommand("wxidc").setExecutor(new WXIDC(this));
+		getCommand("wxcompass").setExecutor(new WXCompass(this));
+	}
     /**
      * Register events.
      */
@@ -281,10 +289,10 @@ public class WormholeXTreme extends JavaPlugin
 		{
 		    return WormholeXTremeCommand.commandRemoveGate(sender, args);
 		}
-		else if (commandName.equals("wxcompass"))
-		{
-		    return WormholeXTremeCommand.commandCompass(sender, args);
-		}
+//		else if (commandName.equals("wxcompass"))
+//		{
+//		    return WormholeXTremeCommand.commandCompass(sender, args);
+//		}
 		else if (commandName.equals("wxcomplete"))
 		{
 		    return WormholeXTremeCommand.commandCompleteGate(sender, args);

@@ -21,7 +21,6 @@ package com.wormhole_xtreme;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -36,9 +35,8 @@ import com.wormhole_xtreme.permissions.PermissionsManager;
 import com.wormhole_xtreme.permissions.PermissionsManager.PermissionLevel;
 
 
-// TODO: Auto-generated Javadoc
 /**
- * WormholeXTreme Commands.
+ * WormholeXTreme Commands and command specific methods.
  *
  * @author Dean Bailey (alron)
  * @author Ben Echols (Lologarithm)
@@ -63,15 +61,12 @@ public class WormholeXTremeCommand {
 		}
 	}
 	
-	/*
-	 * Checks for " and escapes it.
-	 * Returns String[] with properly escaped quotes.
-	 */
 	/**
 	 * Command escaper.
+	 * Checks for " and escapes it.
 	 *
-	 * @param args the args
-	 * @return the string[]
+	 * @param args The String[] argument list to escape quotes on.
+	 * @return String[] with properly escaped quotes.
 	 */
 	public static String[] commandEscaper(String[] args)
 	{
@@ -120,57 +115,7 @@ public class WormholeXTremeCommand {
 		return args_parts_list.toArray(new String[] {});
 	}
 	
-	/**
-	 * Do compass point.
-	 *
-	 * @param p the p
-	 */
-	private static void doCompassPoint(Player p)
-	{
-	    boolean allowed = false;
-        if (WormholeXTreme.Permissions != null)
-        {
-            if (WormholeXTreme.Permissions.has(p, "wormhole.use.compass"))
-            {
-                allowed = true;
-            }
-        }
-        if (p.isOp() || allowed )
-        {
-            Location current = p.getLocation();
-            // HaNieL from Bukkit.org gave me this!
-            ArrayList<Stargate> gates = StargateManager.GetAllGates();
-            double man = Double.MAX_VALUE;
-            Stargate closest = null;
-        
-            for(Stargate s : gates)
-            {
-                Location t = s.TeleportLocation;
-                double distance = Math.sqrt( Math.pow(current.getX() - t.getX(), 2) + 
-                                             Math.pow(current.getY() - t.getY(), 2) +
-                                             Math.pow(current.getZ() - t.getZ(), 2) );
-                if(distance < man)
-                {
-                    man = distance;
-                    closest = s;
-                }
-            }
-        
-            if(closest != null)
-            {
-                p.setCompassTarget(closest.TeleportLocation);
-                p.sendMessage("Compass set to wormhole: " + closest.Name);
-            }
-            else
-            {
-                p.sendMessage("No wormholes to track!");
-            }
-        }
-        else 
-        {
-            p.sendMessage( ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
-        }
-	}
+
 	
 	/**
 	 * Do gate list.
@@ -880,10 +825,6 @@ public class WormholeXTremeCommand {
 		{
 			return doGateComplete(p, message_parts,false);
 		}
-		else if ( message_parts[0].equalsIgnoreCase("compass") && p != null)
-		{
-			doCompassPoint(p);
-		}
 		else if (message_parts[0].equalsIgnoreCase("go") && p != null )
 		{
 			doGo(p,message_parts);
@@ -984,30 +925,6 @@ public class WormholeXTremeCommand {
 	public static boolean commandList(CommandSender sender, String[] args)
 	{
 	    doGateList(sender);
-	    return true;
-	}
-	/*
-	 * Point compass at nearest Stargate
-	 */
-	/**
-	 * Command compass.
-	 *
-	 * @param sender the sender
-	 * @param args the args
-	 * @return true, if successful
-	 */
-	public static boolean commandCompass(CommandSender sender, String[] args)
-	{
-	    Player p = null;
-	    if (!playerCheck(sender))
-	    {
-	        return true;
-	    }
-	    else 
-	    {
-	        p = (Player) sender;
-	    }
-	    doCompassPoint(p);
 	    return true;
 	}
 	

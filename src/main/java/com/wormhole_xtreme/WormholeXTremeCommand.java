@@ -36,15 +36,22 @@ import com.wormhole_xtreme.permissions.PermissionsManager;
 import com.wormhole_xtreme.permissions.PermissionsManager.PermissionLevel;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * WormholeXTreme Commands
+ * WormholeXTreme Commands.
+ *
  * @author Dean Bailey (alron)
  * @author Ben Echols (Lologarithm)
- *
  */
 public class WormholeXTremeCommand {
 
 
+	/**
+	 * Player check.
+	 *
+	 * @param sender the sender
+	 * @return true, if successful
+	 */
 	public static boolean playerCheck(CommandSender sender) {
 		if (sender instanceof Player)
 		{
@@ -59,6 +66,12 @@ public class WormholeXTremeCommand {
 	/*
 	 * Checks for " and escapes it.
 	 * Returns String[] with properly escaped quotes.
+	 */
+	/**
+	 * Command escaper.
+	 *
+	 * @param args the args
+	 * @return the string[]
 	 */
 	public static String[] commandEscaper(String[] args)
 	{
@@ -107,6 +120,11 @@ public class WormholeXTremeCommand {
 		return args_parts_list.toArray(new String[] {});
 	}
 	
+	/**
+	 * Do compass point.
+	 *
+	 * @param p the p
+	 */
 	private static void doCompassPoint(Player p)
 	{
 	    boolean allowed = false;
@@ -154,6 +172,11 @@ public class WormholeXTremeCommand {
         }
 	}
 	
+	/**
+	 * Do gate list.
+	 *
+	 * @param s the s
+	 */
 	private static void doGateList(CommandSender s)
 	{
 		boolean allowed = false;
@@ -191,6 +214,15 @@ public class WormholeXTremeCommand {
 			
 		}
 	}
+	
+	/**
+	 * Do gate complete.
+	 *
+	 * @param p the p
+	 * @param args the args
+	 * @param root_command the root_command
+	 * @return true, if successful
+	 */
 	private static boolean doGateComplete(Player p, String[] args, boolean root_command)
 	{
 		if ( (root_command && args.length >= 1) || (!root_command && args.length >= 2))
@@ -276,6 +308,14 @@ public class WormholeXTremeCommand {
 		return false;
 	}
 	
+	/**
+	 * Do gate remove.
+	 *
+	 * @param sender the sender
+	 * @param args the args
+	 * @param root_command the root_command
+	 * @return true, if successful
+	 */
 	private static boolean doGateRemove(CommandSender sender, String[] args, boolean root_command)
 	{
 		if ( (root_command && args.length >=1) || ((!root_command) && args.length >= 2) )
@@ -363,6 +403,13 @@ public class WormholeXTremeCommand {
 		}
 		return false;
 	}
+	
+	/**
+	 * Do material.
+	 *
+	 * @param s the s
+	 * @param args the args
+	 */
 	private static void doMaterial(CommandSender s, String[] args)
 	{
 		boolean allowed = false;
@@ -401,6 +448,13 @@ public class WormholeXTremeCommand {
 			s.sendMessage( ConfigManager.output_strings.get(StringTypes.PERMISSION_NO) );
 		}
 	}
+	
+	/**
+	 * Do iris material.
+	 *
+	 * @param s the s
+	 * @param args the args
+	 */
 	private static void doIrisMaterial(CommandSender s, String[] args)
 	{
 		boolean allowed = false;
@@ -440,6 +494,13 @@ public class WormholeXTremeCommand {
 			s.sendMessage( ConfigManager.output_strings.get(StringTypes.PERMISSION_NO) );
 		}
 	}
+	
+	/**
+	 * Do shutdown timeout.
+	 *
+	 * @param s the s
+	 * @param args the args
+	 */
 	private static void doShutdownTimeout(CommandSender s, String[] args)
 	{
 		boolean allowed = false;
@@ -481,6 +542,12 @@ public class WormholeXTremeCommand {
 		}
 	}
 	
+	/**
+	 * Do activate timeout.
+	 *
+	 * @param s the s
+	 * @param args the args
+	 */
 	private static void doActivateTimeout(CommandSender s, String[] args)
 	{
 		boolean allowed = false;
@@ -521,6 +588,12 @@ public class WormholeXTremeCommand {
 		}
 	}
 	
+	/**
+	 * Do go.
+	 *
+	 * @param p the p
+	 * @param args the args
+	 */
 	private static void doGo(Player p, String[] args)
 	{
 	    boolean allowed = false;
@@ -544,6 +617,13 @@ public class WormholeXTremeCommand {
 			}
 		}
 	}
+	
+	/**
+	 * Do owner.
+	 *
+	 * @param sender the sender
+	 * @param args the args
+	 */
 	private static void doOwner(CommandSender sender, String[] args)
 	{
 		boolean allowed = false;
@@ -578,6 +658,13 @@ public class WormholeXTremeCommand {
 				sender.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
 			}
 	}
+	
+	/**
+	 * Do dial.
+	 *
+	 * @param p the p
+	 * @param args the args
+	 */
 	private static void doDial(Player p, String[] args)
 	{
 		Stargate start = StargateManager.RemoveActivatedStargate(p);
@@ -685,6 +772,13 @@ public class WormholeXTremeCommand {
 			p.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_NOT_ACTIVE));
 		}
 	}
+	
+	/**
+	 * Do perms.
+	 *
+	 * @param sender the sender
+	 * @param args the args
+	 */
 	private static void doPerms(CommandSender sender, String[] args)
 	{
 		if (playerCheck(sender))
@@ -698,6 +792,14 @@ public class WormholeXTremeCommand {
 		}
 	}
 	
+	/**
+	 * Do add player builder.
+	 *
+	 * @param sender the sender
+	 * @param message_parts the message_parts
+	 * @param root_command the root_command
+	 * @return true, if successful
+	 */
 	private static boolean doAddPlayerBuilder(CommandSender sender, String[] message_parts, boolean root_command) 
 	{
 		if ( playerCheck(sender) )
@@ -755,6 +857,13 @@ public class WormholeXTremeCommand {
 		return false;
 	}
 	
+	/**
+	 * Command wormhole.
+	 *
+	 * @param sender the sender
+	 * @param args the args
+	 * @return true, if successful
+	 */
 	public static boolean commandWormhole(CommandSender sender, String[] args)
 	{
 		Player p = null;
@@ -836,6 +945,13 @@ public class WormholeXTremeCommand {
 	 * If IDC is specified, try and use it during the dial.
 	 * 
 	 */
+	/**
+	 * Command dial.
+	 *
+	 * @param sender the sender
+	 * @param args the args
+	 * @return true, if successful
+	 */
 	public static boolean commandDial(CommandSender sender, String[] args)
 	{
 		Player player = null;
@@ -858,6 +974,13 @@ public class WormholeXTremeCommand {
 	/*
 	 * List Stargates
 	 */
+	/**
+	 * Command list.
+	 *
+	 * @param sender the sender
+	 * @param args the args
+	 * @return true, if successful
+	 */
 	public static boolean commandList(CommandSender sender, String[] args)
 	{
 	    doGateList(sender);
@@ -865,6 +988,13 @@ public class WormholeXTremeCommand {
 	}
 	/*
 	 * Point compass at nearest Stargate
+	 */
+	/**
+	 * Command compass.
+	 *
+	 * @param sender the sender
+	 * @param args the args
+	 * @return true, if successful
 	 */
 	public static boolean commandCompass(CommandSender sender, String[] args)
 	{
@@ -883,6 +1013,13 @@ public class WormholeXTremeCommand {
 	
 	/*
 	 * Complete Stargate
+	 */
+	/**
+	 * Command complete gate.
+	 *
+	 * @param sender the sender
+	 * @param args the args
+	 * @return true, if successful
 	 */
 	public static boolean commandCompleteGate(CommandSender sender, String[] args)
 	{
@@ -905,6 +1042,13 @@ public class WormholeXTremeCommand {
 	/*
 	 * Build Stargate
 	 */
+	/**
+	 * Command build gate.
+	 *
+	 * @param sender the sender
+	 * @param args the args
+	 * @return true, if successful
+	 */
 	public static boolean commandBuildGate(CommandSender sender, String[] args)
 	{	    
         String[] message_parts = commandEscaper(args);
@@ -916,6 +1060,13 @@ public class WormholeXTremeCommand {
 	}
 	/*
 	 * Remove stargate (and delete gate blocks too)
+	 */
+	/**
+	 * Command remove gate.
+	 *
+	 * @param sender the sender
+	 * @param args the args
+	 * @return true, if successful
 	 */
 	public static boolean commandRemoveGate(CommandSender sender, String[] args)
 	{

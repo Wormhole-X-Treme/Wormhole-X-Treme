@@ -28,12 +28,20 @@ import com.wormhole_xtreme.WormholeXTreme;
 
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class StargateShape.
+ */
 public class StargateShape 
 {
+	
+	/** The Constant wxt. */
 	private static final WormholeXTreme wxt = WormholeXTreme.ThisPlugin;
 	
+	/** The shape name. */
 	public String shapeName = "Standard";
 	
+	/** The stargate_positions. */
 	public int[][] stargate_positions = { {0,2,0}, {0,3,0}, {0,4,0}, 
 		{0,1,1}, {0,5,1}, 
 		{0,0,2}, {0,6,2}, 
@@ -41,29 +49,45 @@ public class StargateShape
 		{0,0,4}, {0,6,4}, 
 		{0,5,5}, {0,1,5}, 
 		{0,2,6}, {0,3,6}, {0,4,6} };
+	
+	/** The sign_position. */
 	public int[] sign_position = {0,3,6};
+	
+	/** The enter_position. */
 	public int[] enter_position = {0,0,3};
+	
+	/** The light_positions. */
 	public int[] light_positions = {3,4,11,12};
+	
+	/** The water_positions. */
 	public int[][] water_positions = { {0,2,1}, {0,3,1}, {0,4,1}, 
 			{0,1,2}, {0,2,2}, {0,3,2}, {0,4,2}, {0,5,2}, 
 			{0,1,3}, {0,2,3}, {0,3,3}, {0,4,3}, {0,5,3}, 
 			{0,1,4}, {0,2,4}, {0,3,4}, {0,4,4}, {0,5,4}, 
 			{0,2,5}, {0,3,5}, {0,4,5} };
+	
+	/** The reference_vector. */
 	public int[] reference_vector = {0,1,0};
-	/**
-	 * [0] = Left - / Right +
-	 * [1] = Up + / Down -
-	 * [2] = Forward + / Backward -
-	 */
+	
+	/** [0] = Left - / Right + [1] = Up + / Down - [2] = Forward + / Backward -. */
 	public int[] to_gate_corner = {1,-1, 4};
 	
+	/** The woosh_depth. */
 	public int woosh_depth = 3;
 	
+	/**
+	 * Instantiates a new stargate shape.
+	 */
 	public StargateShape()
 	{
 		
 	}
 	
+	/**
+	 * Instantiates a new stargate shape.
+	 *
+	 * @param file_data the file_data
+	 */
 	public StargateShape(String[] file_data)
 	{
 		sign_position = null;

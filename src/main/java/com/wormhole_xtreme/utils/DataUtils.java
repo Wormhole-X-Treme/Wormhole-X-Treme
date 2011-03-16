@@ -24,13 +24,21 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
+// TODO: Auto-generated Javadoc
 /**
- *  WormholeXTreme DataUtils
- *  @author Ben Echols (Lologarithm) 
+ * WormholeXTreme DataUtils.
+ *
+ * @author Ben Echols (Lologarithm)
  */
 public class DataUtils 
 {
 
+	/**
+	 * Location to bytes.
+	 *
+	 * @param l the l
+	 * @return the byte[]
+	 */
 	public static byte[] LocationToBytes(Location l)
 	{
 		ByteBuffer b = ByteBuffer.allocate(32);
@@ -43,6 +51,12 @@ public class DataUtils
 		return b.array();
 	}
 	
+	/**
+	 * Block to bytes.
+	 *
+	 * @param b the b
+	 * @return the byte[]
+	 */
 	public static byte[] BlockToBytes(Block b)
 	{
 		ByteBuffer bb = ByteBuffer.allocate(12);
@@ -54,6 +68,12 @@ public class DataUtils
 		return bb.array();
 	}
 
+	/**
+	 * Block location to bytes.
+	 *
+	 * @param l the l
+	 * @return the byte[]
+	 */
 	public static byte[] BlockLocationToBytes(Location l)
 	{
 		ByteBuffer bb = ByteBuffer.allocate(12);
@@ -66,18 +86,38 @@ public class DataUtils
 	}
 
 	
+	/**
+	 * Block from bytes.
+	 *
+	 * @param bytes the bytes
+	 * @param w the w
+	 * @return the block
+	 */
 	public static Block BlockFromBytes(byte[] bytes, World w)
 	{
 		ByteBuffer b = ByteBuffer.wrap(bytes);
 		return w.getBlockAt( b.getInt(), b.getInt(), b.getInt() );
 	}
 	
+	/**
+	 * Location from bytes.
+	 *
+	 * @param bytes the bytes
+	 * @param w the w
+	 * @return the location
+	 */
 	public static Location LocationFromBytes(byte[] bytes, World w)
 	{
 		ByteBuffer b = ByteBuffer.wrap(bytes);
 		return new Location(w, b.getDouble(), b.getDouble(), b.getDouble(), b.getFloat(), b.getFloat());
 	}
 	
+	/**
+	 * Int to byte array.
+	 *
+	 * @param value the value
+	 * @return the byte[]
+	 */
 	public static final byte[] intToByteArray(int value) 
 	{
         return new byte[] {
@@ -87,6 +127,13 @@ public class DataUtils
                 (byte)value};
 	}
 	
+	/**
+	 * Byte array to int.
+	 *
+	 * @param b the b
+	 * @param index the index
+	 * @return the int
+	 */
 	public static final int byteArrayToInt(byte [] b, int index) 
 	{
         return (b[index] << 24)
@@ -95,6 +142,12 @@ public class DataUtils
                 + (b[index + 3] & 0xFF);
 	}
 	
+	/**
+	 * Byte to boolean.
+	 *
+	 * @param b the b
+	 * @return true, if successful
+	 */
 	public static final boolean byteToBoolean(byte b)
 	{
 		if ( b >= 1 )

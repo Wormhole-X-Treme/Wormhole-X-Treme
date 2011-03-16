@@ -32,14 +32,18 @@ import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author alron
+ * The Class WXIDC.
  *
+ * @author alron
  */
 public class WXIDC implements CommandExecutor {
 
     /**
-     * @param wormholeXTreme
+     * Instantiates a new wXIDC.
+     *
+     * @param wormholeXTreme the wormhole x treme
      */
     public WXIDC(WormholeXTreme wormholeXTreme) {
         // TODO Auto-generated constructor stub

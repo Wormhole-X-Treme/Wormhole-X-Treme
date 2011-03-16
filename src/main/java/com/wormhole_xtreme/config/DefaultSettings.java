@@ -23,12 +23,18 @@ import com.wormhole_xtreme.permissions.PermissionsManager.PermissionLevel;
 
 
 
+// TODO: Auto-generated Javadoc
 /*
  * This class is based on a class "SettingsList.java" 
  * from MinecartMania written by Afforess from Bukkit.org
  */
+/**
+ * The Class DefaultSettings.
+ */
 public class DefaultSettings 
 {
+	
+	/** The Constant config. */
 	final static Setting[] config = {
 		new Setting(
 				ConfigKeys.TIMEOUT_ACTIVATE, 

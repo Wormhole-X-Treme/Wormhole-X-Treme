@@ -39,15 +39,26 @@ import com.wormhole_xtreme.logic.StargateHelper;
 import com.wormhole_xtreme.permissions.PermissionsManager.PermissionLevel;
 
 
-/** 
- * WormholeXtreme StargateDBManager 
- * @author Ben Echols (Lologarithm) 
+// TODO: Auto-generated Javadoc
+/**
+ * WormholeXtreme StargateDBManager.
+ *
+ * @author Ben Echols (Lologarithm)
  */ 
 public class StargateDBManager 
 {
+	
+	/** The Constant wxt. */
 	private static final WormholeXTreme wxt = WormholeXTreme.ThisPlugin;
+	
+	/** The sql_connection. */
 	private static Connection sql_connection;
 	
+	/**
+	 * Load stargates.
+	 *
+	 * @param server the server
+	 */
 	public static void LoadStargates(Server server)
 	{
 		if ( sql_connection == null )
@@ -183,11 +194,23 @@ public class StargateDBManager
 		
 	}
 	
+	/** The Store statement. */
 	private static volatile PreparedStatement StoreStatement;
+	
+	/** The Update gate statement. */
 	private static volatile PreparedStatement UpdateGateStatement;
+	
+	/** The Get gate statement. */
 	private static volatile PreparedStatement GetGateStatement;
+	
+	/** The Remove statement. */
 	private static volatile PreparedStatement RemoveStatement;
 	
+	/**
+	 * Stargate to sql.
+	 *
+	 * @param s the s
+	 */
 	public static void StargateToSQL(Stargate s)
 	{
 		if ( sql_connection == null  )
@@ -262,6 +285,11 @@ public class StargateDBManager
 		}
 	}
 
+	/**
+	 * Removes the stargate from sql.
+	 *
+	 * @param s the s
+	 */
 	public static void RemoveStargateFromSQL(Stargate s)
 	{
 		if ( sql_connection == null  )
@@ -284,6 +312,9 @@ public class StargateDBManager
 		}
 	}
 	
+	/**
+	 * Connect db.
+	 */
 	private static void ConnectDB()
 	{
 		try 
@@ -315,6 +346,9 @@ public class StargateDBManager
 	    }
 	}
 
+	/**
+	 * Shutdown.
+	 */
 	public static void Shutdown()
 	{
 		try
@@ -334,9 +368,21 @@ public class StargateDBManager
 		}
 	}
 	
+	/** The Update indv perm statement. */
 	private static volatile PreparedStatement UpdateIndvPermStatement = null;
+	
+	/** The Store indv perm statement. */
 	private static volatile PreparedStatement StoreIndvPermStatement = null;
+	
+	/** The Get indv perm statement. */
 	private static volatile PreparedStatement GetIndvPermStatement = null;
+	
+	/**
+	 * Store individual permission in db.
+	 *
+	 * @param player the player
+	 * @param pl the pl
+	 */
 	public static void StoreIndividualPermissionInDB(String player, PermissionLevel pl)
 	{
 		if ( sql_connection == null  )
@@ -408,7 +454,14 @@ public class StargateDBManager
 //		return PermissionLevel.NO_PERMISSION_SET;
 //	}
 	
-	private static volatile PreparedStatement GetAllIndvPermStatement = null;
+	/** The Get all indv perm statement. */
+private static volatile PreparedStatement GetAllIndvPermStatement = null;
+	
+	/**
+	 * Gets the all individual permissions.
+	 *
+	 * @return the concurrent hash map
+	 */
 	public static ConcurrentHashMap<String, PermissionLevel> GetAllIndividualPermissions()
 	{
 		ConcurrentHashMap<String, PermissionLevel> perms = new ConcurrentHashMap<String, PermissionLevel>();
@@ -438,9 +491,21 @@ public class StargateDBManager
 		return perms;
 	}
 	
+	/** The Update group perm statement. */
 	private static volatile PreparedStatement UpdateGroupPermStatement = null;
+	
+	/** The Store group perm statement. */
 	private static volatile PreparedStatement StoreGroupPermStatement = null;
+	
+	/** The Get group perm statement. */
 	private static volatile PreparedStatement GetGroupPermStatement = null;
+	
+	/**
+	 * Store group permission in db.
+	 *
+	 * @param group the group
+	 * @param pl the pl
+	 */
 	public static void StoreGroupPermissionInDB(String group, PermissionLevel pl)
 	{
 		if ( sql_connection == null  )
@@ -483,7 +548,14 @@ public class StargateDBManager
 		}
 	}
 	
+	/** The Get all group perm statement. */
 	private static volatile PreparedStatement GetAllGroupPermStatement = null;
+	
+	/**
+	 * Gets the all group permissions.
+	 *
+	 * @return the hash map
+	 */
 	public static HashMap<String, PermissionLevel> GetAllGroupPermissions()
 	{
 		HashMap<String, PermissionLevel> perms = new HashMap<String, PermissionLevel>();
@@ -516,7 +588,12 @@ public class StargateDBManager
 
 	/*private static PreparedStatement StoreConfigStatement = null;
 	private static PreparedStatement UpdateConfigStatement = null;*/
+	/** The Delete config statement. */
 	private static volatile PreparedStatement DeleteConfigStatement = null;
+	
+	/**
+	 * Delete configurations.
+	 */
 	public static void DeleteConfigurations()
 	{
 		if ( sql_connection == null  )
@@ -539,7 +616,14 @@ public class StargateDBManager
 		}
 	}
 
+	/** The Get all config statement. */
 	private static volatile PreparedStatement GetAllConfigStatement = null;
+	
+	/**
+	 * Gets the all configuration.
+	 *
+	 * @return the hash map
+	 */
 	public static HashMap<String, String> GetAllConfiguration()
 	{
 		HashMap<String, String> configs = new HashMap<String, String>();

@@ -39,30 +39,33 @@ import com.wormhole_xtreme.logic.StargateUpdateRunnable.ActionToTake;
 import com.wormhole_xtreme.utils.WorldUtils;
 
 
-/** 
- * WormholeXtreme Stargate 
- * @author Ben Echols (Lologarithm) 
+// TODO: Auto-generated Javadoc
+/**
+ * WormholeXtreme Stargate.
+ *
+ * @author Ben Echols (Lologarithm)
  */ 
 public class Stargate 
 {	
 	// Used to parse
+	/** The Loaded version. */
 	public byte LoadedVersion = -1;
+	
+	/** The Gate id. */
 	public long GateId = -1;
 	/** 
 	 *  Name of this gate, used to index and target.
 	 */
 	public String Name = "";
-	/** 
-	 * Name of person who made the gate
-	 */
+	
+	/** Name of person who made the gate. */
 	public String Owner = null;
 	/** 
 	 * Network gate is connected to.
 	 */
 	public StargateNetwork Network;
-	/** 
-	 * Is activated through sign destination?
-	 */
+	
+	/** Is activated through sign destination?. */
 	public boolean IsSignPowered;
 	/**
 	 * The gateshape that this gate uses.
@@ -70,58 +73,85 @@ public class Stargate
 	 */
 	public StargateShape GateShape;
 	
+	/** The My world. */
 	public World MyWorld;
 	// Iris passcode (IDC_
+	/** The Iris deactivation code. */
 	public String IrisDeactivationCode = "";
 	// Is Iris active?
+	/** The Iris active. */
 	public boolean IrisActive = false;
 	// Default Iris setting
+	/** The Iris default active. */
 	public boolean IrisDefaultActive = false;
 	// Is this stargate already active? Can be active remotely and have no target of its own.
+	/** The Active. */
 	public boolean Active = false;
 	// Is this stargate already lit up? 
+	/** The Lit gate. */
 	public boolean LitGate = false;
 	// Stargate that is the target of this gate.
+	/** The Target. */
 	public Stargate Target = null;
 	// temp int id of target starget
+	/** The temp_target_id. */
 	public long temp_target_id = -1;
 	
 	// Location of the Button/Lever that activates this gate.
+	/** The Activation block. */
 	public Block ActivationBlock;
 	// Location of the Button/Lever that activates this gate.
+	/** The Iris activation block. */
 	public Block IrisActivationBlock;
 	// Block to place stargate name
+	/** The Name block holder. */
 	public Block NameBlockHolder;
 	
 	// Block to temp store the sign.
+	/** The Teleport sign block. */
 	public Block TeleportSignBlock;
 	// Sign to choose teleport target from (optional)
+	/** The Teleport sign. */
 	public Sign TeleportSign;
 	// Block to teleport from;
+	/** The Teleport location. */
 	public Location TeleportLocation;
 	
 	// Direction that the stargate faces.
+	/** The Facing. */
 	public BlockFace Facing;
 		
 	// The current target on the sign, only used if IsSignPowered is true
+	/** The Sign target. */
 	public Stargate SignTarget;
 	// Temp target id to store when loading gates.
+	/** The temp_sign_target. */
 	public long temp_sign_target = -1;
 	// Index in network the sign is pointing at
+	/** The Sign index. */
 	public int SignIndex = 0;
 
 	
 	// List of all blocks contained in this stargate, including buttons and levers.
+	/** The Blocks. */
 	public ArrayList<Location> Blocks = new ArrayList<Location>();
 	// List of all blocks that turn to water on activation
+	/** The Water blocks. */
 	public ArrayList<Location> WaterBlocks = new ArrayList<Location>();
 	// List of all blocks that turn on when gate is active
+	/** The Light blocks. */
 	public ArrayList<Location> LightBlocks = new ArrayList<Location>();
 	
 	// Used to track active scheduled tasks.
+	/** The Activate task id. */
 	private int ActivateTaskId;
+	
+	/** The Shutdown task id. */
 	private int ShutdownTaskId;
 	
+	/**
+	 * Instantiates a new stargate.
+	 */
 	public Stargate()
 	{
 		
@@ -135,6 +165,11 @@ public class Stargate
 	}*/
 	
 	
+	/**
+	 * Fill gate interior.
+	 *
+	 * @param m the m
+	 */
 	public void FillGateInterior(Material m)
 	{
 	        for( Location bc : this.WaterBlocks )
@@ -144,8 +179,15 @@ public class Stargate
 	        }
 	}
 	
+	/** The animation_step. */
 	int animation_step = 0;
+	
+	/** The Animated blocks. */
 	ArrayList<Block> AnimatedBlocks = new ArrayList<Block>();
+	
+	/**
+	 * Animate opening.
+	 */
 	public void AnimateOpening()
 	{
 		Material woosh_material = ConfigManager.getPortalMaterial();
@@ -216,11 +258,17 @@ public class Stargate
 		}
 	}
 
+	/**
+	 * Activate stargate.
+	 */
 	public void ActivateStargate() 
 	{
 		this.Active = true;
 	}
 	
+	/**
+	 * Light stargate.
+	 */
 	public void LightStargate()
 	{
 		this.LitGate = true;
@@ -237,6 +285,11 @@ public class Stargate
 		}
 	}
 	
+	/**
+	 * Start activation timer.
+	 *
+	 * @param p the p
+	 */
 	public void StartActivationTimer(Player p)
 	{
 		if ( this.ActivateTaskId >= 0)
@@ -249,6 +302,11 @@ public class Stargate
 		WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Wormhole \""+ this.Name + "\" ActivateTaskID \"" + this.ActivateTaskId + "\" created.");
 	}
 
+	/**
+	 * Stop activation timer.
+	 *
+	 * @param p the p
+	 */
 	public void StopActivationTimer(Player p)
 	{
 		if ( this.ActivateTaskId >= 0)
@@ -259,6 +317,11 @@ public class Stargate
 		}
 	}
 
+	/**
+	 * Timeout stargate.
+	 *
+	 * @param p the p
+	 */
 	public void TimeoutStargate(Player p)
 	{
 		if ( this.ActivateTaskId >= 0 )
@@ -291,11 +354,17 @@ public class Stargate
 		}
 	}
 	
+	/**
+	 * De activate stargate.
+	 */
 	public void DeActivateStargate()
 	{
 		this.Active = false;
 	}
 	
+	/**
+	 * Un light stargate.
+	 */
 	public void UnLightStargate()
 	{
 		this.LitGate = false;
@@ -372,7 +441,8 @@ public class Stargate
 	
 	/**
 	 * This method takes in a remote stargate and dials it if it is not active.
-	 * @param target
+	 *
+	 * @param target the target
 	 * @return True if successful, False if remote target is already Active or if there is a failure scheduling stargate shutdowns.
 	 */
 	public boolean DialStargate(Stargate target)
@@ -409,7 +479,8 @@ public class Stargate
 	
 	/**
 	 * This method takes in a remote stargate and dials it if it is not active.
-	 * @param target
+	 *
+	 * @param target the target
 	 * @return True if successful, False if remote target is already Active or if there is a failure scheduling stargate shutdowns.
 	 */
 	public boolean ForceDialStargate(Stargate target)
@@ -444,6 +515,9 @@ public class Stargate
 		return false;
 	}
 	
+	/**
+	 * Shutdown stargate.
+	 */
 	public void ShutdownStargate()
 	{
 		if ( this.ShutdownTaskId >= 0 )
@@ -474,6 +548,12 @@ public class Stargate
 		}
 	}
 	
+	/**
+	 * Complete gate.
+	 *
+	 * @param name the name
+	 * @param idc the idc
+	 */
 	public void CompleteGate(String name, String idc)
 	{
 		this.Name = name;
@@ -489,6 +569,9 @@ public class Stargate
 	
 	/*
 	 * Deal with initial gate sign placement, orientation and text for name, network, and owner.
+	 */
+	/**
+	 * Setup gate sign.
 	 */
 	public void SetupGateSign()
 	{
@@ -529,6 +612,11 @@ public class Stargate
 	/*
 	 * Setup Levers for IRIS control when IDC is set.
 	 */
+	/**
+	 * Setup iris lever.
+	 *
+	 * @param add the add
+	 */
 	public void SetupIrisLever(boolean add)
 	{
 		if ( add )
@@ -564,6 +652,12 @@ public class Stargate
 		}
 		
 	}
+	
+	/**
+	 * Sets the iris deactivation code.
+	 *
+	 * @param idc the idc
+	 */
 	public void SetIrisDeactivationCode ( String idc )
 	{
 		this.IrisDeactivationCode = idc;
@@ -617,6 +711,8 @@ public class Stargate
 	
 	/**
 	 * This method toggles the current state of the iris.
+	 *
+	 * @param active the active
 	 */
 	public void SetIrisActive(boolean active)
 	{
@@ -637,6 +733,12 @@ public class Stargate
 	
 
 
+	/**
+	 * Try click teleport sign.
+	 *
+	 * @param clicked the clicked
+	 * @return true, if successful
+	 */
 	public boolean TryClickTeleportSign(Block clicked) 
 	{
 		if ( TeleportSign == null && TeleportSignBlock != null )
@@ -657,7 +759,12 @@ public class Stargate
 		return false;
 	}
 	
+	/** The gate_order. */
 	private HashMap<Integer, Stargate> gate_order = new HashMap<Integer,Stargate>();
+	
+	/**
+	 * Teleport sign clicked.
+	 */
 	public void TeleportSignClicked()
 	{
 		if ( this.SignIndex == -1 )
@@ -767,6 +874,9 @@ public class Stargate
 	/*
 	 * Delete Stargate Blocks
 	 */
+	/**
+	 * Delete gate blocks.
+	 */
 	public void DeleteGateBlocks()
 	{
 		for( Location bc : this.Blocks )
@@ -778,6 +888,9 @@ public class Stargate
 
 	/*
 	 * Delete Stargate Portal Blocks
+	 */
+	/**
+	 * Delete portal blocks.
 	 */
 	public void DeletePortalBlocks()
 	{
@@ -791,6 +904,9 @@ public class Stargate
 	/*
 	 * Delete Name Block
 	 */
+	/**
+	 * Delete name block.
+	 */
 	public void DeleteNameBlock()
 	{
 		if (this.NameBlockHolder != null)
@@ -802,6 +918,9 @@ public class Stargate
 	/*
 	 * Delete Teleport Sign Block
 	 */
+	/**
+	 * Delete teleport sign block.
+	 */
 	public void DeleteTeleportSignBlock()
 	{
 		if (this.TeleportSignBlock != null)
@@ -812,6 +931,9 @@ public class Stargate
 	
 	/*
 	 * Delete Name Sign
+	 */
+	/**
+	 * Delete name sign.
 	 */
 	public void DeleteNameSign()
 	{
@@ -828,6 +950,9 @@ public class Stargate
 	/*
 	 * Delete Teleport Sign
 	 */
+	/**
+	 * Delete teleport sign.
+	 */
 	public void DeleteTeleportSign()
 	{
 		if (this.TeleportSignBlock != null && this.TeleportSign != null)
@@ -838,6 +963,9 @@ public class Stargate
 	}
 	/*
 	 * Wipe Teleport Sign
+	 */
+	/**
+	 * Reset teleport sign.
 	 */
 	public void ResetTeleportSign()
 	{
@@ -862,6 +990,9 @@ public class Stargate
 	
 	/*
 	 * Delete Iris Lever
+	 */
+	/**
+	 * Delete iris lever.
 	 */
 	public void DeleteIrisLever()
 	{

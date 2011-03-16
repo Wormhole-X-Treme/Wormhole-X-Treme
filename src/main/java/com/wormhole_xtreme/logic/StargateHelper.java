@@ -49,13 +49,31 @@ import com.wormhole_xtreme.utils.DataUtils;
 import com.wormhole_xtreme.utils.WorldUtils;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class StargateHelper.
+ */
 public class StargateHelper 
 {
+	
+	/** The Constant shapes. */
 	private static final ConcurrentHashMap<String, StargateShape> shapes = new ConcurrentHashMap<String, StargateShape>();
+	
+	/** The Constant wxt. */
 	private static final WormholeXTreme wxt = WormholeXTreme.ThisPlugin;
+	
+	/** The Constant StargateSaveVersion. */
 	public static final byte StargateSaveVersion = 5;
+	
+	/** The Empty block. */
 	private static byte[] EmptyBlock = { 0,0,0,0,0,0,0,0,0,0,0,0 };
 	
+	/**
+	 * Stargateto binary.
+	 *
+	 * @param s the s
+	 * @return the byte[]
+	 */
 	public static byte[] stargatetoBinary(Stargate s)
 	{
 		byte[] utf_face_bytes;
@@ -171,11 +189,11 @@ public class StargateHelper
 	} 
 	
 	/**
-	 * 	 * This method takes in a button/lever and a facing and returns a completed stargate.
+	 * * This method takes in a button/lever and a facing and returns a completed stargate.
 	 * If the gate does not match the format for a gate it returns null.
-
-	 * @param button_block
-	 * @param facing
+	 *
+	 * @param button_block the button_block
+	 * @param facing the facing
 	 * @return s If successful returns completed gate, null otherwise
 	 */
 	public static Stargate checkStargate(Block button_block, BlockFace facing )
@@ -196,9 +214,10 @@ public class StargateHelper
 	
 	/**
 	 * This method takes in the DHD pressed and a shape. This method will create a stargate of the specified shape and return it.
-	 * @param button_block
-	 * @param facing
-	 * @param shape
+	 *
+	 * @param button_block the button_block
+	 * @param facing the facing
+	 * @param shape the shape
 	 * @return checkStargate(button_block, facing, shape, true)
 	 */
 	public static Stargate checkStargate(Block button_block, BlockFace facing, StargateShape shape )
@@ -206,6 +225,15 @@ public class StargateHelper
 		return checkStargate(button_block, facing, shape, true);
 	}
 	
+	/**
+	 * Check stargate.
+	 *
+	 * @param button_block the button_block
+	 * @param facing the facing
+	 * @param shape the shape
+	 * @param create the create
+	 * @return the stargate
+	 */
 	public static Stargate checkStargate(Block button_block, BlockFace facing, StargateShape shape, boolean create )
 	{
 		BlockFace opposite = WorldUtils.getInverseDirection(facing);
@@ -387,11 +415,26 @@ public class StargateHelper
 	}
 	
 	
+	/**
+	 * Checks if is stargate material.
+	 *
+	 * @param b the b
+	 * @return true, if is stargate material
+	 */
 	private static boolean isStargateMaterial(Block b)
 	{
 		return b.getType() == ConfigManager.getStargateMaterial();
 	}	
 
+	/**
+	 * Parses the versioned data.
+	 *
+	 * @param gate_data the gate_data
+	 * @param w the w
+	 * @param name the name
+	 * @param network the network
+	 * @return the stargate
+	 */
 	public static Stargate parseVersionedData(byte[] gate_data, World w, String name, StargateNetwork network)
 	{
 		Stargate s = new Stargate();
@@ -823,7 +866,8 @@ public class StargateHelper
 	}
 
 	/**
-	 * Returns a shape based on name
+	 * Returns a shape based on name.
+	 *
 	 * @param name Name of stargate shape
 	 * @return The shape associated with that name. Null if not in list.
 	 */
@@ -835,6 +879,9 @@ public class StargateHelper
 		return null;
 	}
 	
+	/**
+	 * Load shapes.
+	 */
 	public static void loadShapes()
 	{
 		File directory = new File("plugins" + File.separator + "WormholeXTreme" + File.separator + "GateShapes" + File.separator);

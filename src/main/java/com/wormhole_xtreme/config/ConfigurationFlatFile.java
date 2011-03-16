@@ -32,14 +32,29 @@ import com.wormhole_xtreme.config.ConfigManager.ConfigKeys;
 
 
 
+// TODO: Auto-generated Javadoc
 /*
  * This class is based on a class "MinecartFlatFile.java" 
  * from MinecartMania written by Afforess from Bukkit.org
  */
+/**
+ * The Class ConfigurationFlatFile.
+ */
 public class ConfigurationFlatFile 
 {
+	
+	/** The Constant wxt. */
 	private static final WormholeXTreme wxt = WormholeXTreme.ThisPlugin;
 	
+	/**
+	 * Creates the new header.
+	 *
+	 * @param output the output
+	 * @param title the title
+	 * @param subtitle the subtitle
+	 * @param firstHeader the first header
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void createNewHeader(BufferedWriter output, String title, String subtitle, boolean firstHeader) throws IOException 
 	{
 		final String linebreak = "-------------------------------";
@@ -59,6 +74,15 @@ public class ConfigurationFlatFile
 		output.newLine();
 	}
 
+	/**
+	 * Creates the new setting.
+	 *
+	 * @param output the output
+	 * @param name the name
+	 * @param value the value
+	 * @param description the description
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void createNewSetting(BufferedWriter output, ConfigKeys name, String value, String description) throws IOException 
 	{
 		final String linebreak = "---------------";
@@ -90,6 +114,15 @@ public class ConfigurationFlatFile
 		}
 	}
 
+	/**
+	 * Gets the value from setting.
+	 *
+	 * @param input the input
+	 * @param name the name
+	 * @param defaultVal the default val
+	 * @return the value from setting
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static String getValueFromSetting(File input, ConfigKeys name, String defaultVal)  throws IOException
 	{
 		BufferedReader bufferedreader = new BufferedReader(new FileReader(input));

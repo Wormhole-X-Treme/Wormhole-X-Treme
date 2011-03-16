@@ -50,29 +50,50 @@ import com.wormhole_xtreme.command.*;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
-/** 
- * WormholeXtreme for Bukkit 
+// TODO: Auto-generated Javadoc
+/**
+ * WormholeXtreme for Bukkit.
+ *
  * @author Ben Echols (Lologarithm)
  * @author Dean Bailey (alron)
  */ 
 public class WormholeXTreme extends JavaPlugin
 {
 
+	/** The player listener. */
 	private final WormholeXTremePlayerListener playerListener = new WormholeXTremePlayerListener(this);
+	
+	/** The block listener. */
 	private final WormholeXTremeBlockListener blockListener = new WormholeXTremeBlockListener(this);
+	
+	/** The vehicle listener. */
 	private final WormholeXTremeVehicleListener vehicleListener = new WormholeXTremeVehicleListener(this);
 	//private final WormholeXTremeEntityListener entityListener = new WormholeXTremeEntityListener(this);
+	/** The server listener. */
 	private final WormholeXTremeServerListener serverListener = new WormholeXTremeServerListener(this);
+	
+	/** The debugees. */
 	private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
 
 	
+	/** The Permissions. */
 	public static volatile PermissionHandler Permissions = null;
+	
+	/** The Iconomy. */
 	public static volatile iConomy Iconomy = null;
+	
+	/** The Scheduler. */
 	public static BukkitScheduler Scheduler = null;
+	
+	/** The This plugin. */
 	public static WormholeXTreme ThisPlugin = null;
 	 
+	/** The log. */
 	private static Logger log;
  
+	/* (non-Javadoc)
+	 * @see org.bukkit.plugin.Plugin#onEnable()
+	 */
 	@Override
     public void onEnable()
 	{ 
@@ -112,6 +133,9 @@ public class WormholeXTreme extends JavaPlugin
 		getCommand("wxidc").setExecutor(new WXIDC(this));
 	}
 
+    /**
+     * Register events.
+     */
     private void registerEvents() 
     {
 		PluginManager pm = getServer().getPluginManager(); 
@@ -139,6 +163,9 @@ public class WormholeXTreme extends JavaPlugin
 		pm.registerEvent(Event.Type.PLUGIN_DISABLE, serverListener, Priority.Monitor, this);
 	}
 
+	/**
+	 * Setup permissions.
+	 */
 	public void setupPermissions() 
     {
     	Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
@@ -166,6 +193,9 @@ public class WormholeXTreme extends JavaPlugin
     	}
     }
 	
+    /**
+     * Setup iconomy.
+     */
     public void setupIconomy() 
     {
     	Plugin test = this.getServer().getPluginManager().getPlugin("iConomy");
@@ -195,6 +225,9 @@ public class WormholeXTreme extends JavaPlugin
     	}
     }
     
+	/* (non-Javadoc)
+	 * @see org.bukkit.plugin.Plugin#onDisable()
+	 */
 	@Override
     public void onDisable() 
 	{  
@@ -221,6 +254,9 @@ public class WormholeXTreme extends JavaPlugin
 		}
 	} 
 
+	/* (non-Javadoc)
+	 * @see org.bukkit.plugin.java.JavaPlugin#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+	 */
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args)
 	{
@@ -256,11 +292,23 @@ public class WormholeXTreme extends JavaPlugin
 		return false;
 	}
 
+	/**
+	 * Checks if is debugging.
+	 *
+	 * @param player the player
+	 * @return true, if is debugging
+	 */
 	public boolean isDebugging(final Player player) 
 	{ 
 		return debugees.containsKey(player) && debugees.get(player).booleanValue();
 	}
 	
+	/**
+	 * Sets the debugging.
+	 *
+	 * @param player the player
+	 * @param value the value
+	 */
 	public void setDebugging(final Player player, final boolean value) 
 	{
 		debugees.put(player, Boolean.valueOf(value)); 
@@ -291,6 +339,11 @@ public class WormholeXTreme extends JavaPlugin
 		}
 	}
 	
+	/**
+	 * Sets the pretty log level.
+	 *
+	 * @param level the new pretty log level
+	 */
 	public void setPrettyLogLevel(Level level)
 	{
 		log.setLevel(level);

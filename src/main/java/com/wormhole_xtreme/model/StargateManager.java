@@ -33,27 +33,36 @@ import com.nijiko.coelho.iConomy.system.Account;
 import com.wormhole_xtreme.WormholeXTreme;
 import com.wormhole_xtreme.config.ConfigManager;
 
-/** 
- * WormholeXtreme Stargate Manager 
- * @author Ben Echols (Lologarithm) 
+// TODO: Auto-generated Javadoc
+/**
+ * WormholeXtreme Stargate Manager.
+ *
+ * @author Ben Echols (Lologarithm)
  */ 
 public class StargateManager 
 {
 	// A list of all blocks contained by all stargates. Makes for easy indexing when a player is trying
 	// to enter a gate or if water is trying to flow out, also will contain the stone buttons used to activate.
+	/** The all_gate_blocks. */
 	private static ConcurrentHashMap<Location, Stargate> all_gate_blocks = new ConcurrentHashMap<Location, Stargate>();
 	// List of All stargates indexed by name. Useful for dialing and such
+	/** The stargate_list. */
 	private static ConcurrentHashMap<String, Stargate> stargate_list = new ConcurrentHashMap<String, Stargate>();
 	// List of stargates built but not named. Indexed by the player that built it.
+	/** The incomplete_stargates. */
 	private static ConcurrentHashMap<Player, Stargate> incomplete_stargates = new ConcurrentHashMap<Player, Stargate>();
 	// List of stargates that have been activated but not yet dialed. Only used for gates without public use sign.
+	/** The activated_stargates. */
 	private static ConcurrentHashMap<Player, Stargate> activated_stargates = new ConcurrentHashMap<Player, Stargate>();
 	// List of networks indexed by their name
+	/** The stargate_networks. */
 	private static ConcurrentHashMap<String, StargateNetwork> stargate_networks = new ConcurrentHashMap<String, StargateNetwork>();
 	// List of players ready to build a stargate, with the shape they are trying to build.
+	/** The player_builders. */
 	private static ConcurrentHashMap<Player, StargateShape> player_builders = new ConcurrentHashMap<Player, StargateShape>();
 	
 	// List of blocks that are part of an active animation. Only use this to make sure water doesn't flow everywhere.
+	/** The Constant opening_animation_blocks. */
 	public static final ConcurrentHashMap<Location, Block> opening_animation_blocks = new ConcurrentHashMap<Location, Block>();
 
 	/**
@@ -75,10 +84,11 @@ public class StargateManager
 	
 	/**
 	 * This method adds an index mapping block location to stargate.
-	 * NOTE: This method does not verify that the block is part of the gate, 
+	 * NOTE: This method does not verify that the block is part of the gate,
 	 * so it may not persist and won't be removed by removing the stargate. This can cause a gate to stay in memory!!!
-	 * @param b
-	 * @param s
+	 *
+	 * @param b the b
+	 * @param s the s
 	 */
 	public static void AddBlockIndex(Block b, Stargate s)
 	{
@@ -88,9 +98,10 @@ public class StargateManager
 
 	/**
 	 * This method removes an index mapping block location to stargate.
-	 * NOTE: This method does not verify that the block has actually been removed from a gate 
+	 * NOTE: This method does not verify that the block has actually been removed from a gate
 	 * so it may not persist and can be readded when server is restarted.
-	 * @param b
+	 *
+	 * @param b the b
 	 */
 	public static void RemoveBlockIndex(Block b)
 	{
@@ -113,6 +124,11 @@ public class StargateManager
 	
 	// Gets all gates
 	// This is more expensive than some other methods so it probably shouldn't be called a lot.
+	/**
+	 * Gets the all gates.
+	 *
+	 * @return the array list
+	 */
 	public static ArrayList<Stargate> GetAllGates()
 	{
 		ArrayList<Stargate> gates = new ArrayList<Stargate>();
@@ -211,6 +227,15 @@ public class StargateManager
 		incomplete_stargates.remove(p);
 	}
 
+	/**
+	 * Complete stargate.
+	 *
+	 * @param p the p
+	 * @param name the name
+	 * @param idc the idc
+	 * @param network the network
+	 * @return true, if successful
+	 */
 	public static boolean CompleteStargate(Player p, String name, String idc, String network)
 	{
 		Stargate complete = incomplete_stargates.remove(p);
@@ -259,6 +284,13 @@ public class StargateManager
 		return false;
 	}
 	
+	/**
+	 * Complete stargate.
+	 *
+	 * @param p the p
+	 * @param s the s
+	 * @return true, if successful
+	 */
 	public static boolean CompleteStargate(Player p, Stargate s)
 	{
 		Stargate pos_dupe = StargateManager.GetStargate(s.Name);
@@ -297,6 +329,12 @@ public class StargateManager
 		return false;
 	}
 	
+	/**
+	 * Gets the gate from block.
+	 *
+	 * @param b the b
+	 * @return the gate from block
+	 */
 	public static Stargate getGateFromBlock(Block b)
 	{
 		if ( b == null )
@@ -313,6 +351,12 @@ public class StargateManager
 	// If block is a "gate" block this returns true.
 	// This is useful to stop damage from being applied from an underpriveledged user.
 	// Also used to stop flow of water, and prevent portal physics
+	/**
+	 * Checks if is block in gate.
+	 *
+	 * @param b the b
+	 * @return true, if is block in gate
+	 */
 	public static boolean isBlockInGate(Block b)
 	{
 		if ( b == null )
@@ -322,6 +366,12 @@ public class StargateManager
 	}
 	
 	// Network functions
+	/**
+	 * Adds the stargate network.
+	 *
+	 * @param name the name
+	 * @return the stargate network
+	 */
 	public static StargateNetwork AddStargateNetwork(String name)
 	{
 		if ( !stargate_networks.containsKey(name))
@@ -335,6 +385,12 @@ public class StargateManager
 			return stargate_networks.get(name);
 	}
 
+	/**
+	 * Gets the stargate network.
+	 *
+	 * @param name the name
+	 * @return the stargate network
+	 */
 	public static StargateNetwork GetStargateNetwork(String name)
 	{
 		if ( stargate_networks.containsKey(name))
@@ -345,6 +401,12 @@ public class StargateManager
 			return null;		
 	}
 	
+	/**
+	 * Adds the gate to network.
+	 *
+	 * @param gate the gate
+	 * @param network the network
+	 */
 	public static void AddGateToNetwork(Stargate gate, String network)
 	{
 		if ( !stargate_networks.containsKey(network))
@@ -362,11 +424,23 @@ public class StargateManager
 		}
 	}
 
+	/**
+	 * Adds the player builder shape.
+	 *
+	 * @param p the p
+	 * @param shape the shape
+	 */
 	public static void AddPlayerBuilderShape(Player p, StargateShape shape)
 	{
 		player_builders.put(p, shape);
 	}
 	
+	/**
+	 * Gets the player builder shape.
+	 *
+	 * @param p the p
+	 * @return the stargate shape
+	 */
 	public static StargateShape GetPlayerBuilderShape(Player p)
 	{
 		if ( player_builders.containsKey(p) )

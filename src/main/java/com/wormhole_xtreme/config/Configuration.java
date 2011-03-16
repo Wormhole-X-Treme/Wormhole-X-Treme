@@ -39,20 +39,38 @@ import com.wormhole_xtreme.permissions.PermissionsManager.PermissionLevel;
 
 
 
+// TODO: Auto-generated Javadoc
 /*
  * This class is based on a class "Configuration.java" 
  * from MinecartMania written by Afforess from Bukkit.org
  */
+/**
+ * The Class Configuration.
+ */
 public class Configuration 
 {
+	
+	/** The options. */
 	private static File options = null;
+	
+	/** The Constant wxt. */
 	private static final WormholeXTreme wxt = WormholeXTreme.ThisPlugin;
 	
+	/**
+	 * Load configuration.
+	 *
+	 * @param desc the desc
+	 */
 	public static void loadConfiguration(PluginDescriptionFile desc) 
 	{
 		readFile(desc);
 	}
 
+	/**
+	 * Read file.
+	 *
+	 * @param desc the desc
+	 */
 	private static void readFile(PluginDescriptionFile desc) 
 	{	
 		File directory = new File("plugins" + File.separator + desc.getName() + File.separator);
@@ -86,6 +104,13 @@ public class Configuration
 		}
 	}
 
+	/**
+	 * Invalid file.
+	 *
+	 * @param file the file
+	 * @param desc the desc
+	 * @return true, if successful
+	 */
 	private static boolean invalidFile(File file, PluginDescriptionFile desc) 
 	{
 		BufferedReader bufferedreader = null;
@@ -143,6 +168,11 @@ public class Configuration
 		}
 	}*/
 
+	/**
+	 * Write file.
+	 *
+	 * @param desc the desc
+	 */
 	public static void writeFile(PluginDescriptionFile desc)
 	{
 		try 
@@ -181,6 +211,13 @@ public class Configuration
 		}
 	}
 	
+	/**
+	 * Write file.
+	 *
+	 * @param file the file
+	 * @param desc the desc
+	 * @param config the config
+	 */
 	private static void WriteFile(File file, PluginDescriptionFile desc, Setting[] config)
 	{
 		try 
@@ -215,6 +252,13 @@ public class Configuration
 		}
 	}
 
+	/**
+	 * Read file.
+	 *
+	 * @param file the file
+	 * @param desc the desc
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private static void ReadFile(File file, PluginDescriptionFile desc) throws IOException
 	{
 

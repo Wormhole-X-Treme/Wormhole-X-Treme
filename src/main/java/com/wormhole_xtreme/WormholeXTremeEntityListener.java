@@ -35,21 +35,33 @@ import com.wormhole_xtreme.permissions.PermissionsManager;
 import com.wormhole_xtreme.permissions.PermissionsManager.PermissionLevel;
 
 
-/** 
- * WormholeXtreme Entity Listener 
- * @author Ben Echols (Lologarithm) 
+// TODO: Auto-generated Javadoc
+/**
+ * WormholeXtreme Entity Listener.
+ *
+ * @author Ben Echols (Lologarithm)
  * @author Dean Bailey (alron)
  */ 
 public class WormholeXTremeEntityListener extends EntityListener 
 { 
+	
+	/** The wxt. */
 	private WormholeXTreme wxt = null;
 	//private final Stargates plugin;
+	/**
+	 * Instantiates a new wormhole x treme entity listener.
+	 *
+	 * @param instance the instance
+	 */
 	public WormholeXTremeEntityListener(WormholeXTreme instance) 
 	{ 
 		//plugin = instance;
 		wxt = instance;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.bukkit.event.entity.EntityListener#onEntityCombust(org.bukkit.event.entity.EntityCombustEvent)
+	 */
 	@Override
     public void onEntityCombust(EntityCombustEvent event)
 	{
@@ -67,6 +79,9 @@ public class WormholeXTremeEntityListener extends EntityListener
 	}
 	
 
+	/* (non-Javadoc)
+	 * @see org.bukkit.event.entity.EntityListener#onEntityDamage(org.bukkit.event.entity.EntityDamageEvent)
+	 */
 	@Override
     public void onEntityDamage(EntityDamageEvent event)
 	{

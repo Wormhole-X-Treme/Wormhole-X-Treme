@@ -37,16 +37,25 @@ import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
 
 
-/** 
- * WormholeXtreme Player Listener 
+// TODO: Auto-generated Javadoc
+/**
+ * WormholeXtreme Player Listener.
+ *
  * @author Ben Echols (Lologarithm)
  * @author Dean Bailey (alron)
  */ 
 public class WormholeXTremePlayerListener extends PlayerListener 
 { 
+	
+	/** The wxt. */
 	private WormholeXTreme wxt = null;
 	//private ConcurrentHashMap<String, Integer> PlayerCompassOn = new ConcurrentHashMap<String, Integer>(); 
 	//private final WormholeXTreme plugin;
+	/**
+	 * Instantiates a new wormhole x treme player listener.
+	 *
+	 * @param instance the instance
+	 */
 	public WormholeXTremePlayerListener(WormholeXTreme instance) 
 	{ 
 		//plugin = instance; 
@@ -59,7 +68,10 @@ public class WormholeXTremePlayerListener extends PlayerListener
 //		player.sendMessage("Commands are: help, remove <name>, material <material>, irismaterial <material>, perms/perm, active_timeout <time>, shutdown_timeout <time>, owner <gate_name> <optional_set_owner>");
 //	}
 
-	@Override
+	/* (non-Javadoc)
+ * @see org.bukkit.event.player.PlayerListener#onPlayerMove(org.bukkit.event.player.PlayerMoveEvent)
+ */
+@Override
     public void onPlayerMove(PlayerMoveEvent event)
 	{
 		Player p = event.getPlayer();

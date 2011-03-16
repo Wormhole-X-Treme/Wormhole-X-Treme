@@ -27,18 +27,29 @@ import org.bukkit.plugin.Plugin;
 import com.nijiko.coelho.iConomy.iConomy;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
+// TODO: Auto-generated Javadoc
 /**
- * WormholeXTreme Server Listener
+ * WormholeXTreme Server Listener.
+ *
  * @author Ben Echols (Lologarithm)
  * @author Dean Bailey (alron)
  */
 public class WormholeXTremeServerListener extends ServerListener 
 {
+	
+	/**
+	 * Instantiates a new wormhole x treme server listener.
+	 *
+	 * @param this_plugin the this_plugin
+	 */
 	public WormholeXTremeServerListener(Plugin this_plugin)
 	{
 		
 	}
 	
+    /* (non-Javadoc)
+     * @see org.bukkit.event.server.ServerListener#onPluginEnabled(org.bukkit.event.server.PluginEvent)
+     */
     @Override
     public void onPluginEnabled(PluginEvent event) 
     {
@@ -82,6 +93,11 @@ public class WormholeXTremeServerListener extends ServerListener
         }
     }
     
+    /**
+     * Check permissions version.
+     *
+     * @param version the version
+     */
     public void checkPermissionsVersion(String version)
     {
         if ( !version.equals("2.4") && !version.startsWith("2.5"))
@@ -91,6 +107,11 @@ public class WormholeXTremeServerListener extends ServerListener
        
     }
     
+    /**
+     * Check iconomy version.
+     *
+     * @param version the version
+     */
     public void checkIconomyVersion(String version)
     {
         if ( !version.equals("4.0") && !version.equals("4.1") && !version.startsWith("4.2") && !version.startsWith("4.3") && !version.startsWith("4.4"))
@@ -100,6 +121,9 @@ public class WormholeXTremeServerListener extends ServerListener
        
     }
     
+    /* (non-Javadoc)
+     * @see org.bukkit.event.server.ServerListener#onPluginDisabled(org.bukkit.event.server.PluginEvent)
+     */
     @Override
     public void onPluginDisabled(PluginEvent event)
     {

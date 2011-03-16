@@ -25,17 +25,27 @@ import com.wormhole_xtreme.permissions.PermissionsManager;
 
 
 
-/** 
- * WormholeXtreme StargateNetwork
- * @author Ben Echols (Lologarithm) 
+// TODO: Auto-generated Javadoc
+/**
+ * WormholeXtreme StargateNetwork.
+ *
+ * @author Ben Echols (Lologarithm)
  */ 
 public class StargateNetwork 
 {
+	
+	/** The net name. */
 	public String netName;
 	
+	/** The gate_list. */
 	public ArrayList<Stargate> gate_list = new ArrayList<Stargate>();
+	
+	/** The gate lock. */
 	public Object gateLock = new Object();
 	
+	/** The individual_permissions. */
 	public HashMap<String, PermissionsManager.PermissionLevel> individual_permissions = new HashMap<String, PermissionsManager.PermissionLevel>();
+	
+	/** The group_permissions. */
 	public HashMap<String, PermissionsManager.PermissionLevel> group_permissions = new HashMap<String, PermissionsManager.PermissionLevel>();
 }

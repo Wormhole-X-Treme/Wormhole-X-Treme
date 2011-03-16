@@ -32,14 +32,18 @@ import com.wormhole_xtreme.model.StargateManager;
 import com.wormhole_xtreme.WormholeXTreme;
 import com.wormhole_xtreme.WormholeXTremeCommand;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author alron
+ * The Class WXForce.
  *
+ * @author alron
  */
 public class WXForce implements CommandExecutor {
 
     /**
-     * @param wormholeXTreme
+     * Instantiates a new wX force.
+     *
+     * @param wormholeXTreme the wormhole x treme
      */
     public WXForce(WormholeXTreme wormholeXTreme) {
         // TODO Auto-generated constructor stub

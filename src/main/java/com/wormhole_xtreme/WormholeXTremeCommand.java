@@ -162,102 +162,6 @@ public class WormholeXTremeCommand {
 	
 	
 	/**
-	 * Do gate remove.
-	 *
-	 * @param sender the sender
-	 * @param args the args
-	 * @param root_command the root_command
-	 * @return true, if successful
-	 */
-	private static boolean doGateRemove(CommandSender sender, String[] args, boolean root_command)
-	{
-		if ( (root_command && args.length >=1) || ((!root_command) && args.length >= 2) )
-		{
-		    Stargate s;
-		    if (root_command)
-		    {
-		        if (args[0].equals("-all"))
-		        {
-		            return false;
-		        }
-		        s = StargateManager.GetStargate(args[0]);
-		    }
-		    else
-		    {
-		        if (args[1].equals("-all"))
-		        {
-		            return false;
-		        }
-		        s = StargateManager.GetStargate(args[1]);
-		    }
-			
-			if ( s != null )
-			{
-				boolean allowed = false;
-				if (playerCheck(sender))
-				{
-					Player p = (Player) sender;
-					if  (WormholeXTreme.Permissions != null)
-					    {
-					    if (WormholeXTreme.Permissions.has(p, "wormhole.remove.all") || ( s.Owner != null && s.Owner.equals(p.getName()) && WormholeXTreme.Permissions.has(p, "wormhole.remove.own")))
-					    {
-					        allowed = true;
-					    }	
-					}
-					else if (PermissionsManager.getPermissionLevel(p, s) == PermissionsManager.PermissionLevel.WORMHOLE_FULL_PERMISSION )
-					{
-						allowed = true;
-					}
-				}
-				if ( !playerCheck(sender) || allowed )
-				{
-					s.DeleteNameSign();
-					s.ResetTeleportSign();
-					if (!s.IrisDeactivationCode.equals(""))
-					{
-					    s.DeleteIrisLever();
-					}
-					if ((root_command && args.length >= 2 && args[1].equals("-all")) || (!root_command && args.length >= 3 && args[2].equals("-all")))
-					{
-						s.DeleteNameSign();
-						s.DeleteGateBlocks();
-						s.DeletePortalBlocks();
-						s.DeleteTeleportSignBlock();
-						s.DeleteNameBlock();
-					}
-					StargateManager.RemoveStargate(s);
-					sender.sendMessage("\u00A73:: \u00a75Wormhole Removed: \u00a77" + s.Name);
-					return true;
-				}
-				else
-				{
-					sender.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
-					return true;
-				}
-					
-			}
-			else
-			{
-			    if (root_command)
-			    {
-			        sender.sendMessage("\u00A73:: \u00A75error \u00A73:: \u00A77Gate does not exist: " + args[0] + ". Remember proper capitalization.");
-			        return true;
-			    }
-			    else
-			    {
-			        sender.sendMessage("\u00A73:: \u00A75error \u00A73:: \u00A77Gate does not exist: " + args[1] + ". Remember proper capitalization.");
-			        return true;
-			    }
-			}
-		}
-		else
-		{
-			sender.sendMessage("\u00A73:: \u00a75You did not enter a gate name.");
-		}
-		return false;
-	}
-	
-	/**
 	 * Do material.
 	 *
 	 * @param s the s
@@ -741,10 +645,10 @@ public class WormholeXTremeCommand {
 		{
 			doOwner(sender,message_parts);
 		}
-		else if ( message_parts[0].equalsIgnoreCase("remove") )
-		{
-			return doGateRemove(sender,message_parts,false);
-		}
+//		else if ( message_parts[0].equalsIgnoreCase("remove") )
+//		{
+//			return doGateRemove(sender,message_parts,false);
+//		}
 		else if ( message_parts[0].equalsIgnoreCase("perm") || message_parts[0].equalsIgnoreCase("perms"))
 		{
 			doPerms(sender,message_parts);
@@ -852,24 +756,4 @@ public class WormholeXTremeCommand {
         }
 	    return doAddPlayerBuilder(sender, message_parts,true);
 	}
-	/*
-	 * Remove stargate (and delete gate blocks too)
-	 */
-	/**
-	 * Command remove gate.
-	 *
-	 * @param sender the sender
-	 * @param args the args
-	 * @return true, if successful
-	 */
-	public static boolean commandRemoveGate(CommandSender sender, String[] args)
-	{
-	    String[] message_parts = commandEscaper(args);
-	    if ((message_parts.length > 2) || (message_parts.length == 0 ))
-	    {
-	        return false;
-	    }
-	    return doGateRemove(sender, message_parts, true);
-	}
-
 }

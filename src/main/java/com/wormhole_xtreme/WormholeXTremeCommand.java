@@ -19,7 +19,6 @@
 package com.wormhole_xtreme;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -27,12 +26,9 @@ import org.bukkit.entity.Player;
 
 import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
-import com.wormhole_xtreme.logic.StargateHelper;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
-import com.wormhole_xtreme.model.StargateShape;
 import com.wormhole_xtreme.permissions.PermissionsManager;
-import com.wormhole_xtreme.permissions.PermissionsManager.PermissionLevel;
 
 
 /**
@@ -361,70 +357,6 @@ public class WormholeXTremeCommand {
 		}
 	}
 	
-	/**
-	 * Do add player builder.
-	 *
-	 * @param sender the sender
-	 * @param message_parts the message_parts
-	 * @param root_command the root_command
-	 * @return true, if successful
-	 */
-	private static boolean doAddPlayerBuilder(CommandSender sender, String[] message_parts, boolean root_command) 
-	{
-		if ( playerCheck(sender) )
-		{
-			Player p = (Player) sender;
-			if ( (root_command && message_parts.length >= 1) || (!root_command && message_parts.length >= 2) )
-			{
-			    String mp;
-			    if (root_command)
-			    {
-			        mp = message_parts[0];
-			    }
-			    else
-			    {
-			        mp = message_parts[1];
-			    } 
-			    boolean allowed = false;
-	            if (WormholeXTreme.Permissions != null)
-	            {
-	                if (WormholeXTreme.Permissions.has(p, "wormhole.config"))
-	                {
-	                    allowed = true;
-	                }
-	            }
-				if ( p.isOp() || allowed )
-				{
-					StargateShape shape = StargateHelper.getShape(mp);
-					if  ( shape != null)
-					{
-						StargateManager.AddPlayerBuilderShape(p, shape);
-						p.sendMessage("Press Activation button on new DHD to autobuild Stargate in the shape of: " + mp );
-						return true;
-					}
-					else
-					{
-						p.sendMessage("Invalid shape: " + mp);
-					}
-				}
-				else
-				{
-					p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
-					return true;
-				}
-			}
-			else
-			{
-				p.sendMessage("Build command requires a shape");
-			}
-		}
-		else
-		{
-		    return true;
-			 //("Cannot use this command without being a player.")
-		}
-		return false;
-	}
 	
 	/**
 	 * Command wormhole.
@@ -469,10 +401,6 @@ public class WormholeXTremeCommand {
 		{
 			doActivateTimeout(sender,message_parts);
 		}
-		else if ( message_parts[0].equalsIgnoreCase("build") )
-		{
-			return doAddPlayerBuilder(sender,message_parts,false);
-		}
 		else if (p != null)
 			{
 				p.sendMessage(ConfigManager.output_strings.get(StringTypes.REQUEST_INVALID));
@@ -484,26 +412,5 @@ public class WormholeXTremeCommand {
 				return true;
 			}
 		return true;
-	}
-	
-
-	/*
-	 * Build Stargate
-	 */
-	/**
-	 * Command build gate.
-	 *
-	 * @param sender the sender
-	 * @param args the args
-	 * @return true, if successful
-	 */
-	public static boolean commandBuildGate(CommandSender sender, String[] args)
-	{	    
-        String[] message_parts = commandEscaper(args);
-        if ((message_parts.length > 2) || (message_parts.length == 0 ))
-        {
-            return false;
-        }
-	    return doAddPlayerBuilder(sender, message_parts,true);
 	}
 }

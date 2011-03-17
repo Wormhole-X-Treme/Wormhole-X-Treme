@@ -143,6 +143,7 @@ public class WormholeXTreme extends JavaPlugin
 		getCommand("wxcomplete").setExecutor(new WXComplete(this));
 		getCommand("wxremove").setExecutor(new WXRemove(this));
 		getCommand("wxlist").setExecutor(new WXList(this));
+		getCommand("wxgo").setExecutor(new WXGo(this));
 	}
     /**
      * Register events.

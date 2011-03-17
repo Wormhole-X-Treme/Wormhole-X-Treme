@@ -70,3 +70,8 @@ commands:
      description: Forcefully shut down all gates and/or open all iris
      usage: |
             /<command> <close|drop>
+
+   wxgo:
+     description: Teleport to specified wormhole.
+     usage: |
+            /<command> <GateName>

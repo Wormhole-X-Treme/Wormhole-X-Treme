@@ -301,36 +301,6 @@ public class WormholeXTremeCommand {
 	}
 	
 	/**
-	 * Do go.
-	 *
-	 * @param p the p
-	 * @param args the args
-	 */
-	private static void doGo(Player p, String[] args)
-	{
-	    boolean allowed = false;
-	    if ( p.isOp() || ( WormholeXTreme.Permissions != null && WormholeXTreme.Permissions.has(p, "wormhole.go")))
-        {
-            allowed = true;
-        }
-		if (allowed)
-		{
-			if ( args.length == 2)
-			{
-				Stargate s = StargateManager.GetStargate(args[1]);
-				if ( s != null )
-				{
-					p.teleportTo(s.TeleportLocation);
-				}
-				else
-				{
-					p.sendMessage("\u00A73:: \u00A75error \u00A73:: \u00A77Gate does not exist: " + args[1]);
-				}
-			}
-		}
-	}
-	
-	/**
 	 * Do owner.
 	 *
 	 * @param sender the sender
@@ -588,11 +558,7 @@ public class WormholeXTremeCommand {
 			p = (Player) sender;
 		}
 
-		if (message_parts[0].equalsIgnoreCase("go") && p != null )
-		{
-			doGo(p,message_parts);
-		}
-		else if ( message_parts[0].equalsIgnoreCase("owner"))
+        if ( message_parts[0].equalsIgnoreCase("owner"))
 		{
 			doOwner(sender,message_parts);
 		}

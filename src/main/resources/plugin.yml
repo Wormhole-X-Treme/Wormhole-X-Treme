@@ -16,16 +16,9 @@ commands:
                      
             
    wormhole:
-     description: Wormhole related commands. Mostly configuration.
+     description: Wormhole administration and configuration commands.
      usage: |
             /<command> <commandtype> [ARG1] [ARG2]
-            Example: /<command> complete <GateName> idc=[IDC] net=[Net] 
-                     - [IDC] password optional.
-                     - [Net] network optional.
-            Example: /<command> compass 
-                     - Use compass to target Nearest Stargate.
-            Example: /<command> remove <GateName> [-all] 
-                     - [-all] Specify to destroy materials.
 
    wxlist:
      description: List all Stargates.

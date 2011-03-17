@@ -23,9 +23,6 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player; 
 import org.bukkit.event.Event; 
 import org.bukkit.event.Event.Priority; 
@@ -146,6 +143,7 @@ public class WormholeXTreme extends JavaPlugin
 		getCommand("wxgo").setExecutor(new WXGo(this));
 		getCommand("dial").setExecutor(new Dial(this));
 		getCommand("wxbuild").setExecutor(new WXBuild(this));
+		getCommand("wormhole").setExecutor(new Wormhole(this));
 	}
     /**
      * Register events.
@@ -268,19 +266,6 @@ public class WormholeXTreme extends JavaPlugin
 		}
 	} 
 
-	/* (non-Javadoc)
-	 * @see org.bukkit.plugin.java.JavaPlugin#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
-	 */
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args)
-	{
-		String commandName = command.getName().toLowerCase();
-		if (commandName.equals("wormhole"))
-		{
-			return WormholeXTremeCommand.commandWormhole(sender, args);
-		}
-		return false;
-	}
 
 	/**
 	 * Checks if is debugging.

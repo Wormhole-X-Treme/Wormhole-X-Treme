@@ -27,7 +27,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.wormhole_xtreme.WormholeXTreme;
-import com.wormhole_xtreme.WormholeXTremeCommand;
 import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
@@ -55,7 +54,7 @@ public class WXCompass implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
     {
         Player p = null;
-        if (WormholeXTremeCommand.playerCheck(sender))
+        if (CommandUtlities.playerCheck(sender))
         {
             p = (Player)sender;
         } 

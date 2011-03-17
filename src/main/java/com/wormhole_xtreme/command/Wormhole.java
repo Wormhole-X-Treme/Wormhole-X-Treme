@@ -25,7 +25,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.wormhole_xtreme.WormholeXTreme;
-import com.wormhole_xtreme.WormholeXTremeCommand;
 import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
@@ -55,7 +54,7 @@ public class Wormhole implements CommandExecutor
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
     {
-        args = WormholeXTremeCommand.commandEscaper(args);
+        args = CommandUtlities.commandEscaper(args);
         if ((args.length > 4 ) || (args.length == 0)) 
         {
             return false;
@@ -101,7 +100,7 @@ public class Wormhole implements CommandExecutor
 	private static void doMaterial(CommandSender s, String[] args)
 	{
 		boolean allowed = false;
-		if (WormholeXTremeCommand.playerCheck(s))
+		if (CommandUtlities.playerCheck(s))
 		{
 			Player p = (Player) s;
 			if ( p.isOp() || ( WormholeXTreme.Permissions != null && WormholeXTreme.Permissions.has(p, "wormhole.config")))
@@ -109,7 +108,7 @@ public class Wormhole implements CommandExecutor
 				allowed = true;
 			}
 		}	
-		if (allowed || !WormholeXTremeCommand.playerCheck(s))
+		if (allowed || !CommandUtlities.playerCheck(s))
 		{
 			if ( args.length == 2)
 			{
@@ -146,7 +145,7 @@ public class Wormhole implements CommandExecutor
 	private static void doIrisMaterial(CommandSender s, String[] args)
 	{
 		boolean allowed = false;
-		if (WormholeXTremeCommand.playerCheck(s))
+		if (CommandUtlities.playerCheck(s))
 		{
 			Player p = (Player) s;
 			if ( p.isOp() || ( WormholeXTreme.Permissions != null && WormholeXTreme.Permissions.has(p, "wormhole.config")))
@@ -154,7 +153,7 @@ public class Wormhole implements CommandExecutor
 				allowed = true;
 			}
 		}
-		if (allowed || !WormholeXTremeCommand.playerCheck(s))
+		if (allowed || !CommandUtlities.playerCheck(s))
 		{
 			if ( args.length == 2)
 			{
@@ -192,16 +191,16 @@ public class Wormhole implements CommandExecutor
 	private static void doShutdownTimeout(CommandSender s, String[] args)
 	{
 		boolean allowed = false;
-		if (WormholeXTremeCommand.playerCheck(s))
+		if (CommandUtlities.playerCheck(s))
 		{
 			Player p = (Player) s;
-			if ( p.isOp() || !WormholeXTremeCommand.playerCheck(p) || ( WormholeXTreme.Permissions != null && WormholeXTreme.Permissions.has(p, "wormhole.config")))
+			if ( p.isOp() || !CommandUtlities.playerCheck(p) || ( WormholeXTreme.Permissions != null && WormholeXTreme.Permissions.has(p, "wormhole.config")))
 			{
 				allowed = true;
 			}
 			
 		}
-		if (allowed || !WormholeXTremeCommand.playerCheck(s))
+		if (allowed || !CommandUtlities.playerCheck(s))
 		{
 			if ( args.length == 2)
 			{
@@ -239,7 +238,7 @@ public class Wormhole implements CommandExecutor
 	private static void doActivateTimeout(CommandSender s, String[] args)
 	{
 		boolean allowed = false;
-		if (WormholeXTremeCommand.playerCheck(s))
+		if (CommandUtlities.playerCheck(s))
 		{
 			Player p = (Player) s;
 			if ( p.isOp() || ( WormholeXTreme.Permissions != null && WormholeXTreme.Permissions.has(p, "wormhole.config")))
@@ -247,7 +246,7 @@ public class Wormhole implements CommandExecutor
 				allowed = true;
 			}
 		}
-		if (allowed || !WormholeXTremeCommand.playerCheck(s))
+		if (allowed || !CommandUtlities.playerCheck(s))
 		{
 			if ( args.length == 2)
 			{
@@ -285,7 +284,7 @@ public class Wormhole implements CommandExecutor
 	private static void doOwner(CommandSender sender, String[] args)
 	{
 		boolean allowed = false;
-		if (WormholeXTremeCommand.playerCheck(sender))
+		if (CommandUtlities.playerCheck(sender))
 		{
 			Player p = (Player) sender;
 			if ( p.isOp() || ( WormholeXTreme.Permissions != null && WormholeXTreme.Permissions.has(p, "wormhole.config")))
@@ -293,7 +292,7 @@ public class Wormhole implements CommandExecutor
 				allowed = true;
 			}
 		}
-		if (allowed || !WormholeXTremeCommand.playerCheck(sender))
+		if (allowed || !CommandUtlities.playerCheck(sender))
 			if ( args.length > 1 )
 			{
 				Stargate s = StargateManager.GetStargate(args[1]);
@@ -326,7 +325,7 @@ public class Wormhole implements CommandExecutor
 	 */
 	private static void doPerms(CommandSender sender, String[] args)
 	{
-		if (WormholeXTremeCommand.playerCheck(sender))
+		if (CommandUtlities.playerCheck(sender))
 		{
 			Player p = (Player) sender;
 			PermissionsManager.HandlePermissionRequest(p, args);

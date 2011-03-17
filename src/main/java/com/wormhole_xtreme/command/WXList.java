@@ -26,7 +26,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.wormhole_xtreme.WormholeXTreme;
-import com.wormhole_xtreme.WormholeXTremeCommand;
 import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
@@ -57,14 +56,14 @@ public class WXList implements CommandExecutor {
         boolean allowed = false;
         Player p = null;
         
-        if (WormholeXTremeCommand.playerCheck(sender)) {
+        if (CommandUtlities.playerCheck(sender)) {
             p = (Player) sender;
             if ( p.isOp() || (WormholeXTreme.Permissions != null && (WormholeXTreme.Permissions.has(p, "wormhole.config")) || (WormholeXTreme.Permissions.has(p, "wormhole.list"))))
             {
                 allowed = true;
             }
         }
-        if (!WormholeXTremeCommand.playerCheck(sender) || allowed )
+        if (!CommandUtlities.playerCheck(sender) || allowed )
         {
             ArrayList<Stargate> gates = StargateManager.GetAllGates();
             sender.sendMessage("\u00A73:: \u00A75available gates \u00A73::");

@@ -16,7 +16,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.wormhole_xtreme;
+package com.wormhole_xtreme.command;
 
 import java.util.ArrayList;
 
@@ -29,7 +29,7 @@ import org.bukkit.entity.Player;
  * @author Dean Bailey (alron)
  * @author Ben Echols (Lologarithm)
  */
-public class WormholeXTremeCommand {
+class CommandUtlities {
 
 
 	/**
@@ -38,7 +38,7 @@ public class WormholeXTremeCommand {
 	 * @param sender the sender
 	 * @return true, if successful
 	 */
-	public static boolean playerCheck(CommandSender sender) {
+	static boolean playerCheck(CommandSender sender) {
 		if (sender instanceof Player)
 		{
 			return true;
@@ -56,7 +56,7 @@ public class WormholeXTremeCommand {
 	 * @param args The String[] argument list to escape quotes on.
 	 * @return String[] with properly escaped quotes.
 	 */
-	public static String[] commandEscaper(String[] args)
+	static String[] commandEscaper(String[] args)
 	{
 		StringBuilder temp_string = new StringBuilder();
 		boolean start_quote_found = false;

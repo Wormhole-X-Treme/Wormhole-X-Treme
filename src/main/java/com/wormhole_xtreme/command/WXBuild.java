@@ -24,7 +24,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.wormhole_xtreme.WormholeXTreme;
-import com.wormhole_xtreme.WormholeXTremeCommand;
 import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.logic.StargateHelper;
@@ -53,7 +52,7 @@ public class WXBuild implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
         Player player = null;
-        if (!WormholeXTremeCommand.playerCheck(sender) )
+        if (!CommandUtlities.playerCheck(sender) )
         {
             return true;
         }
@@ -61,7 +60,7 @@ public class WXBuild implements CommandExecutor {
         {
             player = (Player)sender;
         }
-        args = WormholeXTremeCommand.commandEscaper(args);
+        args = CommandUtlities.commandEscaper(args);
         if (args.length == 1) 
         {
             boolean allowed = false;

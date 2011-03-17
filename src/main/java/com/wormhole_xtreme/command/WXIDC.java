@@ -26,7 +26,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.wormhole_xtreme.WormholeXTreme;
-import com.wormhole_xtreme.WormholeXTremeCommand;
 import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
@@ -55,11 +54,11 @@ public class WXIDC implements CommandExecutor {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        args = WormholeXTremeCommand.commandEscaper(args);  
+        args = CommandUtlities.commandEscaper(args);  
         Player p = null;
         boolean allowed = false;
         
-        if ( WormholeXTremeCommand.playerCheck(sender) )
+        if ( CommandUtlities.playerCheck(sender) )
         {
             p = (Player) sender;
         }
@@ -72,7 +71,7 @@ public class WXIDC implements CommandExecutor {
             {
                 // 1. check for permission (config, owner, or OP)
                 
-                if ( WormholeXTremeCommand.playerCheck(sender))
+                if ( CommandUtlities.playerCheck(sender))
                 {
                     if ( p.isOp() || 
                         (WormholeXTreme.Permissions != null && (WormholeXTreme.Permissions.has(p, "wormhole.config"))) ||
@@ -83,7 +82,7 @@ public class WXIDC implements CommandExecutor {
                 }
     
     
-                if ( allowed || !WormholeXTremeCommand.playerCheck(sender) )
+                if ( allowed || !CommandUtlities.playerCheck(sender) )
                 {
                     // 2. if args other than name - do a set                
                     if ( args.length >= 2 )

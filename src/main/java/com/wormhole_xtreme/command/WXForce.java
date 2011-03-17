@@ -30,7 +30,6 @@ import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
 import com.wormhole_xtreme.WormholeXTreme;
-import com.wormhole_xtreme.WormholeXTremeCommand;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -58,7 +57,7 @@ public class WXForce implements CommandExecutor {
         {
             boolean allowed = false;
             Player player = null;
-            if (WormholeXTremeCommand.playerCheck(sender))
+            if (CommandUtlities.playerCheck(sender))
             {
                 player = (Player) sender;
                 if (player.isOp() || (WormholeXTreme.Permissions != null && (WormholeXTreme.Permissions.has(player, "wormhole.config") || WormholeXTreme.Permissions.has(player, "wormhole.remove.all"))))

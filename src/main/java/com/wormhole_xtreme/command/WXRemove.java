@@ -24,7 +24,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.wormhole_xtreme.WormholeXTreme;
-import com.wormhole_xtreme.WormholeXTremeCommand;
 import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
@@ -53,7 +52,7 @@ public class WXRemove implements CommandExecutor {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        args = WormholeXTremeCommand.commandEscaper(args);
+        args = CommandUtlities.commandEscaper(args);
         if (args.length >=1 && args.length <= 2)
         {
             if (args[0].equals("-all"))
@@ -65,7 +64,7 @@ public class WXRemove implements CommandExecutor {
             if ( s != null )
             {
                 boolean allowed = false;
-                if (WormholeXTremeCommand.playerCheck(sender))
+                if (CommandUtlities.playerCheck(sender))
                 {
                     Player p = (Player) sender;
                     if  (WormholeXTreme.Permissions != null)
@@ -80,7 +79,7 @@ public class WXRemove implements CommandExecutor {
                         allowed = true;
                     }
                 }
-                if ( !WormholeXTremeCommand.playerCheck(sender) || allowed )
+                if ( !CommandUtlities.playerCheck(sender) || allowed )
                 {
                     s.DeleteNameSign();
                     s.ResetTeleportSign();

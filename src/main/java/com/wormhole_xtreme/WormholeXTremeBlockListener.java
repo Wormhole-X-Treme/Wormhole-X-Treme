@@ -425,7 +425,14 @@ public class WormholeXTremeBlockListener extends BlockListener
 				}
 				else
 				{
-					p.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_REMOTE_ACTIVE));
+					if ( s.LitGate && !s.Active )
+					{
+						p.sendMessage("Gate has been activated by someone else already.");
+					}
+					else
+					{
+						p.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_REMOTE_ACTIVE));
+					}
 				}
 			}
 				

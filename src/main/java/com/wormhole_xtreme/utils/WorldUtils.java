@@ -1,3 +1,21 @@
+/*
+ *   Wormhole X-Treme Plugin for Bukkit
+ *   Copyright (C) 2011  Ben Echols
+ *                       Dean Bailey
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.wormhole_xtreme.utils;
 
 import org.bukkit.Chunk;
@@ -5,12 +23,21 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
+// TODO: Auto-generated Javadoc
 /**
- *  WormholeXTreme WorldUtils
- *  @author Ben Echols (Lologarithm) 
+ * WormholeXTreme WorldUtils.
+ *
+ * @author Ben Echols (Lologarithm)
  */
 public class WorldUtils 
 {
+	
+	/**
+	 * Gets the inverse direction.
+	 *
+	 * @param bf the bf
+	 * @return the inverse direction
+	 */
 	public static BlockFace getInverseDirection(BlockFace bf)
 	{
 		switch ( bf )
@@ -40,6 +67,12 @@ public class WorldUtils
 		}
 	}
 	
+	/**
+	 * Gets the perpendicular right direction.
+	 *
+	 * @param bf the bf
+	 * @return the perpendicular right direction
+	 */
 	public static BlockFace getPerpendicularRightDirection(BlockFace bf)
 	{
 		switch ( bf )
@@ -69,6 +102,12 @@ public class WorldUtils
 		}
 	}
 
+	/**
+	 * Gets the degrees from block face.
+	 *
+	 * @param bf the bf
+	 * @return the degrees from block face
+	 */
 	public static Float getDegreesFromBlockFace(BlockFace bf)
 	{
 		if ( bf == BlockFace.NORTH )
@@ -83,6 +122,13 @@ public class WorldUtils
 		return (float) 0; 
 	}
 
+	/**
+	 * Checks if is same block.
+	 *
+	 * @param b1 the b1
+	 * @param b2 the b2
+	 * @return true, if is same block
+	 */
 	public static boolean isSameBlock(Block b1, Block b2)
 	{
 		if ( b1 == null || b2 == null )
@@ -91,6 +137,12 @@ public class WorldUtils
 		return b1.getX() == b2.getX() && b1.getY() == b2.getY() &&	b1.getZ() == b2.getZ();
 	}
 
+	/**
+	 * Sign facing data from block face.
+	 *
+	 * @param bf the bf
+	 * @return the byte
+	 */
 	public static byte signFacingDataFromBlockFace(BlockFace bf)
 	{
 		switch ( bf )
@@ -108,6 +160,12 @@ public class WorldUtils
 		return (byte)0;
 	}
 	
+	/**
+	 * Lever facing data from block face.
+	 *
+	 * @param bf the bf
+	 * @return the byte
+	 */
 	public static byte leverFacingDataFromBlockFace(BlockFace bf)
 	{
 		switch ( bf )
@@ -125,6 +183,11 @@ public class WorldUtils
 		return (byte)0;
 	}
 
+	/**
+	 * Check chunk load.
+	 *
+	 * @param b the b
+	 */
 	public static void checkChunkLoad(Block b) 
 	{
 		World w = b.getWorld();

@@ -1,3 +1,21 @@
+/*
+ *   Wormhole X-Treme Plugin for Bukkit
+ *   Copyright (C) 2011  Ben Echols
+ *                       Dean Bailey
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.wormhole_xtreme.config;
 
 import java.io.BufferedReader;
@@ -21,20 +39,38 @@ import com.wormhole_xtreme.permissions.PermissionsManager.PermissionLevel;
 
 
 
+// TODO: Auto-generated Javadoc
 /*
  * This class is based on a class "Configuration.java" 
  * from MinecartMania written by Afforess from Bukkit.org
  */
+/**
+ * The Class Configuration.
+ */
 public class Configuration 
 {
+	
+	/** The options. */
 	private static File options = null;
+	
+	/** The Constant wxt. */
 	private static final WormholeXTreme wxt = WormholeXTreme.ThisPlugin;
 	
+	/**
+	 * Load configuration.
+	 *
+	 * @param desc the desc
+	 */
 	public static void loadConfiguration(PluginDescriptionFile desc) 
 	{
 		readFile(desc);
 	}
 
+	/**
+	 * Read file.
+	 *
+	 * @param desc the desc
+	 */
 	private static void readFile(PluginDescriptionFile desc) 
 	{	
 		File directory = new File("plugins" + File.separator + desc.getName() + File.separator);
@@ -68,6 +104,13 @@ public class Configuration
 		}
 	}
 
+	/**
+	 * Invalid file.
+	 *
+	 * @param file the file
+	 * @param desc the desc
+	 * @return true, if successful
+	 */
 	private static boolean invalidFile(File file, PluginDescriptionFile desc) 
 	{
 		BufferedReader bufferedreader = null;
@@ -125,6 +168,11 @@ public class Configuration
 		}
 	}*/
 
+	/**
+	 * Write file.
+	 *
+	 * @param desc the desc
+	 */
 	public static void writeFile(PluginDescriptionFile desc)
 	{
 		try 
@@ -163,6 +211,13 @@ public class Configuration
 		}
 	}
 	
+	/**
+	 * Write file.
+	 *
+	 * @param file the file
+	 * @param desc the desc
+	 * @param config the config
+	 */
 	private static void WriteFile(File file, PluginDescriptionFile desc, Setting[] config)
 	{
 		try 
@@ -197,6 +252,13 @@ public class Configuration
 		}
 	}
 
+	/**
+	 * Read file.
+	 *
+	 * @param file the file
+	 * @param desc the desc
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private static void ReadFile(File file, PluginDescriptionFile desc) throws IOException
 	{
 

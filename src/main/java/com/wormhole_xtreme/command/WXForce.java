@@ -1,5 +1,20 @@
-/**
- * 
+/*
+ *   Wormhole X-Treme Plugin for Bukkit
+ *   Copyright (C) 2011  Ben Echols
+ *                       Dean Bailey
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.wormhole_xtreme.command;
 
@@ -15,16 +30,19 @@ import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
 import com.wormhole_xtreme.WormholeXTreme;
-import com.wormhole_xtreme.WormholeXTremeCommand;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author alron
+ * The Class WXForce.
  *
+ * @author alron
  */
 public class WXForce implements CommandExecutor {
 
     /**
-     * @param wormholeXTreme
+     * Instantiates a new wX force.
+     *
+     * @param wormholeXTreme the wormhole x treme
      */
     public WXForce(WormholeXTreme wormholeXTreme) {
         // TODO Auto-generated constructor stub
@@ -39,7 +57,7 @@ public class WXForce implements CommandExecutor {
         {
             boolean allowed = false;
             Player player = null;
-            if (WormholeXTremeCommand.playerCheck(sender))
+            if (CommandUtlities.playerCheck(sender))
             {
                 player = (Player) sender;
                 if (player.isOp() || (WormholeXTreme.Permissions != null && (WormholeXTreme.Permissions.has(player, "wormhole.config") || WormholeXTreme.Permissions.has(player, "wormhole.remove.all"))))

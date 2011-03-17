@@ -1,3 +1,21 @@
+/*
+ *   Wormhole X-Treme Plugin for Bukkit
+ *   Copyright (C) 2011  Ben Echols
+ *                       Dean Bailey
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.wormhole_xtreme; 
 
 import java.util.logging.Level;
@@ -19,15 +37,25 @@ import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
 
 
-/** 
- * WormholeXtreme Player Listener 
+// TODO: Auto-generated Javadoc
+/**
+ * WormholeXtreme Player Listener.
+ *
  * @author Ben Echols (Lologarithm)
+ * @author Dean Bailey (alron)
  */ 
 public class WormholeXTremePlayerListener extends PlayerListener 
 { 
+	
+	/** The wxt. */
 	private WormholeXTreme wxt = null;
 	//private ConcurrentHashMap<String, Integer> PlayerCompassOn = new ConcurrentHashMap<String, Integer>(); 
 	//private final WormholeXTreme plugin;
+	/**
+	 * Instantiates a new wormhole x treme player listener.
+	 *
+	 * @param instance the instance
+	 */
 	public WormholeXTremePlayerListener(WormholeXTreme instance) 
 	{ 
 		//plugin = instance; 
@@ -40,7 +68,10 @@ public class WormholeXTremePlayerListener extends PlayerListener
 //		player.sendMessage("Commands are: help, remove <name>, material <material>, irismaterial <material>, perms/perm, active_timeout <time>, shutdown_timeout <time>, owner <gate_name> <optional_set_owner>");
 //	}
 
-	@Override
+	/* (non-Javadoc)
+ * @see org.bukkit.event.player.PlayerListener#onPlayerMove(org.bukkit.event.player.PlayerMoveEvent)
+ */
+@Override
     public void onPlayerMove(PlayerMoveEvent event)
 	{
 		Player p = event.getPlayer();

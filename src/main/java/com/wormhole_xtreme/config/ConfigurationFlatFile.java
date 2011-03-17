@@ -1,3 +1,21 @@
+/*
+ *   Wormhole X-Treme Plugin for Bukkit
+ *   Copyright (C) 2011  Ben Echols
+ *                       Dean Bailey
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.wormhole_xtreme.config;
 
 import java.io.BufferedReader;
@@ -14,14 +32,29 @@ import com.wormhole_xtreme.config.ConfigManager.ConfigKeys;
 
 
 
+// TODO: Auto-generated Javadoc
 /*
  * This class is based on a class "MinecartFlatFile.java" 
  * from MinecartMania written by Afforess from Bukkit.org
  */
+/**
+ * The Class ConfigurationFlatFile.
+ */
 public class ConfigurationFlatFile 
 {
+	
+	/** The Constant wxt. */
 	private static final WormholeXTreme wxt = WormholeXTreme.ThisPlugin;
 	
+	/**
+	 * Creates the new header.
+	 *
+	 * @param output the output
+	 * @param title the title
+	 * @param subtitle the subtitle
+	 * @param firstHeader the first header
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void createNewHeader(BufferedWriter output, String title, String subtitle, boolean firstHeader) throws IOException 
 	{
 		final String linebreak = "-------------------------------";
@@ -41,6 +74,15 @@ public class ConfigurationFlatFile
 		output.newLine();
 	}
 
+	/**
+	 * Creates the new setting.
+	 *
+	 * @param output the output
+	 * @param name the name
+	 * @param value the value
+	 * @param description the description
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static void createNewSetting(BufferedWriter output, ConfigKeys name, String value, String description) throws IOException 
 	{
 		final String linebreak = "---------------";
@@ -72,6 +114,15 @@ public class ConfigurationFlatFile
 		}
 	}
 
+	/**
+	 * Gets the value from setting.
+	 *
+	 * @param input the input
+	 * @param name the name
+	 * @param defaultVal the default val
+	 * @return the value from setting
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public static String getValueFromSetting(File input, ConfigKeys name, String defaultVal)  throws IOException
 	{
 		BufferedReader bufferedreader = new BufferedReader(new FileReader(input));

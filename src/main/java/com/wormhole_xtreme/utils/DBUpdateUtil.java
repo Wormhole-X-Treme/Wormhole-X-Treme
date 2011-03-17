@@ -1,3 +1,21 @@
+/*
+ *   Wormhole X-Treme Plugin for Bukkit
+ *   Copyright (C) 2011  Ben Echols
+ *                       Dean Bailey
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.wormhole_xtreme.utils;
 
 import java.io.BufferedReader;
@@ -21,15 +39,26 @@ import com.wormhole_xtreme.WormholeXTreme;
 
 
 
+// TODO: Auto-generated Javadoc
 /**
- *  WormholeXTreme DBUpdateUtil
- *  @author Ben Echols (Lologarithm) 
+ * WormholeXTreme DBUpdateUtil.
+ *
+ * @author Ben Echols (Lologarithm)
  */
 public class DBUpdateUtil 
 {
+	
+	/** The sql_con. */
 	static Connection sql_con;
+	
+	/** The Constant wxt. */
 	private static final WormholeXTreme wxt = WormholeXTreme.ThisPlugin;
 	
+	/**
+	 * Update db.
+	 *
+	 * @return true, if successful
+	 */
 	public static boolean updateDB()
 	{
 		File dir = new File("plugins" + File.separator + "WormholeXTremeDB" + File.separator);
@@ -78,6 +107,11 @@ public class DBUpdateUtil
 		return true;
 	}
 
+	/**
+	 * Gets the current version.
+	 *
+	 * @return the current version
+	 */
 	private static int getCurrentVersion()
 	{
 		int ver = 0;
@@ -101,6 +135,11 @@ public class DBUpdateUtil
 		return ver;
 	}
 	
+	/**
+	 * Gets the count db files.
+	 *
+	 * @return the count db files
+	 */
 	private static int getCountDBFiles()
 	{
 		CodeSource src = WormholeXTreme.class.getProtectionDomain().getCodeSource();
@@ -125,6 +164,12 @@ public class DBUpdateUtil
 		return count;
 	}
 
+	/**
+	 * Update db.
+	 *
+	 * @param version the version
+	 * @param count the count
+	 */
 	private static void updateDB(int version, int count)
 	{
 		if ( count > version )
@@ -189,6 +234,12 @@ public class DBUpdateUtil
 		}
 	}
 	
+	/**
+	 * Read text from jar.
+	 *
+	 * @param s the s
+	 * @return the array list
+	 */
 	public static ArrayList<String> readTextFromJar(String s) 
 	{
 		InputStream is = null;

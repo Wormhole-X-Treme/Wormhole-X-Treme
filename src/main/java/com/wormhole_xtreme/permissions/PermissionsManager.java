@@ -1,3 +1,21 @@
+/*
+ *   Wormhole X-Treme Plugin for Bukkit
+ *   Copyright (C) 2011  Ben Echols
+ *                       Dean Bailey
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.wormhole_xtreme.permissions;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,17 +29,28 @@ import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateDBManager;
 
 
-/** 
- * WormholeXtreme Built in Permissions Manager 
- * @author Ben Echols (Lologarithm) 
+// TODO: Auto-generated Javadoc
+/**
+ * WormholeXtreme Built in Permissions Manager.
+ *
+ * @author Ben Echols (Lologarithm)
  */ 
 public class PermissionsManager 
 {
+	
+	/** The player_general_permission. */
 	private static ConcurrentHashMap<String, PermissionLevel> player_general_permission = new ConcurrentHashMap<String, PermissionLevel>();
 
 	//private static HashMap<String, PermissionLevel> group_general_permission = new HashMap<String, PermissionLevel>();
 	//private static Object group_lock = new Object();
 	
+	/**
+	 * Gets the permission level.
+	 *
+	 * @param p the p
+	 * @param s the s
+	 * @return the permission level
+	 */
 	public static PermissionLevel getPermissionLevel( Player p, Stargate s)
 	{
 		if ( !ConfigManager.getBuiltInPermissionsEnabled() )
@@ -63,6 +92,12 @@ public class PermissionsManager
 		}
 	}
 	
+	/**
+	 * Sets the individual permission level.
+	 *
+	 * @param player the player
+	 * @param lvl the lvl
+	 */
 	public static void SetIndividualPermissionLevel( String player, PermissionLevel lvl )
 	{
 		String pl_lower = player.toLowerCase();
@@ -70,6 +105,12 @@ public class PermissionsManager
 		StargateDBManager.StoreIndividualPermissionInDB(pl_lower, lvl);
 	}
 	
+	/**
+	 * Gets the individual permission level.
+	 *
+	 * @param player the player
+	 * @return the permission level
+	 */
 	public static PermissionLevel GetIndividualPermissionLevel( String player )
 	{
 		String pl_lower = player.toLowerCase();
@@ -79,18 +120,34 @@ public class PermissionsManager
 			return PermissionLevel.NO_PERMISSION_SET;
 	}
 	
+	/**
+	 * Load permissions.
+	 */
 	public static void LoadPermissions()
 	{
 		player_general_permission = StargateDBManager.GetAllIndividualPermissions();
 		// StargateDBManager.GetAllGroupPermissions();
 	}
 	
+	/**
+	 * The Enum PermissionLevel.
+	 */
 	public enum PermissionLevel
 	{
+		
+		/** The N o_ permissio n_ set. */
 		NO_PERMISSION_SET,
+		
+		/** The WORMHOL e_ ful l_ permission. */
 		WORMHOLE_FULL_PERMISSION,
+		
+		/** The WORMHOL e_ creat e_ permission. */
 		WORMHOLE_CREATE_PERMISSION,
+		
+		/** The WORMHOL e_ us e_ permission. */
 		WORMHOLE_USE_PERMISSION,
+		
+		/** The WORMHOL e_ n o_ permission. */
 		WORMHOLE_NO_PERMISSION
 	}
 	// 0         1     2        3
@@ -99,6 +156,12 @@ public class PermissionsManager
 	// /stargate perms group    <GROUPNAME>    <OPTIONAL_SET> (else its a get)
 	// /stargate perms default <OPTIONAL_SET> (else a get)
 	// /stargate perms active  <OPTIONAL_SET> (else a get)
+	/**
+	 * Handle permission request.
+	 *
+	 * @param p the p
+	 * @param message_parts the message_parts
+	 */
 	public static void HandlePermissionRequest(Player p, String[] message_parts) 
 	{
 		if ( p.isOp() )

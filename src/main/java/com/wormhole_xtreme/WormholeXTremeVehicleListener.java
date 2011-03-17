@@ -1,3 +1,21 @@
+/*
+ *   Wormhole X-Treme Plugin for Bukkit
+ *   Copyright (C) 2011  Ben Echols
+ *                       Dean Bailey
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.wormhole_xtreme; 
 
 
@@ -19,21 +37,36 @@ import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
 
 
-/** 
- * WormholeXtreme Vehicle Listener 
- * @author Ben Echols (Lologarithm) 
+// TODO: Auto-generated Javadoc
+/**
+ * WormholeXtreme Vehicle Listener.
+ *
+ * @author Ben Echols (Lologarithm)
+ * @author Dean Bailey (alron)
  */ 
 public class WormholeXTremeVehicleListener extends VehicleListener 
 { 
+	
+	/** The wxt. */
 	private WormholeXTreme wxt = null;
 	//private final Stargates plugin;
+	/**
+	 * Instantiates a new wormhole x treme vehicle listener.
+	 *
+	 * @param instance the instance
+	 */
 	public WormholeXTremeVehicleListener(WormholeXTreme instance) 
 	{ 
 		//plugin = instance; 
 		wxt = instance;
 	} 
 	
+	/** The nospeed. */
 	private static Vector nospeed = new Vector();
+	
+	/* (non-Javadoc)
+	 * @see org.bukkit.event.vehicle.VehicleListener#onVehicleMove(org.bukkit.event.vehicle.VehicleMoveEvent)
+	 */
 	@Override
     public void onVehicleMove(VehicleMoveEvent event)
 	{

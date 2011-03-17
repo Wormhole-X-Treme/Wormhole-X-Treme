@@ -1,3 +1,21 @@
+/*
+ *   Wormhole X-Treme Plugin for Bukkit
+ *   Copyright (C) 2011  Ben Echols
+ *                       Dean Bailey
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.wormhole_xtreme;
 
 import java.util.logging.Level;
@@ -9,14 +27,29 @@ import org.bukkit.plugin.Plugin;
 import com.nijiko.coelho.iConomy.iConomy;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
-
+// TODO: Auto-generated Javadoc
+/**
+ * WormholeXTreme Server Listener.
+ *
+ * @author Ben Echols (Lologarithm)
+ * @author Dean Bailey (alron)
+ */
 public class WormholeXTremeServerListener extends ServerListener 
 {
+	
+	/**
+	 * Instantiates a new wormhole x treme server listener.
+	 *
+	 * @param this_plugin the this_plugin
+	 */
 	public WormholeXTremeServerListener(Plugin this_plugin)
 	{
 		
 	}
 	
+    /* (non-Javadoc)
+     * @see org.bukkit.event.server.ServerListener#onPluginEnabled(org.bukkit.event.server.PluginEvent)
+     */
     @Override
     public void onPluginEnabled(PluginEvent event) 
     {
@@ -60,6 +93,11 @@ public class WormholeXTremeServerListener extends ServerListener
         }
     }
     
+    /**
+     * Check permissions version.
+     *
+     * @param version the version
+     */
     public void checkPermissionsVersion(String version)
     {
         if ( !version.equals("2.4") && !version.startsWith("2.5"))
@@ -69,6 +107,11 @@ public class WormholeXTremeServerListener extends ServerListener
        
     }
     
+    /**
+     * Check iconomy version.
+     *
+     * @param version the version
+     */
     public void checkIconomyVersion(String version)
     {
         if ( !version.equals("4.0") && !version.equals("4.1") && !version.startsWith("4.2") && !version.startsWith("4.3") && !version.startsWith("4.4"))
@@ -78,6 +121,9 @@ public class WormholeXTremeServerListener extends ServerListener
        
     }
     
+    /* (non-Javadoc)
+     * @see org.bukkit.event.server.ServerListener#onPluginDisabled(org.bukkit.event.server.PluginEvent)
+     */
     @Override
     public void onPluginDisabled(PluginEvent event)
     {

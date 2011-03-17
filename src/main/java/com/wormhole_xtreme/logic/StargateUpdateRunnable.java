@@ -1,3 +1,21 @@
+/*
+ *   Wormhole X-Treme Plugin for Bukkit
+ *   Copyright (C) 2011  Ben Echols
+ *                       Dean Bailey
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.wormhole_xtreme.logic;
 
 
@@ -9,28 +27,52 @@ import com.wormhole_xtreme.WormholeXTreme;
 import com.wormhole_xtreme.model.Stargate;
 
 
-/** 
- * WormholeXtreme Runnable thread for updating stargates  
- * @author Ben Echols (Lologarithm) 
+// TODO: Auto-generated Javadoc
+/**
+ * WormholeXtreme Runnable thread for updating stargates.
+ *
+ * @author Ben Echols (Lologarithm)
  */ 
 public class StargateUpdateRunnable implements Runnable
 {
+	
+	/** The stargate. */
 	private Stargate stargate;
+	
+	/** The player. */
 	private Player player;
+	
+	/** The action. */
 	private ActionToTake action;
 	
+	/**
+	 * Instantiates a new stargate update runnable.
+	 *
+	 * @param s the s
+	 * @param act the act
+	 */
 	public StargateUpdateRunnable(Stargate s, ActionToTake act)
 	{
 		this.stargate = s;
 		this.action = act;
 	}
 	
+	/**
+	 * Instantiates a new stargate update runnable.
+	 *
+	 * @param s the s
+	 * @param p the p
+	 * @param act the act
+	 */
 	public StargateUpdateRunnable(Stargate s, Player p, ActionToTake act)
 	{
 		this(s, act);
 		this.player = p;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
 	@Override
 	public void run()
 	{
@@ -49,10 +91,19 @@ public class StargateUpdateRunnable implements Runnable
 		}
 	}
 	
+	/**
+	 * The Enum ActionToTake.
+	 */
 	public enum ActionToTake
 	{
+		
+		/** The SHUTDOWN. */
 		SHUTDOWN,
+		
+		/** The ANIMAT e_ opening. */
 		ANIMATE_OPENING,
+		
+		/** The DEACTIVATE. */
 		DEACTIVATE
 	}
 	

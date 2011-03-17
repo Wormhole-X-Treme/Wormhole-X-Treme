@@ -1,4 +1,28 @@
-Changes 0.801:
+Changes 0.8xx:
+
+- Broke '/wxcompass' out into its own class. Removed '/wormhole compass'.
+
+- Broke '/wxcomplete' out into its own class. Removed '/wormhole complete'.
+
+- Broke '/wxidc' out into its own class.
+
+- Broke '/wxremove' out into its own class. Removed '/wormhole remove'. 
+  Fixed so it toggles iris to off state before removing gates with iris 
+  active.
+  
+- Broke '/wxlist' out into its own class. Added no permissions error message.
+  Removed from '/wormhole' command.
+
+- Added command '/wxgo' and broke it out into its own class. Added no permissions 
+  error message. Removed from '/wormhole' command.
+
+- Broke '/dial' out into its own class.
+
+- Broke '/wxbuild' out into its own class. 
+
+- Broke '/wormhole' out into its own class.
+
+Changes 0.801 (3/15/11 @ 22:33 PST):
 
 - Update to the way data is pushed to signs in gate destruction and creation.
   Causes signs to update visually more reliably.
@@ -9,6 +33,11 @@ Changes 0.801:
 - Initial addition of '/wxforce <gate|drop>' command, used to globally close all 
   gates and/or drop all irises temporarily (until they are dialed again). 
   Uses the 'wormhole.config' or 'wormhole.remove.all' permission nodes.
+  
+- Fixed '/wxremove' so that the permissions check doesn't fall through to the built
+  in permissions check. :|
+  
+- Fixed permissions surrounding gate networks and WORMHOLE_USE_IS_TELEPORT
 
 Changes 0.800 (3/9/11 @ 23:33 PST):
 

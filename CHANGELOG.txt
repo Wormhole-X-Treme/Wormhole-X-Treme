@@ -1,3 +1,15 @@
+Changes 0.8xx:
+
+- Broke '/wxcompass' out into its own class. Removed '/wormhole compass'.
+
+- Broke '/wxcomplete' out into its own class. Removed '/wormhole complete'.
+
+- Broke '/wxidc' out into its own class.
+
+- Broke '/wxremove' out into its own class. Removed '/wormhole remove'. 
+  Fixed so it toggles iris to off state before removing gates with iris 
+  active.
+
 Changes 0.801 (3/15/11 @ 22:33 PST):
 
 - Update to the way data is pushed to signs in gate destruction and creation.

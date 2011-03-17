@@ -142,6 +142,7 @@ public class WormholeXTreme extends JavaPlugin
 		getCommand("wxcompass").setExecutor(new WXCompass(this));
 		getCommand("wxcomplete").setExecutor(new WXComplete(this));
 		getCommand("wxremove").setExecutor(new WXRemove(this));
+		getCommand("wxlist").setExecutor(new WXList(this));
 	}
     /**
      * Register events.
@@ -278,10 +279,6 @@ public class WormholeXTreme extends JavaPlugin
 		else if (commandName.equals("dial"))
 		{
 			return WormholeXTremeCommand.commandDial(sender, args);
-		}
-		else if (commandName.equals("wxlist"))
-		{
-		    return WormholeXTremeCommand.commandList(sender, args);
 		}
 		else if (commandName.equals("wxbuild"))
 		{

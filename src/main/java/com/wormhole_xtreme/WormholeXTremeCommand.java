@@ -115,51 +115,6 @@ public class WormholeXTremeCommand {
 		return args_parts_list.toArray(new String[] {});
 	}
 	
-
-	
-	/**
-	 * Do gate list.
-	 *
-	 * @param s the s
-	 */
-	private static void doGateList(CommandSender s)
-	{
-		boolean allowed = false;
-		Player p = null;
-		
-		if (playerCheck(s)) {
-			p = (Player) s;
-			if ( p.isOp() || (WormholeXTreme.Permissions != null && (WormholeXTreme.Permissions.has(p, "wormhole.config")) || (WormholeXTreme.Permissions.has(p, "wormhole.list"))))
-			{
-				allowed = true;
-			}
-		}
-		if (  !playerCheck(s) || allowed )
-		{
-			ArrayList<Stargate> gates = StargateManager.GetAllGates();
-			s.sendMessage("\u00A73:: \u00A75available gates \u00A73::");
-			StringBuilder sb = new StringBuilder();
-			for ( int i = 0; i < gates.size(); i++)
-			{
-				sb.append("\u00A77" + gates.get(i).Name);
-				if ( i != gates.size() - 1)
-				{
-					sb.append("\u00A78, ");
-				}
-				if (sb.toString().length() >= 75 )
-				{
-				    s.sendMessage(sb.toString());
-				    sb = new StringBuilder();
-				}
-			}
-			if (!sb.toString().equals(""))
-			{
-			    s.sendMessage(sb.toString());
-			}
-			
-		}
-	}
-	
 	
 	/**
 	 * Do material.
@@ -637,18 +592,10 @@ public class WormholeXTremeCommand {
 		{
 			doGo(p,message_parts);
 		}
-		else if ( message_parts[0].equalsIgnoreCase("list") )
-		{
-			doGateList(sender);
-		}
 		else if ( message_parts[0].equalsIgnoreCase("owner"))
 		{
 			doOwner(sender,message_parts);
 		}
-//		else if ( message_parts[0].equalsIgnoreCase("remove") )
-//		{
-//			return doGateRemove(sender,message_parts,false);
-//		}
 		else if ( message_parts[0].equalsIgnoreCase("perm") || message_parts[0].equalsIgnoreCase("perms"))
 		{
 			doPerms(sender,message_parts);
@@ -718,22 +665,6 @@ public class WormholeXTremeCommand {
 		
 		doDial(player,message_parts);
 		return true;
-	}
-	
-	/*
-	 * List Stargates
-	 */
-	/**
-	 * Command list.
-	 *
-	 * @param sender the sender
-	 * @param args the args
-	 * @return true, if successful
-	 */
-	public static boolean commandList(CommandSender sender, String[] args)
-	{
-	    doGateList(sender);
-	    return true;
 	}
 	
 

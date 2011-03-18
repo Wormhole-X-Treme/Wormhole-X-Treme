@@ -134,7 +134,7 @@ public class WormholeXTreme extends JavaPlugin
 	 */
 	private void registerCommands()
 	{
-	    getCommand("wxforce").setExecutor(new WXForce(this));
+	    getCommand("wxforce").setExecutor(new Force(this));
 		getCommand("wxidc").setExecutor(new WXIDC(this));
 		getCommand("wxcompass").setExecutor(new WXCompass(this));
 		getCommand("wxcomplete").setExecutor(new WXComplete(this));

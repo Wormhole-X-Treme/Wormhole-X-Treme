@@ -33,18 +33,18 @@ import com.wormhole_xtreme.WormholeXTreme;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class WXForce.
+ * The Class Force.
  *
  * @author alron
  */
-public class WXForce implements CommandExecutor {
+public class Force implements CommandExecutor {
 
     /**
-     * Instantiates a new wX force.
+     * Instantiates a new force.
      *
      * @param wormholeXTreme the wormhole x treme
      */
-    public WXForce(WormholeXTreme wormholeXTreme) {
+    public Force(WormholeXTreme wormholeXTreme) {
         // TODO Auto-generated constructor stub
     }
 

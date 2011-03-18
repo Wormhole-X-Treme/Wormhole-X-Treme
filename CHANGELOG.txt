@@ -1,4 +1,4 @@
-Changes 0.8xx:
+Changes 0.810:
 
 - Broke '/wxcompass' out into its own class. Removed '/wormhole compass'.
 

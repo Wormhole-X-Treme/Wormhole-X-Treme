@@ -32,6 +32,9 @@ Changes 0.810:
   
 - Refactored the WXForce class to Force. Hopefully this shuts MSSE up. ^^;
 
+- Moved a bunch of the initial loading out of onEnable and into onLoad. 
+  Now we use onEnable only for events that should only happen at plugin Enable.
+
 Changes 0.801 (3/15/11 @ 22:33 PST):
 
 - Update to the way data is pushed to signs in gate destruction and creation.

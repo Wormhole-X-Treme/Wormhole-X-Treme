@@ -86,32 +86,41 @@ public class WormholeXTreme extends JavaPlugin
 	public static WormholeXTreme ThisPlugin = null;
 	 
 	/** The log. */
-	private static Logger log;
- 
+//	private static Logger log;
+	private static Logger log = null;
+	
+	/* (non-Javadoc)
+	 * @see org.bukkit.plugin.java.JavaPlugin#onLoad()
+	 */
+	@Override
+	public void onLoad()
+	{
+	   log = this.getServer().getLogger(); 
+	   ThisPlugin = this; 
+	   Scheduler = getServer().getScheduler();
+	   PluginDescriptionFile pdfFile = this.getDescription();
+	   
+	   prettyLog(Level.INFO,true, pdfFile.getAuthors() + "Load Beginning." );
+	   // Load our config files and set logging level right away.
+	   ConfigManager.setupConfigs(pdfFile);
+	   this.setPrettyLogLevel(ConfigManager.getLogLevel());
+	   // Make sure DB is up to date with latest SCHEMA
+	   DBUpdateUtil.updateDB();
+	   // Load our shapes, stargates, and internal permissions.
+	   StargateHelper.loadShapes();	 
+	   StargateDBManager.LoadStargates(getServer());
+	   PermissionsManager.LoadPermissions();
+	   prettyLog(Level.INFO,true, "Load Completed.");
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.bukkit.plugin.Plugin#onEnable()
 	 */
 	@Override
     public void onEnable()
 	{ 
-		log = this.getServer().getLogger();
-		ThisPlugin = this;
-		PluginDescriptionFile pdfFile = this.getDescription();
-		prettyLog(Level.INFO,true, pdfFile.getAuthors() + "Load Beginning." );
-		
-		// Register our events 
-		registerEvents();
-		
-		ConfigManager.setupConfigs(pdfFile);
-
-		// Make sure DB is up to date with latest SCHEMA
-		DBUpdateUtil.updateDB();
-		
-		this.setPrettyLogLevel(ConfigManager.getLogLevel());
-		
-		StargateHelper.loadShapes();
-		Scheduler = getServer().getScheduler();
-		
+		prettyLog(Level.INFO,true,"Enable Beginning.");
+		// Try and attach to Permissions and iConomy 
 		try
 		{
 			setupPermissions();
@@ -121,12 +130,10 @@ public class WormholeXTreme extends JavaPlugin
 		{
 			
 		}
-
-		StargateDBManager.LoadStargates(getServer());
-		PermissionsManager.LoadPermissions();
-		prettyLog(Level.INFO, true, "Load Completed.");
-		
-		this.registerCommands();
+		// Register our events and commands
+		registerEvents();
+		registerCommands();
+		prettyLog(Level.INFO, true, "Enable Completed.");
 	}
 	
 	/**
@@ -152,7 +159,7 @@ public class WormholeXTreme extends JavaPlugin
     {
 		PluginManager pm = getServer().getPluginManager(); 
 		
-		//Listen for Interact, Physics, Break, Flow, and RightClick evebts. Pass to blockListener
+		//Listen for Interact, Physics, Break, Flow, and RightClick events. Pass to blockListener
 		pm.registerEvent(Event.Type.BLOCK_INTERACT, blockListener, Priority.High, this);
 		pm.registerEvent(Event.Type.BLOCK_PHYSICS, blockListener, Priority.Highest, this);
 		pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.High, this);
@@ -169,7 +176,7 @@ public class WormholeXTreme extends JavaPlugin
 		// Handle player walking through the lava.
 		//pm.registerEvent(Event.Type.ENTITY_DAMAGED, entityListener, Priority.High, this);
 		
-		// Listen for enable events.
+        // Listen for enable events.
 		pm.registerEvent(Event.Type.PLUGIN_ENABLE, serverListener, Priority.Monitor, this);
 		// Listen for disable events.
 		pm.registerEvent(Event.Type.PLUGIN_DISABLE, serverListener, Priority.Monitor, this);
@@ -212,7 +219,6 @@ public class WormholeXTreme extends JavaPlugin
     {
     	Plugin test = this.getServer().getPluginManager().getPlugin("iConomy");
 
-
     	if(Iconomy == null) 
     	{
     		if(test != null) 
@@ -247,7 +253,6 @@ public class WormholeXTreme extends JavaPlugin
 		{
 			Configuration.writeFile(this.getDescription());
 			ArrayList<Stargate> gates = StargateManager.GetAllGates();
-	
 			// Store all our gates
 			for ( Stargate gate : gates )
 			{
@@ -256,7 +261,6 @@ public class WormholeXTreme extends JavaPlugin
 			}
 			
 			StargateDBManager.Shutdown();
-
 			prettyLog(Level.INFO, true, "Successfully shutdown.");
 		}
 		catch ( Exception e)
@@ -291,7 +295,7 @@ public class WormholeXTreme extends JavaPlugin
 	
 	/**
 	 * 
-	 * prettyLog: A quick and dirty way to make log output clean, unified, and versioning as needed.
+	 * prettyLog: A quick and dirty way to make log output clean, unified, and with versioning as needed.
 	 * 
 	 * @param severity Level of severity in the form of INFO, WARNING, SEVERE, etc.
 	 * @param version true causes version display in log entries.

@@ -25,7 +25,7 @@ Changes 0.810:
 - Added another message for active gates. Now ill say either remote activated, or 
   activated by someone else already. 
 
-- Added SIMPLIFIED_PERMISSIONS config option. The default value of 'true' disables
+- Added SIMPLE_PERMISSIONS config option. The default value of 'true' disables
   gate network permissions checks. Setting this to 'false' will cause WXT to make
   use of wormhole.network.use.* and wormhole.network.build.*
 

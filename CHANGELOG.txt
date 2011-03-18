@@ -22,7 +22,7 @@ Changes 0.810:
 
 - Broke '/wormhole' out into its own class.
 
-- Added another message for active gates. Now ill say either remote activated, or 
+- Added another message for active gates. Now it will say either remote activated, or 
   activated by someone else already. 
 
 - Added SIMPLE_PERMISSIONS config option. The default value of 'true' disables

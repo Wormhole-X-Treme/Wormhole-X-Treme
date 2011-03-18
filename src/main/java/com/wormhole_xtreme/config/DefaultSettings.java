@@ -67,6 +67,12 @@ public class DefaultSettings
 				"WormholeXTreme"
 		),
 		new Setting(
+		        ConfigKeys.SIMPLE_PERMISSIONS,
+		        true,
+		        "Simplified permissions set to true disables gate network permissions.",
+		        "WormholeXTreme"
+		),
+		new Setting(
 				ConfigKeys.WORMHOLE_USE_IS_TELEPORT, 
 				false, 
 				"The wormhole.use permission means that a user can teleport through gate. When false a user will be able to teleport but not activate a gate. When true only users with wormhole.use can even teleport.",

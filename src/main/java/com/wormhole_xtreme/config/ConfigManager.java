@@ -412,6 +412,24 @@ public class ConfigManager
 	}
 	
 	/**
+	 * Gets the simple permissions.
+	 *
+	 * @return the simple permissions
+	 */
+	public static boolean getSimplePermissions()
+	{
+	    Setting sp;
+	    if ((sp = ConfigManager.configurations.get(ConfigKeys.SIMPLE_PERMISSIONS)) != null)
+	    {
+	        return sp.getBooleanValue();
+	    }
+	    else
+	    {
+	        return true;
+	    }
+	}
+	
+	/**
 	 * The Enum StringTypes.
 	 */
 	public enum StringTypes
@@ -474,6 +492,9 @@ public class ConfigManager
 		
 		/** The BUIL t_ i n_ defaul t_ permissio n_ level. */
 		BUILT_IN_DEFAULT_PERMISSION_LEVEL,
+		
+		/** The SIMPL e_ permissions. */
+		SIMPLE_PERMISSIONS,
 		
 		/** The WORMHOL e_ us e_ i s_ teleport. */
 		WORMHOLE_USE_IS_TELEPORT,

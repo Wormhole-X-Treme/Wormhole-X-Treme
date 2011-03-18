@@ -69,9 +69,9 @@ public class WormholeXTremePlayerListener extends PlayerListener
 //	}
 
 	/* (non-Javadoc)
- * @see org.bukkit.event.player.PlayerListener#onPlayerMove(org.bukkit.event.player.PlayerMoveEvent)
- */
-@Override
+	 * @see org.bukkit.event.player.PlayerListener#onPlayerMove(org.bukkit.event.player.PlayerMoveEvent)
+     */
+	@Override
     public void onPlayerMove(PlayerMoveEvent event)
 	{
 		Player p = event.getPlayer();
@@ -97,7 +97,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 			if ( WormholeXTreme.Permissions != null)
 			{
 			    // If use permission is also teleport permission we should check here:
-				if (ConfigManager.getWormholeUseIsTeleport() && 
+				if (ConfigManager.getWormholeUseIsTeleport() && !ConfigManager.getSimplePermissions() && 
 					((st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.sign")) || 
 					(!st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.dialer")) || 
 					(!gatenetwork.equals("Public") && !WormholeXTreme.Permissions.has(p, "wormhole.network.use." + gatenetwork))))
@@ -105,6 +105,13 @@ public class WormholeXTremePlayerListener extends PlayerListener
 					// This means that the user doesn't have permission to use.
 					p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
 					return;
+				}
+				else if (ConfigManager.getWormholeUseIsTeleport() && ConfigManager.getSimplePermissions() &&
+				    ((st.IsSignPowered && !WormholeXTreme.Permissions.has(p, "wormhole.use.sign")) ||
+				    (!st.IsSignPowered && !WormholeXTreme.Permissions.has(p, "wormhole.use.dialer"))))
+				{
+				    p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+				    return;
 				}
 			}
 			

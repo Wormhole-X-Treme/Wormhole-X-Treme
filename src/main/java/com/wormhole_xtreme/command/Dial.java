@@ -81,10 +81,18 @@ public class Dial implements CommandExecutor {
                 startnetwork = "Public";
             }
             boolean allowed = false;
-            if (WormholeXTreme.Permissions != null)
+            if (WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
             {
                 WormholeXTreme.ThisPlugin.prettyLog(Level.FINEST, false, "Dial Start - Gate: \""+ start.Name +" \"Network: \"" + startnetwork + "\"");
                 if (WormholeXTreme.Permissions.has(player, "wormhole.use.dialer") && (startnetwork.equals("Public") || (!startnetwork.equals("Public") && WormholeXTreme.Permissions.has(player, "wormhole.network.use." + startnetwork))))
+                {
+                    allowed = true;
+                }
+            }
+            else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+            {
+                WormholeXTreme.ThisPlugin.prettyLog(Level.FINEST, false, "Dial Start - Gate: \""+ start.Name +" \"Network: \"" + startnetwork + "\"");
+                if (WormholeXTreme.Permissions.has(player, "wormhole.use.dialer"))
                 {
                     allowed = true;
                 }

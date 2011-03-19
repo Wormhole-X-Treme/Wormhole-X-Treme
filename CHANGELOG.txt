@@ -25,10 +25,10 @@ Changes 0.810:
 - Added another message for active gates. Now it will say either remote activated, or 
   activated by someone else already. 
 
-- Added SIMPLE_PERMISSIONS config option. The default value of 'true' disables
-  gate network permissions checks. Setting this to 'false' will cause WXT to make
-  use of wormhole.network.use.* and wormhole.network.build.*. This does not stop
-  the wormhole.use.dialer and wormhole.use.sign checks.
+- Added SIMPLE_PERMISSIONS config option. The default value of 'false' makes permissions
+  node settings use complex mode. While the setting of true sets the plugin to check for 
+  extremely simplified permissions. Permission node details can be found in the README.
+  
   
 - Refactored the WXForce class to Force. Hopefully this shuts MSSE up. ^^;
 

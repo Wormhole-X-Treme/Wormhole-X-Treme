@@ -25,17 +25,25 @@ To Update:
 
 Permissions Plugin Nodes:
 
-wormhole.use.sign - lets a user use sign gates.
-wormhole.use.dialer - lets a user use /dial gates
-wormhole.use.compass - lets a user use /wxcompass (/wormhole compass)
-wormhole.remove.own - lets a user remove a gate that they own
-wormhole.remove.all - lets a user remove any gate
-wormhole.build - Able to build new wormholes
-wormhole.config - Able to configure settings like material and timeout
-wormhole.list - Able to list wormholes
-wormhole.network.use.NETWORKNAME - Able to use wormholes on NETWORKNAME
-wormhole.network.build.NETWORKNAME - Able to build wormholes on NETWORKNAME
-wormhole.go - allows user to use '/wormhole go' command.
+    Complex Mode:
+    wormhole.use.sign - lets a user use sign gates.
+    wormhole.use.dialer - lets a user use /dial gates
+    wormhole.use.compass - lets a user use /wxcompass (/wormhole compass)
+    wormhole.remove.own - lets a user remove a gate that they own
+    wormhole.remove.all - lets a user remove any gate
+    wormhole.build - Able to build new wormholes
+    wormhole.config - Able to configure settings like material and timeout
+    wormhole.list - Able to list wormholes
+    wormhole.network.use.NETWORKNAME - Able to use wormholes on NETWORKNAME
+    wormhole.network.build.NETWORKNAME - Able to build wormholes on NETWORKNAME
+    wormhole.go - allows user to use '/wormhole go' command.
+
+    Simple Mode:
+    wormhole.simple.use - Lets a user use wormholes.
+    wormhole.simple.build - Lets a user build wormholes.
+    wormhole.simple.remove - Lets a user remove wormholes.
+    wormhole.simple.config - Lets a user configure WormholeXTreme settings (material, timeout, permissions mode).
+
 
 To Build:
 

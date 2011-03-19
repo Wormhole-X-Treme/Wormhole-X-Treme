@@ -107,8 +107,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 					return;
 				}
 				else if (ConfigManager.getWormholeUseIsTeleport() && ConfigManager.getSimplePermissions() &&
-				    ((st.IsSignPowered && !WormholeXTreme.Permissions.has(p, "wormhole.use.sign")) ||
-				    (!st.IsSignPowered && !WormholeXTreme.Permissions.has(p, "wormhole.use.dialer"))))
+				    ((st.IsSignPowered && !WormholeXTreme.Permissions.has(p, "wormhole.use"))))
 				{
 				    p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
 				    return;

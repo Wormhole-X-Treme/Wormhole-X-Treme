@@ -68,8 +68,8 @@ public class DefaultSettings
 		),
 		new Setting(
 		        ConfigKeys.SIMPLE_PERMISSIONS,
-		        true,
-		        "Simplified permissions set to true disables gate network permissions.",
+		        false,
+		        "If using Permissions plugin based permissions, setting this to true switches WormholeXTreme to use an extremely simplified permissions set ('wormhole.use', 'wormhole.build', 'wormhole.config', and 'wormhole.remove').",
 		        "WormholeXTreme"
 		),
 		new Setting(

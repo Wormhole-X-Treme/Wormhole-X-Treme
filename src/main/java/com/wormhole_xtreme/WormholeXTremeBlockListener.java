@@ -96,7 +96,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 				Boolean allowed = false;
 				if ( WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
 				{
-				    if (WormholeXTreme.Permissions.has(p, "wormhole.use.sign"))
+				    if (WormholeXTreme.Permissions.has(p, "wormhole.use"))
 				    {
 				        allowed = true;
 				    }
@@ -162,7 +162,7 @@ public class WormholeXTremeBlockListener extends BlockListener
         if ( s != null )
         {
             boolean allowed = false;
-            if ( WormholeXTreme.Permissions != null )
+            if ( WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
             {
                 if ( WormholeXTreme.Permissions.has(p, "wormhole.remove.all"))
                 {
@@ -174,6 +174,13 @@ public class WormholeXTremeBlockListener extends BlockListener
                     {
                         allowed = true;
                     }
+                }
+            }
+            else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+            {
+                if (WormholeXTreme.Permissions.has(p, "wormhole.remove"))
+                {
+                    allowed = true;
                 }
             }
             else 
@@ -300,7 +307,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 			boolean allowed = false;
 			if ( WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
 			{    
-			    if (WormholeXTreme.Permissions.has(p, "wormhole.use.sign") || WormholeXTreme.Permissions.has(p, "wormhole.use.dialer"))
+			    if (WormholeXTreme.Permissions.has(p, "wormhole.use"))
 			    {
 			        allowed = true;
 			    }
@@ -518,12 +525,19 @@ public class WormholeXTremeBlockListener extends BlockListener
 			if ( s.IsSignPowered  )
 			{
 				boolean allowed = false;
-				if ( WormholeXTreme.Permissions != null )
+				if ( WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
 				{
 					if ( WormholeXTreme.Permissions.has(p, "wormhole.use.sign") )
 					{
 						allowed = true;
 					}
+				}
+				else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+				{
+				    if (WormholeXTreme.Permissions.has(p, "wormhole.use"))
+				    {
+				        allowed = true;
+				    }
 				}
 				else
 				{

@@ -30,6 +30,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityListener;
 
+import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.model.StargateManager;
 import com.wormhole_xtreme.permissions.PermissionsManager;
 import com.wormhole_xtreme.permissions.PermissionsManager.PermissionLevel;
@@ -90,12 +91,19 @@ public class WormholeXTremeEntityListener extends EntityListener
 			if ( event.getEntity() instanceof Player && StargateManager.isBlockInGate(b) )
 			{
 				Player p = (Player) event.getEntity();
-				if ( WormholeXTreme.Permissions != null)
+				if ( WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
 				{
 					if (WormholeXTreme.Permissions.has(p, "wormhole.use.dialer") || WormholeXTreme.Permissions.has(p, "wormhole.use.sign"))
 					{
 						event.setCancelled(true);
 					}
+				}
+				else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+				{
+				    if (WormholeXTreme.Permissions.has(p, "wormhole.use"))
+				    {
+				        event.setCancelled(true);
+				    }
 				}
 				else
 				{

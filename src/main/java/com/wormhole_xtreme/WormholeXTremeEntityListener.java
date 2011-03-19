@@ -100,7 +100,7 @@ public class WormholeXTremeEntityListener extends EntityListener
 				}
 				else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
 				{
-				    if (WormholeXTreme.Permissions.has(p, "wormhole.use"))
+				    if (WormholeXTreme.Permissions.has(p, "wormhole.simple.use"))
 				    {
 				        event.setCancelled(true);
 				    }

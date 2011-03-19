@@ -69,7 +69,7 @@ public class DefaultSettings
 		new Setting(
 		        ConfigKeys.SIMPLE_PERMISSIONS,
 		        false,
-		        "If using Permissions plugin based permissions, setting this to true switches WormholeXTreme to use an extremely simplified permissions set ('wormhole.use', 'wormhole.build', 'wormhole.config', and 'wormhole.remove').",
+		        "If using Permissions plugin based permissions, setting this to true switches WormholeXTreme to use an extremely simplified permissions set ('wormhole.simple.use', 'wormhole.simple.build', 'wormhole.simple.config', and 'wormhole.simple.remove').",
 		        "WormholeXTreme"
 		),
 		new Setting(

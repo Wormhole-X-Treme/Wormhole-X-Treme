@@ -96,7 +96,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 				Boolean allowed = false;
 				if ( WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
 				{
-				    if (WormholeXTreme.Permissions.has(p, "wormhole.use"))
+				    if (WormholeXTreme.Permissions.has(p, "wormhole.simple.use"))
 				    {
 				        allowed = true;
 				    }
@@ -178,7 +178,7 @@ public class WormholeXTremeBlockListener extends BlockListener
             }
             else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
             {
-                if (WormholeXTreme.Permissions.has(p, "wormhole.remove"))
+                if (WormholeXTreme.Permissions.has(p, "wormhole.simple.remove"))
                 {
                     allowed = true;
                 }
@@ -307,7 +307,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 			boolean allowed = false;
 			if ( WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
 			{    
-			    if (WormholeXTreme.Permissions.has(p, "wormhole.use"))
+			    if (WormholeXTreme.Permissions.has(p, "wormhole.simple.use"));
 			    {
 			        allowed = true;
 			    }
@@ -390,12 +390,19 @@ public class WormholeXTremeBlockListener extends BlockListener
 			if ( new_gate != null )
 			{
 				boolean allowed = false;
-				if ( WormholeXTreme.Permissions != null )
+				if ( WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
 				{
 					if ( WormholeXTreme.Permissions.has(p, "wormhole.build"))
 					{
 						allowed = true;
 					}
+				}
+				else if ( WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+				{
+				    if (WormholeXTreme.Permissions.has(p, "wormhole.simple.build"))
+				    {
+				        allowed = true;
+				    }
 				}
 				else 
 				{
@@ -534,7 +541,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 				}
 				else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
 				{
-				    if (WormholeXTreme.Permissions.has(p, "wormhole.use"))
+				    if (WormholeXTreme.Permissions.has(p, "wormhole.simple.use"))
 				    {
 				        allowed = true;
 				    }

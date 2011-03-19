@@ -92,7 +92,7 @@ public class Dial implements CommandExecutor {
             else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
             {
                 WormholeXTreme.ThisPlugin.prettyLog(Level.FINEST, false, "Dial Start - Gate: \""+ start.Name +" \"Network: \"" + startnetwork + "\"");
-                if (WormholeXTreme.Permissions.has(player, "wormhole.use.dialer"))
+                if (WormholeXTreme.Permissions.has(player, "wormhole.simple.use"))
                 {
                     allowed = true;
                 }

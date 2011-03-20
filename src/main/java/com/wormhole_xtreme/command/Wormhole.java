@@ -31,9 +31,11 @@ import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
 import com.wormhole_xtreme.permissions.PermissionsManager;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author alron
+ * The Class Wormhole.
  *
+ * @author alron
  */
 public class Wormhole implements CommandExecutor 
 {
@@ -54,225 +56,291 @@ public class Wormhole implements CommandExecutor
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
     {
-        args = CommandUtlities.commandEscaper(args);
-        if ((args.length > 4 ) || (args.length == 0)) 
+
+        boolean allowed = false;
+        if (CommandUtlities.playerCheck(sender))
         {
-            return false;
+            Player player = (Player)sender;
+            if (player.isOp())
+            {
+                allowed = true;
+            }
+            else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+            {
+                if (WormholeXTreme.Permissions.has(player, "wormhole.simple.config"))
+                {
+                    allowed = true;
+                }
+            }
+            else if (WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
+            {
+                if (WormholeXTreme.Permissions.has(player, "wormhole.config"))
+                {
+                    allowed = true;
+                }
+            }
         }
-        if ( args[0].equalsIgnoreCase("owner"))
+        if (allowed || !CommandUtlities.playerCheck(sender))
         {
-            doOwner(sender,args);
+            args = CommandUtlities.commandEscaper(args);
+            if ((args.length > 4 ) || (args.length == 0)) 
+            {
+                return false;
+            }
+            if ( args[0].equalsIgnoreCase("owner"))
+            {
+                return doOwner(sender,args);
+            }
+            else if ( args[0].equalsIgnoreCase("perm") || args[0].equalsIgnoreCase("perms"))
+            {
+                doPerms(sender,args);
+            }
+            else if ( args[0].equalsIgnoreCase("material") || args[0].equalsIgnoreCase("portalmaterial"))
+            {
+                return doPortalMaterial(sender,args);
+            }
+            else if ( args[0].equalsIgnoreCase("irismaterial") )
+            {
+                return doIrisMaterial(sender,args);
+            }
+            else if ( args[0].equalsIgnoreCase("timeout") || args[0].equalsIgnoreCase("shutdown_timeout") )
+            {
+                return doShutdownTimeout(sender,args);
+            }
+            else if ( args[0].equalsIgnoreCase("activate_timeout") )
+            {
+                return doActivateTimeout(sender,args);
+            }
+            else if (args[0].equalsIgnoreCase("simple"))
+            {
+                return doSimplePermissions(sender,args);
+            }
+            else 
+            {
+                sender.sendMessage(ConfigManager.output_strings.get(StringTypes.REQUEST_INVALID) + ": " + args[0]);
+                sender.sendMessage(ConfigManager.errorheader + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'shutdown_timeout', 'activate_timeout' and 'simple'.");
+            }
         }
-        else if ( args[0].equalsIgnoreCase("perm") || args[0].equalsIgnoreCase("perms"))
+        else
         {
-            doPerms(sender,args);
-        }
-        else if ( args[0].equalsIgnoreCase("material") )
-        {
-            doMaterial(sender,args);
-        }
-        else if ( args[0].equalsIgnoreCase("irismaterial") )
-        {
-            doIrisMaterial(sender,args);
-        }
-        else if ( args[0].equalsIgnoreCase("timeout") || args[0].equalsIgnoreCase("shutdown_timeout") )
-        {
-            doShutdownTimeout(sender,args);
-        }
-        else if ( args[0].equalsIgnoreCase("activate_timeout") )
-        {
-            doActivateTimeout(sender,args);
-        }
-        else 
-        {
-            sender.sendMessage(ConfigManager.output_strings.get(StringTypes.REQUEST_INVALID));
-            return false;
+            sender.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
         }
         return true;
     }
     
+    
     /**
-	 * Do material.
-	 *
-	 * @param s the s
-	 * @param args the args
-	 */
-	private static void doMaterial(CommandSender s, String[] args)
-	{
-		boolean allowed = false;
-		if (CommandUtlities.playerCheck(s))
-		{
-			Player p = (Player) s;
-			if ( p.isOp() || ( WormholeXTreme.Permissions != null && WormholeXTreme.Permissions.has(p, "wormhole.config")))
-			{
-				allowed = true;
-			}
-		}	
-		if (allowed || !CommandUtlities.playerCheck(s))
-		{
-			if ( args.length == 2)
-			{
-				Material m = Material.STONE;
-				try
-				{
-					m = Material.valueOf(args[1]);
-				}
-				catch (Exception e)
-				{
-				}
-				
-				if ( m == Material.STATIONARY_LAVA || m == Material.STATIONARY_WATER || m == Material.AIR || m == Material.PORTAL )
-				{
-					ConfigManager.setPortalMaterial(m);
-				}
-			}
+     * Do simple permissions.
+     *
+     * @param sender the sender
+     * @param args the args
+     * @return true, if successful
+     */
+    private static boolean doSimplePermissions(CommandSender sender, String[] args) {
+        if (args.length == 2)
+        {
+            boolean simple;
+            if (args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("yes"))
+            {
+                simple = true;
+            }
+            else if (args[1].equalsIgnoreCase("false") || args[1].equalsIgnoreCase("no"))
+            {
+                simple = false;
+            }
+            else
+            {
+                sender.sendMessage(ConfigManager.errorheader + "Invalid Setting: " + args[1]);
+                sender.sendMessage(ConfigManager.errorheader + "Valid options: true/yes, false/no");
+                return false;
+            }
+            if (WormholeXTreme.Permissions != null && CommandUtlities.playerCheck(sender))
+            {
+                Player player = (Player)sender;
+                if (simple && !WormholeXTreme.Permissions.has(player, "wormhole.simple.config"))
+                {
+                    sender.sendMessage(ConfigManager.errorheader + "You currently do not have the 'wormhole.simple.config' permission.");
+                    sender.sendMessage(ConfigManager.errorheader + "Please make sure you have this permission before running this command again.");
+                    return true;
+                }
+                else if (!simple && !WormholeXTreme.Permissions.has(player, "wormhole.config"))
+                {
+                    sender.sendMessage(ConfigManager.errorheader + "You currently do not have the 'wormhole.config' permission.");
+                    sender.sendMessage(ConfigManager.errorheader + "Please make sure you have this permission before running this command again.");
+                    return true;
+                }
+            }
+            ConfigManager.setSimplePermissions(simple);
+            sender.sendMessage(ConfigManager.normalheader + "Simple Permissions set to: " + ConfigManager.getSimplePermissions());
+        }
+        else
+        {
+            sender.sendMessage(ConfigManager.normalheader + "Simple Permissions: " + ConfigManager.getSimplePermissions());
+            sender.sendMessage(ConfigManager.normalheader + "Valid options: true/yes, false/no");
+        }
+        return true;
+    }
 
-			s.sendMessage("Portal material is currently: " + ConfigManager.getPortalMaterial());
-			s.sendMessage("Valid materials are: STATIONARY_WATER, STATIONARY_LAVA, AIR, PORTAL");
+    /**
+     * Do Portal Material.
+     *
+     * @param sender the sender
+     * @param args the args
+     * @return true, if successful
+     */
+	private static boolean doPortalMaterial(CommandSender sender, String[] args)
+	{
+		if ( args.length == 2)
+		{
+			Material m = Material.STONE;
+			try
+			{
+				m = Material.valueOf(args[1]);
+			}
+			catch (Exception e)
+			{
+			}
+			
+			if ( m == Material.STATIONARY_LAVA || m == Material.STATIONARY_WATER || m == Material.AIR || m == Material.PORTAL )
+			{
+				ConfigManager.setPortalMaterial(m);
+				sender.sendMessage(ConfigManager.normalheader + "Portal material set to: " + ConfigManager.getPortalMaterial());
+			}
+			else
+			{
+			    sender.sendMessage(ConfigManager.errorheader + "Invalid Portal Material: " + args[1]);
+			    sender.sendMessage(ConfigManager.errorheader + "Valid materials are: STATIONARY_WATER, STATIONARY_LAVA, AIR, PORTAL");
+			    return false;
+			}
 		}
 		else
 		{
-			s.sendMessage( ConfigManager.output_strings.get(StringTypes.PERMISSION_NO) );
+		    sender.sendMessage(ConfigManager.normalheader + "Portal material is currently: " + ConfigManager.getPortalMaterial());
+		    sender.sendMessage(ConfigManager.normalheader + "Valid materials are: STATIONARY_WATER, STATIONARY_LAVA, AIR, PORTAL");
 		}
+		return true;
 	}
 	
 	/**
 	 * Do iris material.
 	 *
-	 * @param s the s
+	 * @param sender the sender
 	 * @param args the args
+	 * @return true, if successful
 	 */
-	private static void doIrisMaterial(CommandSender s, String[] args)
+	private static boolean doIrisMaterial(CommandSender sender, String[] args)
 	{
-		boolean allowed = false;
-		if (CommandUtlities.playerCheck(s))
+		if ( args.length == 2)
 		{
-			Player p = (Player) s;
-			if ( p.isOp() || ( WormholeXTreme.Permissions != null && WormholeXTreme.Permissions.has(p, "wormhole.config")))
+			Material m = Material.STONE;
+			try
 			{
-				allowed = true;
+				m = Material.valueOf(args[1]);
+			}
+			catch (Exception e)
+			{
+			}
+			
+			if ( m == Material.DIAMOND_BLOCK || m == Material.GLASS || m == Material.IRON_BLOCK || m == Material.BEDROCK || m == Material.STONE || m == Material.LAPIS_BLOCK )
+			{
+				ConfigManager.setIrisMaterial(m);
+				sender.sendMessage(ConfigManager.normalheader + "Iris material set to: " + ConfigManager.getIrisMaterial());
+			}
+			else 
+			{
+			    sender.sendMessage(ConfigManager.errorheader + "Invalid Iris Material: " + args[1]);
+			    sender.sendMessage(ConfigManager.errorheader + "Valid materials are: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, and LAPIS_BLOCK");
+			    return false;
 			}
 		}
-		if (allowed || !CommandUtlities.playerCheck(s))
+		else 
 		{
-			if ( args.length == 2)
-			{
-				Material m = Material.STONE;
-				try
-				{
-					m = Material.valueOf(args[1]);
-				}
-				catch (Exception e)
-				{
-				}
-				
-				if ( m == Material.DIAMOND_BLOCK || m == Material.GLASS || m == Material.IRON_BLOCK || m == Material.BEDROCK || m == Material.STONE 
-				    || m == Material.LAPIS_BLOCK )
-				{
-					ConfigManager.setIrisMaterial(m);
-				}
-			}
-
-			s.sendMessage("Iris material is currently: " + ConfigManager.getIrisMaterial());
-			s.sendMessage("Valid materials are: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, and LAPIS_BLOCK");
+		    sender.sendMessage(ConfigManager.normalheader + "Iris material is currently: " + ConfigManager.getIrisMaterial());
+		    sender.sendMessage(ConfigManager.normalheader + "Valid materials are: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, and LAPIS_BLOCK");
 		}
-		else
-		{
-			s.sendMessage( ConfigManager.output_strings.get(StringTypes.PERMISSION_NO) );
-		}
+		return true;
 	}
 	
 	/**
 	 * Do shutdown timeout.
 	 *
-	 * @param s the s
+	 * @param sender the sender
 	 * @param args the args
+	 * @return true, if successful
 	 */
-	private static void doShutdownTimeout(CommandSender s, String[] args)
+	private static boolean doShutdownTimeout(CommandSender sender, String[] args)
 	{
-		boolean allowed = false;
-		if (CommandUtlities.playerCheck(s))
+		if ( args.length == 2)
 		{
-			Player p = (Player) s;
-			if ( p.isOp() || !CommandUtlities.playerCheck(p) || ( WormholeXTreme.Permissions != null && WormholeXTreme.Permissions.has(p, "wormhole.config")))
+			try
 			{
-				allowed = true;
-			}
-			
-		}
-		if (allowed || !CommandUtlities.playerCheck(s))
-		{
-			if ( args.length == 2)
-			{
-				try
+				int timeout = Integer.parseInt(args[1]);
+				if (  timeout > -1 && timeout <= 60)
 				{
-					int timeout = Integer.parseInt(args[1]);
-					if (  timeout > -1 && timeout <= 60)
-					{
-						ConfigManager.setTimeoutShutdown(timeout);
-					}
-					else
-					{
-						s.sendMessage("Valid timeout is between 0 and 60 seconds.");
-					}
+					ConfigManager.setTimeoutShutdown(timeout);
+					sender.sendMessage(ConfigManager.normalheader + "shutdown_timeout set to: " + ConfigManager.getTimeoutShutdown());
 				}
-				catch (Exception e)
+				else
 				{
-					s.sendMessage("Valid timeout is between 0 and 60 seconds.");
+				    sender.sendMessage(ConfigManager.errorheader + "Invalid shutdown_timeout: " + args[1]);
+					sender.sendMessage(ConfigManager.errorheader + "Valid timeout is between 0 and 60 seconds.");
+					return false;
 				}
 			}
-			s.sendMessage("Current shutdown_timeout is: " + ConfigManager.getTimeoutShutdown() );
+			catch (Exception e)
+			{
+			    sender.sendMessage(ConfigManager.errorheader + "Invalid shutdown_timeout: " + args[1]);
+				sender.sendMessage(ConfigManager.errorheader + "Valid timeout is between 0 and 60 seconds.");
+				return false;
+			}
 		}
 		else
 		{
-			s.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+		    sender.sendMessage(ConfigManager.normalheader + "Current shutdown_timeout is: " + ConfigManager.getTimeoutShutdown() );
+		    sender.sendMessage(ConfigManager.normalheader + "Valid timeout is between 0 and 60 seconds.");
 		}
+		return true;
 	}
 	
 	/**
 	 * Do activate timeout.
 	 *
-	 * @param s the s
+	 * @param sender the sender
 	 * @param args the args
+	 * @return true, if successful
 	 */
-	private static void doActivateTimeout(CommandSender s, String[] args)
+	private static boolean doActivateTimeout(CommandSender sender, String[] args)
 	{
-		boolean allowed = false;
-		if (CommandUtlities.playerCheck(s))
+		if ( args.length == 2)
 		{
-			Player p = (Player) s;
-			if ( p.isOp() || ( WormholeXTreme.Permissions != null && WormholeXTreme.Permissions.has(p, "wormhole.config")))
+			try
 			{
-				allowed = true;
-			}
-		}
-		if (allowed || !CommandUtlities.playerCheck(s))
-		{
-			if ( args.length == 2)
-			{
-				try
+				int timeout = Integer.parseInt(args[1]);
+				if (  timeout >= 10 && timeout <= 60)
 				{
-					int timeout = Integer.parseInt(args[1]);
-					if (  timeout >= 10 && timeout <= 60)
-					{
-						ConfigManager.setTimeoutActivate(timeout);
-					}
-					else 
-					{
-						s.sendMessage("Valid timeout is between 10 and 60 seconds.");
-					}
+					ConfigManager.setTimeoutActivate(timeout);
+					sender.sendMessage(ConfigManager.normalheader + "activate_timeout set to: " + ConfigManager.getTimeoutActivate() );
 				}
-				catch (Exception e)
+				else 
 				{
-					s.sendMessage("Valid timeout is between 10 and 60 seconds.");
+				    sender.sendMessage(ConfigManager.errorheader + "Invalid activate_timeout: " + args[1]);
+					sender.sendMessage(ConfigManager.errorheader + "Valid timeout is between 10 and 60 seconds.");
+					return false;
 				}
 			}
-			s.sendMessage("Current activate_timeout is: " + ConfigManager.getTimeoutActivate() );
+			catch (Exception e)
+			{
+			    sender.sendMessage(ConfigManager.errorheader + "Invalid activate_timeout: " + args[1]);
+				sender.sendMessage(ConfigManager.errorheader + "Valid timeout is between 10 and 60 seconds.");
+				return false;
+			}
 		}
 		else
 		{
-			s.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+		    sender.sendMessage(ConfigManager.normalheader + "Current activate_timeout is: " + ConfigManager.getTimeoutActivate() );
+		    sender.sendMessage(ConfigManager.normalheader + "Valid timeout is between 10 and 60 seconds.");
 		}
+		return true;
 	}
 	
 	/**
@@ -280,40 +348,37 @@ public class Wormhole implements CommandExecutor
 	 *
 	 * @param sender the sender
 	 * @param args the args
+	 * @return true, if successful
 	 */
-	private static void doOwner(CommandSender sender, String[] args)
+	private static boolean doOwner(CommandSender sender, String[] args)
 	{
-		boolean allowed = false;
-		if (CommandUtlities.playerCheck(sender))
+		if ( args.length >= 2 )
 		{
-			Player p = (Player) sender;
-			if ( p.isOp() || ( WormholeXTreme.Permissions != null && WormholeXTreme.Permissions.has(p, "wormhole.config")))
+			Stargate s = StargateManager.GetStargate(args[1]);
+			if (s != null )
 			{
-				allowed = true;
-			}
-		}
-		if (allowed || !CommandUtlities.playerCheck(sender))
-			if ( args.length > 1 )
-			{
-				Stargate s = StargateManager.GetStargate(args[1]);
-				if (s != null )
+				if ( args.length == 3)
 				{
-					if ( args.length > 2)
-					{
-						s.Owner = args[2];
-					}
-					
-					sender.sendMessage("\u00A73:: \u00a75Gate: \u00a77" + s.Name + " \u00a75Owned by: \u00a77" + s.Owner);
+					s.Owner = args[2];
+					sender.sendMessage(ConfigManager.normalheader + "Gate: " + s.Name + " Now owned by: " + s.Owner);
 				}
-				else
+				else if ( args.length == 2)
 				{
-					sender.sendMessage("\u00A73:: \u00A75error \u00A73:: \u00A77Invalid gate name.");
+				    sender.sendMessage(ConfigManager.normalheader + "Gate: " + s.Name + " Owned by: " + s.Owner);
 				}
 			}
 			else
 			{
-				sender.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+				sender.sendMessage(ConfigManager.errorheader + "Invalid gate name: " + args[1]);
+				return false;
 			}
+		}
+		else
+		{
+		    sender.sendMessage(ConfigManager.errorheader + "No gate name specified.");
+		    return false;
+		}
+		return true;
 	}
 	
 

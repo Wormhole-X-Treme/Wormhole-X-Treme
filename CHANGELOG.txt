@@ -29,11 +29,17 @@ Changes 0.810:
   node settings use complex mode. While the setting of true sets the plugin to check for 
   extremely simplified permissions. Permission node details can be found in the README.
   
-  
 - Refactored the WXForce class to Force. Hopefully this shuts MSSE up. ^^;
 
 - Moved a bunch of the initial loading out of onEnable and into onLoad. 
   Now we use onEnable only for events that should only happen at plugin Enable.
+  
+- Updated '/wormhole' command to have more descriptive errors and built in help. 
+  Updated help information for this command as well. Command now has unified messaging
+  string headers. Added new 'simple' option to enabling simple permissions while the game
+  is live. Requires the user to have proper permissions node for configuration in target
+  mode. Removed a bunch of duplicated permissions checks. Only one check is needed at 
+  beginning of command call now. 
 
 Changes 0.801 (3/15/11 @ 22:33 PST):
 

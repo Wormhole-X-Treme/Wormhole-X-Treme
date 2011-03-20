@@ -54,27 +54,29 @@ public class ConfigManager
 		setupStrings();
 		Configuration.loadConfiguration(pdf);
 	}
-
+	
+	public static final String errorheader = "\u00A73:: \u00A75error \u00A73:: \u00A77";
+	public static final String normalheader = "\u00A73:: \u00A77";
 	// Used so that I don't have to retype strings over and over again.
 	/**
 	 * Setup strings.
 	 */
 	private static void setupStrings() 
 	{
-		output_strings.put(StringTypes.PERMISSION_NO, "\u00A73:: \u00A75error \u00A73:: \u00A77You lack the permissions to do this.");
-		output_strings.put(StringTypes.TARGET_IS_SELF, "\u00A73:: \u00A75error \u00A73:: \u00A77Can't dial own gate without solar flare");
-		output_strings.put(StringTypes.TARGET_INVALID, "\u00A73:: \u00A75error \u00A73:: \u00A77Invalid remote gate target.");
-		output_strings.put(StringTypes.TARGET_IS_ACTIVE, "\u00A73:: \u00A75error \u00A73:: \u00A77Target gate is currently active.");
-		output_strings.put(StringTypes.GATE_NOT_ACTIVE, "\u00A73:: \u00A75error \u00A73:: \u00A77No gate activated to dial.");
-		output_strings.put(StringTypes.GATE_REMOTE_ACTIVE, "\u00A73:: \u00A75error \u00A73:: \u00A77Gate remotely activated.");
-		output_strings.put(StringTypes.GATE_SHUTDOWN, "\u00A73:: \u00A77Gate successfully shutdown.");
-		output_strings.put(StringTypes.GATE_ACTIVATED, "\u00A73:: \u00A77Gate successfully activated.");
-		output_strings.put(StringTypes.GATE_DEACTIVATED, "\u00A73:: \u00A77Gate successfully deactivated.");
-		output_strings.put(StringTypes.GATE_DIALED, "\u00A73:: \u00A77Gate successfully dialed.");
-		output_strings.put(StringTypes.CONSTRUCT_SUCCESS, "\u00A73:: \u00A77Gate successfully constructed.");
-		output_strings.put(StringTypes.CONSTRUCT_NAME_INVALID, "\u00A73:: \u00A75error \u00A73:: \u00A77Gate name invalid.");
-		output_strings.put(StringTypes.CONSTRUCT_NAME_TOO_LONG, "\u00A73:: \u00A75error \u00A73:: \u00A77Gate name too long.");
-		output_strings.put(StringTypes.REQUEST_INVALID, "\u00A73:: \u00A75error \u00A73:: \u00A77Invalid Request.");
+		output_strings.put(StringTypes.PERMISSION_NO, errorheader + "You lack the permissions to do this.");
+		output_strings.put(StringTypes.TARGET_IS_SELF, errorheader + "Can't dial own gate without solar flare");
+		output_strings.put(StringTypes.TARGET_INVALID, errorheader + "Invalid remote gate target.");
+		output_strings.put(StringTypes.TARGET_IS_ACTIVE, errorheader + "Target gate is currently active.");
+		output_strings.put(StringTypes.GATE_NOT_ACTIVE, errorheader + "No gate activated to dial.");
+		output_strings.put(StringTypes.GATE_REMOTE_ACTIVE, errorheader + "Gate remotely activated.");
+		output_strings.put(StringTypes.GATE_SHUTDOWN, normalheader + "Gate successfully shutdown.");
+		output_strings.put(StringTypes.GATE_ACTIVATED, normalheader + "Gate successfully activated.");
+		output_strings.put(StringTypes.GATE_DEACTIVATED, normalheader + "Gate successfully deactivated.");
+		output_strings.put(StringTypes.GATE_DIALED, normalheader + "Gate successfully dialed.");
+		output_strings.put(StringTypes.CONSTRUCT_SUCCESS, normalheader + "Gate successfully constructed.");
+		output_strings.put(StringTypes.CONSTRUCT_NAME_INVALID, errorheader + "Gate name invalid.");
+		output_strings.put(StringTypes.CONSTRUCT_NAME_TOO_LONG, errorheader + "Gate name too long.");
+		output_strings.put(StringTypes.REQUEST_INVALID, errorheader + "Invalid Request.");
 	}
 	
 	/**
@@ -425,8 +427,13 @@ public class ConfigManager
 	    }
 	    else
 	    {
-	        return true;
+	        return false;
 	    }
+	}
+	
+	public static void setSimplePermissions(boolean b)
+	{
+	    ConfigManager.setConfigValue(ConfigKeys.SIMPLE_PERMISSIONS, b);
 	}
 	
 	/**
@@ -435,19 +442,19 @@ public class ConfigManager
 	public enum StringTypes
 	{
 		
-		/** The PERMISSIO n_ no. */
+		/** The PERMISSIO_NO. */
 		PERMISSION_NO,
 		
-		/** The TARGE t_ i s_ self. */
+		/** The TARGET_IS_SELF. */
 		TARGET_IS_SELF,
 		
-		/** The TARGE t_ invalid. */
+		/** The TARGET_INVALID. */
 		TARGET_INVALID,
 		
-		/** The TARGE t_ i s_ active. */
+		/** The TARGET_IS_ACTIVE. */
 		TARGET_IS_ACTIVE,
 		
-		/** The GAT e_ no t_ active. */
+		/** The GATE_NOT_ACTIVE. */
 		GATE_NOT_ACTIVE,
 		
 		/** The GAT e_ remot e_ active. */

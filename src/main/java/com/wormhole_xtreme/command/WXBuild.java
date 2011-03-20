@@ -64,9 +64,16 @@ public class WXBuild implements CommandExecutor {
         if (args.length == 1) 
         {
             boolean allowed = false;
-            if (WormholeXTreme.Permissions != null)
+            if (WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
             {
                 if (WormholeXTreme.Permissions.has(player, "wormhole.config"))
+                {
+                    allowed = true;
+                }
+            }
+            else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+            {
+                if (WormholeXTreme.Permissions.has(player, "wormhole.simple.config"))
                 {
                     allowed = true;
                 }
@@ -77,11 +84,11 @@ public class WXBuild implements CommandExecutor {
                 if  ( shape != null)
                 {
                     StargateManager.AddPlayerBuilderShape(player, shape);
-                    player.sendMessage("Press Activation button on new DHD to autobuild Stargate in the shape of: " + args[0] );
+                    player.sendMessage(ConfigManager.normalheader + "Press Activation button on new DHD to autobuild Stargate in the shape of: " + args[0] );
                 }
                 else
                 {
-                    player.sendMessage("Invalid shape: " + args[0]);
+                    player.sendMessage(ConfigManager.errorheader + "Invalid shape: " + args[0]);
                 }
             }
             else

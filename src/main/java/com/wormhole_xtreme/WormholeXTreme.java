@@ -199,6 +199,14 @@ public class WormholeXTreme extends JavaPlugin
     	    	{
     	    		Permissions = ((Permissions)test).getHandler();
     	            WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Attached to Permissions version " + v);
+    	            if (ConfigManager.getSimplePermissions())
+    	            {
+    	                WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Simple Permissions Enabled");
+    	            }
+    	            else
+    	            {
+    	                WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Complex Permissions Enabled");
+    	            }
     	    	}
     	    	catch ( Exception e)
     	    	{

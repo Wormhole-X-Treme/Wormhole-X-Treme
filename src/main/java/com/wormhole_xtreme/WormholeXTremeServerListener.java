@@ -26,6 +26,7 @@ import org.bukkit.plugin.Plugin;
 
 import com.nijiko.coelho.iConomy.iConomy;
 import com.nijikokun.bukkit.Permissions.Permissions;
+import com.wormhole_xtreme.config.ConfigManager;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -84,6 +85,14 @@ public class WormholeXTremeServerListener extends ServerListener
         	    {
         	        WormholeXTreme.Permissions = ((Permissions)p).getHandler();
 	                WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Attached to Permissions version " + v);
+	                if (ConfigManager.getSimplePermissions())
+	                {
+	                    WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Simple Permissions Enabled");
+	                }
+	                else
+	                {
+	                    WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Complex Permissions Enabled");
+	                }
         	    }
         	    catch ( Exception e)
         	    {

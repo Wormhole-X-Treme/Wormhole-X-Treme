@@ -96,7 +96,7 @@ public class WXComplete implements CommandExecutor
                 }
                 else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
                 {
-                    if (WormholeXTreme.Permissions.has(p, "wormhole.build"))
+                    if (WormholeXTreme.Permissions.has(p, "wormhole.simple.build"))
                     {
                         allowed = true;
                     }
@@ -113,7 +113,7 @@ public class WXComplete implements CommandExecutor
                         }
                         else
                         {
-                            p.sendMessage( "Construction Failed!?" );
+                            p.sendMessage(ConfigManager.errorheader + "Construction Failed!?" );
                         }
                     }
                     else

@@ -33,6 +33,7 @@ import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.util.Vector;
 
 import com.wormhole_xtreme.config.ConfigManager;
+import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
 
@@ -47,9 +48,7 @@ import com.wormhole_xtreme.model.StargateManager;
 public class WormholeXTremeVehicleListener extends VehicleListener 
 { 
 	
-	/** The wxt. */
-	private WormholeXTreme wxt = null;
-	//private final Stargates plugin;
+
 	/**
 	 * Instantiates a new wormhole x treme vehicle listener.
 	 *
@@ -58,7 +57,6 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 	public WormholeXTremeVehicleListener(WormholeXTreme instance) 
 	{ 
 		//plugin = instance; 
-		wxt = instance;
 	} 
 	
 	/** The nospeed. */
@@ -72,13 +70,22 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 	{
 		Location l = event.getTo();
 		Block ch = l.getWorld().getBlockAt( l.getBlockX(), l.getBlockY(), l.getBlockZ());
-		if ( ch.getType() == ConfigManager.getPortalMaterial() )
-		{
+		//if ( ch.getType() == ConfigManager.getPortalMaterial() )
+		//{
 			// This means that the cart is in a stargate that is active.
 			Stargate st = StargateManager.getGateFromBlock( ch );
 			
 			if ( st != null &&  st.Active && st.Target != null )
 			{
+			    String gatenetwork;
+			    if (st.Network != null)
+			    {
+			        gatenetwork = st.Network.netName;
+			    }
+			    else
+			    {
+			        gatenetwork = "Public";
+			    }
 				Location target = st.Target.TeleportLocation;
 				Vehicle veh = event.getVehicle();
 				Vector v = veh.getVelocity();
@@ -90,14 +97,37 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 					if ( e instanceof Player )
 					{
 						Player p = (Player)e;
-						if ( p.getVehicle() != null )
-						{
-							wxt.prettyLog(Level.WARNING,false,"Player shouldn't be in this cart.");
-						}
-						else
-						{
-							e.teleportTo(target);
-						}
+						WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Minecart Player in gate:" + st.Name + " gate Active: " + st.Active + " Target Gate: " + st.Target.Name + " Network: " + gatenetwork );
+				        if ( WormholeXTreme.Permissions != null)
+				        {
+				            // If use permission is also teleport permission we should check here:
+				            if (ConfigManager.getWormholeUseIsTeleport() && !ConfigManager.getSimplePermissions() && 
+				                ((st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.sign")) || 
+				                (!st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.dialer")) || 
+				                (!gatenetwork.equals("Public") && !WormholeXTreme.Permissions.has(p, "wormhole.network.use." + gatenetwork))))
+				            {
+				                // This means that the user doesn't have permission to use.
+				                p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+				                return;
+				            }
+				            else if (ConfigManager.getWormholeUseIsTeleport() && ConfigManager.getSimplePermissions() &&
+				                ((st.IsSignPowered && !WormholeXTreme.Permissions.has(p, "wormhole.simple.use"))))
+				            {
+				                p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+				                return;
+				            }
+				        }
+			            if ( st.Target.IrisActive )
+			            {
+			                p.sendMessage(ConfigManager.errorheader + "Remote Iris is locked!");
+			                p.teleportTo(st.TeleportLocation);
+			                veh.teleportTo(st.TeleportLocation);
+			                if (ConfigManager.getTimeoutShutdown() == 0)
+			                {
+			                    st.ShutdownStargate();
+			                }
+			                return;
+			            }
 					}
 				}
 				
@@ -113,16 +143,25 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 					new_speed.setZ(1);
 				// As we all know stargates accelerate matter.
 				new_speed.multiply(speed * 5);
-				
-				veh.teleportTo(target);
-				veh.setVelocity(new_speed);
-				/*if ( e != null)
-					veh.setPassenger(e);*/
+				if (st.Target.IrisActive)
+				{
+				    veh.teleportTo(st.TeleportLocation);
+				}
+				else 
+				{
+				    veh.teleportTo(target);
+				    veh.setVelocity(new_speed);
+				}
+				if ( e != null)
+				{
+				    e.teleportTo(target);
+					veh.setPassenger(e);
+				}
 				if (ConfigManager.getTimeoutShutdown() == 0)
 				{
 					st.ShutdownStargate();
 				}
 			}
-		}
+		//}
 	}
 }

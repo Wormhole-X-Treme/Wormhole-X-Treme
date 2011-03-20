@@ -19,6 +19,7 @@
 package com.wormhole_xtreme; 
 
 
+import java.util.List;
 import java.util.logging.Level;
 
 
@@ -26,8 +27,10 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityListener;
 
+import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
 
 
@@ -76,5 +79,23 @@ public class WormholeXTremeEntityListener extends EntityListener
 				}
 			}
 		}
-	}	
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.bukkit.event.entity.EntityListener#onEntityExplode(org.bukkit.event.entity.EntityExplodeEvent)
+	 */
+	@Override
+	public void onEntityExplode(EntityExplodeEvent event)
+	{
+	    List<Block> explodeblocks = event.blockList();
+	    for ( int i = 0; i < explodeblocks.size(); i++)
+	    {
+	        if (StargateManager.isBlockInGate(explodeblocks.get(i)))
+	        {
+	            Stargate explodegate = StargateManager.getGateFromBlock(explodeblocks.get(i));
+	            WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Stopping Creeper Explosion on Stargate: " + explodegate.Name );
+	            event.setCancelled(true);
+	        }
+	    }
+	}
 } 

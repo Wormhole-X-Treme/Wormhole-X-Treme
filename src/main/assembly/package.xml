@@ -9,7 +9,7 @@
     <fileSets>
         <fileSet>
             <directory>${project.basedir}</directory>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>/docs/</outputDirectory>
             <includes>
                 <include>README*</include>
                 <include>LICENSE*</include>
@@ -20,7 +20,7 @@
         </fileSet>
         <fileSet>
             <directory>${project.basedir}/src/main/resources/GateShapes/</directory>
-            <outputDirectory>/GateShapes/</outputDirectory>
+            <outputDirectory>/plugins/WormholeXTreme/GateShapes/</outputDirectory>
             <includes>
                 <include>*.shape</include>
             </includes>
@@ -31,10 +31,6 @@
   		    <source>${project.build.directory}/${artifactId}-${version}.jar</source>
   		    <outputDirectory>/plugins/</outputDirectory>
   		    <destName>WormholeXTreme.jar</destName>
-        </file>
-        <file>
-            <source>${project.build.directory}/${artifactId}-${version}-javadoc.jar</source>
-            <outputDirectory>/doc/</outputDirectory>
         </file>
         <file>
             <source>${project.basedir}/lib/hsqldb.jar</source>

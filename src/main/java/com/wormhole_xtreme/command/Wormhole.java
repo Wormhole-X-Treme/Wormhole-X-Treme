@@ -370,7 +370,6 @@ public class Wormhole implements CommandExecutor
 			else
 			{
 				sender.sendMessage(ConfigManager.errorheader + "Invalid gate name: " + args[1]);
-				return false;
 			}
 		}
 		else

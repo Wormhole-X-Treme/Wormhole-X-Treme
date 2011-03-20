@@ -58,7 +58,8 @@ public class WXList implements CommandExecutor {
         
         if (CommandUtlities.playerCheck(sender)) {
             p = (Player) sender;
-            if ( p.isOp() || (WormholeXTreme.Permissions != null && (WormholeXTreme.Permissions.has(p, "wormhole.config")) || (WormholeXTreme.Permissions.has(p, "wormhole.list"))))
+            if ( p.isOp() || (WormholeXTreme.Permissions != null && ((ConfigManager.getSimplePermissions() && (WormholeXTreme.Permissions.has(p, "wormhole.simple.config") || WormholeXTreme.Permissions.has(p, "wormhole.simple.use"))) || 
+                (!ConfigManager.getSimplePermissions() && (WormholeXTreme.Permissions.has(p, "wormhole.config")) || (WormholeXTreme.Permissions.has(p, "wormhole.list"))))))
             {
                 allowed = true;
             }
@@ -66,7 +67,7 @@ public class WXList implements CommandExecutor {
         if (!CommandUtlities.playerCheck(sender) || allowed )
         {
             ArrayList<Stargate> gates = StargateManager.GetAllGates();
-            sender.sendMessage("\u00A73:: \u00A75available gates \u00A73::");
+            sender.sendMessage(ConfigManager.normalheader + "Available gates \u00A73::");
             StringBuilder sb = new StringBuilder();
             for ( int i = 0; i < gates.size(); i++)
             {

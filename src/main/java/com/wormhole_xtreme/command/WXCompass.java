@@ -63,9 +63,16 @@ public class WXCompass implements CommandExecutor {
             return true;
         }
         boolean allowed = false;
-        if (WormholeXTreme.Permissions != null)
+        if (WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
         {
             if (WormholeXTreme.Permissions.has(p, "wormhole.use.compass"))
+            {
+                allowed = true;
+            }
+        }
+        else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+        {
+            if (WormholeXTreme.Permissions.has(p, "wormhole.use"))
             {
                 allowed = true;
             }
@@ -94,11 +101,11 @@ public class WXCompass implements CommandExecutor {
             if(closest != null)
             {
                 p.setCompassTarget(closest.TeleportLocation);
-                p.sendMessage("Compass set to wormhole: " + closest.Name);
+                p.sendMessage(ConfigManager.normalheader + "Compass set to wormhole: " + closest.Name);
             }
             else
             {
-                p.sendMessage("No wormholes to track!");
+                p.sendMessage(ConfigManager.errorheader + "No wormholes to track!");
             }
         }
         else 

@@ -67,12 +67,19 @@ public class WXRemove implements CommandExecutor {
                 if (CommandUtlities.playerCheck(sender))
                 {
                     Player p = (Player) sender;
-                    if  (WormholeXTreme.Permissions != null)
-                        {
+                    if  (WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
+                    {
                         if (WormholeXTreme.Permissions.has(p, "wormhole.remove.all") || ( s.Owner != null && s.Owner.equals(p.getName()) && WormholeXTreme.Permissions.has(p, "wormhole.remove.own")))
                         {
                             allowed = true;
                         }   
+                    }
+                    else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+                    {
+                        if (WormholeXTreme.Permissions.has(p, "wormhole.simple.remove"))
+                        {
+                            allowed = true;
+                        }
                     }
                     else if (PermissionsManager.getPermissionLevel(p, s) == PermissionsManager.PermissionLevel.WORMHOLE_FULL_PERMISSION )
                     {
@@ -100,7 +107,7 @@ public class WXRemove implements CommandExecutor {
                         s.DeleteNameBlock();
                     }
                     StargateManager.RemoveStargate(s);
-                    sender.sendMessage("\u00A73:: \u00a75Wormhole Removed: \u00a77" + s.Name);
+                    sender.sendMessage(ConfigManager.normalheader + "Wormhole Removed: " + s.Name);
                 }
                 else
                 {
@@ -110,7 +117,7 @@ public class WXRemove implements CommandExecutor {
             }
             else
             {
-                sender.sendMessage("\u00A73:: \u00A75error \u00A73:: \u00A77Gate does not exist: " + args[0] + ". Remember proper capitalization.");
+                sender.sendMessage(ConfigManager.errorheader + "Gate does not exist: " + args[0] + ". Remember proper capitalization.");
             }
         }
         else

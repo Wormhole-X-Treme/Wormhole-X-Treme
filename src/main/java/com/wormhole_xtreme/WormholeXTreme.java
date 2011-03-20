@@ -65,7 +65,8 @@ public class WormholeXTreme extends JavaPlugin
 	
 	/** The vehicle listener. */
 	private final WormholeXTremeVehicleListener vehicleListener = new WormholeXTremeVehicleListener(this);
-	//private final WormholeXTremeEntityListener entityListener = new WormholeXTremeEntityListener(this);
+	/** The entity listener. */
+	private final WormholeXTremeEntityListener entityListener = new WormholeXTremeEntityListener(this);
 	/** The server listener. */
 	private final WormholeXTremeServerListener serverListener = new WormholeXTremeServerListener(this);
 	
@@ -174,7 +175,9 @@ public class WormholeXTreme extends JavaPlugin
 		// Handle minecarts going through portal
 		pm.registerEvent(Event.Type.VEHICLE_MOVE, vehicleListener, Priority.High, this);
 		// Handle player walking through the lava.
-		//pm.registerEvent(Event.Type.ENTITY_DAMAGED, entityListener, Priority.High, this);
+		pm.registerEvent(Event.Type.ENTITY_DAMAGED, entityListener, Priority.High, this);
+		// Handle Creeper explosions damaging Gate components.
+		pm.registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.High, this);
 		
         // Listen for enable events.
 		pm.registerEvent(Event.Type.PLUGIN_ENABLE, serverListener, Priority.Monitor, this);

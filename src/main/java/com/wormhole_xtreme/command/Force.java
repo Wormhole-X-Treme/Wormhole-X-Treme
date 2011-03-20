@@ -60,7 +60,8 @@ public class Force implements CommandExecutor {
             if (CommandUtlities.playerCheck(sender))
             {
                 player = (Player) sender;
-                if (player.isOp() || (WormholeXTreme.Permissions != null && (WormholeXTreme.Permissions.has(player, "wormhole.config") || WormholeXTreme.Permissions.has(player, "wormhole.remove.all"))))
+                if (player.isOp() || (WormholeXTreme.Permissions != null && ((ConfigManager.getSimplePermissions() && (WormholeXTreme.Permissions.has(player,"wormhole.config") || WormholeXTreme.Permissions.has(player, "wormhole.remove"))) || 
+                    (!ConfigManager.getSimplePermissions() && (WormholeXTreme.Permissions.has(player, "wormhole.config") || WormholeXTreme.Permissions.has(player, "wormhole.remove.all"))))))
                 {
                     allowed = true;
                 }
@@ -111,7 +112,7 @@ public class Force implements CommandExecutor {
                 if (close && !activelist.isEmpty())
                 {
                     StringBuilder deactivated = new StringBuilder();
-                    sender.sendMessage("\u00A73:: \u00A75Forced Closed Gate(s)\u00A73::");
+                    sender.sendMessage(ConfigManager.normalheader + "Forced Closed Gate(s)\u00A73::");
                     for ( int i = 0; i < activelist.size(); i++)
                     {
                         deactivated.append("\u00A77" + activelist.get(i) );
@@ -133,7 +134,7 @@ public class Force implements CommandExecutor {
                 if (drop && !droplist.isEmpty())
                 {
                     StringBuilder dropped = new StringBuilder();
-                    sender.sendMessage("\u00A73:: \u00A75Forced Dropped Iris(es)\u00A73::");
+                    sender.sendMessage(ConfigManager.normalheader + "Forced Dropped Iris(es)\u00A73::");
                     for ( int i = 0; i < droplist.size(); i++)
                     {
                         dropped.append("\u00A77" + droplist.get(i) );

@@ -18,8 +18,6 @@
  */
 package com.wormhole_xtreme.command;
 
-import java.util.logging.Level;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -74,7 +72,8 @@ public class WXIDC implements CommandExecutor {
                 if ( CommandUtlities.playerCheck(sender))
                 {
                     if ( p.isOp() || 
-                        (WormholeXTreme.Permissions != null && (WormholeXTreme.Permissions.has(p, "wormhole.config"))) ||
+                        (WormholeXTreme.Permissions != null && ((ConfigManager.getSimplePermissions() && WormholeXTreme.Permissions.has(p, "wormhole.simple.config")) ||
+                            (!ConfigManager.getSimplePermissions() && WormholeXTreme.Permissions.has(p, "wormhole.config")))) ||
                         s.Owner.equals(p.getName()) )   
                     {
                         allowed = true;
@@ -103,36 +102,18 @@ public class WXIDC implements CommandExecutor {
                         }
                     }
                         
-        
                     // 3. always display current value at end.
-                    
-                    String message = "IDC for gate: " + s.Name + " is:" + s.IrisDeactivationCode;
-                    if ( p != null)
-                    {
-                        p.sendMessage(message);
-                    }
-                    else
-                    {
-                        WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, message);
-                    }
+                    sender.sendMessage(ConfigManager.normalheader + "IDC for gate: " + s.Name + " is:" + s.IrisDeactivationCode);
                 }
                 else
                 {
-                    p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+                    sender.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
                 }
             }
             else
             {
-                String message = "Invalid Stargate: " + args[0];
-                
-                if ( p != null)
-                {
-                    p.sendMessage(message);
-                }
-                else
-                {
-                    WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, message);
-                }
+                sender.sendMessage(ConfigManager.errorheader + "Invalid Stargate: " + args[0]);
+
             }
             return true;
         }

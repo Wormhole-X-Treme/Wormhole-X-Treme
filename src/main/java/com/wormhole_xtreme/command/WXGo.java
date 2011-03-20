@@ -58,7 +58,8 @@ public class WXGo implements CommandExecutor {
             player = (Player)sender;
         }
         boolean allowed = false;
-        if ( player.isOp() || ( WormholeXTreme.Permissions != null && WormholeXTreme.Permissions.has(player, "wormhole.go")))
+        if ( player.isOp() || ( WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions() && WormholeXTreme.Permissions.has(player, "wormhole.go"))
+            || (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions() && WormholeXTreme.Permissions.has(player, "wormhole.config")))
         {
             allowed = true;
         }
@@ -75,7 +76,7 @@ public class WXGo implements CommandExecutor {
                 }
                 else
                 {
-                    player.sendMessage("\u00A73:: \u00A75error \u00A73:: \u00A77Gate does not exist: " + args[0]);
+                    player.sendMessage(ConfigManager.errorheader + "Gate does not exist: " + args[0]);
                 }
             }
             else

@@ -75,7 +75,7 @@ public class DefaultSettings
 		new Setting(
 				ConfigKeys.WORMHOLE_USE_IS_TELEPORT, 
 				false, 
-				"The wormhole.use permission means that a user can teleport through gate. When false a user will be able to teleport but not activate a gate. When true only users with wormhole.use can even teleport.",
+				"The wormhole.use (or wormhole.simple.use) permission means that a user can teleport through gate. When false a user will be able to teleport but not activate a gate. When true only users with wormhole.use (or wormhole.simple.use) can even teleport.",
 				"WormholeXTreme"
 		),
 		new Setting(

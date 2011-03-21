@@ -25,6 +25,7 @@ import java.util.logging.Level;
 
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
@@ -33,6 +34,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityListener;
 
+import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
 
@@ -73,16 +75,21 @@ public class WormholeXTremeEntityListener extends EntityListener
 				// Block standing_block = p.getWorld().getBlockAt(p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ());
 				if ( StargateManager.isBlockInGate(p.getLocation().getBlock()) )
 				{
-					WormholeXTreme.ThisPlugin.prettyLog(Level.FINE,false,"Stopping event: " + event.getCause() + " on: " + p.getName());
-					event.setCancelled(true);
-					if (event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK) || event.getCause().equals(DamageCause.LAVA))
+					if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA) && (event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK) || event.getCause().equals(DamageCause.LAVA)))
 					{
+					    WormholeXTreme.ThisPlugin.prettyLog(Level.FINE,false,"Stopping event: " + event.getCause() + " on: " + p.getName());
+					    event.setCancelled(true);
 					    p.setFireTicks(0);
+					}
+					else if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_WATER) && event.getCause().equals(DamageCause.DROWNING))
+					{
+					    WormholeXTreme.ThisPlugin.prettyLog(Level.FINE,false,"Stopping event: " + event.getCause() + " on: " + p.getName());
+					    event.setCancelled(true);
 					}
 				}
 				else
 				{
-				    if (event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK) || event.getCause().equals(DamageCause.LAVA))
+				    if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA) && (event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK) || event.getCause().equals(DamageCause.LAVA)))
 				    {
 				        Location current = p.getLocation();
 				        ArrayList<Stargate> gates = StargateManager.GetAllGates();

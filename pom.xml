@@ -76,7 +76,7 @@
 		<dependency>
 			<groupId>com.nijiko.coelho.iConomy</groupId>
 			<artifactId>iConomy</artifactId>
-			<version>4.4</version>
+			<version>4.5</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>

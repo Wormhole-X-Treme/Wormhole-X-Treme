@@ -143,7 +143,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 					    if ( balance >= cost )
 					    {
 						    player_account.subtract(cost);
-						    player_account.save();
+						    // player_account.save();
 						    p.sendMessage("\u00A73:: \u00A77Wormhole Use \u00A7F- \u00A72" + cost + " \u00A77" + currency );
 						    //p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
 						    double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
@@ -154,7 +154,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 							    {
 								    Account own_acc = iConomy.getBank().getAccount(st.Owner);
 								    own_acc.add(cost * owner_percent);
-								    own_acc.save();
+								    // own_acc.save();
 							    }
 						    }
 					    }

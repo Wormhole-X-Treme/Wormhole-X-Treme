@@ -1,3 +1,15 @@
+Changes 0.811:
+
+- Came up with a proximity based check for stargates in the lava & fire event
+  cancellation code. Now only 1 block radius around active lava portals
+  gets its lava & fire events cancelled. STATIONARY_LAVA is safe for players
+  to use in portals now. For reals.
+  
+- Version 4.5 of iConomy is now supported and verified as working.
+
+- Now we actually check for Iris on gate use while in minecart...
+ 
+
 Changes 0.810 (3/20/11 @ 00:18 PST):
 
 - Broke '/wxcompass' out into its own class. Removed '/wormhole compass'.

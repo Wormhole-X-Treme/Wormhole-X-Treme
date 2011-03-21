@@ -27,6 +27,7 @@ import org.bukkit.entity.Player;
 
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockInteractEvent;
 import org.bukkit.event.block.BlockListener; 
 import org.bukkit.event.block.BlockPhysicsEvent;
@@ -63,6 +64,22 @@ public class WormholeXTremeBlockListener extends BlockListener
 	public WormholeXTremeBlockListener(final WormholeXTreme plugin)
 	{
 		//this.plugin = plugin;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.bukkit.event.block.BlockListener#onBlockIgnite(org.bukkit.event.block.BlockIgniteEvent)
+	 */
+	@Override
+	public void onBlockIgnite(BlockIgniteEvent event)
+	{
+	    if (!event.isCancelled())
+	    {
+	        if ( StargateManager.isBlockInGate(event.getBlock()))
+	        {
+	            WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Cancelled Block Ignite Cause: " + event.getCause().toString());
+	            event.setCancelled(true);
+	        }
+	    }
 	}
 	
 	/* (non-Javadoc)
@@ -145,10 +162,13 @@ public class WormholeXTremeBlockListener extends BlockListener
 	@Override
     public void onBlockFlow(BlockFromToEvent event)
 	{
-		if ( StargateManager.isBlockInGate(event.getBlock()) )
-		{
-			event.setCancelled(true);
-		}
+	    if (!event.isCancelled())
+	    {
+	        if ( StargateManager.isBlockInGate(event.getBlock()) )
+	        {
+	            event.setCancelled(true);
+	        }
+	    }
 	}
 
 	/* (non-Javadoc)
@@ -269,14 +289,13 @@ public class WormholeXTremeBlockListener extends BlockListener
 	@Override
     public void onBlockPhysics(BlockPhysicsEvent event)
 	{
-		if ( StargateManager.isBlockInGate(event.getBlock())) 
-		{
-			//Material m = event.getBlock().getType();
-			//if ( m.equals(ConfigManager.getPortalMaterial()))
-			//{
+	    if (!event.isCancelled())
+	    {
+	        if ( StargateManager.isBlockInGate(event.getBlock())) 
+	        {
 				event.setCancelled(true);
-			//}
-		}
+	        }
+	    }
 	}
 	
 	/**

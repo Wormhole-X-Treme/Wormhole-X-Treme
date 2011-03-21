@@ -121,12 +121,11 @@ public class StargateManager
 		else
 			return null;
 	}
-	
-	// Gets all gates
-	// This is more expensive than some other methods so it probably shouldn't be called a lot.
+
 	/**
-	 * Gets the all gates.
-	 *
+	 * Get all gates.
+	 * This is more expensive than some other methods so it probably shouldn't be called a lot.
+	 * 
 	 * @return the array list
 	 */
 	public static ArrayList<Stargate> GetAllGates()

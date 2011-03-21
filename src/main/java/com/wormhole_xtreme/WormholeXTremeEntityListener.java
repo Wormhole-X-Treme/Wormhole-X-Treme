@@ -19,17 +19,21 @@
 package com.wormhole_xtreme; 
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityListener;
 
+import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
 
@@ -44,9 +48,7 @@ import com.wormhole_xtreme.model.StargateManager;
  */ 
 public class WormholeXTremeEntityListener extends EntityListener 
 { 
-	
-	/** The wxt. */
-	private WormholeXTreme wxt = null;
+
 	//private final Stargates plugin;
 	/**
 	 * Instantiates a new wormhole x treme entity listener.
@@ -56,27 +58,132 @@ public class WormholeXTremeEntityListener extends EntityListener
 	public WormholeXTremeEntityListener(WormholeXTreme instance) 
 	{ 
 		//plugin = instance;
-		wxt = instance;
 	}
-	
-
+	    
 	/* (non-Javadoc)
 	 * @see org.bukkit.event.entity.EntityListener#onEntityDamage(org.bukkit.event.entity.EntityDamageEvent)
 	 */
 	@Override
     public void onEntityDamage(EntityDamageEvent event)
 	{
-		if ( event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK) || event.getCause().equals(DamageCause.LAVA) || event.getCause().equals(DamageCause.DROWNING))
+		if (!event.isCancelled() && (event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK) || event.getCause().equals(DamageCause.LAVA) || event.getCause().equals(DamageCause.DROWNING)))
 		{
 			if ( event.getEntity() instanceof Player )
 			{
 				Player p = (Player) event.getEntity();
-				Block standing_block = p.getWorld().getBlockAt(p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ());
-				if ( StargateManager.isBlockInGate(standing_block) )
+				// Block standing_block = p.getWorld().getBlockAt(p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ());
+				if ( StargateManager.isBlockInGate(p.getLocation().getBlock()) )
 				{
-					wxt.prettyLog(Level.FINE,false,"Stopping event: " + event.getCause());
+					WormholeXTreme.ThisPlugin.prettyLog(Level.FINE,false,"Stopping event: " + event.getCause() + " on: " + p.getName());
 					event.setCancelled(true);
+					if (event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK) || event.getCause().equals(DamageCause.LAVA))
+					{
+					    p.setFireTicks(0);
+					}
 				}
+				else
+				{
+				    if (event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK) || event.getCause().equals(DamageCause.LAVA))
+				    {
+				        Location current = p.getLocation();
+				        ArrayList<Stargate> gates = StargateManager.GetAllGates();
+				        double man = Double.MAX_VALUE;
+				        Stargate closest = null;
+	        
+				        for(Stargate s : gates)
+				        {
+				            Location t = s.TeleportLocation;
+				            double distance = Math.sqrt( Math.pow(current.getX() - t.getX(), 2) + 
+				                                         Math.pow(current.getY() - t.getY(), 2) +
+				                                         Math.pow(current.getZ() - t.getZ(), 2) );
+				            if(distance < man)
+				            {
+				                man = distance;
+				                closest = s;
+				            }
+				        }
+	        
+				        if(closest != null && man < 50)
+				        {
+				           ArrayList<Location> gateblocks = closest.Blocks;
+				           double blockdistance = Double.MAX_VALUE;
+				           for (Location l : gateblocks )
+				           {
+				               double distance = Math.sqrt( Math.pow(current.getX() - l.getX(), 2) +
+				                                            Math.pow(current.getY() - l.getY(), 2) + 
+				                                            Math.pow(current.getZ() - l.getZ(), 2));
+				               if (distance < blockdistance)
+				               {
+				                   blockdistance = distance;
+				               }
+				           }
+				           if (blockdistance <= 2 && blockdistance != 0 )
+				           {
+				               WormholeXTreme.ThisPlugin.prettyLog(Level.FINE,false,"Stopping "+ closest.Name + " proximity event: " + event.getCause() + " on: " + p.getName());
+				               event.setCancelled(true);
+				               p.setFireTicks(0);
+				           }
+				        }
+				    }
+				}
+			}
+			else if (event.getEntity() instanceof Vehicle)
+			{
+			    Vehicle v = (Vehicle) event.getEntity();
+			    if (StargateManager.isBlockInGate(v.getLocation().getBlock()))
+			    {
+			        WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Stopping event: " + event.getCause() + " on: " + v.toString());
+			        event.setCancelled(true);
+			        if (event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK) || event.getCause().equals(DamageCause.LAVA))
+			        {
+			            v.setFireTicks(0);
+			        }
+			    }
+	            else
+	            {
+	                if (event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK) || event.getCause().equals(DamageCause.LAVA))
+	                {
+	                    Location current = v.getLocation();
+	                    ArrayList<Stargate> gates = StargateManager.GetAllGates();
+	                    double man = Double.MAX_VALUE;
+	                    Stargate closest = null;
+	          
+	                    for(Stargate s : gates)
+	                    {
+	                        Location t = s.TeleportLocation;
+	                        double distance = Math.sqrt( Math.pow(current.getX() - t.getX(), 2) + 
+	                                                     Math.pow(current.getY() - t.getY(), 2) +
+	                                                     Math.pow(current.getZ() - t.getZ(), 2) );
+	                        if(distance < man)
+	                        {
+	                            man = distance;
+	                            closest = s;
+	                        }
+	                    }
+	            
+	                    if(closest != null && man < 50)
+	                    {
+	                        ArrayList<Location> gateblocks = closest.Blocks;
+	                        double blockdistance = Double.MAX_VALUE;
+	                        for (Location l : gateblocks )
+	                        {
+	                            double distance = Math.sqrt( Math.pow(current.getX() - l.getX(), 2) +
+	                                                         Math.pow(current.getY() - l.getY(), 2) + 
+	                                                         Math.pow(current.getZ() - l.getZ(), 2));
+	                            if (distance < blockdistance)
+	                            {
+	                                blockdistance = distance;
+	                            }
+	                        }
+	                        if (blockdistance <= 2 && blockdistance != 0 )
+	                        {
+	                            WormholeXTreme.ThisPlugin.prettyLog(Level.FINE,false,"Stopping "+ closest.Name + " proximity event: " + event.getCause() + " on: " + v.toString());
+	                            event.setCancelled(true);
+	                            v.setFireTicks(0);
+	                        }
+	                    }
+	                }
+	            }
 			}
 		}
 	}

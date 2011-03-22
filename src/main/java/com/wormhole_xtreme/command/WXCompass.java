@@ -79,25 +79,7 @@ public class WXCompass implements CommandExecutor {
         }
         if (p.isOp() || allowed )
         {
-            Location current = p.getLocation();
-            // HaNieL from Bukkit.org gave me this!
-            ArrayList<Stargate> gates = StargateManager.GetAllGates();
-            double man = Double.MAX_VALUE;
-            Stargate closest = null;
-        
-            for(Stargate s : gates)
-            {
-                Location t = s.TeleportLocation;
-                double distance = Math.sqrt( Math.pow(current.getX() - t.getX(), 2) + 
-                                             Math.pow(current.getY() - t.getY(), 2) +
-                                             Math.pow(current.getZ() - t.getZ(), 2) );
-                if(distance < man)
-                {
-                    man = distance;
-                    closest = s;
-                }
-            }
-        
+            Stargate closest = Stargate.FindClosestStargate(p.getLocation());
             if(closest != null)
             {
                 p.setCompassTarget(closest.TeleportLocation);

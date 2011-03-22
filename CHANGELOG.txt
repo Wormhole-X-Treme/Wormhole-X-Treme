@@ -3,6 +3,15 @@ Changes 0.812:
 - /wxgo now works properly when traversing world bounderies. First we quickly pop into
   the default spawn location for the target world, then from there we go to our final
   destination. It is a hack, but it is a working hack. :)
+  
+- methodized the code to find closest stargates, and find distance from closest stargate
+  blocks as well as the math to find distance.
+  
+- Updated block ignition events to only use proximity style checks. Block ignition event
+  cancellation radius increased to active stargate woosh depth or 4 blocks, which ever is 
+  further.
+  
+- Updated '/wxcompass' to use new FindClosestStargate method.
 
 Changes 0.811 (3/21/11 @ 20:27 PST):
 

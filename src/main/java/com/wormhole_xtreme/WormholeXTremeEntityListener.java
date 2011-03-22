@@ -108,7 +108,7 @@ public class WormholeXTremeEntityListener extends EntityListener
 				            }
 				        }
 	        
-				        if(closest != null && man < 50)
+				        if(closest != null && man < 50 && closest.Active)
 				        {
 				           ArrayList<Location> gateblocks = closest.Blocks;
 				           double blockdistance = Double.MAX_VALUE;

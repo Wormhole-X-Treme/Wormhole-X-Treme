@@ -8,6 +8,16 @@ Changes 0.811:
 - Version 4.5 of iConomy is now supported and verified as working.
 
 - Now we actually check for Iris on gate use while in minecart...
+
+- Back to the good ol kick the player out of the cart and stuff them through
+  the stargate method. Doing a bit of a hackish teleport when going between 
+  worlds as well. We tp to spawn, then instantly to destination. This is only
+  when starting the tp while in minecart. If minecart is empty and passing
+  into a stargate that will traverse worlds, we kick the minecart back. Otherwise
+  it will dissapear into the void. 
+  
+- Now we cancel block ignite events on a proximity basis, same way we cancel 
+  fire and lava events on player. No more trees bursting into flames near a stargate.
  
 
 Changes 0.810 (3/20/11 @ 00:18 PST):

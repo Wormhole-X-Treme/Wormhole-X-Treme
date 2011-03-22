@@ -32,6 +32,8 @@ import org.bukkit.event.vehicle.VehicleListener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.util.Vector;
 
+import com.nijiko.coelho.iConomy.iConomy;
+import com.nijiko.coelho.iConomy.system.Account;
 import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
@@ -87,13 +89,14 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 			        gatenetwork = "Public";
 			    }
 				Location target = st.Target.TeleportLocation;
+				WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, target.toString());
 				Vehicle veh = event.getVehicle();
 				Vector v = veh.getVelocity();
 				veh.setVelocity(nospeed);
 				Entity e = veh.getPassenger();
 				if ( e != null )
 				{
-					veh.setPassenger(e);
+					// veh.setPassenger(e);
 					if ( e instanceof Player )
 					{
 						Player p = (Player)e;
@@ -128,7 +131,46 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 			                }
 			                return;
 			            }
+			           if ( WormholeXTreme.Iconomy != null )
+			            {
+			                boolean exempt = ConfigManager.getIconomyOpsExcempt();
+			                if ( !exempt || !p.isOp() )
+			                {
+			                    double cost = ConfigManager.getIconomyWormholeUseCost();
+			                    if (cost != 0.0) 
+			                    {
+			                        Account player_account = iConomy.getBank().getAccount(p.getName());
+			                        double balance = player_account.getBalance();
+			                        String currency = iConomy.getBank().getCurrency();
+			                        if ( balance >= cost )
+			                        {
+			                            player_account.subtract(cost);
+			                            //  player_account.save();
+			                            p.sendMessage("\u00A73:: \u00A77Wormhole Use \u00A7F- \u00A72" + cost + " \u00A77" + currency );
+			                            //p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
+			                            double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
+			                        
+			                            if ( owner_percent != 0.0 && st.Owner != null )
+			                            {
+			                                if ( st.Owner != null && iConomy.getBank().hasAccount(st.Owner))
+			                                {
+			                                    Account own_acc = iConomy.getBank().getAccount(st.Owner);
+			                                    own_acc.add(cost * owner_percent);
+			                                    // own_acc.save();
+			                                }
+			                            }
+			                        }
+			                        else
+			                        {
+			                            p.sendMessage("\u00A73:: \u00A77Not enough " + currency  + "! - Requires: \u00A72" + cost + " \u00A77- Available: \u00A74" + player_account.getBalance() + " \u00A77" + currency);
+			                            //p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
+			                            target = st.TeleportLocation;
+			                        }
+			                    }
+			                }
+			            }			            
 					}
+
 				}
 				
 				double speed = v.length();
@@ -149,14 +191,31 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 				}
 				else 
 				{
-				    veh.teleportTo(target);
+				    if (target.getWorld() != st.TeleportLocation.getWorld())
+				    {
+				        if (e != null)
+				        {
+				            WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Not same world, removing player from cart and doing some teleport hackery");
+				            veh.eject();
+				            e.teleportTo(target.getWorld().getSpawnLocation());
+				            // veh.teleportTo(target.getWorld().getSpawnLocation());
+				            e.teleportTo(target);
+				            //veh.teleportTo(target);
+				            //veh.setPassenger(e);
+				        }
+				        else if (e == null)
+				        {
+				            WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Not same world, empty minecarts not allowed.");
+				            veh.teleportTo(st.TeleportLocation);
+				        }
+				    }
+				    else 
+				    {
+				        veh.teleportTo(target);
+				    }
 				    veh.setVelocity(new_speed);
 				}
-				if ( e != null)
-				{
-				    e.teleportTo(target);
-					veh.setPassenger(e);
-				}
+
 				if (ConfigManager.getTimeoutShutdown() == 0)
 				{
 					st.ShutdownStargate();

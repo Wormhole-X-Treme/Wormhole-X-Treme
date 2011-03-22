@@ -76,6 +76,7 @@ public class ConfigManager
 		output_strings.put(StringTypes.CONSTRUCT_SUCCESS, normalheader + "Gate successfully constructed.");
 		output_strings.put(StringTypes.CONSTRUCT_NAME_INVALID, errorheader + "Gate name invalid.");
 		output_strings.put(StringTypes.CONSTRUCT_NAME_TOO_LONG, errorheader + "Gate name too long.");
+		output_strings.put(StringTypes.CONSTRUCT_NAME_TAKEN, errorheader + "Gate name already taken.");
 		output_strings.put(StringTypes.REQUEST_INVALID, errorheader + "Invalid Request");
 	}
 	

@@ -19,7 +19,6 @@
 package com.wormhole_xtreme; 
  
 
-import java.util.ArrayList;
 import java.util.logging.Level;
 
 import org.bukkit.block.*; 
@@ -76,47 +75,16 @@ public class WormholeXTremeBlockListener extends BlockListener
 	{
 	    if (!event.isCancelled())
 	    {
-	        if ( StargateManager.isBlockInGate(event.getBlock()))
-	        {
-	            WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Cancelled Block Ignite Cause: " + event.getCause().toString());
-	            event.setCancelled(true);
-	        }
-	        else if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
+	        if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
 	        {
 	            Location current = event.getBlock().getLocation();
-	            ArrayList<Stargate> gates = StargateManager.GetAllGates();
-	            double man = Double.MAX_VALUE;
-	            Stargate closest = null;
-	            for (Stargate s : gates)
+	            Stargate closest = Stargate.FindClosestStargate(current);
+	            if ( closest != null && closest.Active)
 	            {
-	                Location t = s.TeleportLocation;
-	                double distance = Math.sqrt( Math.pow(current.getX() - t.getX(), 2) +
-	                                             Math.pow(current.getY() - t.getY(), 2) +
-	                                             Math.pow(current.getZ() - t.getZ(), 2) );
-	                if (distance < man)
+	                double blockdistance = Stargate.DistanceToClosestGateBlock(current, closest);
+	                if ((blockdistance <= closest.GateShape.woosh_depth && closest.GateShape.woosh_depth != 0) || blockdistance <= 4 ) 
 	                {
-	                    man = distance;
-	                    closest = s;
-	                }
-	            }
-	            if (closest != null && man < 50 && closest.Active)
-	            {
-	                ArrayList<Location> gateblocks = closest.Blocks;
-	                double blockdistance = Double.MAX_VALUE;
-	                for (Location l : gateblocks)
-	                {
-	                    double distance = Math.sqrt( Math.pow(current.getX() - l.getX(), 2) +
-	                                                 Math.pow(current.getY() - l.getY(), 2) +
-	                                                 Math.pow(current.getZ() - l.getZ(), 2));
-	                    
-	                    if (distance < blockdistance)
-	                    {
-	                        blockdistance = distance;
-	                    }
-	                }
-	                if (blockdistance <= 3 && blockdistance != 0)
-	                {
-	                    WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Cancelled Proximity Block Ignite Cause: " + event.getCause().toString());
+	                    WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Proximity Block Ignite: \"" + event.getCause().toString() + "\" Distance: \"" + blockdistance + "\"");
 	                    event.setCancelled(true);
 	                }
 	            }

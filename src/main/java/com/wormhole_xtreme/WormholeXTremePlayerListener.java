@@ -173,15 +173,10 @@ public class WormholeXTremePlayerListener extends PlayerListener
 			{
 				target_block = target_block.getFace(BlockFace.UP);
 				target.setY(target.getY() + 1.0);
-			}
-			
+			}		
 			event.setFrom(target);
 			event.setTo(target);
 			p.teleportTo(target);
-			if (p.getFireTicks() > 0) 
-			{
-			    p.setFireTicks(0);
-			}
 			event.setCancelled(true);
 			if ( target == st.Target.TeleportLocation )
 				wxt.prettyLog(Level.INFO,false, p.getDisplayName() + " used wormhole: " + st.Name + " to go to: " + st.Target.Name);
@@ -193,10 +188,6 @@ public class WormholeXTremePlayerListener extends PlayerListener
 		}
 		else if ( st != null )
 		{
-		    if (p.getFireTicks() > 0)
-		    {
-		        p.setFireTicks(0);
-		    }
 			wxt.prettyLog(Level.FINE, false, "Player entered gate but wasn't active or didn't have a target.");
 		}
 	}

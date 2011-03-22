@@ -82,7 +82,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 	            if ( closest != null && closest.Active)
 	            {
 	                double blockdistance = Stargate.DistanceToClosestGateBlock(current, closest);
-	                if ((blockdistance <= closest.GateShape.woosh_depth && closest.GateShape.woosh_depth != 0) || blockdistance <= 4 ) 
+	                if ((blockdistance <= closest.GateShape.woosh_depth && closest.GateShape.woosh_depth != 0) || blockdistance <= 5 ) 
 	                {
 	                    WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Proximity Block Ignite: \"" + event.getCause().toString() + "\" Distance: \"" + blockdistance + "\"");
 	                    event.setCancelled(true);

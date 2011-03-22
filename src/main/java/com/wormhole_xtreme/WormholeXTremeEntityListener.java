@@ -122,7 +122,7 @@ public class WormholeXTremeEntityListener extends EntityListener
 				                   blockdistance = distance;
 				               }
 				           }
-				           if (blockdistance <= 2 && blockdistance != 0 )
+				           if (blockdistance <= 3 && blockdistance != 0 )
 				           {
 				               WormholeXTreme.ThisPlugin.prettyLog(Level.FINE,false,"Stopping "+ closest.Name + " proximity event: " + event.getCause() + " on: " + p.getName());
 				               event.setCancelled(true);

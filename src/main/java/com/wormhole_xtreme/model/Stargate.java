@@ -1001,4 +1001,78 @@ public class Stargate
             this.IrisActivationBlock.setType(Material.AIR);
         }
 	}
+
+	/**
+	 * Sqrt distance.
+	 * 
+	 * Distance between objects generated via square root.
+	 *
+	 * @param self Location of the local object.
+	 * @param target Location of the target object.
+	 * @return distance to target object from local object.
+	 */
+	public static double SqrtDistance(Location self, Location target)
+	{
+	    double distance = Double.MAX_VALUE;
+	    if (self != null && target != null)
+	    {
+	        distance = Math.sqrt( Math.pow(self.getX() - target.getX(), 2) +
+	                              Math.pow(self.getY() - target.getY(), 2) +
+	                              Math.pow(self.getZ() - target.getZ(), 2));
+	    }
+	    return distance;
+	}
+	
+	/**
+	 * Find the closest stargate.
+	 *
+	 * @param self Location of the local object.
+	 * @return The closest stargate to the local object.
+	 */
+	public static Stargate FindClosestStargate(Location self)
+	{
+	    Stargate stargate = null;
+	    if (self != null)
+	    {
+	        ArrayList<Stargate> gates = StargateManager.GetAllGates();
+	        double man = Double.MAX_VALUE;
+            for (Stargate s : gates)
+            {
+                Location t = s.TeleportLocation;
+                double distance = Stargate.SqrtDistance(self, t);
+                if (distance < man)
+                {
+                    man = distance;
+                    stargate = s;
+                }
+            }
+	    }
+	    return stargate;
+	}
+	
+	/**
+	 * Distance to closest stargate block.
+	 *
+	 * @param self Location of the local object.
+	 * @param stargate Stargate to check blocks for distance.
+	 * @return Distance to the closest stargate block.
+	 */
+	public static double DistanceToClosestGateBlock(Location self, Stargate stargate)
+	{
+	    double distance = Double.MAX_VALUE;
+	    if (stargate != null && self != null)
+	    {
+	        ArrayList<Location> gateblocks = stargate.Blocks;
+	        double blockdistance = Double.MAX_VALUE;
+	        for (Location l : gateblocks)
+	        {
+	            blockdistance = SqrtDistance(self,l);
+	            if (blockdistance < distance)
+	            {
+	                distance = blockdistance;
+	            }
+	        }
+	    }
+	    return distance;
+	}
 }

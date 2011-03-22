@@ -18,9 +18,6 @@
  */
 package com.wormhole_xtreme.command;
 
-import java.util.ArrayList;
-
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,7 +27,6 @@ import com.wormhole_xtreme.WormholeXTreme;
 import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
-import com.wormhole_xtreme.model.StargateManager;
 
 /**
  * @author alron

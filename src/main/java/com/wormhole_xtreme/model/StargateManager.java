@@ -252,7 +252,7 @@ public class StargateManager
 					if ( balance >= cost)
 					{
 						player_account.subtract(cost);
-						player_account.save();
+//						player_account.save();
 						p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to build a wormhole." );
 					}
 					else
@@ -306,7 +306,7 @@ public class StargateManager
 					if ( balance >= cost)
 					{
 						player_account.subtract(cost);
-						player_account.save();
+//						player_account.save();
 						p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to build a wormhole." );
 					}
 					else

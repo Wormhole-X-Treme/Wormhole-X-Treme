@@ -18,6 +18,10 @@ Changes 0.812:
   closed gates a bubble of 2 blocks is created to stop fire ticks occuring right as a 
   gate closes. Stopped caring about potential drowning in stargate. If user decides they
   want to stand in the wrong side of a gate till they drown, that is their choice. 
+  
+- Re-added missing CONSTRUCT_NAME_TAKEN error string in ConfigManager. This stops an NPE
+  in 'wxcomplete'.
+
 
 Changes 0.811 (3/21/11 @ 20:27 PST):
 

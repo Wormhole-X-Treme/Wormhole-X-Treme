@@ -13,6 +13,12 @@ Changes 0.812:
   
 - Updated '/wxcompass' to use new FindClosestStargate method.
 
+- Updated onEntityDamage to use only proximity style checks. On active gates a bubble of 
+  no fire damage of either woosh_depth or 4 blocks, which ever is larger, is created. On
+  closed gates a bubble of 2 blocks is created to stop fire ticks occuring right as a 
+  gate closes. Stopped caring about potential drowning in stargate. If user decides they
+  want to stand in the wrong side of a gate till they drown, that is their choice. 
+
 Changes 0.811 (3/21/11 @ 20:27 PST):
 
 - Came up with a proximity based check for stargates in the lava & fire event

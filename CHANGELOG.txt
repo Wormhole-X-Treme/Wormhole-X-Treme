@@ -1,4 +1,4 @@
-Changes 0.811:
+Changes 0.811 (3/21/11 @ 20:27 PST):
 
 - Came up with a proximity based check for stargates in the lava & fire event
   cancellation code. Now only 1 block radius around active lava portals

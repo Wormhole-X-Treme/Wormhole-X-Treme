@@ -70,9 +70,17 @@ public class WXGo implements CommandExecutor {
             {
                 String gogate = args[0].trim().replace("\n", "").replace("\r", "");
                 Stargate s = StargateManager.GetStargate(gogate);
-                if ( s != null )
+                if ( s != null)
                 {
-                    player.teleportTo(s.TeleportLocation);
+                    if (player.getWorld() != s.TeleportLocation.getWorld())
+                    {
+                        player.teleportTo(s.TeleportLocation.getWorld().getSpawnLocation());
+                        player.teleportTo(s.TeleportLocation);
+                    }
+                    else
+                    {
+                        player.teleportTo(s.TeleportLocation);
+                    }
                 }
                 else
                 {

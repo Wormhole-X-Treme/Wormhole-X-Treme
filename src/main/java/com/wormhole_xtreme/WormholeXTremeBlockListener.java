@@ -84,7 +84,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 	                double blockdistance = Stargate.DistanceToClosestGateBlock(current, closest);
 	                if ((blockdistance <= closest.GateShape.woosh_depth && closest.GateShape.woosh_depth != 0) || blockdistance <= 5 ) 
 	                {
-	                    WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Proximity Block Ignite: \"" + event.getCause().toString() + "\" Distance: \"" + blockdistance + "\"");
+	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Proximity Block Ignite: \"" + event.getCause().toString() + "\" Distance: \"" + blockdistance + "\"");
 	                    event.setCancelled(true);
 	                }
 	            }
@@ -121,16 +121,16 @@ public class WormholeXTremeBlockListener extends BlockListener
 	                signnetwork = "Public";
 	            }
 				Boolean allowed = false;
-				if ( WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+				if ( WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
 				{
-				    if (WormholeXTreme.Permissions.has(p, "wormhole.simple.use"))
+				    if (WormholeXTreme.permissions.has(p, "wormhole.simple.use"))
 				    {
 				        allowed = true;
 				    }
 				}
-				else if (WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
+				else if (WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
 				{
-				    if ( WormholeXTreme.Permissions.has(p, "wormhole.use.sign") && (signnetwork.equals("Public") || (!signnetwork.equals("Public") && WormholeXTreme.Permissions.has(p, "wormhole.network.use." + signnetwork))))
+				    if ( WormholeXTreme.permissions.has(p, "wormhole.use.sign") && (signnetwork.equals("Public") || (!signnetwork.equals("Public") && WormholeXTreme.permissions.has(p, "wormhole.network.use." + signnetwork))))
 					{
 						allowed = true;
 					}
@@ -192,23 +192,23 @@ public class WormholeXTremeBlockListener extends BlockListener
         if ( s != null )
         {
             boolean allowed = false;
-            if ( WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
+            if ( WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
             {
-                if ( WormholeXTreme.Permissions.has(p, "wormhole.remove.all"))
+                if ( WormholeXTreme.permissions.has(p, "wormhole.remove.all"))
                 {
                     allowed = true;
                 }
                 else if ( s.Owner != null)  
                 {
-                    if (s.Owner.equals(p.getName()) && WormholeXTreme.Permissions.has(p, "wormhole.remove.own"))
+                    if (s.Owner.equals(p.getName()) && WormholeXTreme.permissions.has(p, "wormhole.remove.own"))
                     {
                         allowed = true;
                     }
                 }
             }
-            else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+            else if (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
             {
-                if (WormholeXTreme.Permissions.has(p, "wormhole.simple.remove"))
+                if (WormholeXTreme.permissions.has(p, "wormhole.simple.remove"))
                 {
                     allowed = true;
                 }
@@ -334,14 +334,14 @@ public class WormholeXTremeBlockListener extends BlockListener
 			    gatenetwork = "Public";
 			}
 			boolean allowed = false;
-			if ( WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions() && WormholeXTreme.Permissions.has(p, "wormhole.simple.use"))
+			if ( WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(p, "wormhole.simple.use"))
 			{    
 			    allowed = true;
 			}
-			else if ( WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
+			else if ( WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
 			{
-				if ( (gatenetwork.equals("Public") || (!gatenetwork.equals("Public") && WormholeXTreme.Permissions.has(p, "wormhole.network.use." + gatenetwork))) && 
-				    (WormholeXTreme.Permissions.has(p, "wormhole.use.sign") || WormholeXTreme.Permissions.has(p, "wormhole.use.dialer")) )
+				if ( (gatenetwork.equals("Public") || (!gatenetwork.equals("Public") && WormholeXTreme.permissions.has(p, "wormhole.network.use." + gatenetwork))) && 
+				    (WormholeXTreme.permissions.has(p, "wormhole.use.sign") || WormholeXTreme.permissions.has(p, "wormhole.use.dialer")) )
 				{    
 				    allowed = true;
 				}			    
@@ -414,16 +414,16 @@ public class WormholeXTremeBlockListener extends BlockListener
 			if ( new_gate != null )
 			{
 				boolean allowed = false;
-				if ( WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
+				if ( WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
 				{
-					if ( WormholeXTreme.Permissions.has(p, "wormhole.build"))
+					if ( WormholeXTreme.permissions.has(p, "wormhole.build"))
 					{
 						allowed = true;
 					}
 				}
-				else if ( WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+				else if ( WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
 				{
-				    if (WormholeXTreme.Permissions.has(p, "wormhole.simple.build"))
+				    if (WormholeXTreme.permissions.has(p, "wormhole.simple.build"))
 				    {
 				        allowed = true;
 				    }
@@ -493,7 +493,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 			}
 			else
 			{
-				WormholeXTreme.ThisPlugin.prettyLog(Level.FINEST, false, p.getName() + " has pressed a button or level but did not find any properly created gates.");
+				WormholeXTreme.thisPlugin.prettyLog(Level.FINEST, false, p.getName() + " has pressed a button or level but did not find any properly created gates.");
 			}
 		}
 		
@@ -556,16 +556,16 @@ public class WormholeXTremeBlockListener extends BlockListener
 			if ( s.IsSignPowered  )
 			{
 				boolean allowed = false;
-				if ( WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
+				if ( WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
 				{
-					if ( WormholeXTreme.Permissions.has(p, "wormhole.use.sign") )
+					if ( WormholeXTreme.permissions.has(p, "wormhole.use.sign") )
 					{
 						allowed = true;
 					}
 				}
-				else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+				else if (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
 				{
-				    if (WormholeXTreme.Permissions.has(p, "wormhole.simple.use"))
+				    if (WormholeXTreme.permissions.has(p, "wormhole.simple.use"))
 				    {
 				        allowed = true;
 				    }

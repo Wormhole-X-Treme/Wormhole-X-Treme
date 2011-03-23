@@ -208,7 +208,7 @@ public class Stargate
 			}
 			
 			animation_step++;
-			WormholeXTreme.Scheduler.scheduleSyncDelayedTask(WormholeXTreme.ThisPlugin, new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 4);
+			WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 4);
 		}
 		else if ( animation_step < woosh_depth )
 		{
@@ -231,9 +231,9 @@ public class Stargate
 			animation_step++;
 			// Longer wait if we have reached the max depth
 			if ( animation_step == woosh_depth )
-				WormholeXTreme.Scheduler.scheduleSyncDelayedTask(WormholeXTreme.ThisPlugin, new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 8);
+				WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 8);
 			else
-				WormholeXTreme.Scheduler.scheduleSyncDelayedTask(WormholeXTreme.ThisPlugin, new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 4);
+				WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 4);
 		}
 		else if ( animation_step >= woosh_depth )
 		{
@@ -251,7 +251,7 @@ public class Stargate
 			if ( animation_step < ((woosh_depth * 2) - 1 ) )
 			{
 				animation_step++;
-				WormholeXTreme.Scheduler.scheduleSyncDelayedTask(WormholeXTreme.ThisPlugin, new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 3);
+				WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 3);
 			}
 			else
 				animation_step = 0;
@@ -294,12 +294,12 @@ public class Stargate
 	{
 		if ( this.ActivateTaskId >= 0)
 		{
-			WormholeXTreme.Scheduler.cancelTask(this.ActivateTaskId);
+			WormholeXTreme.scheduler.cancelTask(this.ActivateTaskId);
 		}
 		
 		int timeout = ConfigManager.getTimeoutActivate() * 20;
-		this.ActivateTaskId = WormholeXTreme.Scheduler.scheduleSyncDelayedTask(WormholeXTreme.ThisPlugin, new StargateUpdateRunnable(this, p, ActionToTake.DEACTIVATE), timeout);
-		WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Wormhole \""+ this.Name + "\" ActivateTaskID \"" + this.ActivateTaskId + "\" created.");
+		this.ActivateTaskId = WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, p, ActionToTake.DEACTIVATE), timeout);
+		WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \""+ this.Name + "\" ActivateTaskID \"" + this.ActivateTaskId + "\" created.");
 	}
 
 	/**
@@ -311,8 +311,8 @@ public class Stargate
 	{
 		if ( this.ActivateTaskId >= 0)
 		{
-		    WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Wormhole \""+ this.Name + "\" ActivateTaskID \"" + this.ActivateTaskId + "\" cancelled.");
-			WormholeXTreme.Scheduler.cancelTask(this.ActivateTaskId);
+		    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \""+ this.Name + "\" ActivateTaskID \"" + this.ActivateTaskId + "\" cancelled.");
+			WormholeXTreme.scheduler.cancelTask(this.ActivateTaskId);
 			this.ActivateTaskId = -1;
 		}
 	}
@@ -326,7 +326,7 @@ public class Stargate
 	{
 		if ( this.ActivateTaskId >= 0 )
 		{
-		    WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Wormhole \""+ this.Name + "\" ActivateTaskID \"" + this.ActivateTaskId + "\" timed out.");
+		    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \""+ this.Name + "\" ActivateTaskID \"" + this.ActivateTaskId + "\" timed out.");
 			this.ActivateTaskId = -1;
 		}
 		// Deactivate if player still hasn't picked a target.
@@ -392,22 +392,22 @@ public class Stargate
 	{
 		if ( this.ShutdownTaskId >= 0)
 		{
-			WormholeXTreme.Scheduler.cancelTask(this.ShutdownTaskId);
+			WormholeXTreme.scheduler.cancelTask(this.ShutdownTaskId);
 		}
 		
 		int timeout = ConfigManager.getTimeoutShutdown() * 20;
 		if ( timeout > 0 )
 		{
-			this.ShutdownTaskId = WormholeXTreme.Scheduler.scheduleSyncDelayedTask(WormholeXTreme.ThisPlugin, new StargateUpdateRunnable(this, ActionToTake.SHUTDOWN), timeout);
-			WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" ShutdownTaskID \"" + this.ShutdownTaskId + "\" created." );
+			this.ShutdownTaskId = WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, ActionToTake.SHUTDOWN), timeout);
+			WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" ShutdownTaskID \"" + this.ShutdownTaskId + "\" created." );
 			if (this.ShutdownTaskId == -1 ) 
 			{ 
-				WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING,false,"Failed to schdule wormhole shutdown timeout: " + timeout + " Received task id of -1. Attempting again.");
-				this.ShutdownTaskId = WormholeXTreme.Scheduler.scheduleSyncDelayedTask(WormholeXTreme.ThisPlugin, new StargateUpdateRunnable(this, ActionToTake.SHUTDOWN), timeout);
+				WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false,"Failed to schdule wormhole shutdown timeout: " + timeout + " Received task id of -1. Attempting again.");
+				this.ShutdownTaskId = WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, ActionToTake.SHUTDOWN), timeout);
 				if (this.ShutdownTaskId == -1 ) 
 				{
 					ShutdownStargate();
-					WormholeXTreme.ThisPlugin.prettyLog(Level.SEVERE,false,"Failed to schdule wormhole shutdown timeout: " + timeout + " Received task id of -1. Wormhole forced closed NOW.");
+					WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Failed to schdule wormhole shutdown timeout: " + timeout + " Received task id of -1. Wormhole forced closed NOW.");
 				}
 			}
 		}
@@ -429,13 +429,13 @@ public class Stargate
 				
 				if (ConfigManager.getPortalWoosh())
 				{
-					WormholeXTreme.Scheduler.scheduleSyncDelayedTask(WormholeXTreme.ThisPlugin, new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING));
+					WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING));
 				}
 			}
 		}
 		else 
 		{
-			WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "No wormhole. No visual events.");
+			WormholeXTreme.thisPlugin.prettyLog(Level.WARNING, false, "No wormhole. No visual events.");
 		}
 	}
 	
@@ -449,7 +449,7 @@ public class Stargate
 	{
 		if ( this.ActivateTaskId >= 0 )
 		{
-			WormholeXTreme.Scheduler.cancelTask(ActivateTaskId);
+			WormholeXTreme.scheduler.cancelTask(ActivateTaskId);
 		}
 		
 		if ( !target.LitGate )
@@ -465,12 +465,12 @@ public class Stargate
 			else if ((this.Active) && (!this.Target.Active))
 			{
 				this.ShutdownStargate();
-				WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Far wormhole failed to open. Closing local wormhole for safety sake.");
+				WormholeXTreme.thisPlugin.prettyLog(Level.WARNING, false, "Far wormhole failed to open. Closing local wormhole for safety sake.");
 			} 
 			else if ((!this.Active) && (target.Active))
 			{
 				target.ShutdownStargate();
-				WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING,false, "Local wormhole failed to open. Closing far end wormhole for safety sake.");
+				WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false, "Local wormhole failed to open. Closing far end wormhole for safety sake.");
 			}
 		}
 		
@@ -487,7 +487,7 @@ public class Stargate
 	{
 		if ( this.ActivateTaskId >= 0 )
 		{
-			WormholeXTreme.Scheduler.cancelTask(ActivateTaskId);
+			WormholeXTreme.scheduler.cancelTask(ActivateTaskId);
 		}
 		
 		//if ( !target.LitGate )
@@ -503,12 +503,12 @@ public class Stargate
 			else if ((this.Active) && (!target.Active))
 			{
 				this.ShutdownStargate();
-				WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Far wormhole failed to open. Closing local wormhole for safety sake.");
+				WormholeXTreme.thisPlugin.prettyLog(Level.WARNING, false, "Far wormhole failed to open. Closing local wormhole for safety sake.");
 			} 
 			else if ((!this.Active) && (target.Active))
 			{
 				target.ShutdownStargate();
-				WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING,false, "Local wormhole failed to open. Closing far end wormhole for safety sake.");
+				WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false, "Local wormhole failed to open. Closing far end wormhole for safety sake.");
 			}
 		//}
 		
@@ -522,8 +522,8 @@ public class Stargate
 	{
 		if ( this.ShutdownTaskId >= 0 )
 		{
-		    WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" ShutdownTaskID \"" + this.ShutdownTaskId + "\" cancelled.");
-			WormholeXTreme.Scheduler.cancelTask(this.ShutdownTaskId);
+		    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" ShutdownTaskID \"" + this.ShutdownTaskId + "\" cancelled.");
+			WormholeXTreme.scheduler.cancelTask(this.ShutdownTaskId);
 			this.ShutdownTaskId = -1;
 		}
 		

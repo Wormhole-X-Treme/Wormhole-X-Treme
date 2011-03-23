@@ -241,7 +241,7 @@ public class StargateManager
 		
 		if ( complete != null )
 		{
-			if ( WormholeXTreme.Iconomy != null )
+			if ( WormholeXTreme.iconomy != null )
 			{
 				boolean exempt = ConfigManager.getIconomyOpsExcempt();
 				if ( !exempt || !p.isOp() )
@@ -274,7 +274,7 @@ public class StargateManager
 			
 			complete.Owner = p.getName();
 			complete.CompleteGate(name, idc);
-			WormholeXTreme.ThisPlugin.prettyLog(Level.INFO,false,"Player: " + p.getDisplayName() + " completed a wormhole: " + complete.Name);
+			WormholeXTreme.thisPlugin.prettyLog(Level.INFO,false,"Player: " + p.getDisplayName() + " completed a wormhole: " + complete.Name);
 			AddStargate(complete);
 			StargateDBManager.StargateToSQL(complete);
 			return true;
@@ -295,7 +295,7 @@ public class StargateManager
 		Stargate pos_dupe = StargateManager.GetStargate(s.Name);
 		if ( pos_dupe == null )
 		{
-			if ( WormholeXTreme.Iconomy != null )
+			if ( WormholeXTreme.iconomy != null )
 			{
 				boolean exempt = ConfigManager.getIconomyOpsExcempt();
 				if ( !exempt || !p.isOp() )
@@ -319,7 +319,7 @@ public class StargateManager
 			
 			s.Owner = p.getName();			
 			s.CompleteGate(s.Name, "");
-			WormholeXTreme.ThisPlugin.prettyLog(Level.INFO,false,"Player: " + p.getDisplayName() + " completed a wormhole: " + s.Name);
+			WormholeXTreme.thisPlugin.prettyLog(Level.INFO,false,"Player: " + p.getDisplayName() + " completed a wormhole: " + s.Name);
 			AddStargate(s);
 			StargateDBManager.StargateToSQL(s);
 			return true;

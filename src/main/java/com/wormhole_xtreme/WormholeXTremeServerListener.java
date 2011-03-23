@@ -45,9 +45,9 @@ public class WormholeXTremeServerListener extends ServerListener
 	{
 		
 	}
-	private final HelpSupport helpSupport = new HelpSupport(WormholeXTreme.ThisPlugin);
-	private final IConomySupport iconomySupport = new IConomySupport(WormholeXTreme.ThisPlugin);
-	private final PermissionsSupport permissionsSupport = new PermissionsSupport(WormholeXTreme.ThisPlugin);
+	private final HelpSupport helpSupport = new HelpSupport(WormholeXTreme.thisPlugin);
+	private final IConomySupport iconomySupport = new IConomySupport(WormholeXTreme.thisPlugin);
+	private final PermissionsSupport permissionsSupport = new PermissionsSupport(WormholeXTreme.thisPlugin);
 	
     /* (non-Javadoc)
      * @see org.bukkit.event.server.ServerListener#onPluginEnabled(org.bukkit.event.server.PluginEvent)

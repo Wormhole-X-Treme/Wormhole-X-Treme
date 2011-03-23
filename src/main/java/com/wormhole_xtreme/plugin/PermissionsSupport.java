@@ -41,9 +41,9 @@ public class PermissionsSupport {
      */
     public void setupPermissions() 
     {
-        Plugin test = WormholeXTreme.ThisPlugin.getServer().getPluginManager().getPlugin("Permissions");
+        Plugin test = WormholeXTreme.thisPlugin.getServer().getPluginManager().getPlugin("Permissions");
 
-        if(WormholeXTreme.Permissions == null) 
+        if(WormholeXTreme.permissions == null) 
         {
             if(test != null)
             {
@@ -51,35 +51,35 @@ public class PermissionsSupport {
                 checkPermissionsVersion(v);
                 try
                 {
-                    WormholeXTreme.Permissions = ((Permissions)test).getHandler();
-                    WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Attached to Permissions version " + v);
+                    WormholeXTreme.permissions = ((Permissions)test).getHandler();
+                    WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Attached to Permissions version " + v);
                     if (ConfigManager.getSimplePermissions())
                     {
-                        WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Simple Permissions Enabled");
+                        WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Simple Permissions Enabled");
                     }
                     else
                     {
-                        WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Complex Permissions Enabled");
+                        WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Complex Permissions Enabled");
                     }
                 }
                 catch ( Exception e)
                 {
-                    WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Failed to get Permissions Handler. Defaulting to built-in permissions.");
+                    WormholeXTreme.thisPlugin.prettyLog(Level.WARNING, false, "Failed to get Permissions Handler. Defaulting to built-in permissions.");
                 }
             } 
             else 
             {
-                WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Permission Plugin not yet available. Defaulting to built-in permissions until Permissions is loaded.");
+                WormholeXTreme.thisPlugin.prettyLog(Level.WARNING, false, "Permission Plugin not yet available. Defaulting to built-in permissions until Permissions is loaded.");
             }
         }
     }
     
     public void disablePermissions()
     {
-        if (!(WormholeXTreme.Permissions == null))
+        if (!(WormholeXTreme.permissions == null))
         {
-            WormholeXTreme.Permissions = null;
-            WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Detached from Permissions.");
+            WormholeXTreme.permissions = null;
+            WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Detached from Permissions.");
         }
     }
     /**
@@ -91,7 +91,7 @@ public class PermissionsSupport {
     {
         if ( !version.equals("2.4") && !version.startsWith("2.5"))
         {
-            WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Not a supported version of Permissions. Recommended is 2.5.4" );
+            WormholeXTreme.thisPlugin.prettyLog(Level.WARNING, false, "Not a supported version of Permissions. Recommended is 2.5.4" );
         }
        
     }

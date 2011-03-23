@@ -53,8 +53,6 @@ public class Configuration
 	/** The options. */
 	private static File options = null;
 	
-	/** The Constant wxt. */
-	private static final WormholeXTreme wxt = WormholeXTreme.ThisPlugin;
 	
 	/**
 	 * Load configuration.
@@ -78,7 +76,7 @@ public class Configuration
 			try {
 				directory.mkdir();
 			} catch (Exception e) {
-				wxt.prettyLog(Level.SEVERE,false,"Unable to make directory: " + e.getMessage());
+				WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Unable to make directory: " + e.getMessage());
 			}
 		}
 		String input = directory.getPath() + File.separator + "Settings.txt";
@@ -96,7 +94,7 @@ public class Configuration
 		}
 		catch (IOException e) 
 		{
-			wxt.prettyLog(Level.SEVERE, false, "Failed to read fiele: " + e.getMessage() );
+			WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE, false, "Failed to read fiele: " + e.getMessage() );
 		}
 		if( invalidFile(options, desc))
 		{
@@ -140,7 +138,7 @@ public class Configuration
 		    }
 		    catch (IOException e) 
 		    { 
-		        WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Failure to close stream: " + e.getMessage()); 
+		        WormholeXTreme.thisPlugin.prettyLog(Level.WARNING, false, "Failure to close stream: " + e.getMessage()); 
 		    }
 		}
 		return true;
@@ -180,7 +178,7 @@ public class Configuration
 			try {
 				options.createNewFile();
 			} catch (Exception e) {
-				wxt.prettyLog(Level.SEVERE,false,"Unable to create new file: " + e.getMessage());
+				WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Unable to create new file: " + e.getMessage());
 			}
 			BufferedWriter bufferedwriter = new BufferedWriter(new FileWriter(options));
 
@@ -225,7 +223,7 @@ public class Configuration
 			try {
 				file.createNewFile();
 			} catch (Exception e) {
-				wxt.prettyLog(Level.SEVERE,false,"Unable to Create File: " + e.getMessage());
+				WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Unable to Create File: " + e.getMessage());
 			}
 			BufferedWriter bufferedwriter = new BufferedWriter(new FileWriter(file));
 

@@ -72,8 +72,8 @@ public class WXIDC implements CommandExecutor {
                 if ( CommandUtlities.playerCheck(sender))
                 {
                     if ( p.isOp() || 
-                        (WormholeXTreme.Permissions != null && ((ConfigManager.getSimplePermissions() && WormholeXTreme.Permissions.has(p, "wormhole.simple.config")) ||
-                            (!ConfigManager.getSimplePermissions() && WormholeXTreme.Permissions.has(p, "wormhole.config")))) ||
+                        (WormholeXTreme.permissions != null && ((ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(p, "wormhole.simple.config")) ||
+                            (!ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(p, "wormhole.config")))) ||
                         s.Owner.equals(p.getName()) )   
                     {
                         allowed = true;

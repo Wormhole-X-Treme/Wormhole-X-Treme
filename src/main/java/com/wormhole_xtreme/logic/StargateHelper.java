@@ -59,9 +59,6 @@ public class StargateHelper
 	/** The Constant shapes. */
 	private static final ConcurrentHashMap<String, StargateShape> shapes = new ConcurrentHashMap<String, StargateShape>();
 	
-	/** The Constant wxt. */
-	private static final WormholeXTreme wxt = WormholeXTreme.ThisPlugin;
-	
 	/** The Constant StargateSaveVersion. */
 	public static final byte StargateSaveVersion = 5;
 	
@@ -85,7 +82,7 @@ public class StargateHelper
 		}
 		catch ( Exception e)
 		{
-			wxt.prettyLog(Level.SEVERE,false,"Unable to store gate in DB, byte encoding failed: " + e.getMessage());
+			WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Unable to store gate in DB, byte encoding failed: " + e.getMessage());
 			return null;
 		}
 
@@ -480,7 +477,7 @@ public class StargateHelper
 					}
 					catch (Exception e)
 					{
-						wxt.prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.Name + " and will be unable to dial out.");
+						WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.Name + " and will be unable to dial out.");
 					}
 				}
 			}
@@ -570,7 +567,7 @@ public class StargateHelper
 					}
 					catch (Exception e)
 					{
-						wxt.prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.Name + " and will be unable to dial out.");
+						WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.Name + " and will be unable to dial out.");
 					}
 				}
 			}
@@ -647,7 +644,7 @@ public class StargateHelper
 					}
 					catch (Exception e)
 					{
-						wxt.prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.Name + " and will be unable to change dial target.");
+						WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.Name + " and will be unable to change dial target.");
 					}
 				}
 			}
@@ -728,7 +725,7 @@ public class StargateHelper
 					}
 					catch (Exception e)
 					{
-						wxt.prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.Name + " and will be unable to change dial target.");
+						WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.Name + " and will be unable to change dial target.");
 					}
 				}
 			}
@@ -809,7 +806,7 @@ public class StargateHelper
 					}
 					catch (Exception e)
 					{
-						wxt.prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.Name + " and will be unable to change dial target.");
+						WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.Name + " and will be unable to change dial target.");
 					}
 				}
 			}
@@ -894,7 +891,7 @@ public class StargateHelper
 			} 
 			catch (Exception e) 
 			{
-				wxt.prettyLog(Level.SEVERE,false,"Unable to make directory: " + e.getMessage());
+				WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Unable to make directory: " + e.getMessage());
 			}
 			try 
 			{
@@ -915,7 +912,7 @@ public class StargateHelper
 			} 
 			catch (Exception e) 
 			{
-				wxt.prettyLog(Level.SEVERE,false,"Unable to create files: " + e.getMessage());
+				WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Unable to create files: " + e.getMessage());
 			}
 		}
 		
@@ -924,7 +921,7 @@ public class StargateHelper
 			{
 				if ( fi.getName().contains(".shape") )
 				{
-					wxt.prettyLog(Level.CONFIG, false, "Loading shape file: \"" + (String)fi.getName() + "\"");
+					WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Loading shape file: \"" + (String)fi.getName() + "\"");
 					try {
 					ArrayList<String> file_lines = new ArrayList<String>();
 					BufferedReader bufferedreader = new BufferedReader(new FileReader(fi));
@@ -939,9 +936,9 @@ public class StargateHelper
 					}
 					catch (Exception e) 
 					{
-						wxt.prettyLog(Level.SEVERE, false, "Unable to read shape files: " + e.getMessage());
+						WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE, false, "Unable to read shape files: " + e.getMessage());
 					}
-					wxt.prettyLog(Level.CONFIG, false, "Completed loading shape file: \"" + (String)fi.getName() + "\"");
+					WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Completed loading shape file: \"" + (String)fi.getName() + "\"");
 				}
 			}
 			

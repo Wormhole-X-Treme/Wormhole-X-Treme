@@ -67,16 +67,16 @@ public class WXRemove implements CommandExecutor {
                 if (CommandUtlities.playerCheck(sender))
                 {
                     Player p = (Player) sender;
-                    if  (WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
+                    if  (WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
                     {
-                        if (WormholeXTreme.Permissions.has(p, "wormhole.remove.all") || ( s.Owner != null && s.Owner.equals(p.getName()) && WormholeXTreme.Permissions.has(p, "wormhole.remove.own")))
+                        if (WormholeXTreme.permissions.has(p, "wormhole.remove.all") || ( s.Owner != null && s.Owner.equals(p.getName()) && WormholeXTreme.permissions.has(p, "wormhole.remove.own")))
                         {
                             allowed = true;
                         }   
                     }
-                    else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+                    else if (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
                     {
-                        if (WormholeXTreme.Permissions.has(p, "wormhole.simple.remove"))
+                        if (WormholeXTreme.permissions.has(p, "wormhole.simple.remove"))
                         {
                             allowed = true;
                         }

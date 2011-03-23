@@ -64,16 +64,16 @@ public class WXBuild implements CommandExecutor {
         if (args.length == 1) 
         {
             boolean allowed = false;
-            if (WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
+            if (WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
             {
-                if (WormholeXTreme.Permissions.has(player, "wormhole.config"))
+                if (WormholeXTreme.permissions.has(player, "wormhole.config"))
                 {
                     allowed = true;
                 }
             }
-            else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+            else if (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
             {
-                if (WormholeXTreme.Permissions.has(player, "wormhole.simple.config"))
+                if (WormholeXTreme.permissions.has(player, "wormhole.simple.config"))
                 {
                     allowed = true;
                 }

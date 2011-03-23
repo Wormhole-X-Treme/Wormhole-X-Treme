@@ -59,16 +59,16 @@ public class WXCompass implements CommandExecutor {
             return true;
         }
         boolean allowed = false;
-        if (WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
+        if (WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
         {
-            if (WormholeXTreme.Permissions.has(p, "wormhole.use.compass"))
+            if (WormholeXTreme.permissions.has(p, "wormhole.use.compass"))
             {
                 allowed = true;
             }
         }
-        else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+        else if (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
         {
-            if (WormholeXTreme.Permissions.has(p, "wormhole.use"))
+            if (WormholeXTreme.permissions.has(p, "wormhole.use"))
             {
                 allowed = true;
             }

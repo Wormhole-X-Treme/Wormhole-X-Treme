@@ -89,7 +89,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 			        gatenetwork = "Public";
 			    }
 				Location target = st.Target.TeleportLocation;
-				WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, target.toString());
+				WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, target.toString());
 				Vehicle veh = event.getVehicle();
 				Vector v = veh.getVelocity();
 				veh.setVelocity(nospeed);
@@ -100,21 +100,21 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 					if ( e instanceof Player )
 					{
 						Player p = (Player)e;
-						WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Minecart Player in gate:" + st.Name + " gate Active: " + st.Active + " Target Gate: " + st.Target.Name + " Network: " + gatenetwork );
-				        if ( WormholeXTreme.Permissions != null)
+						WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Minecart Player in gate:" + st.Name + " gate Active: " + st.Active + " Target Gate: " + st.Target.Name + " Network: " + gatenetwork );
+				        if ( WormholeXTreme.permissions != null)
 				        {
 				            // If use permission is also teleport permission we should check here:
 				            if (ConfigManager.getWormholeUseIsTeleport() && !ConfigManager.getSimplePermissions() && 
-				                ((st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.sign")) || 
-				                (!st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.dialer")) || 
-				                (!gatenetwork.equals("Public") && !WormholeXTreme.Permissions.has(p, "wormhole.network.use." + gatenetwork))))
+				                ((st.IsSignPowered && !WormholeXTreme.permissions.has(p, "wormhole.use.sign")) || 
+				                (!st.IsSignPowered && !WormholeXTreme.permissions.has(p, "wormhole.use.dialer")) || 
+				                (!gatenetwork.equals("Public") && !WormholeXTreme.permissions.has(p, "wormhole.network.use." + gatenetwork))))
 				            {
 				                // This means that the user doesn't have permission to use.
 				                p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
 				                return;
 				            }
 				            else if (ConfigManager.getWormholeUseIsTeleport() && ConfigManager.getSimplePermissions() &&
-				                ((st.IsSignPowered && !WormholeXTreme.Permissions.has(p, "wormhole.simple.use"))))
+				                ((st.IsSignPowered && !WormholeXTreme.permissions.has(p, "wormhole.simple.use"))))
 				            {
 				                p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
 				                return;
@@ -131,7 +131,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 			                }
 			                return;
 			            }
-			           if ( WormholeXTreme.Iconomy != null )
+			           if ( WormholeXTreme.iconomy != null )
 			            {
 			                boolean exempt = ConfigManager.getIconomyOpsExcempt();
 			                if ( !exempt || !p.isOp() )
@@ -195,7 +195,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 				    {
 				        if (e != null)
 				        {
-				            WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Not same world, removing player from cart and doing some teleport hackery");
+				            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Not same world, removing player from cart and doing some teleport hackery");
 				            veh.eject();
 				            e.teleportTo(target.getWorld().getSpawnLocation());
 				            // veh.teleportTo(target.getWorld().getSpawnLocation());
@@ -205,7 +205,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 				        }
 				        else if (e == null)
 				        {
-				            WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Not same world, empty minecarts not allowed.");
+				            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Not same world, empty minecarts not allowed.");
 				            veh.teleportTo(st.TeleportLocation);
 				        }
 				    }

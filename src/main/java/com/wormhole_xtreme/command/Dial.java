@@ -81,18 +81,18 @@ public class Dial implements CommandExecutor {
                 startnetwork = "Public";
             }
             boolean allowed = false;
-            if (WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
+            if (WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
             {
-                WormholeXTreme.ThisPlugin.prettyLog(Level.FINEST, false, "Dial Start - Gate: \""+ start.Name +" \"Network: \"" + startnetwork + "\"");
-                if (WormholeXTreme.Permissions.has(player, "wormhole.use.dialer") && (startnetwork.equals("Public") || (!startnetwork.equals("Public") && WormholeXTreme.Permissions.has(player, "wormhole.network.use." + startnetwork))))
+                WormholeXTreme.thisPlugin.prettyLog(Level.FINEST, false, "Dial Start - Gate: \""+ start.Name +" \"Network: \"" + startnetwork + "\"");
+                if (WormholeXTreme.permissions.has(player, "wormhole.use.dialer") && (startnetwork.equals("Public") || (!startnetwork.equals("Public") && WormholeXTreme.permissions.has(player, "wormhole.network.use." + startnetwork))))
                 {
                     allowed = true;
                 }
             }
-            else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+            else if (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
             {
-                WormholeXTreme.ThisPlugin.prettyLog(Level.FINEST, false, "Dial Start - Gate: \""+ start.Name +" \"Network: \"" + startnetwork + "\"");
-                if (WormholeXTreme.Permissions.has(player, "wormhole.simple.use"))
+                WormholeXTreme.thisPlugin.prettyLog(Level.FINEST, false, "Dial Start - Gate: \""+ start.Name +" \"Network: \"" + startnetwork + "\"");
+                if (WormholeXTreme.permissions.has(player, "wormhole.simple.use"))
                 {
                     allowed = true;
                 }
@@ -128,7 +128,7 @@ public class Dial implements CommandExecutor {
                     {
                         targetnetwork = "Public";
                     }
-                    WormholeXTreme.ThisPlugin.prettyLog(Level.FINEST, false, "Dial Target - Gate: \"" + target.Name + "\" Network: \"" + targetnetwork + "\"");
+                    WormholeXTreme.thisPlugin.prettyLog(Level.FINEST, false, "Dial Target - Gate: \"" + target.Name + "\" Network: \"" + targetnetwork + "\"");
                     // Not on same network
                     if (!startnetwork.equals(targetnetwork))
                     {

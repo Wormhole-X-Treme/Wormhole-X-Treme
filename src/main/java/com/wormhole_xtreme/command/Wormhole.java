@@ -65,16 +65,16 @@ public class Wormhole implements CommandExecutor
             {
                 allowed = true;
             }
-            else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+            else if (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
             {
-                if (WormholeXTreme.Permissions.has(player, "wormhole.simple.config"))
+                if (WormholeXTreme.permissions.has(player, "wormhole.simple.config"))
                 {
                     allowed = true;
                 }
             }
-            else if (WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
+            else if (WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
             {
-                if (WormholeXTreme.Permissions.has(player, "wormhole.config"))
+                if (WormholeXTreme.permissions.has(player, "wormhole.config"))
                 {
                     allowed = true;
                 }
@@ -154,16 +154,16 @@ public class Wormhole implements CommandExecutor
                 sender.sendMessage(ConfigManager.errorheader + "Valid options: true/yes, false/no");
                 return false;
             }
-            if (WormholeXTreme.Permissions != null && CommandUtlities.playerCheck(sender))
+            if (WormholeXTreme.permissions != null && CommandUtlities.playerCheck(sender))
             {
                 Player player = (Player)sender;
-                if (simple && !WormholeXTreme.Permissions.has(player, "wormhole.simple.config"))
+                if (simple && !WormholeXTreme.permissions.has(player, "wormhole.simple.config"))
                 {
                     sender.sendMessage(ConfigManager.errorheader + "You currently do not have the 'wormhole.simple.config' permission.");
                     sender.sendMessage(ConfigManager.errorheader + "Please make sure you have this permission before running this command again.");
                     return true;
                 }
-                else if (!simple && !WormholeXTreme.Permissions.has(player, "wormhole.config"))
+                else if (!simple && !WormholeXTreme.permissions.has(player, "wormhole.config"))
                 {
                     sender.sendMessage(ConfigManager.errorheader + "You currently do not have the 'wormhole.config' permission.");
                     sender.sendMessage(ConfigManager.errorheader + "Please make sure you have this permission before running this command again.");

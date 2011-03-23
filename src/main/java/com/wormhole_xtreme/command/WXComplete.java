@@ -87,16 +87,16 @@ public class WXComplete implements CommandExecutor
                     }
                 }
                 boolean allowed = false;
-                if (WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions())
+                if (WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
                 {
-                    if (WormholeXTreme.Permissions.has(p, "wormhole.build") && ((network.equals("") || network.equals("Public") ) || (!network.equals("") && !network.equals("Public") && WormholeXTreme.Permissions.has(p, "wormhole.network.build." + network))))
+                    if (WormholeXTreme.permissions.has(p, "wormhole.build") && ((network.equals("") || network.equals("Public") ) || (!network.equals("") && !network.equals("Public") && WormholeXTreme.permissions.has(p, "wormhole.network.build." + network))))
                     {
                         allowed = true;
                     }
                 }
-                else if (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions())
+                else if (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
                 {
-                    if (WormholeXTreme.Permissions.has(p, "wormhole.simple.build"))
+                    if (WormholeXTreme.permissions.has(p, "wormhole.simple.build"))
                     {
                         allowed = true;
                     }

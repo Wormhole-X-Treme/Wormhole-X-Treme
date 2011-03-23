@@ -78,13 +78,13 @@ public class WormholeXTremeEntityListener extends EntityListener
 				        double blockdistance = Stargate.DistanceToClosestGateBlock(current, closest);
 				        if (closest.Active && ((blockdistance <= closest.GateShape.woosh_depth && closest.GateShape.woosh_depth != 0) || blockdistance <= 4 ))
 				        {
-				            WormholeXTreme.ThisPlugin.prettyLog(Level.FINE,false,"Blocked Gate: \""+ closest.Name + "\" Proximity Event: \"" + event.getCause().toString() + "\" On: \"" + p.getName() + "\" Distance: \"" + blockdistance + "\"");
+				            WormholeXTreme.thisPlugin.prettyLog(Level.FINE,false,"Blocked Gate: \""+ closest.Name + "\" Proximity Event: \"" + event.getCause().toString() + "\" On: \"" + p.getName() + "\" Distance: \"" + blockdistance + "\"");
 				            event.setCancelled(true);
 				            p.setFireTicks(0);
 				        }
 				        else if (!closest.Active && blockdistance <= 2)
 				        {
-				            WormholeXTreme.ThisPlugin.prettyLog(Level.FINE,false,"Blocked Gate: \""+ closest.Name + "\" Proximity Event: \"" + event.getCause().toString() + "\" On: \"" + p.getName() + "\" Distance: \"" + blockdistance + "\"");
+				            WormholeXTreme.thisPlugin.prettyLog(Level.FINE,false,"Blocked Gate: \""+ closest.Name + "\" Proximity Event: \"" + event.getCause().toString() + "\" On: \"" + p.getName() + "\" Distance: \"" + blockdistance + "\"");
 				            event.setCancelled(true);
 				            p.setFireTicks(0);
 				        }
@@ -106,7 +106,7 @@ public class WormholeXTremeEntityListener extends EntityListener
 	        if (StargateManager.isBlockInGate(explodeblocks.get(i)))
 	        {
 	            Stargate explodegate = StargateManager.getGateFromBlock(explodeblocks.get(i));
-	            WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Blocked Creeper Explosion on Stargate: \"" + explodegate.Name + "\"" );
+	            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Creeper Explosion on Stargate: \"" + explodegate.Name + "\"" );
 	            event.setCancelled(true);
 	        }
 	    }

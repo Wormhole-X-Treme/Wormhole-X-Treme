@@ -43,9 +43,6 @@ import com.wormhole_xtreme.config.ConfigManager.ConfigKeys;
 public class ConfigurationFlatFile 
 {
 	
-	/** The Constant wxt. */
-	private static final WormholeXTreme wxt = WormholeXTreme.ThisPlugin;
-	
 	/**
 	 * Creates the new header.
 	 *
@@ -150,7 +147,7 @@ public class ConfigurationFlatFile
 			}
 			catch ( Exception e)
 			{
-				wxt.prettyLog(Level.SEVERE,false,"Error parsing setting enum:" + e.toString());
+				WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Error parsing setting enum:" + e.toString());
 			}
 		}
 		bufferedreader.close();

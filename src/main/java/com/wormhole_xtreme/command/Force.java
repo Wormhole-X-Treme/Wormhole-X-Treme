@@ -61,8 +61,8 @@ public class Force implements CommandExecutor {
             if (CommandUtlities.playerCheck(sender))
             {
                 player = (Player) sender;
-                if (player.isOp() || (WormholeXTreme.Permissions != null && ((ConfigManager.getSimplePermissions() && (WormholeXTreme.Permissions.has(player,"wormhole.config") || WormholeXTreme.Permissions.has(player, "wormhole.remove"))) || 
-                    (!ConfigManager.getSimplePermissions() && (WormholeXTreme.Permissions.has(player, "wormhole.config") || WormholeXTreme.Permissions.has(player, "wormhole.remove.all"))))))
+                if (player.isOp() || (WormholeXTreme.permissions != null && ((ConfigManager.getSimplePermissions() && (WormholeXTreme.permissions.has(player,"wormhole.config") || WormholeXTreme.permissions.has(player, "wormhole.remove"))) || 
+                    (!ConfigManager.getSimplePermissions() && (WormholeXTreme.permissions.has(player, "wormhole.config") || WormholeXTreme.permissions.has(player, "wormhole.remove.all"))))))
                 {
                     allowed = true;
                 }
@@ -155,7 +155,7 @@ public class Force implements CommandExecutor {
                 }
                 if (player != null)
                 {
-                    WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Player: \"" + player.getName() + "\" ran wxforce close=\"" + close + "\" drop=\"" + drop + "\"" );
+                    WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Player: \"" + player.getName() + "\" ran wxforce close=\"" + close + "\" drop=\"" + drop + "\"" );
                 }
             }
             else 

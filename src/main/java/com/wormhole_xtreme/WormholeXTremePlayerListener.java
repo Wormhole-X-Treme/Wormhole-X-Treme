@@ -94,20 +94,20 @@ public class WormholeXTremePlayerListener extends PlayerListener
 		    }
 			wxt.prettyLog(Level.FINE, false, "Player in gate:" + st.Name + " gate Active: " + st.Active + " Target Gate: " + st.Target.Name + " Network: " + gatenetwork );
 			
-			if ( WormholeXTreme.Permissions != null)
+			if ( WormholeXTreme.permissions != null)
 			{
 			    // If use permission is also teleport permission we should check here:
 				if (ConfigManager.getWormholeUseIsTeleport() && !ConfigManager.getSimplePermissions() && 
-					((st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.sign")) || 
-					(!st.IsSignPowered && !WormholeXTreme.Permissions.permission(p, "wormhole.use.dialer")) || 
-					(!gatenetwork.equals("Public") && !WormholeXTreme.Permissions.has(p, "wormhole.network.use." + gatenetwork))))
+					((st.IsSignPowered && !WormholeXTreme.permissions.permission(p, "wormhole.use.sign")) || 
+					(!st.IsSignPowered && !WormholeXTreme.permissions.permission(p, "wormhole.use.dialer")) || 
+					(!gatenetwork.equals("Public") && !WormholeXTreme.permissions.has(p, "wormhole.network.use." + gatenetwork))))
 				{
 					// This means that the user doesn't have permission to use.
 					p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
 					return;
 				}
 				else if (ConfigManager.getWormholeUseIsTeleport() && ConfigManager.getSimplePermissions() &&
-				    ((st.IsSignPowered && !WormholeXTreme.Permissions.has(p, "wormhole.simple.use"))))
+				    ((st.IsSignPowered && !WormholeXTreme.permissions.has(p, "wormhole.simple.use"))))
 				{
 				    p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
 				    return;
@@ -129,7 +129,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 			}
 		
 			Location target = st.Target.TeleportLocation;
-			if ( WormholeXTreme.Iconomy != null )
+			if ( WormholeXTreme.iconomy != null )
 			{
 				boolean exempt = ConfigManager.getIconomyOpsExcempt();
 				if ( !exempt || !p.isOp() )

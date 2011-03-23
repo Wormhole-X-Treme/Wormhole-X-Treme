@@ -48,9 +48,6 @@ import com.wormhole_xtreme.permissions.PermissionsManager.PermissionLevel;
 public class StargateDBManager 
 {
 	
-	/** The Constant wxt. */
-	private static final WormholeXTreme wxt = WormholeXTreme.ThisPlugin;
-	
 	/** The sql_connection. */
 	private static Connection sql_connection;
 	
@@ -133,7 +130,7 @@ public class StargateDBManager
 				}
 				else
 				{
-					wxt.prettyLog(Level.INFO, true, "Failed to load Stargate '" + sn + "' from DB.");
+					WormholeXTreme.thisPlugin.prettyLog(Level.INFO, true, "Failed to load Stargate '" + sn + "' from DB.");
 				}
 			}
 			gates_data.close();
@@ -184,12 +181,12 @@ public class StargateDBManager
 				}
 			}
 			
-			wxt.prettyLog(Level.INFO,false, gate_list.size() + " Wormholes loaded from WormholeDB.");
+			WormholeXTreme.thisPlugin.prettyLog(Level.INFO,false, gate_list.size() + " Wormholes loaded from WormholeDB.");
 			
 		}
 		catch ( SQLException e) 
 		{
-			wxt.prettyLog(Level.SEVERE,false,"Error loading stargates from DB: " + e.getMessage()); 
+		    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Error loading stargates from DB: " + e.getMessage()); 
 		}
 		
 	}
@@ -280,7 +277,7 @@ public class StargateDBManager
 		}
 		catch ( SQLException e) 
 		{
-			wxt.prettyLog(Level.SEVERE,false,"Error storing stargate to DB: " + e.getMessage());
+		    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Error storing stargate to DB: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -307,7 +304,7 @@ public class StargateDBManager
 		}
 		catch ( SQLException e) 
 		{
-			wxt.prettyLog(Level.SEVERE,false,"Error storing stargate to DB: " + e.getMessage());
+		    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Error storing stargate to DB: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -323,7 +320,7 @@ public class StargateDBManager
 		} 
 		catch (Exception e) 
 		{
-			wxt.prettyLog(Level.SEVERE,false,"ERROR: failed to load HSQLDB JDBC driver.");
+		    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"ERROR: failed to load HSQLDB JDBC driver.");
 			e.printStackTrace();
 			return;
 		}
@@ -337,12 +334,12 @@ public class StargateDBManager
 	    	}
 	    	else
 	    	{
-	    		wxt.prettyLog(Level.SEVERE,false,"WormholeDB already connected.");
+	    	    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"WormholeDB already connected.");
 	    	}
 	    }
 	    catch ( SQLException e)
 	    {
-	    	wxt.prettyLog(Level.SEVERE,false,"Failed to intialized internal DB. Stargates will not be saved: " + e.getMessage());
+	        WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Failed to intialized internal DB. Stargates will not be saved: " + e.getMessage());
 	    }
 	}
 
@@ -359,12 +356,12 @@ public class StargateDBManager
 				StoreStatement = sql_connection.prepareStatement("SHUTDOWN");
 				StoreStatement.execute();
 				sql_connection.close();
-				wxt.prettyLog(Level.INFO, false, "WormholeDB shutdown successfull.");
+				WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "WormholeDB shutdown successfull.");
 			}
 		}
 		catch (SQLException e)
 		{
-			wxt.prettyLog(Level.SEVERE,false," Failed to shutdown:" + e.getMessage());
+		    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false," Failed to shutdown:" + e.getMessage());
 		}
 	}
 	
@@ -417,12 +414,12 @@ public class StargateDBManager
 				int modified = UpdateIndvPermStatement.executeUpdate();
 
 				if ( modified != 1)
-					wxt.prettyLog(Level.SEVERE,false,"Failed to update " + player + " permissions in DB.");
+				    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Failed to update " + player + " permissions in DB.");
 			}
 		}
 		catch ( SQLException e) 
 		{
-			wxt.prettyLog(Level.SEVERE,false,"Error StoreIndividualPermissionInDB : " + e.getMessage());
+		    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Error StoreIndividualPermissionInDB : " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -484,7 +481,7 @@ private static volatile PreparedStatement GetAllIndvPermStatement = null;
 		}
 		catch ( SQLException e) 
 		{
-			wxt.prettyLog(Level.SEVERE,false,"Error GetAllIndividualPermissions: " + e.getMessage());
+		    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Error GetAllIndividualPermissions: " + e.getMessage());
 			e.printStackTrace();
 		}
 		
@@ -543,7 +540,7 @@ private static volatile PreparedStatement GetAllIndvPermStatement = null;
 		}
 		catch ( SQLException e) 
 		{
-			wxt.prettyLog(Level.SEVERE,false,"Error StoreGroupPermissionInDB: " + e.getMessage());
+		    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Error StoreGroupPermissionInDB: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -578,7 +575,7 @@ private static volatile PreparedStatement GetAllIndvPermStatement = null;
 		}
 		catch ( SQLException e) 
 		{
-			wxt.prettyLog(Level.SEVERE,false,"Error GetAllGroupPermStatement: " + e.getMessage());
+		    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Error GetAllGroupPermStatement: " + e.getMessage());
 			e.printStackTrace();
 		}
 		
@@ -611,7 +608,7 @@ private static volatile PreparedStatement GetAllIndvPermStatement = null;
 		}
 		catch ( SQLException e) 
 		{
-			wxt.prettyLog(Level.SEVERE,false,"Error storing stargate to DB: " + e.getMessage());
+		    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Error storing stargate to DB: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -646,7 +643,7 @@ private static volatile PreparedStatement GetAllIndvPermStatement = null;
 		}
 		catch ( SQLException e) 
 		{
-			wxt.prettyLog(Level.SEVERE,false,"Error GetAllGroupPermStatement: " + e.getMessage());
+		    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Error GetAllGroupPermStatement: " + e.getMessage());
 			e.printStackTrace();
 		}
 		

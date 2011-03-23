@@ -81,19 +81,19 @@ public class WormholeXTreme extends JavaPlugin
 
 	
 	/** The Permissions. */
-	public static volatile PermissionHandler Permissions = null;
+	public static volatile PermissionHandler permissions = null;
 	
 	/** The Iconomy. */
-	public static volatile iConomy Iconomy = null;
+	public static volatile iConomy iconomy = null;
 	
 	/** The Help. */
-	public static volatile Help Help = null;
+	public static volatile Help help = null;
 	
 	/** The Scheduler. */
-	public static BukkitScheduler Scheduler = null;
+	public static BukkitScheduler scheduler = null;
 	
 	/** The This plugin. */
-	public static WormholeXTreme ThisPlugin = null;
+	public static WormholeXTreme thisPlugin = null;
 	 
 	/** The log. */
 //	private static Logger log;
@@ -106,8 +106,8 @@ public class WormholeXTreme extends JavaPlugin
 	public void onLoad()
 	{
 	   log = this.getServer().getLogger(); 
-	   ThisPlugin = this; 
-	   Scheduler = getServer().getScheduler();
+	   thisPlugin = this; 
+	   scheduler = getServer().getScheduler();
 	   PluginDescriptionFile pdfFile = this.getDescription();
 	   
 	   prettyLog(Level.INFO,true, pdfFile.getAuthors() + "Load Beginning." );

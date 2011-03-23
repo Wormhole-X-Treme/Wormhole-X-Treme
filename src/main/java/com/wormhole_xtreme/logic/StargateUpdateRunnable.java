@@ -76,7 +76,7 @@ public class StargateUpdateRunnable implements Runnable
 	@Override
 	public void run()
 	{
-	    WormholeXTreme.ThisPlugin.prettyLog(Level.FINE, false, "Run Action \"" + this.action + "\" Stargate \"" + this.stargate.Name + "\"");
+	    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Run Action \"" + this.action + "\" Stargate \"" + this.stargate.Name + "\"");
 		if ( this.action == ActionToTake.SHUTDOWN )
 		{    
 			stargate.ShutdownStargate();

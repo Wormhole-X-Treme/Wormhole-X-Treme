@@ -58,8 +58,8 @@ public class WXList implements CommandExecutor {
         
         if (CommandUtlities.playerCheck(sender)) {
             p = (Player) sender;
-            if ( p.isOp() || (WormholeXTreme.Permissions != null && ((ConfigManager.getSimplePermissions() && (WormholeXTreme.Permissions.has(p, "wormhole.simple.config") || WormholeXTreme.Permissions.has(p, "wormhole.simple.use"))) || 
-                (!ConfigManager.getSimplePermissions() && (WormholeXTreme.Permissions.has(p, "wormhole.config")) || (WormholeXTreme.Permissions.has(p, "wormhole.list"))))))
+            if ( p.isOp() || (WormholeXTreme.permissions != null && ((ConfigManager.getSimplePermissions() && (WormholeXTreme.permissions.has(p, "wormhole.simple.config") || WormholeXTreme.permissions.has(p, "wormhole.simple.use"))) || 
+                (!ConfigManager.getSimplePermissions() && (WormholeXTreme.permissions.has(p, "wormhole.config")) || (WormholeXTreme.permissions.has(p, "wormhole.list"))))))
             {
                 allowed = true;
             }

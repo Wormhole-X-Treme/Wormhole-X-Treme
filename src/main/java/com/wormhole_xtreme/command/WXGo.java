@@ -58,8 +58,8 @@ public class WXGo implements CommandExecutor {
             player = (Player)sender;
         }
         boolean allowed = false;
-        if ( player.isOp() || ( WormholeXTreme.Permissions != null && !ConfigManager.getSimplePermissions() && WormholeXTreme.Permissions.has(player, "wormhole.go"))
-            || (WormholeXTreme.Permissions != null && ConfigManager.getSimplePermissions() && WormholeXTreme.Permissions.has(player, "wormhole.config")))
+        if ( player.isOp() || ( WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.go"))
+            || (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.config")))
         {
             allowed = true;
         }

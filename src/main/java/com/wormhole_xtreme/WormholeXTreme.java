@@ -29,12 +29,10 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.PluginDescriptionFile; 
 import org.bukkit.plugin.PluginManager; 
 import org.bukkit.plugin.java.JavaPlugin; 
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import com.nijiko.coelho.iConomy.iConomy;
 import com.nijiko.permissions.PermissionHandler;
-import com.nijikokun.bukkit.Permissions.Permissions;
 
 import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.Configuration;
@@ -43,6 +41,9 @@ import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateDBManager;
 import com.wormhole_xtreme.model.StargateManager;
 import com.wormhole_xtreme.permissions.PermissionsManager;
+import com.wormhole_xtreme.plugin.HelpSupport;
+import com.wormhole_xtreme.plugin.IConomySupport;
+import com.wormhole_xtreme.plugin.PermissionsSupport;
 import com.wormhole_xtreme.utils.DBUpdateUtil;
 import com.wormhole_xtreme.command.*;
 
@@ -71,6 +72,10 @@ public class WormholeXTreme extends JavaPlugin
 	/** The server listener. */
 	private final WormholeXTremeServerListener serverListener = new WormholeXTremeServerListener(this);
 	
+	private final HelpSupport helpSupport = new HelpSupport(this);
+	private final IConomySupport iconomySupport = new IConomySupport(this);
+	private final PermissionsSupport permissionsSupport = new PermissionsSupport(this);
+	
 	/** The debugees. */
 	private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
 
@@ -82,7 +87,7 @@ public class WormholeXTreme extends JavaPlugin
 	public static volatile iConomy Iconomy = null;
 	
 	/** The Help. */
-	public static Help Help = null;
+	public static volatile Help Help = null;
 	
 	/** The Scheduler. */
 	public static BukkitScheduler Scheduler = null;
@@ -128,9 +133,9 @@ public class WormholeXTreme extends JavaPlugin
 		// Try and attach to Permissions and iConomy and Help
 		try
 		{
-			setupPermissions();
-			setupIconomy();
-			setupHelp();
+			permissionsSupport.setupPermissions();
+			iconomySupport.setupIconomy();
+			helpSupport.setupHelp();
 		}
 		catch ( Exception e)
 		{
@@ -139,6 +144,7 @@ public class WormholeXTreme extends JavaPlugin
 		// Register our events and commands
 		registerEvents();
 		registerCommands();
+		helpSupport.registerHelpCommands();
 		prettyLog(Level.INFO, true, "Enable Completed.");
 	}
 	
@@ -158,6 +164,7 @@ public class WormholeXTreme extends JavaPlugin
 		getCommand("wxbuild").setExecutor(new WXBuild(this));
 		getCommand("wormhole").setExecutor(new Wormhole(this));
 	}
+
     /**
      * Register events.
      */
@@ -192,104 +199,6 @@ public class WormholeXTreme extends JavaPlugin
 		pm.registerEvent(Event.Type.PLUGIN_DISABLE, serverListener, Priority.Monitor, this);
 	}
 
-	/**
-	 * Setup permissions.
-	 */
-	public void setupPermissions() 
-    {
-    	Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
-
-    	if(Permissions == null) 
-    	{
-    	    if(test != null)
-    	    {
-    	    	String v = test.getDescription().getVersion();
-    	    	serverListener.checkPermissionsVersion(v);
-    	    	try
-    	    	{
-    	    		Permissions = ((Permissions)test).getHandler();
-    	            WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Attached to Permissions version " + v);
-    	            if (ConfigManager.getSimplePermissions())
-    	            {
-    	                WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Simple Permissions Enabled");
-    	            }
-    	            else
-    	            {
-    	                WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Complex Permissions Enabled");
-    	            }
-    	    	}
-    	    	catch ( Exception e)
-    	    	{
-    	    		prettyLog(Level.WARNING, false, "Failed to get Permissions Handler. Defaulting to built-in permissions.");
-    	    	}
-    	    } 
-    	    else 
-    	    {
-    			prettyLog(Level.WARNING, false, "Permission Plugin not yet available. Defaulting to built-in permissions until Permissions is loaded.");
-    	    }
-    	}
-    }
-	
-    /**
-     * Setup iconomy.
-     */
-    public void setupIconomy() 
-    {
-    	Plugin test = this.getServer().getPluginManager().getPlugin("iConomy");
-
-    	if(Iconomy == null) 
-    	{
-    		if(test != null) 
-    	    {
-        		String v = test.getDescription().getVersion();
-        		serverListener.checkIconomyVersion(v);
-        		try
-        		{
-	    	    	Iconomy = ((iConomy)test);
-	                WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Attached to iConomy version " + v);
-        		}
-        		catch ( Exception e)
-        		{
-        			prettyLog(Level.WARNING, false, "Failed to get cast to iConomy.");
-        		}
-    	    } 
-    	    else 
-    	    {
-    			prettyLog(Level.WARNING, false, "iConomy Plugin not yet available - there will be no iConomy integration until loaded.");
-    	    	//this.getServer().getPluginManager().disablePlugin(this);
-    	    }
-    	}
-    }
-    
-    /**
-     * Setup help.
-     */
-    public void setupHelp()
-    {
-        Plugin test = this.getServer().getPluginManager().getPlugin("Help");
-        
-        if (Help == null)
-        {
-            if (test != null)
-            {
-                String version = test.getDescription().getVersion();
-                serverListener.checkHelpVersion(version);
-                try 
-                {
-                    Help = ((Help)test);
-                    WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Attached to Help version " + version);
-                }
-                catch (Exception e)
-                {
-                    prettyLog(Level.WARNING, false, "Failed to get cast to Help.");
-                }
-            }
-            else
-            {
-                prettyLog(Level.WARNING, false, "Help Plugin not yet available - there will be no Help integration until loaded.");
-            }
-        }
-    }
     
 	/* (non-Javadoc)
 	 * @see org.bukkit.plugin.Plugin#onDisable()

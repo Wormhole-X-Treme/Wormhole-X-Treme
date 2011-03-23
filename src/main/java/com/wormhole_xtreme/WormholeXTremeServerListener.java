@@ -18,17 +18,13 @@
  */
 package com.wormhole_xtreme;
 
-import java.util.logging.Level;
-
-import me.taylorkelly.help.Help;
-
 import org.bukkit.event.server.PluginEvent;
 import org.bukkit.event.server.ServerListener;
 import org.bukkit.plugin.Plugin;
 
-import com.nijiko.coelho.iConomy.iConomy;
-import com.nijikokun.bukkit.Permissions.Permissions;
-import com.wormhole_xtreme.config.ConfigManager;
+import com.wormhole_xtreme.plugin.HelpSupport;
+import com.wormhole_xtreme.plugin.IConomySupport;
+import com.wormhole_xtreme.plugin.PermissionsSupport;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -49,6 +45,9 @@ public class WormholeXTremeServerListener extends ServerListener
 	{
 		
 	}
+	private final HelpSupport helpSupport = new HelpSupport(WormholeXTreme.ThisPlugin);
+	private final IConomySupport iconomySupport = new IConomySupport(WormholeXTreme.ThisPlugin);
+	private final PermissionsSupport permissionsSupport = new PermissionsSupport(WormholeXTreme.ThisPlugin);
 	
     /* (non-Javadoc)
      * @see org.bukkit.event.server.ServerListener#onPluginEnabled(org.bukkit.event.server.PluginEvent)
@@ -58,111 +57,19 @@ public class WormholeXTremeServerListener extends ServerListener
     {
         if(event.getPlugin().getDescription().getName().equals("iConomy")) 
         {
-    		if (WormholeXTreme.Iconomy == null)
-    		{
-    		    Plugin p = event.getPlugin();
-    		    String v = event.getPlugin().getDescription().getVersion();
-    		    this.checkIconomyVersion(v);
-    		    try
-    		    {
-    		        WormholeXTreme.Iconomy = (iConomy)p;
-	                WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Attached to iConomy version " + v);
-    		    }
-    		    catch ( Exception e)
-    		    {
-    		        WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Failed to attach to iConomy: " + e.getMessage());
-    		    }
-    		}
-
+            iconomySupport.setupIconomy();
         }
         else if(event.getPlugin().getDescription().getName().equals("Permissions"))
         {
-    		
-    		if (WormholeXTreme.Permissions == null) 
-    		{
-    		    Plugin p = event.getPlugin();
-    		    String v = event.getPlugin().getDescription().getVersion();
-    		    this.checkPermissionsVersion(v);
-    		    try
-        	    {
-        	        WormholeXTreme.Permissions = ((Permissions)p).getHandler();
-	                WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Attached to Permissions version " + v);
-	                if (ConfigManager.getSimplePermissions())
-	                {
-	                    WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Simple Permissions Enabled");
-	                }
-	                else
-	                {
-	                    WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Complex Permissions Enabled");
-	                }
-        	    }
-        	    catch ( Exception e)
-        	    {
-        		    WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Failed to attach to Permissions: " + e.getMessage());
-        	    }
-    		}
+    		permissionsSupport.setupPermissions();
         }
         else if (event.getPlugin().getDescription().getName().equals("Help"))
         {
-            if (WormholeXTreme.Help == null)
-            {
-                Plugin p = event.getPlugin();
-                String v = event.getPlugin().getDescription().getVersion();
-                this.checkHelpVersion(v);
-                try 
-                {
-                    WormholeXTreme.Help = (Help)p;
-                    WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Attached to Help version" + v);
-                }
-                catch (Exception e)
-                {
-                    WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Failed to attach to Help: " + e.getMessage());
-                }
-            }
+            helpSupport.setupHelp();
         }
     }
     
-    /**
-     * Check permissions version.
-     *
-     * @param version the version
-     */
-    public void checkPermissionsVersion(String version)
-    {
-        if ( !version.equals("2.4") && !version.startsWith("2.5"))
-        {
-        	WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Not a supported version of Permissions. Recommended is 2.5.4" );
-        }
-       
-    }
-    
-    /**
-     * Check iconomy version.
-     *
-     * @param version the version
-     */
-    public void checkIconomyVersion(String version)
-    {
-        if ( !version.equals("4.0") && !version.equals("4.1") && !version.startsWith("4.2") && !version.startsWith("4.3") && 
-            !version.startsWith("4.4") && !version.startsWith("4.5"))
-        {
-        	WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Not a supported version of iConomy. Recommended is 4.5" );
-        }
-       
-    }
-    
-    /**
-     * Check help version.
-     *
-     * @param version the version
-     */
-    public void checkHelpVersion(String version)
-    {
-        if (!version.equals("0.2"))
-        {
-            WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Not a supported version of Help. Recommended is 0.2" );
-        }
-    }
+
     
     /* (non-Javadoc)
      * @see org.bukkit.event.server.ServerListener#onPluginDisabled(org.bukkit.event.server.PluginEvent)
@@ -172,30 +79,15 @@ public class WormholeXTremeServerListener extends ServerListener
     {
         if(event.getPlugin().getDescription().getName().equals("iConomy"))
         {
-            if (!(WormholeXTreme.Iconomy == null))
-            {
-                String v = event.getPlugin().getDescription().getVersion();
-                WormholeXTreme.Iconomy = null;
-                WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Detached from iConomy version " + v);
-            }
+            iconomySupport.disableIconomy();
         }
         if(event.getPlugin().getDescription().getName().equals("Permissions"))
         {
-            if (!(WormholeXTreme.Permissions == null))
-            {
-                String v = event.getPlugin().getDescription().getVersion();
-                WormholeXTreme.Permissions = null;
-                WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Detached from Permissions version " + v);
-            }
+            permissionsSupport.disablePermissions();
         }
         if(event.getPlugin().getDescription().getName().equals("Help"))
         {
-            if (!(WormholeXTreme.Help == null))
-            {
-                String v = event.getPlugin().getDescription().getVersion();
-                WormholeXTreme.Help = null;
-                WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Detached from Help version " + v);
-            }
+            helpSupport.disableHelp();
         }
     }
 }

@@ -18,6 +18,8 @@
  */
 package com.wormhole_xtreme.command;
 
+import java.util.logging.Level;
+
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -30,6 +32,7 @@ import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
 import com.wormhole_xtreme.permissions.PermissionsManager;
+import com.wormhole_xtreme.plugin.HelpSupport;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -39,7 +42,7 @@ import com.wormhole_xtreme.permissions.PermissionsManager;
  */
 public class Wormhole implements CommandExecutor 
 {
-
+    private static HelpSupport helpSupport = new HelpSupport(WormholeXTreme.thisPlugin);
     /**
      * Instantiates a new wormhole.
      *
@@ -139,6 +142,7 @@ public class Wormhole implements CommandExecutor
     private static boolean doSimplePermissions(CommandSender sender, String[] args) {
         if (args.length == 2)
         {
+            Player player = null;
             boolean simple;
             if (args[1].equalsIgnoreCase("true") || args[1].equalsIgnoreCase("yes"))
             {
@@ -156,7 +160,7 @@ public class Wormhole implements CommandExecutor
             }
             if (WormholeXTreme.permissions != null && CommandUtlities.playerCheck(sender))
             {
-                Player player = (Player)sender;
+                player = (Player)sender;
                 if (simple && !WormholeXTreme.permissions.has(player, "wormhole.simple.config"))
                 {
                     sender.sendMessage(ConfigManager.errorheader + "You currently do not have the 'wormhole.simple.config' permission.");
@@ -172,6 +176,11 @@ public class Wormhole implements CommandExecutor
             }
             ConfigManager.setSimplePermissions(simple);
             sender.sendMessage(ConfigManager.normalheader + "Simple Permissions set to: " + ConfigManager.getSimplePermissions());
+            helpSupport.registerHelpCommands();
+            if (player != null)
+            {
+                WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Simple Permissions set to: \"" + simple + "\" by: \"" + player.getName() + "\"");
+            }
         }
         else
         {

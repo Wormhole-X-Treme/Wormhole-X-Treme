@@ -33,6 +33,9 @@ Changes 0.812:
 
 - Ops are now always able to use 'wxremove'.
 
+- The '/wormhole simple' command now refreshes Help entries to the proper permissions after
+  being set.
+
 
 Changes 0.811 (3/21/11 @ 20:27 PST):
 

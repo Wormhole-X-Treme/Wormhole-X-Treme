@@ -85,6 +85,10 @@ public class WXRemove implements CommandExecutor {
                     {
                         allowed = true;
                     }
+                    if (p.isOp())
+                    {
+                        allowed = true;
+                    }
                 }
                 if ( !CommandUtlities.playerCheck(sender) || allowed )
                 {

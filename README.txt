@@ -78,6 +78,13 @@ To Build:
      
  2.2 iConomy location: http://forums.bukkit.org/threads/40/
  
- 3. Run a 'mvn install' in the directory you ran the git clone into (or unpacked the source zip).
+ 3. Force Help into your local repo.
+ 
+ 3.1 (example commands) 'mvn install:install-file -Dfile=Help.jar -DgroupId=me.taylorkelly -DartifactId=Help \
+     -Dversion=0.2 -Dpackaging=jar -DgeneratePom=true'
+ 
+ 3.2 Help location: http://forums.bukkit.org/threads/6536/
+ 
+ 4. Run a 'mvn install' in the directory you ran the git clone into (or unpacked the source zip).
   
- 4. Enjoy plugin that is now in target/. It will be a jar or a package zip.   
+ 5. Enjoy plugin that is now in target/. It will be a jar or a package zip.   

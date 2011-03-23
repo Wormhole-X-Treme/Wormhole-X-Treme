@@ -29,11 +29,13 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.PluginDescriptionFile; 
 import org.bukkit.plugin.PluginManager; 
 import org.bukkit.plugin.java.JavaPlugin; 
-
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import com.nijiko.coelho.iConomy.iConomy;
-import com.nijikokun.bukkit.Permissions.Permissions;
 import com.nijiko.permissions.PermissionHandler;
+import com.nijikokun.bukkit.Permissions.Permissions;
+
 import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.Configuration;
 import com.wormhole_xtreme.logic.StargateHelper;
@@ -44,8 +46,7 @@ import com.wormhole_xtreme.permissions.PermissionsManager;
 import com.wormhole_xtreme.utils.DBUpdateUtil;
 import com.wormhole_xtreme.command.*;
 
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitScheduler;
+import me.taylorkelly.help.Help;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -79,6 +80,9 @@ public class WormholeXTreme extends JavaPlugin
 	
 	/** The Iconomy. */
 	public static volatile iConomy Iconomy = null;
+	
+	/** The Help. */
+	public static Help Help = null;
 	
 	/** The Scheduler. */
 	public static BukkitScheduler Scheduler = null;
@@ -121,11 +125,12 @@ public class WormholeXTreme extends JavaPlugin
     public void onEnable()
 	{ 
 		prettyLog(Level.INFO,true,"Enable Beginning.");
-		// Try and attach to Permissions and iConomy 
+		// Try and attach to Permissions and iConomy and Help
 		try
 		{
 			setupPermissions();
 			setupIconomy();
+			setupHelp();
 		}
 		catch ( Exception e)
 		{
@@ -245,7 +250,7 @@ public class WormholeXTreme extends JavaPlugin
         		}
         		catch ( Exception e)
         		{
-        			prettyLog(Level.WARNING, false, "Failed to get cast to iConomy. Defaulting to built-in permissions.");
+        			prettyLog(Level.WARNING, false, "Failed to get cast to iConomy.");
         		}
     	    } 
     	    else 
@@ -254,6 +259,36 @@ public class WormholeXTreme extends JavaPlugin
     	    	//this.getServer().getPluginManager().disablePlugin(this);
     	    }
     	}
+    }
+    
+    /**
+     * Setup help.
+     */
+    public void setupHelp()
+    {
+        Plugin test = this.getServer().getPluginManager().getPlugin("Help");
+        
+        if (Help == null)
+        {
+            if (test != null)
+            {
+                String version = test.getDescription().getVersion();
+                serverListener.checkHelpVersion(version);
+                try 
+                {
+                    Help = ((Help)test);
+                    WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Attached to Help version " + version);
+                }
+                catch (Exception e)
+                {
+                    prettyLog(Level.WARNING, false, "Failed to get cast to Help.");
+                }
+            }
+            else
+            {
+                prettyLog(Level.WARNING, false, "Help Plugin not yet available - there will be no Help integration until loaded.");
+            }
+        }
     }
     
 	/* (non-Javadoc)

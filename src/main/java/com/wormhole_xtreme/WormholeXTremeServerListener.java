@@ -20,6 +20,8 @@ package com.wormhole_xtreme;
 
 import java.util.logging.Level;
 
+import me.taylorkelly.help.Help;
+
 import org.bukkit.event.server.PluginEvent;
 import org.bukkit.event.server.ServerListener;
 import org.bukkit.plugin.Plugin;
@@ -73,7 +75,7 @@ public class WormholeXTremeServerListener extends ServerListener
     		}
 
         }
-        if(event.getPlugin().getDescription().getName().equals("Permissions"))
+        else if(event.getPlugin().getDescription().getName().equals("Permissions"))
         {
     		
     		if (WormholeXTreme.Permissions == null) 
@@ -99,6 +101,24 @@ public class WormholeXTremeServerListener extends ServerListener
         		    WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Failed to attach to Permissions: " + e.getMessage());
         	    }
     		}
+        }
+        else if (event.getPlugin().getDescription().getName().equals("Help"))
+        {
+            if (WormholeXTreme.Help == null)
+            {
+                Plugin p = event.getPlugin();
+                String v = event.getPlugin().getDescription().getVersion();
+                this.checkHelpVersion(v);
+                try 
+                {
+                    WormholeXTreme.Help = (Help)p;
+                    WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Attached to Help version" + v);
+                }
+                catch (Exception e)
+                {
+                    WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Failed to attach to Help: " + e.getMessage());
+                }
+            }
         }
     }
     
@@ -131,6 +151,19 @@ public class WormholeXTremeServerListener extends ServerListener
        
     }
     
+    /**
+     * Check help version.
+     *
+     * @param version the version
+     */
+    public void checkHelpVersion(String version)
+    {
+        if (!version.equals("0.2"))
+        {
+            WormholeXTreme.ThisPlugin.prettyLog(Level.WARNING, false, "Not a supported version of Help. Recommended is 0.2" );
+        }
+    }
+    
     /* (non-Javadoc)
      * @see org.bukkit.event.server.ServerListener#onPluginDisabled(org.bukkit.event.server.PluginEvent)
      */
@@ -153,6 +186,15 @@ public class WormholeXTremeServerListener extends ServerListener
                 String v = event.getPlugin().getDescription().getVersion();
                 WormholeXTreme.Permissions = null;
                 WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Detached from Permissions version " + v);
+            }
+        }
+        if(event.getPlugin().getDescription().getName().equals("Help"))
+        {
+            if (!(WormholeXTreme.Help == null))
+            {
+                String v = event.getPlugin().getDescription().getVersion();
+                WormholeXTreme.Help = null;
+                WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Detached from Help version " + v);
             }
         }
     }

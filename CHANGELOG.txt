@@ -21,6 +21,17 @@ Changes 0.812:
   
 - Re-added missing CONSTRUCT_NAME_TAKEN error string in ConfigManager. This stops an NPE
   in 'wxcomplete'.
+  
+- Added support for tkelly's Help plugin. Will generate proper config based on permissions
+  type (simple or complex) or lack of permissions plugin altogether. 
+
+- Refactored the heck out of iConomy and Permissions support. Own classes in a new package
+  to go along with the Help support. Methodized a bunch of useful functions. Less
+  duplicated code.
+  
+- Added some log output for 'wxforce'. Should help combat abuse.
+
+- Ops are now always able to use 'wxremove'.
 
 
 Changes 0.811 (3/21/11 @ 20:27 PST):

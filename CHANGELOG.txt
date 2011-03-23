@@ -1,4 +1,4 @@
-Changes 0.812:
+Changes 0.812 (3/23/11 @ 15:17 PST):
 
 - /wxgo now works properly when traversing world bounderies. First we quickly pop into
   the default spawn location for the target world, then from there we go to our final

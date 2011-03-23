@@ -1019,8 +1019,32 @@ public class Stargate
 	        distance = Math.sqrt( Math.pow(self.getX() - target.getX(), 2) +
 	                              Math.pow(self.getY() - target.getY(), 2) +
 	                              Math.pow(self.getZ() - target.getZ(), 2));
+
 	    }
 	    return distance;
+	}
+	
+	/**
+	 * Not sqrt distance.
+	 *
+     * Distance between objects generated via simple math.
+     * Not reliable at close distances, but good enough for long distances.
+     * Less costly than sqrting it.
+     *
+     * @param self Location of the local object.
+     * @param target Location of the target object.
+     * @return distance to target object from local object.
+	 */
+	public static double NotSqrtDistance(Location self, Location target)
+	{
+        double distance = Double.MAX_VALUE;
+        if (self != null && target != null)
+        {
+	           distance = Math.pow(self.getX() - target.getX(), 2) +
+	                      Math.pow(self.getY() - target.getY(), 2) +
+	                      Math.pow(self.getZ() - target.getZ(), 2);            
+        }
+        return distance;   
 	}
 	
 	/**
@@ -1039,7 +1063,7 @@ public class Stargate
             for (Stargate s : gates)
             {
                 Location t = s.TeleportLocation;
-                double distance = Stargate.SqrtDistance(self, t);
+                double distance = Stargate.NotSqrtDistance(self, t);
                 if (distance < man)
                 {
                     man = distance;

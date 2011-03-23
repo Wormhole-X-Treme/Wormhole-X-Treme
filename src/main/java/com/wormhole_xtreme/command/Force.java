@@ -19,6 +19,7 @@
 package com.wormhole_xtreme.command;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -152,7 +153,10 @@ public class Force implements CommandExecutor {
                         sender.sendMessage(dropped.toString());
                     }
                 }
-                
+                if (player != null)
+                {
+                    WormholeXTreme.ThisPlugin.prettyLog(Level.INFO, false, "Player: \"" + player.getName() + "\" ran wxforce close=\"" + close + "\" drop=\"" + drop + "\"" );
+                }
             }
             else 
             {

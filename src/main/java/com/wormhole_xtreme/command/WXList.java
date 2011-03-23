@@ -69,6 +69,7 @@ public class WXList implements CommandExecutor {
             ArrayList<Stargate> gates = StargateManager.GetAllGates();
             sender.sendMessage(ConfigManager.normalheader + "Available gates \u00A73::");
             StringBuilder sb = new StringBuilder();
+            // TODO: Add checks for complex permissions enabled users running this command and only display what they have access to use.
             for ( int i = 0; i < gates.size(); i++)
             {
                 sb.append("\u00A77" + gates.get(i).Name);

@@ -22,6 +22,7 @@ package com.wormhole_xtreme;
 import java.util.logging.Level;
 
 
+import org.bukkit.Chunk;
 import org.bukkit.Location; 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -196,11 +197,13 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 				        {
 				            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Not same world, removing player from cart and doing some teleport hackery");
 				            veh.eject();
-				            // e.teleportTo(target.getWorld().getSpawnLocation());
-				            // veh.teleportTo(target.getWorld().getSpawnLocation());
-				            e.teleport(target);
+				            target.getWorld().loadChunk(target.getBlockX(), target.getBlockZ(), false);
 				            veh.teleport(target);
-				            veh.setPassenger(e);
+				            e.teleport(target);
+				            if (e instanceof Player && !veh.setPassenger(e))
+				            {
+				                WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Unable to set \"" + ((Player) e).getName() + "\" as passenger of minecart");
+				            }
 				        }
 				        else if (e == null)
 				        {

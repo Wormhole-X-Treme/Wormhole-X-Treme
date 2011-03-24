@@ -277,6 +277,10 @@ public class Configuration
 				{
 					// Check if this is a number
 					Setting s = new Setting(DefaultSettings.config[i].getName(), Integer.parseInt(value), DefaultSettings.config[i].getDescription(), "WormholeXTreme");
+					if (s.getName() == ConfigKeys.ICONOMY_WORMHOLE_BUILD_COST || s.getName() == ConfigKeys.ICONOMY_WORMHOLE_USE_COST)
+					{
+					    s = new Setting(DefaultSettings.config[i].getName(),  Double.parseDouble(value + ".0"), DefaultSettings.config[i].getDescription(), "WormholeXTreme");
+					}
 					ConfigManager.configurations.put(s.getName(), s);
 				}
 				catch ( NumberFormatException e)

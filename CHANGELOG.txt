@@ -1,3 +1,7 @@
+Changes 0.820:
+
+- Initial support for CraftBukkit Build 560+.
+
 Changes 0.812 (3/23/11 @ 15:17 PST):
 
 - /wxgo now works properly when traversing world bounderies. First we quickly pop into

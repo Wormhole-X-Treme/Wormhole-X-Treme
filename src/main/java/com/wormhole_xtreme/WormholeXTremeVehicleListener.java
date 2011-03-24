@@ -123,8 +123,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 			            if ( st.Target.IrisActive )
 			            {
 			                p.sendMessage(ConfigManager.errorheader + "Remote Iris is locked!");
-			                p.teleportTo(st.TeleportLocation);
-			                veh.teleportTo(st.TeleportLocation);
+			                veh.teleport(st.TeleportLocation);
 			                if (ConfigManager.getTimeoutShutdown() == 0)
 			                {
 			                    st.ShutdownStargate();
@@ -187,7 +186,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 				new_speed.multiply(speed * 5);
 				if (st.Target.IrisActive)
 				{
-				    veh.teleportTo(st.TeleportLocation);
+				    veh.teleport(st.TeleportLocation);
 				}
 				else 
 				{
@@ -197,21 +196,21 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 				        {
 				            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Not same world, removing player from cart and doing some teleport hackery");
 				            veh.eject();
-				            e.teleportTo(target.getWorld().getSpawnLocation());
+				            // e.teleportTo(target.getWorld().getSpawnLocation());
 				            // veh.teleportTo(target.getWorld().getSpawnLocation());
-				            e.teleportTo(target);
-				            //veh.teleportTo(target);
-				            //veh.setPassenger(e);
+				            e.teleport(target);
+				            veh.teleport(target);
+				            veh.setPassenger(e);
 				        }
 				        else if (e == null)
 				        {
 				            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Not same world, empty minecarts not allowed.");
-				            veh.teleportTo(st.TeleportLocation);
+				            veh.teleport(st.TeleportLocation);
 				        }
 				    }
 				    else 
 				    {
-				        veh.teleportTo(target);
+				        veh.teleport(target);
 				    }
 				    veh.setVelocity(new_speed);
 				}

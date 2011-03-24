@@ -72,15 +72,15 @@ public class WXGo implements CommandExecutor {
                 Stargate s = StargateManager.GetStargate(gogate);
                 if ( s != null)
                 {
-                    if (player.getWorld() != s.TeleportLocation.getWorld())
-                    {
-                        player.teleportTo(s.TeleportLocation.getWorld().getSpawnLocation());
-                        player.teleportTo(s.TeleportLocation);
-                    }
-                    else
-                    {
-                        player.teleportTo(s.TeleportLocation);
-                    }
+//                    if (player.getWorld() != s.TeleportLocation.getWorld())
+//                    {
+//                        player.teleportTo(s.TeleportLocation.getWorld().getSpawnLocation());
+                        player.teleport(s.TeleportLocation);
+//                    }
+//                    else
+//                    {
+//                        player.teleportTo(s.TeleportLocation);
+//                    }
                 }
                 else
                 {

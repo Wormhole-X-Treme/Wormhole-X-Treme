@@ -21,25 +21,20 @@ package com.wormhole_xtreme;
 
 import java.util.logging.Level;
 
-import org.bukkit.block.*; 
 import org.bukkit.Location;
 import org.bukkit.Material; 
 import org.bukkit.entity.Player; 
 
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
-import org.bukkit.event.block.BlockInteractEvent;
 import org.bukkit.event.block.BlockListener; 
 import org.bukkit.event.block.BlockPhysicsEvent;
-import org.bukkit.event.block.BlockRightClickEvent;
 
 import com.wormhole_xtreme.config.ConfigManager;
-import com.wormhole_xtreme.config.ConfigManager.StringTypes;
-import com.wormhole_xtreme.logic.StargateHelper;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
-import com.wormhole_xtreme.model.StargateShape;
 import com.wormhole_xtreme.permissions.PermissionsManager;
 import com.wormhole_xtreme.permissions.PermissionsManager.PermissionLevel;
 import com.wormhole_xtreme.utils.WorldUtils;
@@ -93,79 +88,30 @@ public class WormholeXTremeBlockListener extends BlockListener
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.bukkit.event.block.BlockListener#onBlockRightClick(org.bukkit.event.block.BlockRightClickEvent)
+	 * @see org.bukkit.event.block.BlockListener#onBlockBurn(org.bukkit.event.block.BlockBurnEvent)
 	 */
 	@Override
-    public void onBlockRightClick(BlockRightClickEvent event)
+	public void onBlockBurn(BlockBurnEvent event)
 	{
-		Block clicked = event.getBlock();
-		Player p = event.getPlayer();
-		//System.out.println("Right Clicked.");
-		if ( clicked.getType() == Material.STONE_BUTTON || clicked.getType() == Material.LEVER )
-		{
-			//this.ButtonLeverHit(event.getPlayer(), event.getBlock(), event.getDirection());
-		}
-		else if ( clicked.getType() == Material.WALL_SIGN )
-		{
-			Stargate s = StargateManager.getGateFromBlock(clicked);
-			
-			if ( s != null )
-			{
-			    String signnetwork;
-	            if (s.Network != null )
+	    if (!event.isCancelled())
+	    {
+	        if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
+	        {
+	            Location current = event.getBlock().getLocation();
+	            Stargate closest = Stargate.FindClosestStargate(current);
+	            if ( closest != null && closest.Active)
 	            {
-	                signnetwork = s.Network.netName;
+	                double blockdistance = Stargate.DistanceToClosestGateBlock(current, closest);
+	                if ((blockdistance <= closest.GateShape.woosh_depth && closest.GateShape.woosh_depth != 0) || blockdistance <= 5 ) 
+	                {
+	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Proximity Block Burn Distance: \"" + blockdistance + "\"");
+	                    event.setCancelled(true);
+	                }
 	            }
-	            else
-	            {
-	                signnetwork = "Public";
-	            }
-				Boolean allowed = false;
-				if ( WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
-				{
-				    if (WormholeXTreme.permissions.has(p, "wormhole.simple.use"))
-				    {
-				        allowed = true;
-				    }
-				}
-				else if (WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
-				{
-				    if ( WormholeXTreme.permissions.has(p, "wormhole.use.sign") && (signnetwork.equals("Public") || (!signnetwork.equals("Public") && WormholeXTreme.permissions.has(p, "wormhole.network.use." + signnetwork))))
-					{
-						allowed = true;
-					}
-				}
-				else 
-				{
-					PermissionLevel lvl = PermissionsManager.getPermissionLevel(p, s);
-					if ( ( lvl == PermissionLevel.WORMHOLE_CREATE_PERMISSION || lvl == PermissionLevel.WORMHOLE_USE_PERMISSION || lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION ) )
-					{
-					    allowed = true;
-					}
-				}
-
-				
-				if ( p.isOp() || allowed) 
-				{
-					if ( s.TryClickTeleportSign(clicked) )
-					{
-						String target = "";
-						if ( s.SignTarget != null )
-						{
-							target = s.SignTarget.Name;
-						}
-						p.sendMessage("Dialer set to: " + target);
-					}
-				}
-				else 
-				{
-					p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
-				}
-			}
-		}
-			
+	        }
+	    }
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.bukkit.event.block.BlockListener#onBlockFlow(org.bukkit.event.block.BlockFromToEvent)
 	 */
@@ -273,25 +219,6 @@ public class WormholeXTremeBlockListener extends BlockListener
         } 
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.bukkit.event.block.BlockListener#onBlockInteract(org.bukkit.event.block.BlockInteractEvent)
-	 */
-	@Override
-    public void onBlockInteract(BlockInteractEvent event)
-	{
-		if ( event.isPlayer() )
-		{
-			Block clicked = event.getBlock();
-			if ( clicked.getType() == Material.STONE_BUTTON || clicked.getType() == Material.LEVER )
-			{
-				if ( this.ButtonLeverHit((Player)event.getEntity(), event.getBlock(), null) )
-				{
-					event.setCancelled(true);
-				}
-			}
-		}
-		
-	}
 
 	/* (non-Javadoc)
 	 * @see org.bukkit.event.block.BlockListener#onBlockPhysics(org.bukkit.event.block.BlockPhysicsEvent)
@@ -306,313 +233,5 @@ public class WormholeXTremeBlockListener extends BlockListener
 				event.setCancelled(true);
 	        }
 	    }
-	}
-	
-	/**
-	 * Button lever hit.
-	 *
-	 * @param p the p
-	 * @param clicked the clicked
-	 * @param direction the direction
-	 * @return true, if successful
-	 */
-	private boolean ButtonLeverHit(Player p, Block clicked, BlockFace direction)
-	{
-		Stargate s = StargateManager.getGateFromBlock(clicked);
-		
-		if ( s != null  )
-		{
-			PermissionLevel lvl = PermissionsManager.getPermissionLevel(p, s);
-			
-			String gatenetwork;
-			if (s.Network != null)
-			{
-			    gatenetwork = s.Network.netName;
-			}
-			else
-			{
-			    gatenetwork = "Public";
-			}
-			boolean allowed = false;
-			if ( WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(p, "wormhole.simple.use"))
-			{    
-			    allowed = true;
-			}
-			else if ( WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
-			{
-				if ( (gatenetwork.equals("Public") || (!gatenetwork.equals("Public") && WormholeXTreme.permissions.has(p, "wormhole.network.use." + gatenetwork))) && 
-				    (WormholeXTreme.permissions.has(p, "wormhole.use.sign") || WormholeXTreme.permissions.has(p, "wormhole.use.dialer")) )
-				{    
-				    allowed = true;
-				}			    
-			}
-			else if ( ( lvl == PermissionLevel.WORMHOLE_CREATE_PERMISSION || lvl == PermissionLevel.WORMHOLE_USE_PERMISSION || lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION ) )
-			{
-				allowed = true;
-			}
-
-			if ( p.isOp() || allowed )
-			{
-				if ( WorldUtils.isSameBlock(s.ActivationBlock, clicked) )
-				{
-					this.HandleGateActivationSwitch(s, p);
-				}
-				else if ( WorldUtils.isSameBlock(s.IrisActivationBlock, clicked) )
-				{
-					this.HandleIrisActivationSwitch(s,p);
-					if ((s.Active) && (!s.IrisActive)) 
-					{
-						s.FillGateInterior(ConfigManager.getPortalMaterial());
-					}
-				}
-			}
-			else
-			{
-				p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
-			}
-			
-			return true;
-		}
-		else 
-		{
-			if ( direction == null )
-			{
-				switch ( clicked.getData() )
-				{
-				case 1:
-					direction = BlockFace.SOUTH;
-					break;
-				case 2:
-					direction = BlockFace.NORTH;
-					break;
-				case 3:
-					direction = BlockFace.WEST;
-					break;
-				case 4:
-					direction = BlockFace.EAST;
-					break;
-				}
-				
-				if ( direction == null)
-				{
-					return false;
-				}
-			}
-			// Check to see if player has already run the "build" command.
-			StargateShape shape = StargateManager.GetPlayerBuilderShape(p);
-			
-			Stargate new_gate = null;
-			if ( shape != null )
-			{
-				new_gate = StargateHelper.checkStargate(clicked, direction, shape);
-			}
-			else
-			{
-				new_gate = StargateHelper.checkStargate(clicked, direction);
-			}
-			
-			if ( new_gate != null )
-			{
-				boolean allowed = false;
-				if ( WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
-				{
-					if ( WormholeXTreme.permissions.has(p, "wormhole.build"))
-					{
-						allowed = true;
-					}
-				}
-				else if ( WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
-				{
-				    if (WormholeXTreme.permissions.has(p, "wormhole.simple.build"))
-				    {
-				        allowed = true;
-				    }
-				}
-				else 
-				{
-					PermissionLevel lvl = PermissionsManager.getPermissionLevel(p, new_gate);
-					if ( ( lvl == PermissionLevel.WORMHOLE_CREATE_PERMISSION || lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION ) )
-					{
-						allowed = true;
-					}
-				}
-
-				if ( p.isOp() || allowed )
-				{
-					if ( new_gate.IsSignPowered )
-					{
-						p.sendMessage("\u00A73:: \u00A75completed \u00A73:: \u00A77Stargate Design Valid with Sign Nav.");
-						if ( new_gate.Name.equals("") )
-						{
-							p.sendMessage("\u00A73:: \u00A74error \u00A73:: \u00A77Stargate name invalid. Replace sign and try again.");
-							p.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_INVALID));
-						}
-						else
-						{
-							boolean success = StargateManager.CompleteStargate(p, new_gate);
-							if ( success )
-							{
-								p.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_SUCCESS));
-								new_gate.TeleportSign.setLine(0, "-" + new_gate.Name + "-" );
-								new_gate.TeleportSign.setData(new_gate.TeleportSign.getData());
-								new_gate.TeleportSign.update();
-							}
-							else
-							{
-								p.sendMessage("Stargate constrution failed!?");
-							}
-						}
-						
-					}
-					else
-					{
-						// Print to player that it was successful!
-						p.sendMessage("\u00A73:: \u00A75Valid Stargate Design! \u00A73:: \u00A7B<required> \u00A76[optional]");
-						p.sendMessage("\u00A73:: \u00A77Type \'\u00A7F/wxcomplete \u00A7B<name> \u00A76[idc=IDC] [net=NET]\u00A77\' to complete.");
-						// Add gate to unnamed gates.
-						StargateManager.AddIncompleteStargate(p, new_gate);
-					}
-				}
-				else
-				{
-					if ( new_gate.IsSignPowered )
-					{
-						new_gate.Network.gate_list.remove(new_gate);
-						new_gate.TeleportSign.setLine(0, new_gate.Name);
-						if (new_gate.Network != null)
-						{
-						    new_gate.TeleportSign.setLine(1, new_gate.Network.netName );
-						}
-						new_gate.TeleportSign.setData(new_gate.TeleportSign.getData());
-						new_gate.TeleportSign.update();
-					}
-					StargateManager.RemoveIncompleteStargate(p);
-					p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
-				}	
-				return true;
-			}
-			else
-			{
-				WormholeXTreme.thisPlugin.prettyLog(Level.FINEST, false, p.getName() + " has pressed a button or level but did not find any properly created gates.");
-			}
-		}
-		
-		return false;
-	}
-
-	/**
-	 * Handle iris activation switch.
-	 *
-	 * @param s the s
-	 * @param p the p
-	 */
-	private void HandleIrisActivationSwitch(Stargate s, Player p) 
-	{
-		s.ToggleIrisLever();
-	}
-
-	/**
-	 * Handle gate activation switch.
-	 *
-	 * @param s the s
-	 * @param p the p
-	 */
-	private void HandleGateActivationSwitch(Stargate s, Player p) 
-	{
-		if ( s.Active || s.LitGate )
-		{
-			if ( s.Target != null)
-			{
-				//Shutdown stargate
-				s.ShutdownStargate();
-				p.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_SHUTDOWN));
-			}
-			else
-			{
-				Stargate s2 = StargateManager.RemoveActivatedStargate(p);
-				if ( s2 != null && s.GateId == s2.GateId )
-				{
-					s.StopActivationTimer(p);
-					s.DeActivateStargate();
-					s.UnLightStargate();
-					p.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_DEACTIVATED));
-				}
-				else
-				{
-					if ( s.LitGate && !s.Active )
-					{
-						p.sendMessage("Gate has been activated by someone else already.");
-					}
-					else
-					{
-						p.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_REMOTE_ACTIVE));
-					}
-				}
-			}
-				
-		}
-		else
-		{
-			if ( s.IsSignPowered  )
-			{
-				boolean allowed = false;
-				if ( WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
-				{
-					if ( WormholeXTreme.permissions.has(p, "wormhole.use.sign") )
-					{
-						allowed = true;
-					}
-				}
-				else if (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
-				{
-				    if (WormholeXTreme.permissions.has(p, "wormhole.simple.use"))
-				    {
-				        allowed = true;
-				    }
-				}
-				else
-				{
-					allowed = true;
-				}
-				
-				if ( p.isOp() || allowed )
-				{
-					if ( s.TeleportSign == null && s.TeleportSignBlock != null )
-					{
-						s.TryClickTeleportSign(s.TeleportSignBlock);
-					}
-					
-					if ( s.SignTarget != null)
-					{
-						if ( s.DialStargate(s.SignTarget) )
-						{
-							p.sendMessage("\u00A73:: \u00A75Stargates connected!");
-						}
-						else
-						{
-							p.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_REMOTE_ACTIVE));
-						}
-					}
-					else
-					{
-						p.sendMessage(ConfigManager.output_strings.get(StringTypes.TARGET_INVALID));
-					}
-				}
-				else
-				{
-					p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
-				}
-			}
-			else
-			{
-				//Activate Stargate
-				p.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_ACTIVATED));
-				p.sendMessage("\u00A73:: \u00A75Chevrons Locked! \u00A73:: \u00A7B<required> \u00A76[optional]");
-				p.sendMessage("\u00A73:: \u00A77Type \'\u00A7F/dial \u00A7B<gatename> \u00A76[idc]\u00A77\'");
-				StargateManager.AddActivatedStargate(p, s);
-				s.StartActivationTimer(p);
-				s.LightStargate();
-			}
-		}
 	}
 } 

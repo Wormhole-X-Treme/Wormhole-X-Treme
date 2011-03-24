@@ -2,6 +2,10 @@ Changes 0.820:
 
 - Initial support for CraftBukkit Build 560+.
 
+- Got rid of the stupid double error that people got by not reading the readme. Now when
+  we parse settings.txt, if the value is integer for the iconomy settings, we change it
+  to a double by simply dropping a .0 at the end of it. Problem solved.
+
 Changes 0.812 (3/23/11 @ 15:17 PST):
 
 - /wxgo now works properly when traversing world bounderies. First we quickly pop into

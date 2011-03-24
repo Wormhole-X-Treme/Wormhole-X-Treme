@@ -179,6 +179,7 @@ public class WormholeXTreme extends JavaPlugin
 		pm.registerEvent(Event.Type.BLOCK_FROMTO, blockListener, Priority.Highest, this);
 		pm.registerEvent(Event.Type.BLOCK_IGNITE, blockListener, Priority.High, this);
 		pm.registerEvent(Event.Type.BLOCK_BURN, blockListener, Priority.High, this);
+		pm.registerEvent(Event.Type.BLOCK_DAMAGE, blockListener, Priority.High, this);
 		
 		// To handle teleporting when walking into a gate.
 		pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.High, this);

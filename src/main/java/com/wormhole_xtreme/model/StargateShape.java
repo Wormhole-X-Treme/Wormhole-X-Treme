@@ -71,6 +71,8 @@ public class StargateShape
 	
 	/** The woosh_depth. */
 	public int woosh_depth = 3;
+	/** The square of the woosh_depth, in comparisions with squared distance */
+	public int woosh_depth_squared = 9;
 	
 	/**
 	 * Instantiates a new stargate shape.

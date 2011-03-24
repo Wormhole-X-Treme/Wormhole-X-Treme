@@ -1001,50 +1001,25 @@ public class Stargate
             this.IrisActivationBlock.setType(Material.AIR);
         }
 	}
-
-	/**
-	 * Sqrt distance.
-	 * 
-	 * Distance between objects generated via square root.
-	 *
-	 * @param self Location of the local object.
-	 * @param target Location of the target object.
-	 * @return distance to target object from local object.
-	 */
-	public static double SqrtDistance(Location self, Location target)
-	{
-	    double distance = Double.MAX_VALUE;
-	    if (self != null && target != null)
-	    {
-	        distance = Math.sqrt( Math.pow(self.getX() - target.getX(), 2) +
-	                              Math.pow(self.getY() - target.getY(), 2) +
-	                              Math.pow(self.getZ() - target.getZ(), 2));
-
-	    }
-	    return distance;
-	}
 	
 	/**
-	 * Not sqrt distance.
-	 *
-     * Distance between objects generated via simple math.
-     * Not reliable at close distances, but good enough for long distances.
-     * Less costly than sqrting it.
-     *
-     * @param self Location of the local object.
-     * @param target Location of the target object.
-     * @return distance to target object from local object.
+	 * Gets the square of the distance between self and target
+	 * which saves the costly call to {@link Math#sqrt(double)}
+         *
+         * @param self Location of the local object.
+         * @param target Location of the target object.
+         * @return square of distance to target object from local object.
 	 */
-	public static double NotSqrtDistance(Location self, Location target)
+	public static double getSquaredDistance(Location self, Location target)
 	{
-        double distance = Double.MAX_VALUE;
-        if (self != null && target != null)
-        {
+            double distance = Double.MAX_VALUE;
+            if (self != null && target != null)
+            {
 	           distance = Math.pow(self.getX() - target.getX(), 2) +
 	                      Math.pow(self.getY() - target.getY(), 2) +
 	                      Math.pow(self.getZ() - target.getZ(), 2);            
-        }
-        return distance;   
+            }
+            return distance;   
 	}
 	
 	/**
@@ -1063,7 +1038,7 @@ public class Stargate
             for (Stargate s : gates)
             {
                 Location t = s.TeleportLocation;
-                double distance = Stargate.NotSqrtDistance(self, t);
+                double distance = Stargate.getSquaredDistance(self, t);
                 if (distance < man)
                 {
                     man = distance;
@@ -1079,9 +1054,9 @@ public class Stargate
 	 *
 	 * @param self Location of the local object.
 	 * @param stargate Stargate to check blocks for distance.
-	 * @return Distance to the closest stargate block.
+	 * @return square of distance to the closest stargate block.
 	 */
-	public static double DistanceToClosestGateBlock(Location self, Stargate stargate)
+	public static double distanceSquaredToClosestGateBlock(Location self, Stargate stargate)
 	{
 	    double distance = Double.MAX_VALUE;
 	    if (stargate != null && self != null)
@@ -1090,7 +1065,7 @@ public class Stargate
 	        double blockdistance = Double.MAX_VALUE;
 	        for (Location l : gateblocks)
 	        {
-	            blockdistance = SqrtDistance(self,l);
+	            blockdistance = Stargate.getSquaredDistance(self,l);
 	            if (blockdistance < distance)
 	            {
 	                distance = blockdistance;

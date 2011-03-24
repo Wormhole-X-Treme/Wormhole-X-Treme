@@ -76,14 +76,14 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	{
 	    Block clicked = event.getClickedBlock();
 	    Player player = event.getPlayer();
-	    if ( clicked.getType() == Material.STONE_BUTTON || clicked.getType() == Material.LEVER )
+	    if (clicked != null && (clicked.getType() == Material.STONE_BUTTON || clicked.getType() == Material.LEVER ))
 	    {
 	        if ( this.ButtonLeverHit(player, clicked, null) )
 	        {
 	            event.setCancelled(true);
 	        }
 	    }
-	    else if ( clicked.getType() == Material.WALL_SIGN )
+	    else if ( clicked != null && clicked.getType() == Material.WALL_SIGN )
 	    {
 	        Stargate s = StargateManager.getGateFromBlock(clicked);
 

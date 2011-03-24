@@ -80,7 +80,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	    {
 	        if ( this.ButtonLeverHit(player, clicked, null) )
 	        {
-	            event.setCancelled(true);
+	            //event.setCancelled(true);
 	        }
 	    }
 	    else if ( clicked != null && clicked.getType() == Material.WALL_SIGN )
@@ -138,6 +138,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	            else 
 	            {
 	                player.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+	                event.setCancelled(true);
 	            }
 	        }
 	    }
@@ -193,6 +194,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 				//p.sendMessage("Remote Iris is active - unable to teleport!");
 				event.setFrom(st.TeleportLocation);
 				event.setTo(st.TeleportLocation);
+				p.setNoDamageTicks(2);
 				p.teleport(st.TeleportLocation);
 				if (p.getFireTicks() > 0 )
 				{
@@ -249,6 +251,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 			}		
 			event.setFrom(target);
 			event.setTo(target);
+			p.setNoDamageTicks(2);
 			p.teleport(target);
 			event.setCancelled(true);
 			if ( target == st.Target.TeleportLocation )

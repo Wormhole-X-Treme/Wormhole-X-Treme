@@ -21,8 +21,6 @@ package com.wormhole_xtreme;
 
 import java.util.logging.Level;
 
-
-import org.bukkit.Chunk;
 import org.bukkit.Location; 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;

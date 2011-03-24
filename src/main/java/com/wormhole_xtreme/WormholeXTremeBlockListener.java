@@ -128,6 +128,43 @@ public class WormholeXTremeBlockListener extends BlockListener
 	    }
 	}
 	
+	/**
+	 * Check damage permission.
+	 *
+	 * @param player the player
+	 * @param stargate the stargate
+	 * @return true, if successful
+	 */
+	private boolean checkDamagePermission(Player player, Stargate stargate)
+	{
+	    boolean allowed = false;
+	    if ( player.isOp())
+	    {
+	        allowed = true;
+	    }
+	    else if ( WormholeXTreme.permissions != null )
+	    {
+	        if (!ConfigManager.getSimplePermissions() && (WormholeXTreme.permissions.has(player, "wormhole.remove.all") ||
+	            (stargate.Owner != null && stargate.Owner.equals(player.getName()) && WormholeXTreme.permissions.has(player, "wormhole.remove.own") )))
+	        {
+	            allowed = true;
+	        }
+	        else if (ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.simple.remove"))
+	        {
+	            allowed = true;
+	        }
+	    }
+	    else 
+	    {
+	        PermissionLevel lvl = PermissionsManager.getPermissionLevel(player, stargate);
+	        if (lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION)
+	        {
+	            allowed = true;
+	        }
+	    }
+	    return allowed;
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.bukkit.event.block.BlockListener#onBlockDamage(org.bukkit.event.block.BlockDamageEvent)
 	 */
@@ -142,31 +179,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 	            boolean allowed = false;
 	            if (event instanceof Player)
 	            {
-	                Player player = event.getPlayer();
-	                if ( player.isOp())
-	                {
-	                    allowed = true;
-	                }
-	                else if ( WormholeXTreme.permissions != null )
-	                {
-	                    if (!ConfigManager.getSimplePermissions() && (WormholeXTreme.permissions.has(player, "wormhole.remove.all") ||
-	                        (stargate.Owner != null && stargate.Owner.equals(player.getName()) && WormholeXTreme.permissions.has(player, "wormhole.remove.own") )))
-	                    {
-	                        allowed = true;
-	                    }
-	                    else if (ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.simple.remove"))
-	                    {
-	                        allowed = true;
-	                    }
-	                }
-	                else 
-	                {
-	                    PermissionLevel lvl = PermissionsManager.getPermissionLevel(player, stargate);
-	                    if (lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION)
-	                    {
-	                        allowed = true;
-	                    }
-	                }
+	                allowed = checkDamagePermission((Player)event.getPlayer(), stargate);
 	            }
 	            if (!allowed)
 	            {
@@ -180,92 +193,69 @@ public class WormholeXTremeBlockListener extends BlockListener
 	 * @see org.bukkit.event.block.BlockListener#onBlockBreak(org.bukkit.event.block.BlockBreakEvent)
 	 */
 	@Override
-	public void onBlockBreak(BlockBreakEvent e)
+	public void onBlockBreak(BlockBreakEvent event)
 	{
-	    Stargate s = StargateManager.getGateFromBlock(e.getBlock());
-        Player p = e.getPlayer();
-        if ( s != null )
-        {
-            boolean allowed = false;
-            if ( WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
-            {
-                if ( WormholeXTreme.permissions.has(p, "wormhole.remove.all"))
-                {
-                    allowed = true;
-                }
-                else if ( s.Owner != null)  
-                {
-                    if (s.Owner.equals(p.getName()) && WormholeXTreme.permissions.has(p, "wormhole.remove.own"))
-                    {
-                        allowed = true;
-                    }
-                }
-            }
-            else if (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
-            {
-                if (WormholeXTreme.permissions.has(p, "wormhole.simple.remove"))
-                {
-                    allowed = true;
-                }
-            }
-            else 
-            {
-                PermissionLevel lvl = PermissionsManager.getPermissionLevel(p, s);
-                if ( lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION )
-                {
-                    allowed = true;
-                }
-            }
-
-            if ( p.isOp() || allowed )
-            {
-                if ( !WorldUtils.isSameBlock(s.ActivationBlock, e.getBlock()) )
-                {
-                    if ( s.TeleportSignBlock != null && WorldUtils.isSameBlock(s.TeleportSignBlock, e.getBlock()) )
-                    {
-                        p.sendMessage("Destroyed DHD Sign. You will be unable to change dialing target from this gate.");
-                        p.sendMessage("You can rebuild it later.");
-                        s.TeleportSign = null;
-                    } 
-                    else if (e.getBlock().getType().equals(ConfigManager.getIrisMaterial()))
-                    {
-                        e.setCancelled(true);
-                    } 
-                    else
-                    {
-                        if (s.Active) 
-                        {
-                            s.DeActivateStargate();
-                            s.FillGateInterior(Material.AIR);
-                        }
-                        if (s.LitGate) 
-                        {
-                            s.UnLightStargate();
-                            s.StopActivationTimer(p);
-                            StargateManager.RemoveActivatedStargate(p);
-                        }
-                        s.ResetTeleportSign();
-                        s.DeleteNameSign();
-                        if (!s.IrisDeactivationCode.equals(""))
-                        {
-                            s.DeleteIrisLever();
-                        }
-                        StargateManager.RemoveStargate(s);
-                        p.sendMessage("Stargate Destroyed: " + s.Name);
-                    }
-                }
-                else
-                {
-                    p.sendMessage("Destroyed DHD. You will be unable to dial out from this gate.");
-                    p.sendMessage("You can rebuild it later.");
-                }
-                
-            }
-            else
-            {
-                e.setCancelled(true);
-            }
-        } 
+	    if (!event.isCancelled())
+	    {
+	        Stargate stargate = StargateManager.getGateFromBlock(event.getBlock());
+	        if (stargate != null)
+	        {
+	            boolean allowed = false;
+	            Player player = null;
+	            if (event instanceof Player)
+	            {
+	                player = event.getPlayer();
+	                allowed = checkDamagePermission(player, stargate);
+	            }
+	            if (allowed)
+	            {
+	                if ( !WorldUtils.isSameBlock(stargate.ActivationBlock, event.getBlock()) )
+	                {
+	                    if ( stargate.TeleportSignBlock != null && WorldUtils.isSameBlock(stargate.TeleportSignBlock, event.getBlock()) )
+	                    {
+	                        player.sendMessage("Destroyed DHD Sign. You will be unable to change dialing target from this gate.");
+	                        player.sendMessage("You can rebuild it later.");
+	                        stargate.TeleportSign = null;
+	                    } 
+	                    else if (event.getBlock().getType().equals(ConfigManager.getIrisMaterial()))
+	                    {
+	                        event.setCancelled(true);
+	                    } 
+	                    else
+	                    {
+	                        if (stargate.Active) 
+	                        {
+	                            stargate.DeActivateStargate();
+	                            stargate.FillGateInterior(Material.AIR);
+	                        }
+	                        if (stargate.LitGate) 
+	                        {
+	                            stargate.UnLightStargate();
+	                            stargate.StopActivationTimer(player);
+	                            StargateManager.RemoveActivatedStargate(player);
+	                        }
+	                        stargate.ResetTeleportSign();
+	                        stargate.DeleteNameSign();
+	                        if (!stargate.IrisDeactivationCode.equals(""))
+	                        {
+	                            stargate.DeleteIrisLever();
+	                        }
+	                        StargateManager.RemoveStargate(stargate);
+	                        player.sendMessage("Stargate Destroyed: " + stargate.Name);
+	                    }
+	                }
+	                else
+	                {
+	                    player.sendMessage("Destroyed DHD. You will be unable to dial out from this gate.");
+	                    player.sendMessage("You can rebuild it later.");
+	                }
+	            }
+	            else
+	            {
+	                event.setCancelled(true);
+	            }
+	        }
+	    }
 	}
 	
 

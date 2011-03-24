@@ -27,6 +27,7 @@ import org.bukkit.entity.Player;
 
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockListener; 
@@ -126,7 +127,55 @@ public class WormholeXTremeBlockListener extends BlockListener
 	        }
 	    }
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see org.bukkit.event.block.BlockListener#onBlockDamage(org.bukkit.event.block.BlockDamageEvent)
+	 */
+	@Override
+	public void onBlockDamage(BlockDamageEvent event)
+	{
+	    if (!event.isCancelled())
+	    {
+	        Stargate stargate = StargateManager.getGateFromBlock(event.getBlock());
+	        if (stargate != null)
+	        {
+	            boolean allowed = false;
+	            if (event instanceof Player)
+	            {
+	                Player player = event.getPlayer();
+	                if ( player.isOp())
+	                {
+	                    allowed = true;
+	                }
+	                else if ( WormholeXTreme.permissions != null )
+	                {
+	                    if (!ConfigManager.getSimplePermissions() && (WormholeXTreme.permissions.has(player, "wormhole.remove.all") ||
+	                        (stargate.Owner != null && stargate.Owner.equals(player.getName()) && WormholeXTreme.permissions.has(player, "wormhole.remove.own") )))
+	                    {
+	                        allowed = true;
+	                    }
+	                    else if (ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.simple.remove"))
+	                    {
+	                        allowed = true;
+	                    }
+	                }
+	                else 
+	                {
+	                    PermissionLevel lvl = PermissionsManager.getPermissionLevel(player, stargate);
+	                    if (lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION)
+	                    {
+	                        allowed = true;
+	                    }
+	                }
+	            }
+	            if (!allowed)
+	            {
+	                event.setCancelled(true);
+	            }
+	        }
+	    }
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.bukkit.event.block.BlockListener#onBlockBreak(org.bukkit.event.block.BlockBreakEvent)
 	 */

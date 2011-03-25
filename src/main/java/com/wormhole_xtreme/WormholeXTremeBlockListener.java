@@ -140,12 +140,18 @@ public class WormholeXTremeBlockListener extends BlockListener
 	        if (stargate != null)
 	        {
 	            boolean allowed = false;
-	            if (event instanceof Player)
+	            Player player = null;
+	            if (event.getPlayer() != null)
 	            {
-	                allowed = WXPermissions.checkWXPermissions((Player)event.getPlayer(), stargate, PermissionType.DAMAGE );
+	                player = event.getPlayer();
+	                allowed = WXPermissions.checkWXPermissions(player, stargate, PermissionType.DAMAGE );
 	            }
 	            if (!allowed)
 	            {
+	                if (player != null)
+	                {
+	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied damage on: " + stargate.Name);
+	                }
 	                event.setCancelled(true);
 	            }
 	        }
@@ -165,10 +171,10 @@ public class WormholeXTremeBlockListener extends BlockListener
 	        {
 	            boolean allowed = false;
 	            Player player = null;
-	            if (event instanceof Player)
+	            if (event.getPlayer() != null )
 	            {
 	                player = event.getPlayer();
-	                allowed = WXPermissions.checkWXPermissions(player, stargate,PermissionType.DAMAGE);
+	                allowed = WXPermissions.checkWXPermissions(player, stargate, PermissionType.DAMAGE);
 	            }
 	            if (allowed)
 	            {
@@ -215,6 +221,10 @@ public class WormholeXTremeBlockListener extends BlockListener
 	            }
 	            else
 	            {
+	                if (player != null)
+	                {
+	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied block destroy on: " + stargate.Name);
+	                }
 	                event.setCancelled(true);
 	            }
 	        }

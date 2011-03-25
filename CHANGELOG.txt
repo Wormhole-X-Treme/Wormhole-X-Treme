@@ -15,7 +15,11 @@ Changes 0.820:
 - Gate block protection should now be compatible with plugins like mcMMO. "Should" being
   the operating word.
 
-
+- Buttons and Levers now properly move when used. Event for them is only canceled on
+  permission deny. 
+  
+- All Permissions deny events now log at Level.FINE. Got permissions problems with WXT?
+  Now see what is happening.
 
 Changes 0.812 (3/23/11 @ 15:17 PST):
 

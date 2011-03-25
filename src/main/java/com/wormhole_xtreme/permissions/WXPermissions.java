@@ -18,6 +18,8 @@
  */
 package com.wormhole_xtreme.permissions;
 
+import java.util.logging.Level;
+
 import org.bukkit.entity.Player;
 
 import com.wormhole_xtreme.WormholeXTreme;
@@ -215,11 +217,16 @@ public class WXPermissions {
             if (!ConfigManager.getSimplePermissions() && (WormholeXTreme.permissions.has(player, "wormhole.remove.all") ||
                 (stargate.Owner != null && stargate.Owner.equals(player.getName()) && WormholeXTreme.permissions.has(player, "wormhole.remove.own") )))
             {
+                
                 return true;
             }
             else if (ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.simple.remove"))
             {
                 return true;
+            }
+            else
+            {
+                WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied Remove on: " + stargate.Name);
             }
         }
         return false;
@@ -254,6 +261,10 @@ public class WXPermissions {
             {
                 return true;
             }
+            else
+            {
+                WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied sign permission on: " + stargate.Name );
+            }
         }
         return false;
     }
@@ -286,6 +297,10 @@ public class WXPermissions {
                 (!gatenet.equals("Public") && WormholeXTreme.permissions.has(player, "wormhole.network.use." + gatenet))))
             {
                 return true;
+            }
+            else
+            {
+                WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied dialer permission on: " + stargate.Name );
             }
         }
         return false;
@@ -335,6 +350,17 @@ public class WXPermissions {
             {
                 return true;
             }
+            else
+            {
+                if (stargate != null)
+                {
+                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied config permission on: " + stargate.Name);
+                }
+                else
+                {
+                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied config permission.");
+                }
+            }
         }
         return false;
     }
@@ -354,6 +380,7 @@ public class WXPermissions {
         }
         else
         {
+            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied config permission.");
             return false;
         }
     }
@@ -376,6 +403,7 @@ public class WXPermissions {
         }
         else
         {
+            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied list permission.");
             return false;
         }
     }
@@ -395,6 +423,7 @@ public class WXPermissions {
         }
         else
         {
+            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied compass permission.");
             return false;
         }
     }
@@ -413,6 +442,7 @@ public class WXPermissions {
         }
         else
         {
+            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied go permission.");
             return false;
         }
     }

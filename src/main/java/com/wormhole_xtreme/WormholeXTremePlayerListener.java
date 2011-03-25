@@ -75,10 +75,11 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	{
 	    Block clicked = event.getClickedBlock();
 	    Player player = event.getPlayer();
+
 	    if (clicked != null && (clicked.getType() == Material.STONE_BUTTON || clicked.getType() == Material.LEVER ))
 	    {
 	        if ( !this.ButtonLeverHit(player, clicked, null) )
-	        {
+	        {  
 	            event.setCancelled(true);
 	        }
 	    }
@@ -273,7 +274,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
                 
                 if ( direction == null)
                 {
-                    return false;
+                    return true;
                 }
             }
             // Check to see if player has already run the "build" command.
@@ -348,10 +349,10 @@ public class WormholeXTremePlayerListener extends PlayerListener
             }
             else
             {
-                WormholeXTreme.thisPlugin.prettyLog(Level.FINEST, false, p.getName() + " has pressed a button or level but did not find any properly created gates.");
+                WormholeXTreme.thisPlugin.prettyLog(Level.FINEST, false, p.getName() + " has pressed a button or lever but did not find any properly created gates.");
+                return true;
             }
         } 
-        return false;
     }
     
     /**

@@ -77,9 +77,9 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	    Player player = event.getPlayer();
 	    if (clicked != null && (clicked.getType() == Material.STONE_BUTTON || clicked.getType() == Material.LEVER ))
 	    {
-	        if ( this.ButtonLeverHit(player, clicked, null) )
+	        if ( !this.ButtonLeverHit(player, clicked, null) )
 	        {
-	            //event.setCancelled(true);
+	            event.setCancelled(true);
 	        }
 	    }
 	    else if ( clicked != null && clicked.getType() == Material.WALL_SIGN )
@@ -214,7 +214,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	    }
 	}
 	
-	   /**
+	/**
      * Button lever hit.
      *
      * @param p the p
@@ -232,7 +232,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
             {
                 if ( WorldUtils.isSameBlock(s.ActivationBlock, clicked) )
                 {
-                    this.HandleGateActivationSwitch(s, p);
+                    return this.HandleGateActivationSwitch(s, p);
                 }
                 else if ( WorldUtils.isSameBlock(s.IrisActivationBlock, clicked) )
                 {
@@ -241,6 +241,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
                     {
                         s.FillGateInterior(ConfigManager.getPortalMaterial());
                     }
+                    return true;
                 }
             }
             else
@@ -248,7 +249,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
                 p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
             }
             
-            return true;
+            return false;
         }
         else 
         {
@@ -312,6 +313,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
                             else
                             {
                                 p.sendMessage("Stargate constrution failed!?");
+                                return false;
                             }
                         }
                         
@@ -324,6 +326,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
                         // Add gate to unnamed gates.
                         StargateManager.AddIncompleteStargate(p, new_gate);
                     }
+                    return true;
                 }
                 else
                 {
@@ -340,15 +343,14 @@ public class WormholeXTremePlayerListener extends PlayerListener
                     }
                     StargateManager.RemoveIncompleteStargate(p);
                     p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+                    return false;
                 }   
-                return true;
             }
             else
             {
                 WormholeXTreme.thisPlugin.prettyLog(Level.FINEST, false, p.getName() + " has pressed a button or level but did not find any properly created gates.");
             }
-        }
-        
+        } 
         return false;
     }
     
@@ -366,10 +368,11 @@ public class WormholeXTremePlayerListener extends PlayerListener
     /**
      * Handle gate activation switch.
      *
-     * @param s the s
-     * @param p the p
+     * @param stargate the stargate
+     * @param player the player
+     * @return true, if successful
      */
-    private void HandleGateActivationSwitch(Stargate stargate, Player player) 
+    private boolean HandleGateActivationSwitch(Stargate stargate, Player player) 
     {
         if ( stargate.Active || stargate.LitGate )
         {
@@ -378,6 +381,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
                 //Shutdown stargate
                 stargate.ShutdownStargate();
                 player.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_SHUTDOWN));
+                return true;
             }
             else
             {
@@ -388,6 +392,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
                     stargate.DeActivateStargate();
                     stargate.UnLightStargate();
                     player.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_DEACTIVATED));
+                    return true;
                 }
                 else
                 {
@@ -399,9 +404,9 @@ public class WormholeXTremePlayerListener extends PlayerListener
                     {
                         player.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_REMOTE_ACTIVE));
                     }
+                    return false;
                 }
-            }
-                
+            }      
         }
         else
         {
@@ -419,20 +424,24 @@ public class WormholeXTremePlayerListener extends PlayerListener
                         if ( stargate.DialStargate(stargate.SignTarget) )
                         {
                             player.sendMessage(ConfigManager.normalheader + "Stargates connected!");
+                            return true;
                         }
                         else
                         {
                             player.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_REMOTE_ACTIVE));
+                            return false;
                         }
                     }
                     else
                     {
                         player.sendMessage(ConfigManager.output_strings.get(StringTypes.TARGET_INVALID));
+                        return false;
                     }
                 }
                 else
                 {
                     player.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+                    return false;
                 }
             }
             else
@@ -444,6 +453,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
                 StargateManager.AddActivatedStargate(player, stargate);
                 stargate.StartActivationTimer(player);
                 stargate.LightStargate();
+                return true;
             }
         }
     }

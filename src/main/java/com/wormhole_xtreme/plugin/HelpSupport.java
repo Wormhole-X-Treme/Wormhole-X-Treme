@@ -179,7 +179,7 @@ public class HelpSupport {
             WormholeXTreme.help.registerCommand("wormhole irismaterial <material>","Display iris material, optionally change <material>", WormholeXTreme.thisPlugin, wormhole);
             WormholeXTreme.help.registerCommand("wormhole shutdown_timeout <timeout>","Display shutdown timeout, optionally change <timeout>", WormholeXTreme.thisPlugin, wormhole);
             WormholeXTreme.help.registerCommand("wormhole activate_timeout <timeout>","Display activation timeout, optionally change <timeout>", WormholeXTreme.thisPlugin, wormhole);
-            WormholeXTreme.help.registerCommand("wormhole simple <boolean>","Display simple permissions status, optionally change via <boolean>", WormholeXTreme.thisPlugin, wormhole);
+            WormholeXTreme.help.registerCommand("wormhole simple <boolean>","Display simple permissions, optionally change via <boolean>", WormholeXTreme.thisPlugin, wormhole);
         }
     }
 }

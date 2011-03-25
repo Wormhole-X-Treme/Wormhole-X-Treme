@@ -82,7 +82,7 @@ public class HelpSupport {
      */
     public void checkHelpVersion(String version)
     {
-        if (!version.equals("0.2"))
+        if (!version.startsWith("0.2"))
         {
             WormholeXTreme.thisPlugin.prettyLog(Level.WARNING, false, "Not a supported version of Help. Recommended is 0.2" );
         }

@@ -36,8 +36,8 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
-import com.wormhole_xtreme.permissions.PermissionsManager;
-import com.wormhole_xtreme.permissions.PermissionsManager.PermissionLevel;
+import com.wormhole_xtreme.permissions.WXPermissions;
+import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
 import com.wormhole_xtreme.utils.WorldUtils;
 
 
@@ -128,43 +128,6 @@ public class WormholeXTremeBlockListener extends BlockListener
 	    }
 	}
 	
-	/**
-	 * Check damage permission.
-	 *
-	 * @param player the player
-	 * @param stargate the stargate
-	 * @return true, if successful
-	 */
-	private boolean checkDamagePermission(Player player, Stargate stargate)
-	{
-	    boolean allowed = false;
-	    if ( player.isOp())
-	    {
-	        allowed = true;
-	    }
-	    else if ( WormholeXTreme.permissions != null )
-	    {
-	        if (!ConfigManager.getSimplePermissions() && (WormholeXTreme.permissions.has(player, "wormhole.remove.all") ||
-	            (stargate.Owner != null && stargate.Owner.equals(player.getName()) && WormholeXTreme.permissions.has(player, "wormhole.remove.own") )))
-	        {
-	            allowed = true;
-	        }
-	        else if (ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.simple.remove"))
-	        {
-	            allowed = true;
-	        }
-	    }
-	    else 
-	    {
-	        PermissionLevel lvl = PermissionsManager.getPermissionLevel(player, stargate);
-	        if (lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION)
-	        {
-	            allowed = true;
-	        }
-	    }
-	    return allowed;
-	}
-	
 	/* (non-Javadoc)
 	 * @see org.bukkit.event.block.BlockListener#onBlockDamage(org.bukkit.event.block.BlockDamageEvent)
 	 */
@@ -179,7 +142,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 	            boolean allowed = false;
 	            if (event instanceof Player)
 	            {
-	                allowed = checkDamagePermission((Player)event.getPlayer(), stargate);
+	                allowed = WXPermissions.checkWXPermissions((Player)event.getPlayer(), stargate, PermissionType.DAMAGE );
 	            }
 	            if (!allowed)
 	            {
@@ -205,7 +168,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 	            if (event instanceof Player)
 	            {
 	                player = event.getPlayer();
-	                allowed = checkDamagePermission(player, stargate);
+	                allowed = WXPermissions.checkWXPermissions(player, stargate,PermissionType.DAMAGE);
 	            }
 	            if (allowed)
 	            {

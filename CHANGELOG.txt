@@ -5,6 +5,17 @@ Changes 0.820:
 - Got rid of the stupid double error that people got by not reading the readme. Now when
   we parse settings.txt, if the value is integer for the iconomy settings, we change it
   to a double by simply dropping a .0 at the end of it. Problem solved.
+  
+- Lots of optimizations to the distance finding method we were using. Also fixes to the 
+  gate shape parsing code. (Thanks lirelent)
+  
+- Overhaul of the way we handle permissions internally. More unified approach to the
+  actual permissions checks. 
+  
+- Gate block protection should now be compatible with plugins like mcMMO. "Should" being
+  the operating word.
+
+
 
 Changes 0.812 (3/23/11 @ 15:17 PST):
 

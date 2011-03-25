@@ -29,6 +29,8 @@ import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.logic.StargateHelper;
 import com.wormhole_xtreme.model.StargateManager;
 import com.wormhole_xtreme.model.StargateShape;
+import com.wormhole_xtreme.permissions.WXPermissions;
+import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
 
 /**
  * @author alron
@@ -63,22 +65,7 @@ public class WXBuild implements CommandExecutor {
         args = CommandUtlities.commandEscaper(args);
         if (args.length == 1) 
         {
-            boolean allowed = false;
-            if (WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
-            {
-                if (WormholeXTreme.permissions.has(player, "wormhole.config"))
-                {
-                    allowed = true;
-                }
-            }
-            else if (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
-            {
-                if (WormholeXTreme.permissions.has(player, "wormhole.simple.config"))
-                {
-                    allowed = true;
-                }
-            }
-            if ( player.isOp() || allowed )
+            if ( WXPermissions.checkWXPermissions(player, PermissionType.CONFIG) )
             {
                 StargateShape shape = StargateHelper.getShape(args[0]);
                 if  ( shape != null)

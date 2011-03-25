@@ -52,8 +52,61 @@ public class WXPermissions {
         /** The BUILD. */
         BUILD,
         
+        /** The REMOVE. */
+        REMOVE,
+        
         /** The USE. */
-        USE
+        USE,
+        
+        /** The LIST. */
+        LIST,
+        
+        /** The CONFIG. */
+        CONFIG,
+        
+        /** The GO. */
+        GO,
+        
+        /** The COMPASS. */
+        COMPASS
+    }
+    
+    /**
+     * Check wx permissions.
+     *
+     * @param player the player
+     * @param permissiontype the permissiontype
+     * @return true, if successful
+     */
+    public static boolean checkWXPermissions(Player player, PermissionType permissiontype)
+    {
+        return checkWXPermissions(player,null,null,permissiontype);
+    }
+    
+    /**
+     * Check wx permissions.
+     *
+     * @param player the player
+     * @param network the network
+     * @param permissiontype the permissiontype
+     * @return true, if successful
+     */
+    public static boolean checkWXPermissions(Player player, String network, PermissionType permissiontype)
+    {
+        return checkWXPermissions(player,null,network,permissiontype);
+    }
+    
+    /**
+     * Check wx permisssions.
+     *
+     * @param player the player
+     * @param stargate the stargate
+     * @param permissionstype the permissionstype
+     * @return true, if successful
+     */
+    public static boolean checkWXPermissions(Player player, Stargate stargate, PermissionType permissionstype)
+    {
+        return checkWXPermissions(player,stargate,null,permissionstype);
     }
     
     /**
@@ -61,20 +114,32 @@ public class WXPermissions {
      *
      * @param player the player
      * @param stargate the stargate
+     * @param network the network
      * @param permissiontype the permissiontype
      * @return true, if successful
      */
-    public static boolean checkWXPermissions(Player player, Stargate stargate, PermissionType permissiontype)
+    public static boolean checkWXPermissions(Player player, Stargate stargate, String network, PermissionType permissiontype)
     {
+        if (player == null)
+        {
+            return false;
+        }
         if (player.isOp())
         {
             return true;
         }
         else if (WormholeXTreme.permissions != null)
         {
-            if (permissiontype == PermissionType.DAMAGE)
+            if (permissiontype == PermissionType.DAMAGE || permissiontype == PermissionType.REMOVE )
             {
-                return checkRemovePermission(player,stargate);
+                if (checkRemovePermission(player,stargate) || checkConfigPermission(player))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else if (permissiontype == PermissionType.SIGN)
             {
@@ -82,11 +147,27 @@ public class WXPermissions {
             }
             else if (permissiontype == PermissionType.BUILD)
             {
-                return checkBuildPermission(player,stargate);
+                return checkBuildPermission(player,stargate,network);
             }
             else if (permissiontype == PermissionType.DIALER)
             {
                 return checkDialerPermission(player,stargate);
+            }
+            else if (permissiontype == PermissionType.LIST)
+            {
+                return checkListPermission(player);
+            }
+            else if (permissiontype == PermissionType.CONFIG)
+            {
+                return checkConfigPermission(player);
+            }
+            else if (permissiontype == PermissionType.GO)
+            {
+                return checkGoPermission(player);
+            }
+            else if (permissiontype == PermissionType.COMPASS)
+            {
+                return checkCompassPermission(player);
             }
             else if (permissiontype == PermissionType.USE)
             {
@@ -102,11 +183,13 @@ public class WXPermissions {
         }
         else
         {
-            if (permissiontype == PermissionType.DAMAGE)
+            if (permissiontype == PermissionType.DAMAGE || permissiontype == PermissionType.REMOVE || permissiontype == PermissionType.CONFIG ||
+                permissiontype == PermissionType.GO )
             {
                 return checkFullPermissionBuiltIn(player,stargate);
             }
-            else if (permissiontype == PermissionType.SIGN || permissiontype == PermissionType.DIALER || permissiontype == PermissionType.USE )
+            else if (permissiontype == PermissionType.SIGN || permissiontype == PermissionType.DIALER || permissiontype == PermissionType.USE || 
+                permissiontype == PermissionType.LIST || permissiontype == PermissionType.COMPASS )
             {
                 return checkAnyPermissionBuiltIn(player,stargate);
             }
@@ -127,19 +210,19 @@ public class WXPermissions {
      */
     private static boolean checkRemovePermission(Player player, Stargate stargate)
     {
-        if (!ConfigManager.getSimplePermissions() && (WormholeXTreme.permissions.has(player, "wormhole.remove.all") ||
-            (stargate.Owner != null && stargate.Owner.equals(player.getName()) && WormholeXTreme.permissions.has(player, "wormhole.remove.own") )))
+        if (stargate != null)
         {
-            return true;
+            if (!ConfigManager.getSimplePermissions() && (WormholeXTreme.permissions.has(player, "wormhole.remove.all") ||
+                (stargate.Owner != null && stargate.Owner.equals(player.getName()) && WormholeXTreme.permissions.has(player, "wormhole.remove.own") )))
+            {
+                return true;
+            }
+            else if (ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.simple.remove"))
+            {
+                return true;
+            }
         }
-        else if (ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.simple.remove"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return false;
     }
 
     /**
@@ -151,28 +234,28 @@ public class WXPermissions {
      */
     private static boolean checkSignPermission(Player player, Stargate stargate)
     {
-        String gatenet;
-        if (stargate.Network != null )
+        if (stargate != null)
         {
-            gatenet = stargate.Network.netName;
-        }
-        else
-        {
-            gatenet = "Public";
-        }
-        if ( ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.simple.use"))
-        {
-            return true;
-        }
-        else if ( !ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.use.sign") && (gatenet.equals("Public") ||
+            String gatenet;
+            if (stargate.Network != null )
+            {
+                gatenet = stargate.Network.netName;
+            }
+            else
+            {
+                gatenet = "Public";
+            }
+            if ( ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.simple.use"))
+            {
+                return true;
+            }
+            else if ( !ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.use.sign") && (gatenet.equals("Public") ||
                 (!gatenet.equals("Public") && WormholeXTreme.permissions.has(player, "wormhole.network.use." + gatenet))))
-        {
-            return true;
+            {
+                return true;
+            }
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }
     
     /**
@@ -184,21 +267,88 @@ public class WXPermissions {
      */
     private static boolean checkDialerPermission(Player player, Stargate stargate)
     {
-        String gatenet;
-        if (stargate.Network != null )
+        if (stargate != null)
         {
-            gatenet = stargate.Network.netName;
-        }
-        else
-        {
-            gatenet = "Public";
-        }
-        if ( ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.simple.use"))
-        {
-            return true;
-        }
-        else if ( !ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.use.dialer") && (gatenet.equals("Public") ||
+            String gatenet;
+            if (stargate.Network != null )
+            {
+                gatenet = stargate.Network.netName;
+            }
+            else
+            {
+                gatenet = "Public";
+            }
+            if ( ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.simple.use"))
+            {
+                return true;
+            }
+            else if ( !ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.use.dialer") && (gatenet.equals("Public") ||
                 (!gatenet.equals("Public") && WormholeXTreme.permissions.has(player, "wormhole.network.use." + gatenet))))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Check build permission.
+     *
+     * @param player the player
+     * @param stargate the stargate
+     * @param network the network
+     * @return true, if successful
+     */
+    private static boolean checkBuildPermission(Player player, Stargate stargate, String network)
+    {
+        if (stargate != null || network != null)
+        {
+            String gatenet;
+            if (stargate != null)
+            {
+                if (stargate.Network != null )
+                {
+                    gatenet = stargate.Network.netName;
+                }
+                else
+                {
+                    gatenet = "Public";
+                }
+            }
+            else
+            {
+                if (network != null)
+                {
+                    gatenet = network;
+                }
+                else
+                {
+                    gatenet = "Public";
+                }
+            }
+            if ( !ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.build") && (gatenet.equals("Public") ||
+                (!gatenet.equals("Public") && WormholeXTreme.permissions.has(player, "wormhole.network.build." + gatenet))))
+            {
+                return true;
+            }
+            else if ( ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.simple.build"))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Check config permission.
+     *
+     * @param player the player
+     * @return true, if successful
+     */
+    private static boolean checkConfigPermission(Player player)
+    {
+        if ((ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.simple.config")) ||
+            (!ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.config")))
         {
             return true;
         }
@@ -209,30 +359,18 @@ public class WXPermissions {
     }
     
     /**
-     * Check build permission.
+     * Check list permission.
      *
      * @param player the player
-     * @param stargate the stargate
      * @return true, if successful
      */
-    private static boolean checkBuildPermission(Player player, Stargate stargate)
+    private static boolean checkListPermission(Player player)
     {
-    
-        String gatenet;
-        if (stargate.Network != null )
-        {
-            gatenet = stargate.Network.netName;
-        }
-        else
-        {
-            gatenet = "Public";
-        }
-        if ( !ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.build") && (gatenet.equals("Public") ||
-            (!gatenet.equals("Public") && WormholeXTreme.permissions.has(player, "wormhole.network.build." + gatenet))))
+        if (ConfigManager.getSimplePermissions() && (WormholeXTreme.permissions.has(player, "wormhole.simple.config") || WormholeXTreme.permissions.has(player, "wormhole.simple.use"))) 
         {
             return true;
         }
-        else if ( ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.simple.build"))
+        else if (!ConfigManager.getSimplePermissions() && (WormholeXTreme.permissions.has(player, "wormhole.config")) || (WormholeXTreme.permissions.has(player, "wormhole.list")))
         {
             return true;
         }
@@ -242,6 +380,42 @@ public class WXPermissions {
         }
     }
     
+    /**
+     * Check compass permission.
+     *
+     * @param player the player
+     * @return true, if successful
+     */
+    private static boolean checkCompassPermission(Player player)
+    {
+        if ((ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.use")) ||
+            (!ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.use.compass")))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    /**
+     * Check go permission.
+     *
+     * @param player the player
+     * @return true, if successful
+     */
+    private static boolean checkGoPermission(Player player)
+    {
+        if ((!ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.go")) || 
+            (ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.config")))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     /**
      * Check full permission built in.
      *
@@ -251,14 +425,14 @@ public class WXPermissions {
      */
     private static boolean checkFullPermissionBuiltIn(Player player, Stargate stargate)
     {
-        if (PermissionsManager.getPermissionLevel(player, stargate) == PermissionLevel.WORMHOLE_FULL_PERMISSION)
+        if (stargate != null)
         {
-            return true;
+            if (PermissionsManager.getPermissionLevel(player, stargate) == PermissionLevel.WORMHOLE_FULL_PERMISSION)
+            {
+                return true;
+            }
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }
     
     /**
@@ -270,15 +444,15 @@ public class WXPermissions {
      */
     private static boolean checkBuildPermissionBuiltIn(Player player, Stargate stargate)
     {
-        PermissionLevel lvl = PermissionsManager.getPermissionLevel(player, stargate);
-        if ( ( lvl == PermissionLevel.WORMHOLE_CREATE_PERMISSION || lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION ) )
+        if (stargate != null)
         {
-            return true;
+            PermissionLevel lvl = PermissionsManager.getPermissionLevel(player, stargate);
+            if ( ( lvl == PermissionLevel.WORMHOLE_CREATE_PERMISSION || lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION ) )
+            {
+                return true;
+            }
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }   
     
     /**
@@ -290,15 +464,15 @@ public class WXPermissions {
      */
     private static boolean checkAnyPermissionBuiltIn(Player player, Stargate stargate)
     {
-        PermissionLevel lvl = PermissionsManager.getPermissionLevel(player, stargate);
-        if ( ( lvl == PermissionLevel.WORMHOLE_CREATE_PERMISSION || lvl == PermissionLevel.WORMHOLE_USE_PERMISSION || lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION ) )
+        if (stargate != null)
         {
-            return true;
+            PermissionLevel lvl = PermissionsManager.getPermissionLevel(player, stargate);
+            if ( ( lvl == PermissionLevel.WORMHOLE_CREATE_PERMISSION || lvl == PermissionLevel.WORMHOLE_USE_PERMISSION || lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION ) )
+            {
+                return true;
+            }
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }
     
 

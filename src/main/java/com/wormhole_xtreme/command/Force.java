@@ -30,6 +30,8 @@ import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
+import com.wormhole_xtreme.permissions.WXPermissions;
+import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
 import com.wormhole_xtreme.WormholeXTreme;
 
 // TODO: Auto-generated Javadoc
@@ -61,11 +63,7 @@ public class Force implements CommandExecutor {
             if (CommandUtlities.playerCheck(sender))
             {
                 player = (Player) sender;
-                if (player.isOp() || (WormholeXTreme.permissions != null && ((ConfigManager.getSimplePermissions() && (WormholeXTreme.permissions.has(player,"wormhole.config") || WormholeXTreme.permissions.has(player, "wormhole.remove"))) || 
-                    (!ConfigManager.getSimplePermissions() && (WormholeXTreme.permissions.has(player, "wormhole.config") || WormholeXTreme.permissions.has(player, "wormhole.remove.all"))))))
-                {
-                    allowed = true;
-                }
+                allowed = WXPermissions.checkWXPermissions(player, PermissionType.CONFIG);
             }
             else 
             {

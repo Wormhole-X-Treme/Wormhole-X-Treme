@@ -28,6 +28,8 @@ import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
+import com.wormhole_xtreme.permissions.WXPermissions;
+import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
 
 /**
  * @author alron
@@ -57,13 +59,7 @@ public class WXGo implements CommandExecutor {
         {
             player = (Player)sender;
         }
-        boolean allowed = false;
-        if ( player.isOp() || ( WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.go"))
-            || (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.config")))
-        {
-            allowed = true;
-        }
-        if (allowed)
+        if (WXPermissions.checkWXPermissions(player, PermissionType.GO))
         {
             args = CommandUtlities.commandEscaper(args);
             if ( args.length == 1)
@@ -72,15 +68,7 @@ public class WXGo implements CommandExecutor {
                 Stargate s = StargateManager.GetStargate(gogate);
                 if ( s != null)
                 {
-//                    if (player.getWorld() != s.TeleportLocation.getWorld())
-//                    {
-//                        player.teleportTo(s.TeleportLocation.getWorld().getSpawnLocation());
-                        player.teleport(s.TeleportLocation);
-//                    }
-//                    else
-//                    {
-//                        player.teleportTo(s.TeleportLocation);
-//                    }
+                    player.teleport(s.TeleportLocation);
                 }
                 else
                 {

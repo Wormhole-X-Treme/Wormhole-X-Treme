@@ -32,6 +32,8 @@ import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
 import com.wormhole_xtreme.permissions.PermissionsManager;
+import com.wormhole_xtreme.permissions.WXPermissions;
+import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
 import com.wormhole_xtreme.plugin.HelpSupport;
 
 // TODO: Auto-generated Javadoc
@@ -59,31 +61,12 @@ public class Wormhole implements CommandExecutor
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
     {
-
-        boolean allowed = false;
+        Player player = null;
         if (CommandUtlities.playerCheck(sender))
         {
-            Player player = (Player)sender;
-            if (player.isOp())
-            {
-                allowed = true;
-            }
-            else if (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
-            {
-                if (WormholeXTreme.permissions.has(player, "wormhole.simple.config"))
-                {
-                    allowed = true;
-                }
-            }
-            else if (WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
-            {
-                if (WormholeXTreme.permissions.has(player, "wormhole.config"))
-                {
-                    allowed = true;
-                }
-            }
+            player = (Player)sender;
         }
-        if (allowed || !CommandUtlities.playerCheck(sender))
+        if ((player != null && WXPermissions.checkWXPermissions(player, PermissionType.CONFIG)) || !CommandUtlities.playerCheck(sender))
         {
             args = CommandUtlities.commandEscaper(args);
             if ((args.length > 4 ) || (args.length == 0)) 

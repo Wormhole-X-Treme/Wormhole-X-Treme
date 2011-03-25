@@ -28,7 +28,8 @@ import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
-import com.wormhole_xtreme.permissions.PermissionsManager;
+import com.wormhole_xtreme.permissions.WXPermissions;
+import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -60,37 +61,15 @@ public class WXRemove implements CommandExecutor {
                 return false;
             }
             Stargate s = StargateManager.GetStargate(args[0]);
-
+            
             if ( s != null )
             {
-                boolean allowed = false;
+                Player player = null;
                 if (CommandUtlities.playerCheck(sender))
                 {
-                    Player p = (Player) sender;
-                    if  (WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
-                    {
-                        if (WormholeXTreme.permissions.has(p, "wormhole.remove.all") || ( s.Owner != null && s.Owner.equals(p.getName()) && WormholeXTreme.permissions.has(p, "wormhole.remove.own")))
-                        {
-                            allowed = true;
-                        }   
-                    }
-                    else if (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
-                    {
-                        if (WormholeXTreme.permissions.has(p, "wormhole.simple.remove"))
-                        {
-                            allowed = true;
-                        }
-                    }
-                    else if (PermissionsManager.getPermissionLevel(p, s) == PermissionsManager.PermissionLevel.WORMHOLE_FULL_PERMISSION )
-                    {
-                        allowed = true;
-                    }
-                    if (p.isOp())
-                    {
-                        allowed = true;
-                    }
+                    player = (Player) sender;
                 }
-                if ( !CommandUtlities.playerCheck(sender) || allowed )
+                if ( !CommandUtlities.playerCheck(sender) || (player != null && WXPermissions.checkWXPermissions(player, s, PermissionType.REMOVE)))
                 {
                     s.DeleteNameSign();
                     s.ResetTeleportSign();

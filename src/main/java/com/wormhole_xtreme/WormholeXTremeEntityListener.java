@@ -62,7 +62,7 @@ public class WormholeXTremeEntityListener extends EntityListener
 	 * @see org.bukkit.event.entity.EntityListener#onEntityDamage(org.bukkit.event.entity.EntityDamageEvent)
 	 */
 	@Override
-        public void onEntityDamage(EntityDamageEvent event)
+	public void onEntityDamage(EntityDamageEvent event)
 	{
 		if (!event.isCancelled() && (event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK) || event.getCause().equals(DamageCause.LAVA)))
 		{

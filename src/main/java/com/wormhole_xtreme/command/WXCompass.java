@@ -27,6 +27,8 @@ import com.wormhole_xtreme.WormholeXTreme;
 import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
+import com.wormhole_xtreme.permissions.WXPermissions;
+import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
 
 /**
  * @author alron
@@ -58,22 +60,7 @@ public class WXCompass implements CommandExecutor {
         {
             return true;
         }
-        boolean allowed = false;
-        if (WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
-        {
-            if (WormholeXTreme.permissions.has(p, "wormhole.use.compass"))
-            {
-                allowed = true;
-            }
-        }
-        else if (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
-        {
-            if (WormholeXTreme.permissions.has(p, "wormhole.use"))
-            {
-                allowed = true;
-            }
-        }
-        if (p.isOp() || allowed )
+        if (WXPermissions.checkWXPermissions(p, PermissionType.COMPASS))
         {
             Stargate closest = Stargate.FindClosestStargate(p.getLocation());
             if(closest != null)

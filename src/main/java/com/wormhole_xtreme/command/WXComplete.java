@@ -28,6 +28,8 @@ import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
+import com.wormhole_xtreme.permissions.WXPermissions;
+import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -86,22 +88,7 @@ public class WXComplete implements CommandExecutor
                         network = key_value_string[1];
                     }
                 }
-                boolean allowed = false;
-                if (WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
-                {
-                    if (WormholeXTreme.permissions.has(p, "wormhole.build") && ((network.equals("") || network.equals("Public") ) || (!network.equals("") && !network.equals("Public") && WormholeXTreme.permissions.has(p, "wormhole.network.build." + network))))
-                    {
-                        allowed = true;
-                    }
-                }
-                else if (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
-                {
-                    if (WormholeXTreme.permissions.has(p, "wormhole.simple.build"))
-                    {
-                        allowed = true;
-                    }
-                }
-                if (p.isOp() || allowed )
+                if (WXPermissions.checkWXPermissions(p, network, PermissionType.BUILD))
                 {
                     if ( dup_name == null )
                     {

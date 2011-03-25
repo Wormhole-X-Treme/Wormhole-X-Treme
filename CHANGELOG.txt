@@ -20,6 +20,10 @@ Changes 0.820:
   
 - All Permissions deny events now log at Level.FINE. Got permissions problems with WXT?
   Now see what is happening.
+  
+- Optimized fire protection. Now we use timer events that go off 2 seconds after gates 
+  close. This way we don't have to listen for fire type events 24/7. :)
+  
 
 Changes 0.812 (3/23/11 @ 15:17 PST):
 

@@ -87,6 +87,9 @@ public class Stargate
 	// Is this stargate already active? Can be active remotely and have no target of its own.
 	/** The Active. */
 	public boolean Active = false;
+	
+	/** The Recent active. */
+	public boolean RecentActive = false;
 	// Is this stargate already lit up? 
 	/** The Lit gate. */
 	public boolean LitGate = false;
@@ -148,6 +151,9 @@ public class Stargate
 	
 	/** The Shutdown task id. */
 	private int ShutdownTaskId;
+	
+	/** The After shutdown task id. */
+	private int AfterShutdownTaskId;
 	
 	/**
 	 * Instantiates a new stargate.
@@ -360,6 +366,15 @@ public class Stargate
 	public void DeActivateStargate()
 	{
 		this.Active = false;
+		this.RecentActive = true;
+	}
+	
+	/**
+	 * De recent activate stargate.
+	 */
+	public void DeRecentActivateStargate()
+	{
+	    this.RecentActive = false;
 	}
 	
 	/**
@@ -439,6 +454,25 @@ public class Stargate
 		}
 	}
 	
+	/**
+	 * After shutdown of stargate, spawn off task to set RecentActive = false;
+	 * This way we can depend on RecentActive for gate fire/lava protection.
+	 */
+	public void AfterShutdown()
+	{
+	    if (this.AfterShutdownTaskId >= 0)
+	    {
+	        WormholeXTreme.scheduler.cancelTask(this.AfterShutdownTaskId);
+	    }
+	    int timeout = 40;
+	    this.AfterShutdownTaskId = WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this,ActionToTake.AFTERSHUTDOWN), timeout);
+	    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" AfterShutdownTaskID \"" + this.AfterShutdownTaskId + "\" created." );
+	    if (this.AfterShutdownTaskId == -1)
+	    {
+	        WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Failed to schdule wormhole after shutdown, received task id of -1.");
+	        this.DeRecentActivateStargate();
+	    }
+	}
 	/**
 	 * This method takes in a remote stargate and dials it if it is not active.
 	 *
@@ -546,6 +580,21 @@ public class Stargate
 		{
 		    this.FillGateInterior(Material.AIR);
 		}
+		this.AfterShutdown();
+	}
+	
+	/**
+	 * After shutdown stargate.
+	 */
+	public void AfterShutdownStargate()
+	{
+	    if (this.AfterShutdownTaskId >= 0)
+	    {
+	        WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" AfterShutdownTaskID \"" + this.AfterShutdownTaskId + "\" cancelled.");
+	        WormholeXTreme.scheduler.cancelTask(this.AfterShutdownTaskId);
+	        this.AfterShutdownTaskId = -1;
+	    }
+	    this.DeRecentActivateStargate();
 	}
 	
 	/**
@@ -1004,11 +1053,11 @@ public class Stargate
 	
 	/**
 	 * Gets the square of the distance between self and target
-	 * which saves the costly call to {@link Math#sqrt(double)}
-         *
-         * @param self Location of the local object.
-         * @param target Location of the target object.
-         * @return square of distance to target object from local object.
+	 * which saves the costly call to {@link Math#sqrt(double)}.
+	 *
+	 * @param self Location of the local object.
+	 * @param target Location of the target object.
+	 * @return square of distance to target object from local object.
 	 */
 	public static double getSquaredDistance(Location self, Location target)
 	{

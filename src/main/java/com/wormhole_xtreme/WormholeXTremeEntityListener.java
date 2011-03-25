@@ -76,14 +76,7 @@ public class WormholeXTremeEntityListener extends EntityListener
 				    if(closest != null)
 				    {
 				        double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
-				        if (closest.Active && ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 16 ))
-				        {
-				            WormholeXTreme.thisPlugin.prettyLog(Level.FINE,false,"Blocked Gate: \""+ closest.Name + "\" Proximity Event: \"" + event.getCause().toString() +
-				                    "\" On: \"" + p.getName() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
-				            event.setCancelled(true);
-				            p.setFireTicks(0);
-				        }
-				        else if (!closest.Active && blockDistanceSquared <= 4)
+				        if ((closest.Active || closest.RecentActive) && ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 16 ))
 				        {
 				            WormholeXTreme.thisPlugin.prettyLog(Level.FINE,false,"Blocked Gate: \""+ closest.Name + "\" Proximity Event: \"" + event.getCause().toString() +
 				                    "\" On: \"" + p.getName() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");

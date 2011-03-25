@@ -75,7 +75,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 	        {
 	            Location current = event.getBlock().getLocation();
 	            Stargate closest = Stargate.FindClosestStargate(current);
-	            if ( closest != null && closest.Active)
+	            if ( closest != null && (closest.Active || closest.RecentActive))
 	            {
 	                double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
 	                if ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 25 ) 
@@ -100,7 +100,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 	        {
 	            Location current = event.getBlock().getLocation();
 	            Stargate closest = Stargate.FindClosestStargate(current);
-	            if ( closest != null && closest.Active)
+	            if ( closest != null && (closest.Active || closest.RecentActive))
 	            {
 	                double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
 	                if ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 25 ) 

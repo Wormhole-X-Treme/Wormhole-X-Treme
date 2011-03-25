@@ -37,6 +37,8 @@ import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
+import com.wormhole_xtreme.permissions.WXPermissions;
+import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
 
 
 // TODO: Auto-generated Javadoc
@@ -100,25 +102,12 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 					{
 						Player p = (Player)e;
 						WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Minecart Player in gate:" + st.Name + " gate Active: " + st.Active + " Target Gate: " + st.Target.Name + " Network: " + gatenetwork );
-				        if ( WormholeXTreme.permissions != null)
-				        {
-				            // If use permission is also teleport permission we should check here:
-				            if (ConfigManager.getWormholeUseIsTeleport() && !ConfigManager.getSimplePermissions() && 
-				                ((st.IsSignPowered && !WormholeXTreme.permissions.has(p, "wormhole.use.sign")) || 
-				                (!st.IsSignPowered && !WormholeXTreme.permissions.has(p, "wormhole.use.dialer")) || 
-				                (!gatenetwork.equals("Public") && !WormholeXTreme.permissions.has(p, "wormhole.network.use." + gatenetwork))))
-				            {
-				                // This means that the user doesn't have permission to use.
-				                p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
-				                return;
-				            }
-				            else if (ConfigManager.getWormholeUseIsTeleport() && ConfigManager.getSimplePermissions() &&
-				                ((st.IsSignPowered && !WormholeXTreme.permissions.has(p, "wormhole.simple.use"))))
-				            {
-				                p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
-				                return;
-				            }
-				        }
+			            if (ConfigManager.getWormholeUseIsTeleport() && ((st.IsSignPowered && !WXPermissions.checkWXPermissions(p, st, PermissionType.SIGN)) ||
+			                (!st.IsSignPowered && !WXPermissions.checkWXPermissions(p, st, PermissionType.DIALER))))
+			            {
+			                p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+			                return;
+			            }
 			            if ( st.Target.IrisActive )
 			            {
 			                p.sendMessage(ConfigManager.errorheader + "Remote Iris is locked!");
@@ -129,46 +118,41 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 			                }
 			                return;
 			            }
-			           if ( WormholeXTreme.iconomy != null )
+			            if ( WormholeXTreme.iconomy != null )
 			            {
-			                boolean exempt = ConfigManager.getIconomyOpsExcempt();
-			                if ( !exempt || !p.isOp() )
+			                double cost = ConfigManager.getIconomyWormholeUseCost();
+			                if (!ConfigManager.getIconomyOpsExcempt() && !p.isOp() && cost != 0.0 && st.Owner != null && st.Owner != p.getName() ) 
 			                {
-			                    double cost = ConfigManager.getIconomyWormholeUseCost();
-			                    if (cost != 0.0) 
+			                    Account player_account = iConomy.getBank().getAccount(p.getName());
+			                    double balance = player_account.getBalance();
+			                    String currency = iConomy.getBank().getCurrency();
+			                    if ( balance >= cost )
 			                    {
-			                        Account player_account = iConomy.getBank().getAccount(p.getName());
-			                        double balance = player_account.getBalance();
-			                        String currency = iConomy.getBank().getCurrency();
-			                        if ( balance >= cost )
+			                        player_account.subtract(cost);
+			                        //  player_account.save();
+			                        p.sendMessage(ConfigManager.normalheader + "Wormhole Use \u00A7F- \u00A72" + cost + " \u00A77" + currency );
+			                        //p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
+			                        double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
+
+			                        if ( owner_percent != 0.0 && st.Owner != null )
 			                        {
-			                            player_account.subtract(cost);
-			                            //  player_account.save();
-			                            p.sendMessage("\u00A73:: \u00A77Wormhole Use \u00A7F- \u00A72" + cost + " \u00A77" + currency );
-			                            //p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
-			                            double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
-			                        
-			                            if ( owner_percent != 0.0 && st.Owner != null )
+			                            if ( st.Owner != null && iConomy.getBank().hasAccount(st.Owner))
 			                            {
-			                                if ( st.Owner != null && iConomy.getBank().hasAccount(st.Owner))
-			                                {
-			                                    Account own_acc = iConomy.getBank().getAccount(st.Owner);
-			                                    own_acc.add(cost * owner_percent);
-			                                    // own_acc.save();
-			                                }
+			                                Account own_acc = iConomy.getBank().getAccount(st.Owner);
+			                                own_acc.add(cost * owner_percent);
+			                                // own_acc.save();
 			                            }
 			                        }
-			                        else
-			                        {
-			                            p.sendMessage("\u00A73:: \u00A77Not enough " + currency  + "! - Requires: \u00A72" + cost + " \u00A77- Available: \u00A74" + player_account.getBalance() + " \u00A77" + currency);
-			                            //p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
-			                            target = st.TeleportLocation;
-			                        }
+			                    }
+			                    else
+			                    {
+			                        p.sendMessage(ConfigManager.errorheader + "Not enough " + currency  + "! - Requires: \u00A72" + cost + " \u00A77- Available: \u00A74" + player_account.getBalance() + " \u00A77" + currency);
+			                        //p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
+			                        target = st.TeleportLocation;
 			                    }
 			                }
 			            }			            
 					}
-
 				}
 				
 				double speed = v.length();
@@ -203,10 +187,10 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 				                WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Unable to set \"" + ((Player) e).getName() + "\" as passenger of minecart");
 				            }
 				        }
-				        else if (e == null)
+				        else
 				        {
-				            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Not same world, empty minecarts not allowed.");
-				            veh.teleport(st.TeleportLocation);
+				            // WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Not same world, empty minecarts not allowed.");
+				            veh.teleport(target);
 				        }
 				    }
 				    else 

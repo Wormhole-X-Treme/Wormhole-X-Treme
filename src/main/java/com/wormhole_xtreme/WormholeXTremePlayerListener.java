@@ -134,7 +134,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	        wxt.prettyLog(Level.FINE, false, "Player in gate:" + st.Name + " gate Active: " + st.Active + " Target Gate: " + st.Target.Name + " Network: " + gatenetwork );
 
 	        if (ConfigManager.getWormholeUseIsTeleport() && ((st.IsSignPowered && !WXPermissions.checkWXPermissions(p, st, PermissionType.SIGN)) ||
-	            (!st.IsSignPowered && !WXPermissions.checkWXPermissions(p, st, PermissionType.USE))))
+	            (!st.IsSignPowered && !WXPermissions.checkWXPermissions(p, st, PermissionType.DIALER))))
 	        {
 	            p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
 	            return;

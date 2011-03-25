@@ -70,16 +70,17 @@ public class StargateShape
 	public int[] to_gate_corner = {1,-1, 4};
 	
 	/** The woosh_depth. */
-	public int woosh_depth = 3;
+	public final int woosh_depth;
 	/** The square of the woosh_depth, used in comparisions with squared distance */
-	public int woosh_depth_squared = 9;
+	public final int woosh_depth_squared;
 	
 	/**
 	 * Instantiates a new stargate shape.
 	 */
 	public StargateShape()
 	{
-		
+		woosh_depth = 3;
+		woosh_depth_squared = 9;
 	}
 	
 	/**
@@ -97,150 +98,145 @@ public class StargateShape
 		ArrayList<Integer> light_positions = new ArrayList<Integer>();
 		
 		int num_blocks = 0;
+		int cur_woosh_depth = 3;
 		
-		try
+		// 1. scan all lines for lines beginning with [  - that is the height of the gate
+		int height = 0;
+		int width = 0;
+		for ( int i = 0; i < file_data.length; i++ )
 		{
-			// 1. scan all lines for lines beginning with [  - that is the height of the gate
-			int height = 0;
-			int width = 0;
-			for ( int i = 0; i < file_data.length; i++ )
+			String line = file_data[i];
+			
+			if ( line.contains("Name=") )
 			{
-				String line = file_data[i];
-				
-				if ( line.contains("Name=") )
+				this.shapeName = line.split("=")[1];
+				WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Begin parsing shape: \"" + (String)this.shapeName + "\"");
+			}
+			else if ( line.equals("GateShape=") )
+			{
+				int index = i + 1;
+				while ( file_data[index].startsWith("[") )
 				{
-					this.shapeName = line.split("=")[1];
-					WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Begin parsing shape: \"" + (String)this.shapeName + "\"");
-				}
-				else if ( line.equals("GateShape=") )
-				{
-					int index = i + 1;
-					while ( file_data[index].startsWith("[") )
+					if ( width <= 0 )
 					{
-						if ( width <= 0 )
-						{
-							Pattern p = Pattern.compile("(\\[.*?\\])");
-							Matcher m = p.matcher(file_data[index]);
-							while ( m.find() )
-								width++;
-						}
-						
-						height++; index++;
-					}
-					
-					// At this point we should know the height and width
-					if ( height <= 0 || width <= 0)
-					{
-					    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE, false, "Unable to parse custom gate due to incorrect height or width: \"" + (String)this.shapeName + "\"");
-						return;
-					}
-					else 
-					{
-					    WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG,false,"Shape: \"" + (String)this.shapeName + "\"" + " Height: \"" + Integer.toString((int)height) + "\"" + " Width: \"" + Integer.toString((int)width) + "\"" );
-					}
-					
-					// Now parse each [X] and put into int array.
-					index = i + 1;
-					while ( file_data[index].startsWith("[") )
-					{
-						
 						Pattern p = Pattern.compile("(\\[.*?\\])");
 						Matcher m = p.matcher(file_data[index]);
-						int j = 0;
 						while ( m.find() )
-						{
-							String block = m.group(0);
-							Integer[] point = { 0, (height - 1 - (index-i-1)), (width - 1 - j) };
-							if ( block.contains("O") )
-							{
-								num_blocks++;
-								block_positions.add(point);
-							}
-							else if ( block.contains("P") )
-							{
-								portal_positions.add(point);
-							}
-							
-							
-							if ( block.contains("S") || block.contains("E") )
-							{
-								int[] point_i = new int[3];
-								for (int k = 0; k < 3; k++ )
-									point_i[k] = point[k];
-								
-								if ( block.contains("S") )
-								{
-									sign_position = point_i;
-								}
-								if ( block.contains("E") )
-								{
-									enter_position = point_i;
-								}
-							}
-							
-							if ( block.contains("L") && block.contains("O") )
-							{
-								light_positions.add( num_blocks - 1);
-							}
-							
-							j++;
-						}
-						index++;
+							width++;
 					}
+						
+					height++; index++;
 				}
-				else if ( line.contains("BUTTON_UP") )
+					
+				// At this point we should know the height and width
+				if ( height <= 0 || width <= 0)
 				{
-					to_gate_corner[1] = Integer.parseInt(line.split("=")[1]);
+				    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE, false, "Unable to parse custom gate due to incorrect height or width: \"" + (String)this.shapeName + "\"");
+					throw new IllegalArgumentException("Unable to parse custom gate due to incorrect height or width: \"" + (String)this.shapeName + "\"");
 				}
-				else if ( line.contains("BUTTON_RIGHT") )
+				else 
 				{
-					to_gate_corner[0] = Integer.parseInt(line.split("=")[1]);
+				    WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG,false,"Shape: \"" + (String)this.shapeName + "\"" + " Height: \"" + Integer.toString((int)height) + "\"" + " Width: \"" + Integer.toString((int)width) + "\"" );
 				}
-				else if ( line.contains("BUTTON_AWAY") )
+					
+				// Now parse each [X] and put into int array.
+				index = i + 1;
+				while ( file_data[index].startsWith("[") )
 				{
-					to_gate_corner[2] = Integer.parseInt(line.split("=")[1]);
-				}
-				else if ( line.contains("WOOSH_DEPTH") )
-				{
-					woosh_depth = Integer.parseInt(line.split("=")[1]);
+						
+					Pattern p = Pattern.compile("(\\[.*?\\])");
+					Matcher m = p.matcher(file_data[index]);
+					int j = 0;
+					while ( m.find() )
+					{
+						String block = m.group(0);
+						Integer[] point = { 0, (height - 1 - (index-i-1)), (width - 1 - j) };
+						if ( block.contains("O") )
+						{
+							num_blocks++;
+							block_positions.add(point);
+						}
+						else if ( block.contains("P") )
+						{
+							portal_positions.add(point);
+						}
+						
+							
+						if ( block.contains("S") || block.contains("E") )
+						{
+							int[] point_i = new int[3];
+							for (int k = 0; k < 3; k++ )
+								point_i[k] = point[k];
+							
+							if ( block.contains("S") )
+							{
+								sign_position = point_i;
+							}
+							if ( block.contains("E") )
+							{
+								enter_position = point_i;
+							}
+						}
+							
+						if ( block.contains("L") && block.contains("O") )
+						{
+							light_positions.add( num_blocks - 1);
+						}
+							
+						j++;
+					}
+					index++;
 				}
 			}
-			WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Stargate Sign Position: \"" + Arrays.toString(sign_position) + "\"");
-			WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Stargate Enter Position: \"" + Arrays.toString(enter_position) + "\"");
-			WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Stargate Button Position [Left/Right,Up/Down,Forward/Back]: \"" + Arrays.toString((int[])to_gate_corner) + "\"");
-			this.water_positions = new int[portal_positions.size()][3];
-			for ( int i = 0; i < portal_positions.size(); i++)
+			else if ( line.contains("BUTTON_UP") )
 			{
-				int[] point = new int[3];
-				for (int j = 0; j < 3; j++ )
-					point[j] = portal_positions.get(i)[j];
-				this.water_positions[i] = point;
+				to_gate_corner[1] = Integer.parseInt(line.split("=")[1]);
 			}
-			WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Stargate Portal Positions: \"" + Arrays.deepToString((int[][])this.water_positions) + "\"");
-			
-			this.light_positions = new int[light_positions.size()];
-			for ( int i = 0; i < light_positions.size(); i++)
+			else if ( line.contains("BUTTON_RIGHT") )
 			{
-				this.light_positions[i] = light_positions.get(i);
+				to_gate_corner[0] = Integer.parseInt(line.split("=")[1]);
 			}
-			WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Light Material Positions: \"" + light_positions + "\"");
-			
-			this.stargate_positions = new int[block_positions.size()][3];
-			for ( int i = 0; i < block_positions.size(); i++)
+			else if ( line.contains("BUTTON_AWAY") )
 			{
-				int[] point = new int[3];
-				for (int j = 0; j < 3; j++ )
-					point[j] = block_positions.get(i)[j];
-				this.stargate_positions[i] = point;
+				to_gate_corner[2] = Integer.parseInt(line.split("=")[1]);
 			}
-			WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Stargate Material Positions: \"" + Arrays.deepToString((int[][])this.stargate_positions) + "\"");
-			WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Finished parsing shape: \"" + (String)this.shapeName + "\"");
+			else if ( line.contains("WOOSH_DEPTH") )
+			{
+				cur_woosh_depth = Integer.parseInt(line.split("=")[1]);
+			}
 		}
-		catch ( Exception e )
+		WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Stargate Sign Position: \"" + Arrays.toString(sign_position) + "\"");
+		WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Stargate Enter Position: \"" + Arrays.toString(enter_position) + "\"");
+		WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Stargate Button Position [Left/Right,Up/Down,Forward/Back]: \"" + Arrays.toString((int[])to_gate_corner) + "\"");
+		this.water_positions = new int[portal_positions.size()][3];
+		for ( int i = 0; i < portal_positions.size(); i++)
 		{
-		    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE, false, "Unable to parse custom gate: \"" + (String)this.shapeName + "\"");
-			e.printStackTrace();
-			return;			
+			int[] point = new int[3];
+			for (int j = 0; j < 3; j++ )
+				point[j] = portal_positions.get(i)[j];
+			this.water_positions[i] = point;
 		}
+		WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Stargate Portal Positions: \"" + Arrays.deepToString((int[][])this.water_positions) + "\"");
+		
+		this.light_positions = new int[light_positions.size()];
+		for ( int i = 0; i < light_positions.size(); i++)
+		{
+			this.light_positions[i] = light_positions.get(i);
+		}
+		WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Light Material Positions: \"" + light_positions + "\"");
+			
+		this.stargate_positions = new int[block_positions.size()][3];
+		for ( int i = 0; i < block_positions.size(); i++)
+		{
+			int[] point = new int[3];
+			for (int j = 0; j < 3; j++ )
+				point[j] = block_positions.get(i)[j];
+			this.stargate_positions[i] = point;
+		}
+		WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Stargate Material Positions: \"" + Arrays.deepToString((int[][])this.stargate_positions) + "\"");
+		WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Finished parsing shape: \"" + (String)this.shapeName + "\"");
+
+		woosh_depth = cur_woosh_depth;
+		woosh_depth_squared = cur_woosh_depth * cur_woosh_depth;
 	}
 }

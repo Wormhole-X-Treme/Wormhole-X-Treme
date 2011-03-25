@@ -121,7 +121,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 			            if ( WormholeXTreme.iconomy != null )
 			            {
 			                double cost = ConfigManager.getIconomyWormholeUseCost();
-			                if (!ConfigManager.getIconomyOpsExcempt() && !p.isOp() && cost != 0.0 && st.Owner != null && st.Owner != p.getName() ) 
+			                if (!ConfigManager.getIconomyOpsExcempt() && !p.isOp() && cost != 0.0 && st.Owner != null && !st.Owner.equals(p.getName()) ) 
 			                {
 			                    Account player_account = iConomy.getBank().getAccount(p.getName());
 			                    double balance = player_account.getBalance();

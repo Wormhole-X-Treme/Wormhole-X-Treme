@@ -77,10 +77,10 @@ public class WormholeXTremeBlockListener extends BlockListener
 	            Stargate closest = Stargate.FindClosestStargate(current);
 	            if ( closest != null && closest.Active)
 	            {
-	                double blockdistance = Stargate.DistanceToClosestGateBlock(current, closest);
-	                if ((blockdistance <= closest.GateShape.woosh_depth && closest.GateShape.woosh_depth != 0) || blockdistance <= 5 ) 
+	                double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
+	                if ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 25 ) 
 	                {
-	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Proximity Block Ignite: \"" + event.getCause().toString() + "\" Distance: \"" + blockdistance + "\"");
+	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Proximity Block Ignite: \"" + event.getCause().toString() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
 	                    event.setCancelled(true);
 	                }
 	            }
@@ -102,10 +102,10 @@ public class WormholeXTremeBlockListener extends BlockListener
 	            Stargate closest = Stargate.FindClosestStargate(current);
 	            if ( closest != null && closest.Active)
 	            {
-	                double blockdistance = Stargate.DistanceToClosestGateBlock(current, closest);
-	                if ((blockdistance <= closest.GateShape.woosh_depth && closest.GateShape.woosh_depth != 0) || blockdistance <= 5 ) 
+	                double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
+	                if ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 25 ) 
 	                {
-	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Proximity Block Burn Distance: \"" + blockdistance + "\"");
+	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Proximity Block Burn Distance Squared: \"" + blockDistanceSquared + "\"");
 	                    event.setCancelled(true);
 	                }
 	            }

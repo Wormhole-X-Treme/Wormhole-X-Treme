@@ -204,10 +204,10 @@ public class WormholeXTremeBlockListener extends BlockListener
 	                            StargateManager.RemoveActivatedStargate(player);
 	                        }
 	                        stargate.ResetTeleportSign();
-	                        stargate.DeleteNameSign();
+	                        stargate.SetupGateSign(false);
 	                        if (!stargate.IrisDeactivationCode.equals(""))
 	                        {
-	                            stargate.DeleteIrisLever();
+	                            stargate.SetupIrisLever(false);
 	                        }
 	                        StargateManager.RemoveStargate(stargate);
 	                        player.sendMessage("Stargate Destroyed: " + stargate.Name);

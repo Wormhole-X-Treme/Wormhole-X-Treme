@@ -114,7 +114,7 @@ class CommandUtilities {
 	 */
 	static void gateRemove(Stargate stargate, boolean destroy)
 	{
-	    stargate.DeleteNameSign();
+	    stargate.SetupGateSign(false);
         stargate.ResetTeleportSign();
         if (!stargate.IrisDeactivationCode.equals(""))
         {
@@ -122,15 +122,13 @@ class CommandUtilities {
             {
                 stargate.ToggleIrisActive();
             }
-            stargate.DeleteIrisLever();
+            stargate.SetupIrisLever(false);
         }
         if (destroy)
         {
-            stargate.DeleteNameSign();
             stargate.DeleteGateBlocks();
             stargate.DeletePortalBlocks();
-            stargate.DeleteTeleportSignBlock();
-            stargate.DeleteNameBlock(); 
+            stargate.DeleteTeleportSign();
         }
         StargateManager.RemoveStargate(stargate);
 	}

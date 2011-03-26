@@ -18,9 +18,12 @@
  */
 package com.wormhole_xtreme.command;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -399,6 +402,11 @@ public class Wormhole implements CommandExecutor
 	        Stargate stargate = StargateManager.GetStargate(args[1]);
 	        if (stargate != null)
 	        {
+	            // ArrayList<Location> blocklist = stargate.Blocks;
+	            if (stargate.IsSignPowered && stargate.TeleportSignBlock == null)
+	            {
+	                stargate.ResetTeleportSign();
+	            }
 	            sender.sendMessage(ConfigManager.normalheader + "Regenerating Gate: " + stargate.Name );
 	        }
 	        else

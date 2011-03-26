@@ -53,18 +53,18 @@ public class WormholeXTremePlayerListener extends PlayerListener
 { 
 	
 	/** The wxt. */
-	private WormholeXTreme wxt = null;
+	private static WormholeXTreme wxt = null;
 	//private ConcurrentHashMap<String, Integer> PlayerCompassOn = new ConcurrentHashMap<String, Integer>(); 
 	//private final WormholeXTreme plugin;
 	/**
 	 * Instantiates a new wormhole x treme player listener.
 	 *
-	 * @param instance the instance
+	 * @param wormholeXTreme the wormhole x treme
 	 */
-	public WormholeXTremePlayerListener(WormholeXTreme instance) 
+	public WormholeXTremePlayerListener(WormholeXTreme wormholeXTreme) 
 	{ 
 		//plugin = instance; 
-		wxt = instance;
+		wxt = wormholeXTreme;
 	}
  
 	/* (non-Javadoc)
@@ -82,6 +82,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	        {  
 	            event.setCancelled(true);
 	        }
+	        wxt.prettyLog(Level.INFO, false," " + clicked.getData() );
 	    }
 	    else if ( clicked != null && clicked.getType() == Material.WALL_SIGN )
 	    {

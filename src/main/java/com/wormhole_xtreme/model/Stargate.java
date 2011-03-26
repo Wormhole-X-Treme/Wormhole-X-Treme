@@ -635,65 +635,75 @@ public class Stargate
 		// 1. Setup Name Sign
 		if ( this.NameBlockHolder != null )
 		{
-		    this.SetupGateSign();
+		    this.SetupGateSign(true);
 		}
 		// 2. Set up Iris stuff
 		SetIrisDeactivationCode(idc);
 	}
 	
-	/*
-	 * Deal with initial gate sign placement, orientation and text for name, network, and owner.
-	 */
+
 	/**
-	 * Setup gate sign.
-	 */
-	public void SetupGateSign()
-	{
-	      
-	        Block name_sign = this.NameBlockHolder.getFace(Facing);
-			name_sign.setType(Material.WALL_SIGN);		
-			switch ( Facing )
-			{
-			    case NORTH:
-			        name_sign.setData((byte)0x04);
-			        break;
-			    case SOUTH:
-			        name_sign.setData((byte)0x05);
-			        break;
-			    case EAST:
-			        name_sign.setData((byte)0x02);
-			        break;
-			    case WEST:
-			        name_sign.setData((byte)0x03);
-			        break;
-			}
-			name_sign.getState().setData(new MaterialData(Material.WALL_SIGN));		
-			Sign sign = (Sign)name_sign.getState();
-			sign.setLine(0, "-" + this.Name + "-");
-	
-			if ( this.Network != null )
-			{
-				sign.setLine(1, "N:" + this.Network.netName);
-			}
-			
-			if ( this.Owner != null )
-			{
-				sign.setLine(2, "O:" + this.Owner);
-			}
-	        sign.update();
-	}
-	
-	/*
-	 * Setup Levers for IRIS control when IDC is set.
-	 */
-	/**
-	 * Setup iris lever.
+	 * Setup or remove gate name sign.
 	 *
-	 * @param add the add
+	 * @param create true to create, false to destroy
 	 */
-	public void SetupIrisLever(boolean add)
+	public void SetupGateSign(boolean create)
 	{
-		if ( add )
+	    if (this.NameBlockHolder != null)
+	    {
+	        if (create)
+	        {
+	            Block name_sign = this.NameBlockHolder.getFace(Facing);
+	            name_sign.setType(Material.WALL_SIGN);		
+	            switch ( Facing )
+	            {
+	                case NORTH:
+	                    name_sign.setData((byte)0x04);
+	                    break;
+	                case SOUTH:
+	                    name_sign.setData((byte)0x05);
+	                    break;
+	                case EAST:
+	                    name_sign.setData((byte)0x02);
+	                    break;
+	                case WEST:
+	                    name_sign.setData((byte)0x03);
+	                    break;
+	            }
+	            name_sign.getState().setData(new MaterialData(Material.WALL_SIGN));		
+	            Sign sign = (Sign)name_sign.getState();
+	            sign.setLine(0, "-" + this.Name + "-");
+
+	            if ( this.Network != null )
+	            {
+	                sign.setLine(1, "N:" + this.Network.netName);
+	            }
+
+	            if ( this.Owner != null )
+	            {
+	                sign.setLine(2, "O:" + this.Owner);
+	            }
+	            sign.update();
+	        }
+	        else
+	        {
+	            Block name_sign;
+	            if (( name_sign = this.NameBlockHolder.getFace(Facing)) != null)
+	            {
+	                name_sign.setType(Material.AIR);
+	            }
+	        }
+	    }
+	}
+
+	/**
+	 * Setup or remove IRIS control lever.
+	 *
+	 * @param create true for create, false for destroy.
+	 */
+	public void SetupIrisLever(boolean create)
+	{
+		if ( create )
 		{
 	    	Block iris_block = this.ActivationBlock.getFace(BlockFace.DOWN);
 	    	this.IrisActivationBlock = iris_block;
@@ -975,51 +985,7 @@ public class Stargate
 		}
 	}
 	
-	/*
-	 * Delete Name Block
-	 */
-	/**
-	 * Delete name block.
-	 */
-	public void DeleteNameBlock()
-	{
-		if (this.NameBlockHolder != null)
-		{
-			this.NameBlockHolder.setType(Material.AIR);
-		}
-	}
-	
-	/*
-	 * Delete Teleport Sign Block
-	 */
-	/**
-	 * Delete teleport sign block.
-	 */
-	public void DeleteTeleportSignBlock()
-	{
-		if (this.TeleportSignBlock != null)
-		{
-			this.TeleportSignBlock.setType(Material.AIR);
-		}
-	}
-	
-	/*
-	 * Delete Name Sign
-	 */
-	/**
-	 * Delete name sign.
-	 */
-	public void DeleteNameSign()
-	{
-		if ( this.NameBlockHolder != null)
-		{
-			Block name_sign;
-			if (( name_sign = this.NameBlockHolder.getFace(Facing)) != null)
-			{
-				name_sign.setType(Material.AIR);
-			}
-		}
-	}
+
 	
 	/*
 	 * Delete Teleport Sign
@@ -1060,20 +1026,6 @@ public class Stargate
 			this.TeleportSign.update();
 		}
 		
-	}
-	
-	/*
-	 * Delete Iris Lever
-	 */
-	/**
-	 * Delete iris lever.
-	 */
-	public void DeleteIrisLever()
-	{
-        if (this.IrisActivationBlock != null)
-        {
-            this.IrisActivationBlock.setType(Material.AIR);
-        }
 	}
 	
 	/**

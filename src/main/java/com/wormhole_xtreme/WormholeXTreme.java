@@ -215,7 +215,7 @@ public class WormholeXTreme extends JavaPlugin
 			// Store all our gates
 			for ( Stargate gate : gates )
 			{
-				gate.ShutdownStargate();
+				gate.ShutdownStargate(false);
 				StargateDBManager.StargateToSQL(gate);
 			}
 			

@@ -273,6 +273,13 @@ public class Stargate
 	}
 	
 	/**
+	 * After activate stargate.
+	 */
+	public void AfterActivateStargate()
+	{
+	    this.RecentActive = true;
+	}
+	/**
 	 * Light stargate.
 	 */
 	public void LightStargate()
@@ -366,7 +373,6 @@ public class Stargate
 	public void DeActivateStargate()
 	{
 		this.Active = false;
-		this.RecentActive = true;
 	}
 	
 	/**
@@ -405,33 +411,33 @@ public class Stargate
 	 */
 	public void DialStargate()
 	{
-		if ( this.ShutdownTaskId >= 0)
-		{
-			WormholeXTreme.scheduler.cancelTask(this.ShutdownTaskId);
-		}
-		
-		int timeout = ConfigManager.getTimeoutShutdown() * 20;
-		if ( timeout > 0 )
-		{
-			this.ShutdownTaskId = WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, ActionToTake.SHUTDOWN), timeout);
-			WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" ShutdownTaskID \"" + this.ShutdownTaskId + "\" created." );
-			if (this.ShutdownTaskId == -1 ) 
-			{ 
-				WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false,"Failed to schdule wormhole shutdown timeout: " + timeout + " Received task id of -1. Attempting again.");
-				this.ShutdownTaskId = WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, ActionToTake.SHUTDOWN), timeout);
-				if (this.ShutdownTaskId == -1 ) 
-				{
-					ShutdownStargate();
-					WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Failed to schdule wormhole shutdown timeout: " + timeout + " Received task id of -1. Wormhole forced closed NOW.");
-				}
-			}
-		}
+	    if ( this.ShutdownTaskId >= 0)
+	    {
+	        WormholeXTreme.scheduler.cancelTask(this.ShutdownTaskId);
+	    }
+	    if (this.AfterShutdownTaskId >= 0)
+	    {
+	        WormholeXTreme.scheduler.cancelTask(this.AfterShutdownTaskId);
+	    }
+
+	    int timeout = ConfigManager.getTimeoutShutdown() * 20;
+	    if ( timeout > 0 )
+	    {
+	        this.ShutdownTaskId = WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, ActionToTake.SHUTDOWN), timeout);
+	        WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" ShutdownTaskID \"" + this.ShutdownTaskId + "\" created." );
+	        if (this.ShutdownTaskId == -1 ) 
+	        { 
+	            ShutdownStargate();
+	            WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Failed to schdule wormhole shutdown timeout: " + timeout + " Received task id of -1. Wormhole forced closed NOW.");
+	        }
+	    }
 		
 		if ((this.ShutdownTaskId >= 0) || ( timeout == 0 ))
 		{
 			if ( !this.Active ) 
 			{
 				ActivateStargate();
+				DeRecentActivateStargate();
 			}
 			if ( !this.LitGate)
 			{
@@ -464,7 +470,7 @@ public class Stargate
 	    {
 	        WormholeXTreme.scheduler.cancelTask(this.AfterShutdownTaskId);
 	    }
-	    int timeout = 40;
+	    int timeout = 60;
 	    this.AfterShutdownTaskId = WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this,ActionToTake.AFTERSHUTDOWN), timeout);
 	    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" AfterShutdownTaskID \"" + this.AfterShutdownTaskId + "\" created." );
 	    if (this.AfterShutdownTaskId == -1)
@@ -551,8 +557,10 @@ public class Stargate
 	
 	/**
 	 * Shutdown stargate.
+	 *
+	 * @param timer true if we want to spawn after shutdown timer.
 	 */
-	public void ShutdownStargate()
+	public void ShutdownStargate(boolean timer)
 	{
 		if ( this.ShutdownTaskId >= 0 )
 		{
@@ -567,7 +575,12 @@ public class Stargate
 		}
 
 		this.Target = null;
+		if (timer)
+		{
+		    this.AfterActivateStargate();
+		}		
 		this.DeActivateStargate();
+
 		this.UnLightStargate();
 		
 		// Only set back to air if iris isn't on.
@@ -580,7 +593,19 @@ public class Stargate
 		{
 		    this.FillGateInterior(Material.AIR);
 		}
-		this.AfterShutdown();
+		if (timer)
+		{
+		    this.AfterShutdown();
+		}
+	}
+	
+	/**
+	 * Shutdown stargate.
+	 * This is the same as calling ShutdownStargate(false)
+	 */
+	public void ShutdownStargate()
+	{
+	    this.ShutdownStargate(true);
 	}
 	
 	/**

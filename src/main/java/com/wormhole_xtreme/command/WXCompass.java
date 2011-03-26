@@ -52,7 +52,7 @@ public class WXCompass implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
     {
         Player p = null;
-        if (CommandUtlities.playerCheck(sender))
+        if (CommandUtilities.playerCheck(sender))
         {
             p = (Player)sender;
         } 

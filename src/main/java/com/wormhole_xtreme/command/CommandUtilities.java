@@ -23,13 +23,16 @@ import java.util.ArrayList;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.wormhole_xtreme.model.Stargate;
+import com.wormhole_xtreme.model.StargateManager;
+
 /**
  * WormholeXTreme Commands and command specific methods.
  *
  * @author Dean Bailey (alron)
  * @author Ben Echols (Lologarithm)
  */
-class CommandUtlities {
+class CommandUtilities {
 
 
 	/**
@@ -101,5 +104,34 @@ class CommandUtlities {
 			}
 		}
 		return args_parts_list.toArray(new String[] {});
+	}
+	
+	/**
+	 * Gate remove.
+	 *
+	 * @param stargate the stargate
+	 * @param destroy true to destroy gate blocks
+	 */
+	static void gateRemove(Stargate stargate, boolean destroy)
+	{
+	    stargate.DeleteNameSign();
+        stargate.ResetTeleportSign();
+        if (!stargate.IrisDeactivationCode.equals(""))
+        {
+            if (stargate.IrisActive)
+            {
+                stargate.ToggleIrisActive();
+            }
+            stargate.DeleteIrisLever();
+        }
+        if (destroy)
+        {
+            stargate.DeleteNameSign();
+            stargate.DeleteGateBlocks();
+            stargate.DeletePortalBlocks();
+            stargate.DeleteTeleportSignBlock();
+            stargate.DeleteNameBlock(); 
+        }
+        StargateManager.RemoveStargate(stargate);
 	}
 }

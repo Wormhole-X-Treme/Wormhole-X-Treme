@@ -299,7 +299,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
                         p.sendMessage(ConfigManager.normalheader + "Stargate Design Valid with Sign Nav.");
                         if ( new_gate.Name.equals("") )
                         {
-                            p.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_INVALID));
+                            p.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_INVALID) + "\"\"");
                         }
                         else
                         {

@@ -55,7 +55,7 @@ public class Dial implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
     {
         Player player = null;
-        if (!CommandUtlities.playerCheck(sender))
+        if (!CommandUtilities.playerCheck(sender))
         {
             return true;
         }
@@ -63,7 +63,7 @@ public class Dial implements CommandExecutor {
         {
             player = (Player)sender;
         }
-        args = CommandUtlities.commandEscaper(args);
+        args = CommandUtilities.commandEscaper(args);
         if (args.length > 2 || args.length == 0)
         {
             return false;

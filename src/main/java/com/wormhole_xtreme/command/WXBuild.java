@@ -54,7 +54,7 @@ public class WXBuild implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
         Player player = null;
-        if (!CommandUtlities.playerCheck(sender) )
+        if (!CommandUtilities.playerCheck(sender) )
         {
             return true;
         }
@@ -62,7 +62,7 @@ public class WXBuild implements CommandExecutor {
         {
             player = (Player)sender;
         }
-        args = CommandUtlities.commandEscaper(args);
+        args = CommandUtilities.commandEscaper(args);
         if (args.length == 1) 
         {
             if ( WXPermissions.checkWXPermissions(player, PermissionType.CONFIG) )

@@ -74,10 +74,11 @@ public class ConfigManager
 		output_strings.put(StringTypes.GATE_DEACTIVATED, normalheader + "Gate successfully deactivated.");
 		output_strings.put(StringTypes.GATE_DIALED, normalheader + "Gate successfully dialed.");
 		output_strings.put(StringTypes.CONSTRUCT_SUCCESS, normalheader + "Gate successfully constructed.");
-		output_strings.put(StringTypes.CONSTRUCT_NAME_INVALID, errorheader + "Gate name invalid.");
-		output_strings.put(StringTypes.CONSTRUCT_NAME_TOO_LONG, errorheader + "Gate name too long.");
-		output_strings.put(StringTypes.CONSTRUCT_NAME_TAKEN, errorheader + "Gate name already taken.");
+		output_strings.put(StringTypes.CONSTRUCT_NAME_INVALID, errorheader + "Gate name invalid: ");
+		output_strings.put(StringTypes.CONSTRUCT_NAME_TOO_LONG, errorheader + "Gate name too long: ");
+		output_strings.put(StringTypes.CONSTRUCT_NAME_TAKEN, errorheader + "Gate name already taken: ");
 		output_strings.put(StringTypes.REQUEST_INVALID, errorheader + "Invalid Request");
+		output_strings.put(StringTypes.GATE_NOT_SPECIFIED, errorheader + "No gate name specified.");
 	}
 	
 	/**
@@ -486,7 +487,9 @@ public class ConfigManager
 		CONSTRUCT_NAME_TAKEN,
 		
 		/** The REQUES t_ invalid. */
-		REQUEST_INVALID
+		REQUEST_INVALID,
+		
+		GATE_NOT_SPECIFIED
 	}
 
 	/**

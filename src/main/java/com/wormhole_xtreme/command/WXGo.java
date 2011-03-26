@@ -51,7 +51,7 @@ public class WXGo implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
     {
         Player player = null;
-        if (!CommandUtlities.playerCheck(sender))
+        if (!CommandUtilities.playerCheck(sender))
         {
             return true;
         }
@@ -61,7 +61,7 @@ public class WXGo implements CommandExecutor {
         }
         if (WXPermissions.checkWXPermissions(player, PermissionType.GO))
         {
-            args = CommandUtlities.commandEscaper(args);
+            args = CommandUtilities.commandEscaper(args);
             if ( args.length == 1)
             {
                 String gogate = args[0].trim().replace("\n", "").replace("\r", "");

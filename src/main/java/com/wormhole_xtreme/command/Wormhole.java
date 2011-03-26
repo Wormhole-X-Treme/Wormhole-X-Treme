@@ -62,13 +62,13 @@ public class Wormhole implements CommandExecutor
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
     {
         Player player = null;
-        if (CommandUtlities.playerCheck(sender))
+        if (CommandUtilities.playerCheck(sender))
         {
             player = (Player)sender;
         }
-        if ((player != null && WXPermissions.checkWXPermissions(player, PermissionType.CONFIG)) || !CommandUtlities.playerCheck(sender))
+        if ((player != null && WXPermissions.checkWXPermissions(player, PermissionType.CONFIG)) || !CommandUtilities.playerCheck(sender))
         {
-            args = CommandUtlities.commandEscaper(args);
+            args = CommandUtilities.commandEscaper(args);
             if ((args.length > 4 ) || (args.length == 0)) 
             {
                 return false;
@@ -101,10 +101,14 @@ public class Wormhole implements CommandExecutor
             {
                 return doSimplePermissions(sender,args);
             }
+            else if (args[0].equalsIgnoreCase("regenerate") || args[0].equalsIgnoreCase("regen"))
+            {
+                return doRegenerate(sender, args);
+            }
             else 
             {
                 sender.sendMessage(ConfigManager.output_strings.get(StringTypes.REQUEST_INVALID) + ": " + args[0]);
-                sender.sendMessage(ConfigManager.errorheader + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'shutdown_timeout', 'activate_timeout' and 'simple'.");
+                sender.sendMessage(ConfigManager.errorheader + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'shutdown_timeout', 'activate_timeout', 'simple' and 'regenerate'.");
             }
         }
         else
@@ -141,7 +145,7 @@ public class Wormhole implements CommandExecutor
                 sender.sendMessage(ConfigManager.errorheader + "Valid options: true/yes, false/no");
                 return false;
             }
-            if (WormholeXTreme.permissions != null && CommandUtlities.playerCheck(sender))
+            if (WormholeXTreme.permissions != null && CommandUtilities.playerCheck(sender))
             {
                 player = (Player)sender;
                 if (simple && !WormholeXTreme.permissions.has(player, "wormhole.simple.config"))
@@ -361,12 +365,12 @@ public class Wormhole implements CommandExecutor
 			}
 			else
 			{
-				sender.sendMessage(ConfigManager.errorheader + "Invalid gate name: " + args[1]);
+				sender.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_INVALID) + "\"" + args[1] + "\"");
 			}
 		}
 		else
 		{
-		    sender.sendMessage(ConfigManager.errorheader + "No gate name specified.");
+		    sender.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_NOT_SPECIFIED));
 		    return false;
 		}
 		return true;
@@ -381,12 +385,32 @@ public class Wormhole implements CommandExecutor
 	 */
 	private static void doPerms(CommandSender sender, String[] args)
 	{
-		if (CommandUtlities.playerCheck(sender))
+		if (CommandUtilities.playerCheck(sender))
 		{
 			Player p = (Player) sender;
 			PermissionsManager.HandlePermissionRequest(p, args);
 		}
 	}
     
-
+	private static boolean doRegenerate(CommandSender sender, String[] args)
+	{
+	    if ( args.length >= 2 )
+	    {
+	        Stargate stargate = StargateManager.GetStargate(args[1]);
+	        if (stargate != null)
+	        {
+	            sender.sendMessage(ConfigManager.normalheader + "Regenerating Gate: " + stargate.Name );
+	        }
+	        else
+	        {
+	            sender.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_INVALID) + "\"" + args[1] + "\"");
+	        }
+	    }
+	    else
+	    {
+	        sender.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_NOT_SPECIFIED));
+	        return false;
+	    }
+	    return true;
+	}
 }

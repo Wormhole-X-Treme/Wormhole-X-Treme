@@ -56,7 +56,7 @@ public class WXComplete implements CommandExecutor
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player p = null;
-        if (!CommandUtlities.playerCheck(sender))
+        if (!CommandUtilities.playerCheck(sender))
         {
             return true;
         }
@@ -64,7 +64,7 @@ public class WXComplete implements CommandExecutor
         {
             p = (Player)sender;
         }
-        args = CommandUtlities.commandEscaper(args);
+        args = CommandUtilities.commandEscaper(args);
         if (args.length >= 1 && args.length <= 3)
         {
             String name = args[0].trim().replace("\n", "").replace("\r", "");
@@ -105,7 +105,7 @@ public class WXComplete implements CommandExecutor
                     }
                     else
                     {
-                        p.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_TAKEN));
+                        p.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_TAKEN) + "\"" + name + "\"");
                     }
                 }
                 else 
@@ -115,7 +115,7 @@ public class WXComplete implements CommandExecutor
             }
             else
             {
-                p.sendMessage( ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_TOO_LONG) );
+                p.sendMessage( ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_TOO_LONG) + "\"" + name + "\"" );
             }
         }
         else

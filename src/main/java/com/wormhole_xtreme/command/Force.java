@@ -60,7 +60,7 @@ public class Force implements CommandExecutor {
         {
             boolean allowed = false;
             Player player = null;
-            if (CommandUtlities.playerCheck(sender))
+            if (CommandUtilities.playerCheck(sender))
             {
                 player = (Player) sender;
                 allowed = WXPermissions.checkWXPermissions(player, PermissionType.CONFIG);

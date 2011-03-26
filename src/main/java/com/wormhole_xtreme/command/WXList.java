@@ -57,10 +57,10 @@ public class WXList implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player player = null;
         
-        if (CommandUtlities.playerCheck(sender)) {
+        if (CommandUtilities.playerCheck(sender)) {
             player = (Player) sender;
         }
-        if (!CommandUtlities.playerCheck(sender) || (player != null && WXPermissions.checkWXPermissions(player, PermissionType.LIST)) )
+        if (!CommandUtilities.playerCheck(sender) || (player != null && WXPermissions.checkWXPermissions(player, PermissionType.LIST)) )
         {
             ArrayList<Stargate> gates = StargateManager.GetAllGates();
             sender.sendMessage(ConfigManager.normalheader + "Available gates \u00A73::");

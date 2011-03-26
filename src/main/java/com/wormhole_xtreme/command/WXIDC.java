@@ -54,9 +54,9 @@ public class WXIDC implements CommandExecutor {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        args = CommandUtlities.commandEscaper(args);  
+        args = CommandUtilities.commandEscaper(args);  
         Player p = null;
-        if ( CommandUtlities.playerCheck(sender) )
+        if ( CommandUtilities.playerCheck(sender) )
         {
             p = (Player) sender;
         }
@@ -65,7 +65,7 @@ public class WXIDC implements CommandExecutor {
             Stargate s = StargateManager.GetStargate(args[0]);
             if ( s != null )
             {
-                if ((p != null && (WXPermissions.checkWXPermissions(p, PermissionType.CONFIG) || (s.Owner != null && s.Owner.equals(p.getName())))) || !CommandUtlities.playerCheck(sender))
+                if ((p != null && (WXPermissions.checkWXPermissions(p, PermissionType.CONFIG) || (s.Owner != null && s.Owner.equals(p.getName())))) || !CommandUtilities.playerCheck(sender))
                 {
                     // 2. if args other than name - do a set                
                     if ( args.length >= 2 )

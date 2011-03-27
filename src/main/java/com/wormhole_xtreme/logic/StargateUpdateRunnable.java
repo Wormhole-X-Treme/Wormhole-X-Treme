@@ -93,6 +93,10 @@ public class StargateUpdateRunnable implements Runnable
 		{
 		    stargate.AfterShutdownStargate();
 		}
+		else if (this.action == ActionToTake.BUTTONSTATELOCK )
+		{
+		    stargate.DialButtonLeverState();
+		}
 	}
 	
 	/**
@@ -110,7 +114,9 @@ public class StargateUpdateRunnable implements Runnable
 		/** The DEACTIVATE. */
 		DEACTIVATE,
 		
-		AFTERSHUTDOWN
+		AFTERSHUTDOWN,
+		
+		BUTTONSTATELOCK
 	}
 	
 }

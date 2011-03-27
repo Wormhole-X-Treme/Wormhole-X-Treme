@@ -155,6 +155,8 @@ public class Stargate
 	/** The After shutdown task id. */
 	private int AfterShutdownTaskId;
 	
+	private int ButtonStateLockTaskId;
+	
 	/**
 	 * Instantiates a new stargate.
 	 */
@@ -305,7 +307,7 @@ public class Stargate
 	 */
 	public void StartActivationTimer(Player p)
 	{
-		if ( this.ActivateTaskId >= 0)
+		if ( this.ActivateTaskId > 0)
 		{
 			WormholeXTreme.scheduler.cancelTask(this.ActivateTaskId);
 		}
@@ -322,7 +324,7 @@ public class Stargate
 	 */
 	public void StopActivationTimer(Player p)
 	{
-		if ( this.ActivateTaskId >= 0)
+		if ( this.ActivateTaskId > 0)
 		{
 		    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \""+ this.Name + "\" ActivateTaskID \"" + this.ActivateTaskId + "\" cancelled.");
 			WormholeXTreme.scheduler.cancelTask(this.ActivateTaskId);
@@ -337,7 +339,7 @@ public class Stargate
 	 */
 	public void TimeoutStargate(Player p)
 	{
-		if ( this.ActivateTaskId >= 0 )
+		if ( this.ActivateTaskId > 0 )
 		{
 		    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \""+ this.Name + "\" ActivateTaskID \"" + this.ActivateTaskId + "\" timed out.");
 			this.ActivateTaskId = -1;
@@ -411,11 +413,11 @@ public class Stargate
 	 */
 	public void DialStargate()
 	{
-	    if ( this.ShutdownTaskId >= 0)
+	    if ( this.ShutdownTaskId > 0)
 	    {
 	        WormholeXTreme.scheduler.cancelTask(this.ShutdownTaskId);
 	    }
-	    if (this.AfterShutdownTaskId >= 0)
+	    if (this.AfterShutdownTaskId > 0)
 	    {
 	        WormholeXTreme.scheduler.cancelTask(this.AfterShutdownTaskId);
 	    }
@@ -432,7 +434,7 @@ public class Stargate
 	        }
 	    }
 		
-		if ((this.ShutdownTaskId >= 0) || ( timeout == 0 ))
+		if ((this.ShutdownTaskId > 0) || ( timeout == 0 ))
 		{
 			if ( !this.Active ) 
 			{
@@ -471,7 +473,7 @@ public class Stargate
 	 */
 	public void AfterShutdown()
 	{
-	    if (this.AfterShutdownTaskId >= 0)
+	    if (this.AfterShutdownTaskId > 0)
 	    {
 	        WormholeXTreme.scheduler.cancelTask(this.AfterShutdownTaskId);
 	    }
@@ -492,7 +494,7 @@ public class Stargate
 	 */
 	public boolean DialStargate(Stargate target)
 	{
-		if ( this.ActivateTaskId >= 0 )
+		if ( this.ActivateTaskId > 0 )
 		{
 			WormholeXTreme.scheduler.cancelTask(ActivateTaskId);
 		}
@@ -530,7 +532,7 @@ public class Stargate
 	 */
 	public boolean ForceDialStargate(Stargate target)
 	{
-		if ( this.ActivateTaskId >= 0 )
+		if ( this.ActivateTaskId > 0 )
 		{
 			WormholeXTreme.scheduler.cancelTask(ActivateTaskId);
 		}
@@ -567,7 +569,7 @@ public class Stargate
 	 */
 	public void ShutdownStargate(boolean timer)
 	{
-		if ( this.ShutdownTaskId >= 0 )
+		if ( this.ShutdownTaskId > 0 )
 		{
 		    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" ShutdownTaskID \"" + this.ShutdownTaskId + "\" cancelled.");
 			WormholeXTreme.scheduler.cancelTask(this.ShutdownTaskId);
@@ -619,7 +621,7 @@ public class Stargate
 	 */
 	public void AfterShutdownStargate()
 	{
-	    if (this.AfterShutdownTaskId >= 0)
+	    if (this.AfterShutdownTaskId > 0)
 	    {
 	        WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" AfterShutdownTaskID \"" + this.AfterShutdownTaskId + "\" cancelled.");
 	        WormholeXTreme.scheduler.cancelTask(this.AfterShutdownTaskId);
@@ -827,34 +829,44 @@ public class Stargate
 	 */
 	public void DialButtonLeverState()
 	{
-	    
-	    int state = (int)this.ActivationBlock.getData();
-	    Material material = this.ActivationBlock.getType();
-	    if (this.Active)
+	    if (this.ActivationBlock != null)
 	    {
-	           if (state <= 4 && state != 0)
-	            {
-	                state = state + 8;
-	            }
-	    }
-	    else
-	    {
-	           if (state <= 12 && state >= 9)
-	            {
-	                state = state - 8;
-	            }
-	    }
-	    if (this.ActivationBlock != null && (material == Material.LEVER || material == Material.STONE_BUTTON))
-	    {
-	        this.ActivationBlock.getState().setData(new MaterialData(material));
-	        this.ActivationBlock.setData((byte)state,false);
-	        if (this.ActivationBlock.getState().update())
+	        Material material = this.ActivationBlock.getType();
+	        if (material == Material.LEVER || material == Material.STONE_BUTTON)
 	        {
-	            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Dial Button Lever Gate: \"" + this.Name + "\" Material: \"" + material.toString() + "\" State: \"" + state + "\"");
+	            int state = (int)this.ActivationBlock.getData();
+	            if (this.Active)
+	            {
+	                if (state <= 4 && state != 0)
+	                {
+	                    state = state + 8;
+	                }
+	            }
+	            else
+	            {
+	                if (state <= 12 && state >= 9)
+	                {
+	                    state = state - 8;
+	                }
+	            }
+	            if (this.ButtonStateLockTaskId > 0 && !this.Active && WormholeXTreme.scheduler.isQueued(this.ButtonStateLockTaskId))
+	            {
+	                WormholeXTreme.scheduler.cancelTask(this.ButtonStateLockTaskId);
+	                WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Dial Button Gate: \"" + this.Name + "\" ButtonStateLockTaskID: \"" + this.ButtonStateLockTaskId + "\" cancelled.");
+	                this.ButtonStateLockTaskId = 0;
+	            }
+	            this.ActivationBlock.setData((byte)state);
+	            {
+	                WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Dial Button Lever Gate: \"" + this.Name + "\" Material: \"" + material.toString() + "\" State: \"" + state + "\"");
+	                if (this.Active && material == Material.STONE_BUTTON && !WormholeXTreme.scheduler.isQueued(this.ButtonStateLockTaskId))
+	                {
+	                    this.ButtonStateLockTaskId = WormholeXTreme.scheduler.scheduleSyncRepeatingTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, ActionToTake.BUTTONSTATELOCK), 11, 20);
+	                }
+	            }
 	        }
 	    }
 	}
-	
+
 	// version_byte|ActivationBlock|IrisActivationBlock|NameBlockHolder|TeleportLocation|IsSignPowered|TeleportSign|
 	//  facing_len|facing_string|idc_len|idc|IrisActive|num_blocks|Blocks|num_water_blocks|WaterBlocks
 	

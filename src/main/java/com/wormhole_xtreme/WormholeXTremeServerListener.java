@@ -18,7 +18,8 @@
  */
 package com.wormhole_xtreme;
 
-import org.bukkit.event.server.PluginEvent;
+import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerListener;
 import org.bukkit.plugin.Plugin;
 
@@ -53,7 +54,7 @@ public class WormholeXTremeServerListener extends ServerListener
      * @see org.bukkit.event.server.ServerListener#onPluginEnabled(org.bukkit.event.server.PluginEvent)
      */
     @Override
-    public void onPluginEnable(PluginEvent event) 
+    public void onPluginEnable(PluginEnableEvent event) 
     {
         if(event.getPlugin().getDescription().getName().equals("iConomy")) 
         {
@@ -75,7 +76,7 @@ public class WormholeXTremeServerListener extends ServerListener
      * @see org.bukkit.event.server.ServerListener#onPluginDisabled(org.bukkit.event.server.PluginEvent)
      */
     @Override
-    public void onPluginDisable(PluginEvent event)
+    public void onPluginDisable(PluginDisableEvent event)
     {
         if(event.getPlugin().getDescription().getName().equals("iConomy"))
         {

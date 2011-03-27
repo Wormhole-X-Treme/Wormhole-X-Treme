@@ -355,7 +355,7 @@ public class Stargate
 			// Make sure to reset iris if it should be on.
 			if ( this.IrisDefaultActive ) 
 			{
-				SetIrisActive(IrisDefaultActive);
+				ToggleIrisActive(IrisDefaultActive);
 			}
 			if ( this.LitGate )
 			{
@@ -436,12 +436,17 @@ public class Stargate
 		{
 			if ( !this.Active ) 
 			{
-				ActivateStargate();
-				DeRecentActivateStargate();
+				this.ActivateStargate();
+				this.DialButtonLeverState();
+				this.DeRecentActivateStargate();
 			}
 			if ( !this.LitGate)
 			{
 				LightStargate();
+			}
+			if (this.IrisActive)
+			{
+			    this.ToggleIrisActive(false);
 			}
 			// Show water if you are dialing out OR if the iris isn't active
 			if ( this.Target != null || !this.IrisActive )
@@ -582,17 +587,18 @@ public class Stargate
 		this.DeActivateStargate();
 
 		this.UnLightStargate();
-		
+		this.DialButtonLeverState();
 		// Only set back to air if iris isn't on.
 		// If the iris should be on, we will make it that way.
 		if ( this.IrisDefaultActive )
 		{
-			SetIrisActive(IrisDefaultActive);
+			ToggleIrisActive(IrisDefaultActive);
 		}
 		else if ( !this.IrisActive )
 		{
 		    this.FillGateInterior(Material.AIR);
 		}
+		
 		if (timer)
 		{
 		    this.AfterShutdown();
@@ -745,7 +751,7 @@ public class Stargate
 	public void SetIrisDeactivationCode ( String idc )
 	{
 		this.IrisDeactivationCode = idc;
-		this.SetIrisActive(false);
+		this.ToggleIrisActive(false);
 		
 		// If empty string make sure to make lever area air instead of lever.
 		if ( !idc.equals("") )
@@ -754,8 +760,8 @@ public class Stargate
 		}
 		else
 		{
+			this.ToggleIrisActive(false);
 			this.SetupIrisLever(false);
-			this.SetIrisActive(false);
 		}
 	}
 	
@@ -763,35 +769,45 @@ public class Stargate
 	 * This method should only be called when the Iris lever is hit.
 	 * This toggles the current state of the Iris and then sets that state to be the default.
 	 */
-	public void ToggleIrisLever()
+	public void ToggleIrisDefault()
 	{
 		ToggleIrisActive();
-		IrisDefaultActive = IrisActive;
+		this.IrisDefaultActive = this.IrisActive;
 	}
-	
 	/**
-	 * This method toggles the current state of the iris.
+	 * Toggle the iris state. 
 	 */
 	public void ToggleIrisActive()
 	{
-	    IrisActive = !IrisActive;
+	    this.IrisActive = !this.IrisActive;
+	    this.ToggleIrisActive(this.IrisActive);
+	}
+	/**
+	 * This method sets the iris state and toggles the iris lever.
+	 * Smart enough to know if the gate is active and set the proper
+	 * material in its interior.
+	 *
+	 * @param irisactive true for iris on, false for off.
+	 */
+	public void ToggleIrisActive(boolean irisactive)
+	{
+	    this.IrisActive = irisactive;
 	    int leverstate = (int)this.IrisActivationBlock.getData();
-	    if ( IrisActive )
+	    if ( this.IrisActive )
 	    {
-	        if (leverstate <= 12 && leverstate >= 9)
+	        if (leverstate <= 4 && leverstate != 0)
 	        {
-	            leverstate = leverstate - 8;
+	            leverstate = leverstate + 8;
 	        }
 	        this.FillGateInterior(ConfigManager.getIrisMaterial());
 	    }
 	    else
 	    {
-
-	        if (leverstate <= 4 && leverstate != 0)
+	        if (leverstate <= 12 && leverstate >= 9)
 	        {
-	            leverstate = leverstate + 8;
+	            leverstate = leverstate - 8;
 	        }
-	        if ( Active )
+	        if (this.Active)
 	        {
 	            this.FillGateInterior(ConfigManager.getPortalMaterial());
 	        }
@@ -800,38 +816,45 @@ public class Stargate
 	            this.FillGateInterior(Material.AIR);
 	        }
 	    }
-	    this.IrisActivationBlock.setData((byte)leverstate);
-	}
-	
-	/**
-	 * This method toggles the current state of the iris.
-	 *
-	 * @param active the active
-	 */
-	public void SetIrisActive(boolean active)
-	{
-	    IrisActive = active;
-	    int leverstate = (int)this.IrisActivationBlock.getData();
-	    if ( IrisActive )
+	    if (this.IrisActivationBlock != null && this.IrisActivationBlock.getType() == Material.LEVER )
 	    {
-	        if (leverstate <= 12 && leverstate >= 9)
-	        {
-	            leverstate = leverstate - 8;
-	        }
-	        this.FillGateInterior(ConfigManager.getIrisMaterial());
+	        this.IrisActivationBlock.setData((byte)leverstate);
+	    }
+	}
+
+	/**
+	 * Set the dial button and lever block state based on gate activation status.
+	 */
+	public void DialButtonLeverState()
+	{
+	    
+	    int state = (int)this.ActivationBlock.getData();
+	    Material material = this.ActivationBlock.getType();
+	    if (this.Active)
+	    {
+	           if (state <= 4 && state != 0)
+	            {
+	                state = state + 8;
+	            }
 	    }
 	    else
 	    {
-
-	        if (leverstate <= 4 && leverstate != 0)
-	        {
-	            leverstate = leverstate + 8;
-	        }
-	        this.FillGateInterior(Material.AIR);
+	           if (state <= 12 && state >= 9)
+	            {
+	                state = state - 8;
+	            }
 	    }
-	    this.IrisActivationBlock.setData((byte)leverstate);
+	    if (this.ActivationBlock != null && (material == Material.LEVER || material == Material.STONE_BUTTON))
+	    {
+	        this.ActivationBlock.getState().setData(new MaterialData(material));
+	        this.ActivationBlock.setData((byte)state,false);
+	        if (this.ActivationBlock.getState().update())
+	        {
+	            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Dial Button Lever Gate: \"" + this.Name + "\" Material: \"" + material.toString() + "\" State: \"" + state + "\"");
+	        }
+	    }
 	}
-
+	
 	// version_byte|ActivationBlock|IrisActivationBlock|NameBlockHolder|TeleportLocation|IsSignPowered|TeleportSign|
 	//  facing_len|facing_string|idc_len|idc|IrisActive|num_blocks|Blocks|num_water_blocks|WaterBlocks
 	

@@ -51,9 +51,6 @@ import com.wormhole_xtreme.utils.WorldUtils;
  */ 
 public class WormholeXTremePlayerListener extends PlayerListener 
 { 
-	
-	/** The wxt. */
-	private static WormholeXTreme wxt = null;
 	//private ConcurrentHashMap<String, Integer> PlayerCompassOn = new ConcurrentHashMap<String, Integer>(); 
 	//private final WormholeXTreme plugin;
 	/**
@@ -64,7 +61,6 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	public WormholeXTremePlayerListener(WormholeXTreme wormholeXTreme) 
 	{ 
 		//plugin = instance; 
-		wxt = wormholeXTreme;
 	}
  
 	/* (non-Javadoc)
@@ -78,13 +74,11 @@ public class WormholeXTremePlayerListener extends PlayerListener
 
 	    if (clicked != null && (clicked.getType() == Material.STONE_BUTTON || clicked.getType() == Material.LEVER ))
 	    {
+	        WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false,"Caught Button/Lever Hit from: \"" + player.getName() + "\" Event type: \"" + event.getType() + "\" Action Type: \"" + event.getAction() + "\"");
 	        if ( !this.ButtonLeverHit(player, clicked, null) )
 	        {  
+	            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false,"Cancelled Button/Lever Hit from: \"" + player.getName() + "\" Event type: \"" + event.getType() + "\" Action Type: \"" + event.getAction() + "\"");
 	            event.setCancelled(true);
-	        }
-	        else
-	        {
-	            wxt.prettyLog(Level.FINE, false,"Caught Button/Lever Hit from: \"" + player.getName() + "\" Event type: \"" + event.getType() + "\" Action Type: \"" + event.getAction() + "\"");
 	        }
 	    }
 	    else if ( clicked != null && clicked.getType() == Material.WALL_SIGN )
@@ -136,7 +130,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	        {
 	            gatenetwork = "Public";
 	        }
-	        wxt.prettyLog(Level.FINE, false, "Player in gate:" + st.Name + " gate Active: " + st.Active + " Target Gate: " + st.Target.Name + " Network: " + gatenetwork );
+	        WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player in gate:" + st.Name + " gate Active: " + st.Active + " Target Gate: " + st.Target.Name + " Network: " + gatenetwork );
 
 	        if (ConfigManager.getWormholeUseIsTeleport() && ((st.IsSignPowered && !WXPermissions.checkWXPermissions(p, st, PermissionType.SIGN)) ||
 	            (!st.IsSignPowered && !WXPermissions.checkWXPermissions(p, st, PermissionType.DIALER))))
@@ -206,7 +200,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	        p.teleport(target);
 	        event.setCancelled(true);
 	        if ( target == st.Target.TeleportLocation )
-	            wxt.prettyLog(Level.INFO,false, p.getDisplayName() + " used wormhole: " + st.Name + " to go to: " + st.Target.Name);
+	            WormholeXTreme.thisPlugin.prettyLog(Level.INFO,false, p.getDisplayName() + " used wormhole: " + st.Name + " to go to: " + st.Target.Name);
 
 	        if ( ConfigManager.getTimeoutShutdown() == 0 )
 	        {
@@ -215,7 +209,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	    }
 	    else if ( st != null )
 	    {
-	        wxt.prettyLog(Level.FINE, false, "Player entered gate but wasn't active or didn't have a target.");
+	        WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player entered gate but wasn't active or didn't have a target.");
 	    }
 	}
 	
@@ -237,16 +231,15 @@ public class WormholeXTremePlayerListener extends PlayerListener
             {
                 if ( WorldUtils.isSameBlock(s.ActivationBlock, clicked) )
                 {
-                    return this.HandleGateActivationSwitch(s, p);
+                    this.HandleGateActivationSwitch(s, p);
                 }
                 else if ( WorldUtils.isSameBlock(s.IrisActivationBlock, clicked) )
                 {
-                    this.HandleIrisActivationSwitch(s,p);
+                    s.ToggleIrisDefault();
                     if ((s.Active) && (!s.IrisActive)) 
                     {
                         s.FillGateInterior(ConfigManager.getPortalMaterial());
                     }
-                    return true;
                 }
             }
             else
@@ -358,17 +351,6 @@ public class WormholeXTremePlayerListener extends PlayerListener
             }
         } 
     }
-    
-    /**
-     * Handle iris activation switch.
-     *
-     * @param s the s
-     * @param p the p
-     */
-    private void HandleIrisActivationSwitch(Stargate s, Player p) 
-    {
-        s.ToggleIrisLever();
-    }
 
     /**
      * Handle gate activation switch.
@@ -395,6 +377,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
                 {
                     stargate.StopActivationTimer(player);
                     stargate.DeActivateStargate();
+                    stargate.DialButtonLeverState();
                     stargate.UnLightStargate();
                     player.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_DEACTIVATED));
                     return true;

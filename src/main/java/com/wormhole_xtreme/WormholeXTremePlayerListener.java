@@ -82,7 +82,10 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	        {  
 	            event.setCancelled(true);
 	        }
-	        wxt.prettyLog(Level.INFO, false," " + clicked.getData() );
+	        else
+	        {
+	            wxt.prettyLog(Level.FINE, false,"Caught Button/Lever Hit from: \"" + player.getName() + "\" Event type: \"" + event.getType() + "\" Action Type: \"" + event.getAction() + "\"");
+	        }
 	    }
 	    else if ( clicked != null && clicked.getType() == Material.WALL_SIGN )
 	    {

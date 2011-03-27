@@ -117,7 +117,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 	 * @see org.bukkit.event.block.BlockListener#onBlockFlow(org.bukkit.event.block.BlockFromToEvent)
 	 */
 	@Override
-    public void onBlockFlow(BlockFromToEvent event)
+    public void onBlockFromTo(BlockFromToEvent event)
 	{
 	    if (!event.isCancelled())
 	    {

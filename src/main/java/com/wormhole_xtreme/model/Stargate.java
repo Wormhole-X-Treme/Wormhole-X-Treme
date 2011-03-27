@@ -774,23 +774,33 @@ public class Stargate
 	 */
 	public void ToggleIrisActive()
 	{
-		IrisActive = !IrisActive;
-		
-		if ( IrisActive )
-		{
-		    this.FillGateInterior(ConfigManager.getIrisMaterial());
-		}
-		else
-		{
-			if ( Active )
-			{
-			    this.FillGateInterior(ConfigManager.getPortalMaterial());
-			}
-			else
-			{
-			    this.FillGateInterior(Material.AIR);
-			}
-		}		
+	    IrisActive = !IrisActive;
+	    int leverstate = (int)this.IrisActivationBlock.getData();
+	    if ( IrisActive )
+	    {
+	        if (leverstate <= 12 && leverstate >= 9)
+	        {
+	            leverstate = leverstate - 8;
+	        }
+	        this.FillGateInterior(ConfigManager.getIrisMaterial());
+	    }
+	    else
+	    {
+
+	        if (leverstate <= 4 && leverstate != 0)
+	        {
+	            leverstate = leverstate + 8;
+	        }
+	        if ( Active )
+	        {
+	            this.FillGateInterior(ConfigManager.getPortalMaterial());
+	        }
+	        else
+	        {
+	            this.FillGateInterior(Material.AIR);
+	        }
+	    }
+	    this.IrisActivationBlock.setData((byte)leverstate);
 	}
 	
 	/**
@@ -800,18 +810,28 @@ public class Stargate
 	 */
 	public void SetIrisActive(boolean active)
 	{
-		IrisActive = active;
-		
-		if ( IrisActive )
-		{
-		    this.FillGateInterior(ConfigManager.getIrisMaterial());
-		}
-		else
-		{
-		    this.FillGateInterior(Material.AIR);
-		}		
+	    IrisActive = active;
+	    int leverstate = (int)this.IrisActivationBlock.getData();
+	    if ( IrisActive )
+	    {
+	        if (leverstate <= 12 && leverstate >= 9)
+	        {
+	            leverstate = leverstate - 8;
+	        }
+	        this.FillGateInterior(ConfigManager.getIrisMaterial());
+	    }
+	    else
+	    {
+
+	        if (leverstate <= 4 && leverstate != 0)
+	        {
+	            leverstate = leverstate + 8;
+	        }
+	        this.FillGateInterior(Material.AIR);
+	    }
+	    this.IrisActivationBlock.setData((byte)leverstate);
 	}
-	
+
 	// version_byte|ActivationBlock|IrisActivationBlock|NameBlockHolder|TeleportLocation|IsSignPowered|TeleportSign|
 	//  facing_len|facing_string|idc_len|idc|IrisActive|num_blocks|Blocks|num_water_blocks|WaterBlocks
 	

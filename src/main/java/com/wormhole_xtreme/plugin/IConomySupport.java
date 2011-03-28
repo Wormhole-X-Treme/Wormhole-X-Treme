@@ -24,6 +24,7 @@ import org.bukkit.plugin.Plugin;
 
 import com.nijiko.coelho.iConomy.iConomy;
 import com.wormhole_xtreme.WormholeXTreme;
+import com.wormhole_xtreme.config.ConfigManager;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -34,24 +35,13 @@ import com.wormhole_xtreme.WormholeXTreme;
 public class IConomySupport {
     
     /**
-     * Instantiates a new i conomy support.
-     *
-     * @param wormholeXTreme the wormhole x treme
-     */
-    public IConomySupport(WormholeXTreme wormholeXTreme)
-    {
-    
-    }
-    
-    /**
      * Setup iconomy.
      */
-    public void setupIconomy() 
+    public static void enableIconomy() 
     {
-        Plugin test = WormholeXTreme.thisPlugin.getServer().getPluginManager().getPlugin("iConomy");
-
-        if(WormholeXTreme.iconomy == null) 
+        if(WormholeXTreme.iconomy == null && !ConfigManager.getIconomySupportDisable()) 
         {
+            Plugin test = WormholeXTreme.thisPlugin.getServer().getPluginManager().getPlugin("iConomy");
             if(test != null) 
             {
                 String v = test.getDescription().getVersion();
@@ -68,21 +58,24 @@ public class IConomySupport {
             } 
             else 
             {
-                WormholeXTreme.thisPlugin.prettyLog(Level.WARNING, false, "iConomy Plugin not yet available - there will be no iConomy integration until loaded.");
-                //this.getServer().getPluginManager().disablePlugin(this);
+                WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "iConomy Plugin not yet available - there will be no iConomy integration until loaded.");
             }
+        }
+        else
+        {
+            WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "iConomy Plugin support disabled via settings.txt.");
         }
     }
     
     /**
      * Disable iconomy.
      */
-    public void disableIconomy()
+    public static void disableIconomy()
     {
-            if (!(WormholeXTreme.iconomy == null))
+            if (WormholeXTreme.iconomy != null)
             {
                 WormholeXTreme.iconomy = null;
-                WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Detached from iConomy.");
+                WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Detached from iConomy plugin.");
             }
     }
     
@@ -91,7 +84,7 @@ public class IConomySupport {
      *
      * @param version the version
      */
-    public void checkIconomyVersion(String version)
+    private static void checkIconomyVersion(String version)
     {
         if ( !version.equals("4.0") && !version.equals("4.1") && !version.startsWith("4.2") && !version.startsWith("4.3") && 
             !version.startsWith("4.4") && !version.startsWith("4.5"))

@@ -26,25 +26,22 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 import com.wormhole_xtreme.WormholeXTreme;
 import com.wormhole_xtreme.config.ConfigManager;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author alron
+ * The Class PermissionsSupport.
  *
+ * @author alron
  */
 public class PermissionsSupport {
     
-    public PermissionsSupport(WormholeXTreme wormholeXTreme)
-    {
-        
-    }
     /**
      * Setup permissions.
      */
-    public void setupPermissions() 
+    public static void enablePermissions() 
     {
-        Plugin test = WormholeXTreme.thisPlugin.getServer().getPluginManager().getPlugin("Permissions");
-
-        if(WormholeXTreme.permissions == null) 
+        if(WormholeXTreme.permissions == null && !ConfigManager.getPermissionsSupportDisable()) 
         {
+            Plugin test = WormholeXTreme.thisPlugin.getServer().getPluginManager().getPlugin("Permissions");
             if(test != null)
             {
                 String v = test.getDescription().getVersion();
@@ -69,17 +66,24 @@ public class PermissionsSupport {
             } 
             else 
             {
-                WormholeXTreme.thisPlugin.prettyLog(Level.WARNING, false, "Permission Plugin not yet available. Defaulting to built-in permissions until Permissions is loaded.");
+                WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Permission Plugin not yet available. Defaulting to built-in permissions until Permissions is loaded.");
             }
+        }
+        else
+        {
+            WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Permission Plugin support disabled via settings.txt.");
         }
     }
     
-    public void disablePermissions()
+    /**
+     * Disable permissions.
+     */
+    public static void disablePermissions()
     {
-        if (!(WormholeXTreme.permissions == null))
+        if (WormholeXTreme.permissions != null)
         {
             WormholeXTreme.permissions = null;
-            WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Detached from Permissions.");
+            WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Detached from Permissions plugin.");
         }
     }
     /**
@@ -87,7 +91,7 @@ public class PermissionsSupport {
      *
      * @param version the version
      */
-    public void checkPermissionsVersion(String version)
+    private static void checkPermissionsVersion(String version)
     {
         if ( !version.equals("2.4") && !version.startsWith("2.5"))
         {

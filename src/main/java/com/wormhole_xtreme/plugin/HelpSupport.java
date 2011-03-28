@@ -35,16 +35,12 @@ import me.taylorkelly.help.Help;
  */
 public class HelpSupport {
     
-    public HelpSupport(WormholeXTreme wormholeXTreme)
-    {
-        
-    }
     /**
      * Setup help.
      */
-    public void setupHelp()
+    public static void enableHelp()
     {
-        if (WormholeXTreme.help == null)
+        if (WormholeXTreme.help == null && !ConfigManager.getHelpSupportDisable())
         {
             Plugin helptest = WormholeXTreme.thisPlugin.getServer().getPluginManager().getPlugin("Help");
             if (helptest != null)
@@ -63,16 +59,24 @@ public class HelpSupport {
             }
             else
             {
-                WormholeXTreme.thisPlugin.prettyLog(Level.WARNING, false, "Help Plugin not yet available - there will be no Help integration until loaded.");
+                WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Help Plugin not yet available - there will be no Help integration until loaded.");
             }
         }
+        else
+        {
+            WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Help Plugin support disabled via settings.txt.");
+        }
     }
-    public void disableHelp()
+    
+    /**
+     * Disable help.
+     */
+    public static void disableHelp()
     {
-        if (!(WormholeXTreme.help == null))
+        if (WormholeXTreme.help != null)
         {
             WormholeXTreme.help = null;
-            WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Detached from Help.");
+            WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Detached from Help plugin.");
         }
     }
     /**
@@ -80,9 +84,9 @@ public class HelpSupport {
      *
      * @param version the version
      */
-    public void checkHelpVersion(String version)
+    private static void checkHelpVersion(String version)
     {
-        if (!version.equals("0.2"))
+        if (!version.startsWith("0.2"))
         {
             WormholeXTreme.thisPlugin.prettyLog(Level.WARNING, false, "Not a supported version of Help. Recommended is 0.2" );
         }
@@ -91,9 +95,9 @@ public class HelpSupport {
     /**
      * Register help commands.
      */
-    public void registerHelpCommands()
+    public static void registerHelpCommands()
     {
-        if (WormholeXTreme.help != null)
+        if (WormholeXTreme.help != null && !ConfigManager.getHelpSupportDisable())
         {
             final String[] cp = new String[] { "wormhole.use.sign",
                                                          "wormhole.use.dialer",
@@ -179,7 +183,7 @@ public class HelpSupport {
             WormholeXTreme.help.registerCommand("wormhole irismaterial <material>","Display iris material, optionally change <material>", WormholeXTreme.thisPlugin, wormhole);
             WormholeXTreme.help.registerCommand("wormhole shutdown_timeout <timeout>","Display shutdown timeout, optionally change <timeout>", WormholeXTreme.thisPlugin, wormhole);
             WormholeXTreme.help.registerCommand("wormhole activate_timeout <timeout>","Display activation timeout, optionally change <timeout>", WormholeXTreme.thisPlugin, wormhole);
-            WormholeXTreme.help.registerCommand("wormhole simple <boolean>","Display simple permissions status, optionally enable/disable via <boolean>", WormholeXTreme.thisPlugin, wormhole);
+            WormholeXTreme.help.registerCommand("wormhole simple <boolean>","Display simple permissions, optionally change via <boolean>", WormholeXTreme.thisPlugin, wormhole);
         }
     }
 }

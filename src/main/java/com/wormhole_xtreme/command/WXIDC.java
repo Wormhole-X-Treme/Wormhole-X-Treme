@@ -28,6 +28,8 @@ import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
+import com.wormhole_xtreme.permissions.WXPermissions;
+import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -52,36 +54,18 @@ public class WXIDC implements CommandExecutor {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        args = CommandUtlities.commandEscaper(args);  
+        args = CommandUtilities.commandEscaper(args);  
         Player p = null;
-        boolean allowed = false;
-        
-        if ( CommandUtlities.playerCheck(sender) )
+        if ( CommandUtilities.playerCheck(sender) )
         {
             p = (Player) sender;
         }
-        
-        
         if ( args.length >= 1 )
         {
             Stargate s = StargateManager.GetStargate(args[0]);
             if ( s != null )
             {
-                // 1. check for permission (config, owner, or OP)
-                
-                if ( CommandUtlities.playerCheck(sender))
-                {
-                    if ( p.isOp() || 
-                        (WormholeXTreme.permissions != null && ((ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(p, "wormhole.simple.config")) ||
-                            (!ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(p, "wormhole.config")))) ||
-                        s.Owner.equals(p.getName()) )   
-                    {
-                        allowed = true;
-                    }
-                }
-    
-    
-                if ( allowed || !CommandUtlities.playerCheck(sender) )
+                if ((p != null && (WXPermissions.checkWXPermissions(p, PermissionType.CONFIG) || (s.Owner != null && s.Owner.equals(p.getName())))) || !CommandUtilities.playerCheck(sender))
                 {
                     // 2. if args other than name - do a set                
                     if ( args.length >= 2 )

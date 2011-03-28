@@ -76,7 +76,7 @@ public class StargateUpdateRunnable implements Runnable
 	@Override
 	public void run()
 	{
-	    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Run Action \"" + this.action + "\" Stargate \"" + this.stargate.Name + "\"");
+	    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Run Action \"" + this.action.toString() + "\" Stargate \"" + this.stargate.Name + "\"");
 		if ( this.action == ActionToTake.SHUTDOWN )
 		{    
 			stargate.ShutdownStargate();
@@ -88,6 +88,14 @@ public class StargateUpdateRunnable implements Runnable
 		else if ( this.action == ActionToTake.DEACTIVATE )
 		{
 			stargate.TimeoutStargate(player);
+		}
+		else if ( this.action == ActionToTake.AFTERSHUTDOWN )
+		{
+		    stargate.AfterShutdownStargate();
+		}
+		else if (this.action == ActionToTake.BUTTONSTATELOCK )
+		{
+		    stargate.DialButtonLeverState();
 		}
 	}
 	
@@ -104,7 +112,11 @@ public class StargateUpdateRunnable implements Runnable
 		ANIMATE_OPENING,
 		
 		/** The DEACTIVATE. */
-		DEACTIVATE
+		DEACTIVATE,
+		
+		AFTERSHUTDOWN,
+		
+		BUTTONSTATELOCK
 	}
 	
 }

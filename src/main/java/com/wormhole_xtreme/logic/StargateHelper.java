@@ -922,21 +922,22 @@ public class StargateHelper
 				if ( fi.getName().contains(".shape") )
 				{
 					WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Loading shape file: \"" + (String)fi.getName() + "\"");
-					try {
-					ArrayList<String> file_lines = new ArrayList<String>();
-					BufferedReader bufferedreader = new BufferedReader(new FileReader(fi));
-					for (String s = ""; (s = bufferedreader.readLine()) != null; ) 
+					try
 					{
-						file_lines.add(s);
-					}
-					bufferedreader.close();
-			
-					StargateShape shape = new StargateShape(file_lines.toArray(new String[]{}));
-					shapes.put(shape.shapeName, shape);
+						ArrayList<String> file_lines = new ArrayList<String>();
+						BufferedReader bufferedreader = new BufferedReader(new FileReader(fi));
+						for (String s = ""; (s = bufferedreader.readLine()) != null; ) 
+						{
+							file_lines.add(s);
+						}
+						bufferedreader.close();
+
+						StargateShape shape = new StargateShape(file_lines.toArray(new String[]{}));
+						shapes.put(shape.shapeName, shape);
 					}
 					catch (Exception e) 
 					{
-						WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE, false, "Unable to read shape files: " + e.getMessage());
+						WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE, false, "Unable to read shape file: " + e.getMessage());
 					}
 					WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Completed loading shape file: \"" + (String)fi.getName() + "\"");
 				}

@@ -30,8 +30,8 @@ import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
-import com.wormhole_xtreme.permissions.PermissionsManager;
-import com.wormhole_xtreme.permissions.PermissionsManager.PermissionLevel;
+import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
+import com.wormhole_xtreme.permissions.WXPermissions;
 
 /**
  * @author alron
@@ -55,7 +55,7 @@ public class Dial implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
     {
         Player player = null;
-        if (!CommandUtlities.playerCheck(sender))
+        if (!CommandUtilities.playerCheck(sender))
         {
             return true;
         }
@@ -63,7 +63,7 @@ public class Dial implements CommandExecutor {
         {
             player = (Player)sender;
         }
-        args = CommandUtlities.commandEscaper(args);
+        args = CommandUtilities.commandEscaper(args);
         if (args.length > 2 || args.length == 0)
         {
             return false;
@@ -71,42 +71,17 @@ public class Dial implements CommandExecutor {
         Stargate start = StargateManager.RemoveActivatedStargate(player);
         if (start != null)
         {               
-            String startnetwork;
-            if (start.Network != null)
+            if ( WXPermissions.checkWXPermissions(player, start, PermissionType.DIALER))
             {
-                startnetwork = start.Network.netName;
-            }
-            else 
-            {
-                startnetwork = "Public";
-            }
-            boolean allowed = false;
-            if (WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
-            {
-                WormholeXTreme.thisPlugin.prettyLog(Level.FINEST, false, "Dial Start - Gate: \""+ start.Name +" \"Network: \"" + startnetwork + "\"");
-                if (WormholeXTreme.permissions.has(player, "wormhole.use.dialer") && (startnetwork.equals("Public") || (!startnetwork.equals("Public") && WormholeXTreme.permissions.has(player, "wormhole.network.use." + startnetwork))))
+                String startnetwork;
+                if (start.Network != null)
                 {
-                    allowed = true;
+                    startnetwork = start.Network.netName;
                 }
-            }
-            else if (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
-            {
-                WormholeXTreme.thisPlugin.prettyLog(Level.FINEST, false, "Dial Start - Gate: \""+ start.Name +" \"Network: \"" + startnetwork + "\"");
-                if (WormholeXTreme.permissions.has(player, "wormhole.simple.use"))
+                else 
                 {
-                    allowed = true;
+                    startnetwork = "Public";
                 }
-            }
-            else
-            {
-                PermissionLevel lvl = PermissionsManager.getPermissionLevel(player, start);
-                if ( lvl.equals(PermissionLevel.WORMHOLE_FULL_PERMISSION) || lvl.equals(PermissionLevel.WORMHOLE_CREATE_PERMISSION) || lvl.equals(PermissionLevel.WORMHOLE_USE_PERMISSION)) {
-                    allowed = true;
-                }
-            }
-            
-            if ( player.isOp() || allowed )
-            {
                 if ( !start.Name.equals(args[0]) )
                 {
                     Stargate target = StargateManager.GetStargate(args[0]);
@@ -138,7 +113,10 @@ public class Dial implements CommandExecutor {
                         player.sendMessage(ConfigManager.output_strings.get(StringTypes.TARGET_INVALID) + " Not on same network.");
                         return true;
                     }
-                        
+                    if (start.IrisActive)
+                    {
+                        start.ToggleIrisActive();
+                    }
                     if (!target.IrisDeactivationCode.equals("") && target.IrisActive)
                     {
                         if ( args.length >= 2 && target.IrisDeactivationCode.equals(args[1]))
@@ -146,14 +124,14 @@ public class Dial implements CommandExecutor {
                             if ( target.IrisActive )
                             {
                                 target.ToggleIrisActive();
-                                player.sendMessage("\u00A73:: \u00A75IDC accepted. Iris has been deactivated.");
+                                player.sendMessage(ConfigManager.normalheader + "IDC accepted. Iris has been deactivated.");
                             }
                         }
                     }
-                    
+
                     if ( start.DialStargate(target) ) 
                     {
-                        player.sendMessage("\u00A73:: \u00A75Stargates connected!");
+                        player.sendMessage(ConfigManager.normalheader + "Stargates connected!");
                     }
                     else
                     {

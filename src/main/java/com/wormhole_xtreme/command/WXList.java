@@ -30,6 +30,8 @@ import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
+import com.wormhole_xtreme.permissions.WXPermissions;
+import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -53,18 +55,12 @@ public class WXList implements CommandExecutor {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        boolean allowed = false;
-        Player p = null;
+        Player player = null;
         
-        if (CommandUtlities.playerCheck(sender)) {
-            p = (Player) sender;
-            if ( p.isOp() || (WormholeXTreme.permissions != null && ((ConfigManager.getSimplePermissions() && (WormholeXTreme.permissions.has(p, "wormhole.simple.config") || WormholeXTreme.permissions.has(p, "wormhole.simple.use"))) || 
-                (!ConfigManager.getSimplePermissions() && (WormholeXTreme.permissions.has(p, "wormhole.config")) || (WormholeXTreme.permissions.has(p, "wormhole.list"))))))
-            {
-                allowed = true;
-            }
+        if (CommandUtilities.playerCheck(sender)) {
+            player = (Player) sender;
         }
-        if (!CommandUtlities.playerCheck(sender) || allowed )
+        if (!CommandUtilities.playerCheck(sender) || (player != null && WXPermissions.checkWXPermissions(player, PermissionType.LIST)) )
         {
             ArrayList<Stargate> gates = StargateManager.GetAllGates();
             sender.sendMessage(ConfigManager.normalheader + "Available gates \u00A73::");

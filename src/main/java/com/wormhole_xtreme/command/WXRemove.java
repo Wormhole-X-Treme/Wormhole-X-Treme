@@ -28,7 +28,8 @@ import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
-import com.wormhole_xtreme.permissions.PermissionsManager;
+import com.wormhole_xtreme.permissions.WXPermissions;
+import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -52,7 +53,7 @@ public class WXRemove implements CommandExecutor {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        args = CommandUtlities.commandEscaper(args);
+        args = CommandUtilities.commandEscaper(args);
         if (args.length >=1 && args.length <= 2)
         {
             if (args[0].equals("-all"))
@@ -60,57 +61,22 @@ public class WXRemove implements CommandExecutor {
                 return false;
             }
             Stargate s = StargateManager.GetStargate(args[0]);
-
+            
             if ( s != null )
             {
-                boolean allowed = false;
-                if (CommandUtlities.playerCheck(sender))
+                Player player = null;
+                if (CommandUtilities.playerCheck(sender))
                 {
-                    Player p = (Player) sender;
-                    if  (WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
-                    {
-                        if (WormholeXTreme.permissions.has(p, "wormhole.remove.all") || ( s.Owner != null && s.Owner.equals(p.getName()) && WormholeXTreme.permissions.has(p, "wormhole.remove.own")))
-                        {
-                            allowed = true;
-                        }   
-                    }
-                    else if (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
-                    {
-                        if (WormholeXTreme.permissions.has(p, "wormhole.simple.remove"))
-                        {
-                            allowed = true;
-                        }
-                    }
-                    else if (PermissionsManager.getPermissionLevel(p, s) == PermissionsManager.PermissionLevel.WORMHOLE_FULL_PERMISSION )
-                    {
-                        allowed = true;
-                    }
-                    if (p.isOp())
-                    {
-                        allowed = true;
-                    }
+                    player = (Player) sender;
                 }
-                if ( !CommandUtlities.playerCheck(sender) || allowed )
+                if ( !CommandUtilities.playerCheck(sender) || (player != null && WXPermissions.checkWXPermissions(player, s, PermissionType.REMOVE)))
                 {
-                    s.DeleteNameSign();
-                    s.ResetTeleportSign();
-                    if (!s.IrisDeactivationCode.equals(""))
+                    boolean destroy = false;
+                    if (args.length == 2 && args[1].equalsIgnoreCase("-all"))
                     {
-                        if (s.IrisActive)
-                        {
-                            s.ToggleIrisActive();
-                        }
-                        s.DeleteIrisLever();
+                        destroy = true;
                     }
-                    if ( args.length == 2 && args[1].equals("-all"))
-                    {
-                        s.DeleteNameSign();
-                        s.DeleteGateBlocks();
-                        s.DeletePortalBlocks();
-                        s.DeleteTeleportSignBlock();
-                        s.DeleteNameBlock();
-                    }
-                    StargateManager.RemoveStargate(s);
+                    CommandUtilities.gateRemove(s,destroy);
                     sender.sendMessage(ConfigManager.normalheader + "Wormhole Removed: " + s.Name);
                 }
                 else

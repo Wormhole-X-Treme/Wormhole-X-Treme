@@ -36,8 +36,8 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
-import com.wormhole_xtreme.permissions.PermissionsManager;
-import com.wormhole_xtreme.permissions.PermissionsManager.PermissionLevel;
+import com.wormhole_xtreme.permissions.WXPermissions;
+import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
 import com.wormhole_xtreme.utils.WorldUtils;
 
 
@@ -75,12 +75,12 @@ public class WormholeXTremeBlockListener extends BlockListener
 	        {
 	            Location current = event.getBlock().getLocation();
 	            Stargate closest = Stargate.FindClosestStargate(current);
-	            if ( closest != null && closest.Active)
+	            if ( closest != null && (closest.Active || closest.RecentActive))
 	            {
-	                double blockdistance = Stargate.DistanceToClosestGateBlock(current, closest);
-	                if ((blockdistance <= closest.GateShape.woosh_depth && closest.GateShape.woosh_depth != 0) || blockdistance <= 5 ) 
+	                double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
+	                if ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 25 ) 
 	                {
-	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Proximity Block Ignite: \"" + event.getCause().toString() + "\" Distance: \"" + blockdistance + "\"");
+	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Block Type: \"" + event.getBlock().getType().toString() + "\" Proximity Block Ignite: \"" + event.getCause().toString() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
 	                    event.setCancelled(true);
 	                }
 	            }
@@ -100,12 +100,12 @@ public class WormholeXTremeBlockListener extends BlockListener
 	        {
 	            Location current = event.getBlock().getLocation();
 	            Stargate closest = Stargate.FindClosestStargate(current);
-	            if ( closest != null && closest.Active)
+	            if ( closest != null && (closest.Active || closest.RecentActive))
 	            {
-	                double blockdistance = Stargate.DistanceToClosestGateBlock(current, closest);
-	                if ((blockdistance <= closest.GateShape.woosh_depth && closest.GateShape.woosh_depth != 0) || blockdistance <= 5 ) 
+	                double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
+	                if ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 25 ) 
 	                {
-	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Proximity Block Burn Distance: \"" + blockdistance + "\"");
+	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Proximity Block Burn Distance Squared: \"" + blockDistanceSquared + "\"");
 	                    event.setCancelled(true);
 	                }
 	            }
@@ -117,7 +117,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 	 * @see org.bukkit.event.block.BlockListener#onBlockFlow(org.bukkit.event.block.BlockFromToEvent)
 	 */
 	@Override
-    public void onBlockFlow(BlockFromToEvent event)
+    public void onBlockFromTo(BlockFromToEvent event)
 	{
 	    if (!event.isCancelled())
 	    {
@@ -126,43 +126,6 @@ public class WormholeXTremeBlockListener extends BlockListener
 	            event.setCancelled(true);
 	        }
 	    }
-	}
-	
-	/**
-	 * Check damage permission.
-	 *
-	 * @param player the player
-	 * @param stargate the stargate
-	 * @return true, if successful
-	 */
-	private boolean checkDamagePermission(Player player, Stargate stargate)
-	{
-	    boolean allowed = false;
-	    if ( player.isOp())
-	    {
-	        allowed = true;
-	    }
-	    else if ( WormholeXTreme.permissions != null )
-	    {
-	        if (!ConfigManager.getSimplePermissions() && (WormholeXTreme.permissions.has(player, "wormhole.remove.all") ||
-	            (stargate.Owner != null && stargate.Owner.equals(player.getName()) && WormholeXTreme.permissions.has(player, "wormhole.remove.own") )))
-	        {
-	            allowed = true;
-	        }
-	        else if (ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.simple.remove"))
-	        {
-	            allowed = true;
-	        }
-	    }
-	    else 
-	    {
-	        PermissionLevel lvl = PermissionsManager.getPermissionLevel(player, stargate);
-	        if (lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION)
-	        {
-	            allowed = true;
-	        }
-	    }
-	    return allowed;
 	}
 	
 	/* (non-Javadoc)
@@ -177,12 +140,18 @@ public class WormholeXTremeBlockListener extends BlockListener
 	        if (stargate != null)
 	        {
 	            boolean allowed = false;
-	            if (event instanceof Player)
+	            Player player = null;
+	            if (event.getPlayer() != null)
 	            {
-	                allowed = checkDamagePermission((Player)event.getPlayer(), stargate);
+	                player = event.getPlayer();
+	                allowed = WXPermissions.checkWXPermissions(player, stargate, PermissionType.DAMAGE );
 	            }
 	            if (!allowed)
 	            {
+	                if (player != null)
+	                {
+	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied damage on: " + stargate.Name);
+	                }
 	                event.setCancelled(true);
 	            }
 	        }
@@ -202,10 +171,10 @@ public class WormholeXTremeBlockListener extends BlockListener
 	        {
 	            boolean allowed = false;
 	            Player player = null;
-	            if (event instanceof Player)
+	            if (event.getPlayer() != null )
 	            {
 	                player = event.getPlayer();
-	                allowed = checkDamagePermission(player, stargate);
+	                allowed = WXPermissions.checkWXPermissions(player, stargate, PermissionType.DAMAGE);
 	            }
 	            if (allowed)
 	            {
@@ -235,10 +204,10 @@ public class WormholeXTremeBlockListener extends BlockListener
 	                            StargateManager.RemoveActivatedStargate(player);
 	                        }
 	                        stargate.ResetTeleportSign();
-	                        stargate.DeleteNameSign();
+	                        stargate.SetupGateSign(false);
 	                        if (!stargate.IrisDeactivationCode.equals(""))
 	                        {
-	                            stargate.DeleteIrisLever();
+	                            stargate.SetupIrisLever(false);
 	                        }
 	                        StargateManager.RemoveStargate(stargate);
 	                        player.sendMessage("Stargate Destroyed: " + stargate.Name);
@@ -252,6 +221,10 @@ public class WormholeXTremeBlockListener extends BlockListener
 	            }
 	            else
 	            {
+	                if (player != null)
+	                {
+	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied block destroy on: " + stargate.Name);
+	                }
 	                event.setCancelled(true);
 	            }
 	        }

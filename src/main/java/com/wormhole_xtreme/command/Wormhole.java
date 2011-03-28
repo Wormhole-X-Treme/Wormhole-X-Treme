@@ -32,6 +32,8 @@ import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
 import com.wormhole_xtreme.permissions.PermissionsManager;
+import com.wormhole_xtreme.permissions.WXPermissions;
+import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
 import com.wormhole_xtreme.plugin.HelpSupport;
 
 // TODO: Auto-generated Javadoc
@@ -42,7 +44,6 @@ import com.wormhole_xtreme.plugin.HelpSupport;
  */
 public class Wormhole implements CommandExecutor 
 {
-    private static HelpSupport helpSupport = new HelpSupport(WormholeXTreme.thisPlugin);
     /**
      * Instantiates a new wormhole.
      *
@@ -59,33 +60,14 @@ public class Wormhole implements CommandExecutor
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
     {
-
-        boolean allowed = false;
-        if (CommandUtlities.playerCheck(sender))
+        Player player = null;
+        if (CommandUtilities.playerCheck(sender))
         {
-            Player player = (Player)sender;
-            if (player.isOp())
-            {
-                allowed = true;
-            }
-            else if (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions())
-            {
-                if (WormholeXTreme.permissions.has(player, "wormhole.simple.config"))
-                {
-                    allowed = true;
-                }
-            }
-            else if (WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions())
-            {
-                if (WormholeXTreme.permissions.has(player, "wormhole.config"))
-                {
-                    allowed = true;
-                }
-            }
+            player = (Player)sender;
         }
-        if (allowed || !CommandUtlities.playerCheck(sender))
+        if ((player != null && WXPermissions.checkWXPermissions(player, PermissionType.CONFIG)) || !CommandUtilities.playerCheck(sender))
         {
-            args = CommandUtlities.commandEscaper(args);
+            args = CommandUtilities.commandEscaper(args);
             if ((args.length > 4 ) || (args.length == 0)) 
             {
                 return false;
@@ -118,10 +100,14 @@ public class Wormhole implements CommandExecutor
             {
                 return doSimplePermissions(sender,args);
             }
+            else if (args[0].equalsIgnoreCase("regenerate") || args[0].equalsIgnoreCase("regen"))
+            {
+                return doRegenerate(sender, args);
+            }
             else 
             {
                 sender.sendMessage(ConfigManager.output_strings.get(StringTypes.REQUEST_INVALID) + ": " + args[0]);
-                sender.sendMessage(ConfigManager.errorheader + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'shutdown_timeout', 'activate_timeout' and 'simple'.");
+                sender.sendMessage(ConfigManager.errorheader + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'shutdown_timeout', 'activate_timeout', 'simple' and 'regenerate'.");
             }
         }
         else
@@ -158,7 +144,7 @@ public class Wormhole implements CommandExecutor
                 sender.sendMessage(ConfigManager.errorheader + "Valid options: true/yes, false/no");
                 return false;
             }
-            if (WormholeXTreme.permissions != null && CommandUtlities.playerCheck(sender))
+            if (WormholeXTreme.permissions != null && CommandUtilities.playerCheck(sender))
             {
                 player = (Player)sender;
                 if (simple && !WormholeXTreme.permissions.has(player, "wormhole.simple.config"))
@@ -176,7 +162,10 @@ public class Wormhole implements CommandExecutor
             }
             ConfigManager.setSimplePermissions(simple);
             sender.sendMessage(ConfigManager.normalheader + "Simple Permissions set to: " + ConfigManager.getSimplePermissions());
-            helpSupport.registerHelpCommands();
+            if (!ConfigManager.getHelpSupportDisable())
+            {
+                HelpSupport.registerHelpCommands();
+            }
             if (player != null)
             {
                 WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Simple Permissions set to: \"" + simple + "\" by: \"" + player.getName() + "\"");
@@ -378,12 +367,12 @@ public class Wormhole implements CommandExecutor
 			}
 			else
 			{
-				sender.sendMessage(ConfigManager.errorheader + "Invalid gate name: " + args[1]);
+				sender.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_INVALID) + "\"" + args[1] + "\"");
 			}
 		}
 		else
 		{
-		    sender.sendMessage(ConfigManager.errorheader + "No gate name specified.");
+		    sender.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_NOT_SPECIFIED));
 		    return false;
 		}
 		return true;
@@ -398,12 +387,50 @@ public class Wormhole implements CommandExecutor
 	 */
 	private static void doPerms(CommandSender sender, String[] args)
 	{
-		if (CommandUtlities.playerCheck(sender))
+		if (CommandUtilities.playerCheck(sender))
 		{
 			Player p = (Player) sender;
 			PermissionsManager.HandlePermissionRequest(p, args);
 		}
 	}
     
-
+	private static boolean doRegenerate(CommandSender sender, String[] args)
+	{
+	    if ( args.length >= 2 )
+	    {
+	        Stargate stargate = StargateManager.GetStargate(args[1]);
+	        if (stargate != null)
+	        {
+	            // TODO: Finish this.
+	            Stargate tempgate = new Stargate();
+	            tempgate.Name = stargate.Name;
+	            tempgate.Owner = stargate.Owner;
+	            tempgate.Network = stargate.Network;
+	            if (stargate.GateShape != null)
+	            {
+	                tempgate.GateShape = stargate.GateShape;
+	            }
+	            tempgate.IrisDeactivationCode = stargate.IrisDeactivationCode;
+	            tempgate.Facing = stargate.Facing;
+	            tempgate.TeleportLocation = stargate.TeleportLocation;
+	            tempgate.IsSignPowered = stargate.IsSignPowered;
+	            // ArrayList<Location> blocklist = stargate.Blocks;
+	            //if (stargate.IsSignPowered && stargate.TeleportSignBlock == null)
+	            //{
+	            //    stargate.ResetTeleportSign();
+	            //}
+	            sender.sendMessage(ConfigManager.normalheader + "Regenerating Gate: " + tempgate.Name );
+	        }
+	        else
+	        {
+	            sender.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_INVALID) + "\"" + args[1] + "\"");
+	        }
+	    }
+	    else
+	    {
+	        sender.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_NOT_SPECIFIED));
+	        return false;
+	    }
+	    return true;
+	}
 }

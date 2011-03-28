@@ -18,6 +18,7 @@
  */
 package com.wormhole_xtreme.command;
 
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,6 +29,9 @@ import com.wormhole_xtreme.config.ConfigManager;
 import com.wormhole_xtreme.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
+import com.wormhole_xtreme.permissions.WXPermissions;
+import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
+import com.wormhole_xtreme.utils.TeleportUtils;
 
 /**
  * @author alron
@@ -49,7 +53,7 @@ public class WXGo implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
     {
         Player player = null;
-        if (!CommandUtlities.playerCheck(sender))
+        if (!CommandUtilities.playerCheck(sender))
         {
             return true;
         }
@@ -57,30 +61,17 @@ public class WXGo implements CommandExecutor {
         {
             player = (Player)sender;
         }
-        boolean allowed = false;
-        if ( player.isOp() || ( WormholeXTreme.permissions != null && !ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.go"))
-            || (WormholeXTreme.permissions != null && ConfigManager.getSimplePermissions() && WormholeXTreme.permissions.has(player, "wormhole.config")))
+        if (WXPermissions.checkWXPermissions(player, PermissionType.GO))
         {
-            allowed = true;
-        }
-        if (allowed)
-        {
-            args = CommandUtlities.commandEscaper(args);
+            args = CommandUtilities.commandEscaper(args);
             if ( args.length == 1)
             {
                 String gogate = args[0].trim().replace("\n", "").replace("\r", "");
                 Stargate s = StargateManager.GetStargate(gogate);
                 if ( s != null)
                 {
-//                    if (player.getWorld() != s.TeleportLocation.getWorld())
-//                    {
-//                        player.teleportTo(s.TeleportLocation.getWorld().getSpawnLocation());
-                        player.teleport(s.TeleportLocation);
-//                    }
-//                    else
-//                    {
-//                        player.teleportTo(s.TeleportLocation);
-//                    }
+                    Location tp = TeleportUtils.FindSafeTeleportFromStargate(s);
+                    player.teleport(tp);
                 }
                 else
                 {

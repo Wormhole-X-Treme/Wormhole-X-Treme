@@ -72,10 +72,6 @@ public class WormholeXTreme extends JavaPlugin
 	/** The server listener. */
 	private final WormholeXTremeServerListener serverListener = new WormholeXTremeServerListener(this);
 	
-	private final HelpSupport helpSupport = new HelpSupport(this);
-	private final IConomySupport iconomySupport = new IConomySupport(this);
-	private final PermissionsSupport permissionsSupport = new PermissionsSupport(this);
-	
 	/** The debugees. */
 	private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
 
@@ -133,9 +129,9 @@ public class WormholeXTreme extends JavaPlugin
 		// Try and attach to Permissions and iConomy and Help
 		try
 		{
-			permissionsSupport.setupPermissions();
-			iconomySupport.setupIconomy();
-			helpSupport.setupHelp();
+			PermissionsSupport.enablePermissions();
+			IConomySupport.enableIconomy();
+			HelpSupport.enableHelp();
 		}
 		catch ( Exception e)
 		{
@@ -144,7 +140,7 @@ public class WormholeXTreme extends JavaPlugin
 		// Register our events and commands
 		registerEvents();
 		registerCommands();
-		helpSupport.registerHelpCommands();
+		HelpSupport.registerHelpCommands();
 		prettyLog(Level.INFO, true, "Enable Completed.");
 	}
 	
@@ -215,7 +211,7 @@ public class WormholeXTreme extends JavaPlugin
 			// Store all our gates
 			for ( Stargate gate : gates )
 			{
-				gate.ShutdownStargate();
+				gate.ShutdownStargate(false);
 				StargateDBManager.StargateToSQL(gate);
 			}
 			

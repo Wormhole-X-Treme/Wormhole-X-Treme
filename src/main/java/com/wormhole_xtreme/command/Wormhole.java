@@ -18,12 +18,9 @@
  */
 package com.wormhole_xtreme.command;
 
-import java.util.ArrayList;
 import java.util.logging.Level;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -47,7 +44,6 @@ import com.wormhole_xtreme.plugin.HelpSupport;
  */
 public class Wormhole implements CommandExecutor 
 {
-    private static HelpSupport helpSupport = new HelpSupport(WormholeXTreme.thisPlugin);
     /**
      * Instantiates a new wormhole.
      *
@@ -166,7 +162,10 @@ public class Wormhole implements CommandExecutor
             }
             ConfigManager.setSimplePermissions(simple);
             sender.sendMessage(ConfigManager.normalheader + "Simple Permissions set to: " + ConfigManager.getSimplePermissions());
-            helpSupport.registerHelpCommands();
+            if (!ConfigManager.getHelpSupportDisable())
+            {
+                HelpSupport.registerHelpCommands();
+            }
             if (player != null)
             {
                 WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Simple Permissions set to: \"" + simple + "\" by: \"" + player.getName() + "\"");
@@ -402,12 +401,25 @@ public class Wormhole implements CommandExecutor
 	        Stargate stargate = StargateManager.GetStargate(args[1]);
 	        if (stargate != null)
 	        {
-	            // ArrayList<Location> blocklist = stargate.Blocks;
-	            if (stargate.IsSignPowered && stargate.TeleportSignBlock == null)
+	            // TODO: Finish this.
+	            Stargate tempgate = new Stargate();
+	            tempgate.Name = stargate.Name;
+	            tempgate.Owner = stargate.Owner;
+	            tempgate.Network = stargate.Network;
+	            if (stargate.GateShape != null)
 	            {
-	                stargate.ResetTeleportSign();
+	                tempgate.GateShape = stargate.GateShape;
 	            }
-	            sender.sendMessage(ConfigManager.normalheader + "Regenerating Gate: " + stargate.Name );
+	            tempgate.IrisDeactivationCode = stargate.IrisDeactivationCode;
+	            tempgate.Facing = stargate.Facing;
+	            tempgate.TeleportLocation = stargate.TeleportLocation;
+	            tempgate.IsSignPowered = stargate.IsSignPowered;
+	            // ArrayList<Location> blocklist = stargate.Blocks;
+	            //if (stargate.IsSignPowered && stargate.TeleportSignBlock == null)
+	            //{
+	            //    stargate.ResetTeleportSign();
+	            //}
+	            sender.sendMessage(ConfigManager.normalheader + "Regenerating Gate: " + tempgate.Name );
 	        }
 	        else
 	        {

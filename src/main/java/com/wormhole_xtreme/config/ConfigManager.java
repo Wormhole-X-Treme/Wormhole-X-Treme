@@ -55,7 +55,10 @@ public class ConfigManager
 		Configuration.loadConfiguration(pdf);
 	}
 	
+	/** The Constant errorheader. */
 	public static final String errorheader = "\u00A73:: \u00A75error \u00A73:: \u00A77";
+	
+	/** The Constant normalheader. */
 	public static final String normalheader = "\u00A73:: \u00A77";
 	// Used so that I don't have to retype strings over and over again.
 	/**
@@ -433,11 +436,69 @@ public class ConfigManager
 	    }
 	}
 	
+	/**
+	 * Sets the simple permissions.
+	 *
+	 * @param b the new simple permissions
+	 */
 	public static void setSimplePermissions(boolean b)
 	{
 	    ConfigManager.setConfigValue(ConfigKeys.SIMPLE_PERMISSIONS, b);
 	}
 	
+	/**
+	 * Gets the Permissions plugin support status.
+	 *
+	 * @return true, if Permissions plugin support is disabled.
+	 */
+	public static boolean getPermissionsSupportDisable()
+	{
+	    Setting psd;
+	    if ((psd = ConfigManager.configurations.get(ConfigKeys.PERMISSIONS_SUPPORT_DISABLE)) != null)
+	    {
+	        return psd.getBooleanValue();
+	    }
+	    else
+	    {
+	        return false;
+	    }
+	}
+
+	/**
+	 * Gets the Help plugin support status.
+	 *
+	 * @return true, if Help plugin support is disabled.
+	 */
+	public static boolean getHelpSupportDisable()
+	{
+	    Setting hsd;
+	    if ((hsd = ConfigManager.configurations.get(ConfigKeys.HELP_SUPPORT_DISABLE)) != null)
+	    {
+	        return hsd.getBooleanValue();
+	    }
+	    else
+	    {
+	        return false;
+	    }
+	}
+	
+	/**
+	 * Gets the iConomy plugin support status.
+	 *
+	 * @return true, if iConomy plugin support is disabled.
+	 */
+	public static boolean getIconomySupportDisable()
+	{
+	    Setting isd;
+	    if ((isd = ConfigManager.configurations.get(ConfigKeys.ICONOMY_SUPPORT_DISABLE)) != null)
+	    {
+	        return isd.getBooleanValue();
+	    }
+	    else
+	    {
+	        return false;
+	    }
+	}
 	/**
 	 * The Enum StringTypes.
 	 */
@@ -489,6 +550,7 @@ public class ConfigManager
 		/** The REQUES t_ invalid. */
 		REQUEST_INVALID,
 		
+		/** The GAT e_ no t_ specified. */
 		GATE_NOT_SPECIFIED
 	}
 
@@ -504,7 +566,10 @@ public class ConfigManager
 		/** The BUIL t_ i n_ defaul t_ permissio n_ level. */
 		BUILT_IN_DEFAULT_PERMISSION_LEVEL,
 		
-		/** The SIMPL e_ permissions. */
+		/** The PERMISSION SUPPORT DISABLE. */
+		PERMISSIONS_SUPPORT_DISABLE,
+		
+		/** The SIMPLE PERMISSIONS. */
 		SIMPLE_PERMISSIONS,
 		
 		/** The WORMHOL e_ us e_ i s_ teleport. */
@@ -525,6 +590,8 @@ public class ConfigManager
 		/** The IRI s_ material. */
 		IRIS_MATERIAL,
 		
+		/** The ICONOMY SUPPORT DISABLE. */
+		ICONOMY_SUPPORT_DISABLE,
 		/** The ICONOM y_ wormhol e_ us e_ cost. */
 		ICONOMY_WORMHOLE_USE_COST,
 		
@@ -536,6 +603,9 @@ public class ConfigManager
 		
 		/** The ICONOM y_ wormhol e_ owne r_ percent. */
 		ICONOMY_WORMHOLE_OWNER_PERCENT,
+		
+		/** The HELP SUPPORT DISABLE. */
+		HELP_SUPPORT_DISABLE,
 		
 		/** The LO g_ level. */
 		LOG_LEVEL

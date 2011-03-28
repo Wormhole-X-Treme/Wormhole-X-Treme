@@ -84,7 +84,6 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	    else if ( clicked != null && clicked.getType() == Material.WALL_SIGN )
 	    {
 	        Stargate stargate = StargateManager.getGateFromBlock(clicked);
-
 	        if ( stargate != null )
 	        {
 	            if (WXPermissions.checkWXPermissions(player, stargate, PermissionType.SIGN)) 
@@ -189,7 +188,8 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	        }
 
 	        Block target_block = target.getWorld().getBlockAt(target.getBlockX(), target.getBlockY(), target.getBlockZ());
-	        while ( target_block.getType() != Material.AIR && target_block.getType() != Material.WATER && target_block.getType() != Material.LAVA )
+	        String target_material = target_block.getType().toString();
+	        if ( !target_material.equals("AIR") && !target_material.endsWith("WATER") && !target_material.endsWith("LAVA") )
 	        {
 	            target_block = target_block.getFace(BlockFace.UP);
 	            target.setY(target.getY() + 1.0);

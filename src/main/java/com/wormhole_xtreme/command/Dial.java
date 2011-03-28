@@ -113,7 +113,10 @@ public class Dial implements CommandExecutor {
                         player.sendMessage(ConfigManager.output_strings.get(StringTypes.TARGET_INVALID) + " Not on same network.");
                         return true;
                     }
-
+                    if (start.IrisActive)
+                    {
+                        start.ToggleIrisActive();
+                    }
                     if (!target.IrisDeactivationCode.equals("") && target.IrisActive)
                     {
                         if ( args.length >= 2 && target.IrisDeactivationCode.equals(args[1]))

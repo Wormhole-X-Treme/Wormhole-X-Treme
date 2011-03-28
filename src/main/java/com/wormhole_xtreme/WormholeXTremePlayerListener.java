@@ -243,7 +243,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 				}
 			}
 			
-			Block target_block = target.getWorld().getBlockAt(target.getBlockX(), target.getBlockY(), target.getBlockZ());
+			Block target_block = target.getBlock();
 			while ( target_block.getType() != Material.AIR && target_block.getType() != Material.WATER && target_block.getType() != Material.LAVA )
 			{
 				target_block = target_block.getFace(BlockFace.UP);

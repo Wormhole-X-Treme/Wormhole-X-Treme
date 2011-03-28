@@ -18,6 +18,7 @@
  */
 package com.wormhole_xtreme.command;
 
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,6 +31,7 @@ import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
 import com.wormhole_xtreme.permissions.WXPermissions;
 import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
+import com.wormhole_xtreme.utils.TeleportUtils;
 
 /**
  * @author alron
@@ -68,7 +70,8 @@ public class WXGo implements CommandExecutor {
                 Stargate s = StargateManager.GetStargate(gogate);
                 if ( s != null)
                 {
-                    player.teleport(s.TeleportLocation);
+                    Location tp = TeleportUtils.FindSafeTeleportFromStargate(s);
+                    player.teleport(tp);
                 }
                 else
                 {

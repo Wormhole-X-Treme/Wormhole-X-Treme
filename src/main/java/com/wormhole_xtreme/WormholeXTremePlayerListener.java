@@ -39,6 +39,7 @@ import com.wormhole_xtreme.model.StargateManager;
 import com.wormhole_xtreme.model.StargateShape;
 import com.wormhole_xtreme.permissions.WXPermissions;
 import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
+import com.wormhole_xtreme.utils.TeleportUtils;
 import com.wormhole_xtreme.utils.WorldUtils;
 
 
@@ -69,16 +70,30 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	@Override
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
+	    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false,"Caught Player: \"" + event.getPlayer().getName() + "\" Event type: \"" + event.getType() + "\" Action Type: \"" + event.getAction() + "\"");
+	    if (handlePlayerInteractEvent(event))
+	    {
+	        WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false,"Cancelled Player: \"" + event.getPlayer().getName() + "\" Event type: \"" + event.getType() + "\" Action Type: \"" + event.getAction() + "\"");
+	        event.setCancelled(true);
+	    }
+	}
+	
+	/**
+	 * Handle player interact event.
+	 *
+	 * @param event the event
+	 * @return true, if successful
+	 */
+	private static boolean handlePlayerInteractEvent(PlayerInteractEvent event)
+	{
 	    Block clicked = event.getClickedBlock();
 	    Player player = event.getPlayer();
 
 	    if (clicked != null && (clicked.getType() == Material.STONE_BUTTON || clicked.getType() == Material.LEVER ))
 	    {
-	        WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false,"Caught Button/Lever Hit from: \"" + player.getName() + "\" Event type: \"" + event.getType() + "\" Action Type: \"" + event.getAction() + "\"");
-	        if ( !this.ButtonLeverHit(player, clicked, null) )
+	        if ( !ButtonLeverHit(player, clicked, null) )
 	        {  
-	            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false,"Cancelled Button/Lever Hit from: \"" + player.getName() + "\" Event type: \"" + event.getType() + "\" Action Type: \"" + event.getAction() + "\"");
-	            event.setCancelled(true);
+	            return true;
 	        }
 	    }
 	    else if ( clicked != null && clicked.getType() == Material.WALL_SIGN )
@@ -96,15 +111,17 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	                        target = stargate.SignTarget.Name;
 	                    }
 	                    player.sendMessage("Dialer set to: " + target);
+	                    return true;
 	                }
 	            }
 	            else 
 	            {
 	                player.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
-	                event.setCancelled(true);
+	                return true;
 	            }
 	        }
 	    }
+	    return false;
 	}
 
 	/* (non-Javadoc)
@@ -112,6 +129,20 @@ public class WormholeXTremePlayerListener extends PlayerListener
      */
 	@Override
 	public void onPlayerMove(PlayerMoveEvent event)
+	{
+	    if (handlePlayerMoveEvent(event))
+	    {
+	        event.setCancelled(true);
+	    }
+	}
+	
+	/**
+	 * Handle player move event.
+	 *
+	 * @param event the event
+	 * @return true, if successful
+	 */
+	private static boolean handlePlayerMoveEvent(PlayerMoveEvent event)
 	{
 	    Player p = event.getPlayer();
 	    Location l = event.getTo();
@@ -135,7 +166,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	            (!st.IsSignPowered && !WXPermissions.checkWXPermissions(p, st, PermissionType.DIALER))))
 	        {
 	            p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
-	            return;
+	            return false;
 	        }
 	        if ( st.Target.IrisActive )
 	        {
@@ -148,7 +179,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	            {
 	                p.setFireTicks(0);
 	            }
-	            return;
+	            return true;
 	        }
 
 	        Location target = st.Target.TeleportLocation;
@@ -191,19 +222,15 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	                }
 	            }
 	        }
-
-	        Block target_block = target.getWorld().getBlockAt(target.getBlockX(), target.getBlockY(), target.getBlockZ());
-	        String target_material = target_block.getType().toString();
-	        if ( !target_material.equals("AIR") && !target_material.endsWith("WATER") && !target_material.endsWith("LAVA") )
+	        if (target != st.TeleportLocation)
 	        {
-	            target_block = target_block.getFace(BlockFace.UP);
-	            target.setY(target.getY() + 1.0);
-	        }		
+	            target = TeleportUtils.FindSafeTeleportFromStargate(st.Target);
+	            st.Target.TeleportLocation = target;
+	        }
 	        event.setFrom(target);
 	        event.setTo(target);
 	        p.setNoDamageTicks(2);
 	        p.teleport(target);
-	        event.setCancelled(true);
 	        if ( target == st.Target.TeleportLocation )
 	            WormholeXTreme.thisPlugin.prettyLog(Level.INFO,false, p.getDisplayName() + " used wormhole: " + st.Name + " to go to: " + st.Target.Name);
 
@@ -211,11 +238,13 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	        {
 	            st.ShutdownStargate();
 	        }
+	        return true;
 	    }
 	    else if ( st != null )
 	    {
 	        WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player entered gate but wasn't active or didn't have a target.");
 	    }
+	    return false;
 	}
 	
 	/**
@@ -226,7 +255,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
      * @param direction the direction
      * @return true, if successful
      */
-    private boolean ButtonLeverHit(Player p, Block clicked, BlockFace direction)
+    private static boolean ButtonLeverHit(Player p, Block clicked, BlockFace direction)
     {
         Stargate s = StargateManager.getGateFromBlock(clicked);
         
@@ -236,7 +265,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
             {
                 if ( WorldUtils.isSameBlock(s.ActivationBlock, clicked) )
                 {
-                    this.HandleGateActivationSwitch(s, p);
+                    HandleGateActivationSwitch(s, p);
                 }
                 else if ( WorldUtils.isSameBlock(s.IrisActivationBlock, clicked) )
                 {
@@ -364,7 +393,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
      * @param player the player
      * @return true, if successful
      */
-    private boolean HandleGateActivationSwitch(Stargate stargate, Player player) 
+    private static boolean HandleGateActivationSwitch(Stargate stargate, Player player) 
     {
         if ( stargate.Active || stargate.LitGate )
         {

@@ -39,6 +39,7 @@ import com.wormhole_xtreme.model.Stargate;
 import com.wormhole_xtreme.model.StargateManager;
 import com.wormhole_xtreme.permissions.WXPermissions;
 import com.wormhole_xtreme.permissions.WXPermissions.PermissionType;
+import com.wormhole_xtreme.utils.TeleportUtils;
 
 
 // TODO: Auto-generated Javadoc
@@ -178,6 +179,11 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 				}
 				else 
 				{
+		            if (target != st.TeleportLocation)
+		            {
+		                target = TeleportUtils.FindSafeTeleportFromStargate(st.Target);
+		                st.Target.TeleportLocation = target;
+		            }
 				    if (target.getWorld() != st.TeleportLocation.getWorld())
 				    {
 				        if (e != null)

@@ -155,8 +155,6 @@ public class Stargate
 	/** The After shutdown task id. */
 	private int AfterShutdownTaskId;
 	
-	private int ButtonStateLockTaskId;
-	
 	/**
 	 * Instantiates a new stargate.
 	 */
@@ -831,6 +829,12 @@ public class Stargate
 	        if (material == Material.LEVER || material == Material.STONE_BUTTON)
 	        {
 	            int state = (int)this.ActivationBlock.getData();
+	            if (material == Material.STONE_BUTTON)
+	            {
+	                WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Automaticially replaced Button on gate \"" + this.Name + "\" with Lever.");
+	                this.ActivationBlock.setType(Material.LEVER);
+	                this.ActivationBlock.setData((byte)state);
+	            }
 	            if (this.Active)
 	            {
 	                if (state <= 4 && state != 0)
@@ -845,19 +849,10 @@ public class Stargate
 	                    state = state - 8;
 	                }
 	            }
-	            if (this.ButtonStateLockTaskId > 0 && !this.Active && WormholeXTreme.scheduler.isQueued(this.ButtonStateLockTaskId))
-	            {
-	                WormholeXTreme.scheduler.cancelTask(this.ButtonStateLockTaskId);
-	                WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Dial Button Gate: \"" + this.Name + "\" ButtonStateLockTaskID: \"" + this.ButtonStateLockTaskId + "\" cancelled.");
-	                this.ButtonStateLockTaskId = 0;
-	            }
+
 	            this.ActivationBlock.setData((byte)state);
 	            {
 	                WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Dial Button Lever Gate: \"" + this.Name + "\" Material: \"" + material.toString() + "\" State: \"" + state + "\"");
-	                if (this.Active && material == Material.STONE_BUTTON && !WormholeXTreme.scheduler.isQueued(this.ButtonStateLockTaskId))
-	                {
-	                    this.ButtonStateLockTaskId = WormholeXTreme.scheduler.scheduleSyncRepeatingTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, ActionToTake.BUTTONSTATELOCK), 11, 20);
-	                }
 	            }
 	        }
 	    }

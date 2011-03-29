@@ -640,7 +640,7 @@ public class Stargate
 		    this.SetupGateSign(true);
 		}
 		// 2. Set up Iris stuff
-		if (idc != "")
+		if (!idc.equals(""))
 		{
 		    SetIrisDeactivationCode(idc);
 		}

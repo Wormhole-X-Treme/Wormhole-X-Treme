@@ -70,7 +70,7 @@ public class WXGo implements CommandExecutor {
                 Stargate s = StargateManager.GetStargate(gogate);
                 if ( s != null)
                 {
-                    Location tp = TeleportUtils.FindSafeTeleportFromStargate(s);
+                    Location tp = TeleportUtils.findSafeTeleportFromStargate(s);
                     player.teleport(tp);
                 }
                 else

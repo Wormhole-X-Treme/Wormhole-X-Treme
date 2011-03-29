@@ -224,7 +224,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	        }
 	        if (target != st.TeleportLocation)
 	        {
-	            target = TeleportUtils.FindSafeTeleportFromStargate(st.Target);
+	            target = TeleportUtils.findSafeTeleportFromStargate(st.Target);
 	            st.Target.TeleportLocation = target;
 	        }
 	        event.setFrom(target);

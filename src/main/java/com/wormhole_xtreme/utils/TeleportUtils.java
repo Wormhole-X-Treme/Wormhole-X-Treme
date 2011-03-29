@@ -43,7 +43,7 @@ public class TeleportUtils {
      * @param stargate The unsafe stargate to find a location from.
      * @return The safe stading location (probably)
      */
-    public static Location FindSafeTeleportFromStargate(Stargate stargate)
+    public static Location findSafeTeleportFromStargate(Stargate stargate)
     {
         Location location = stargate.TeleportLocation;
         WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Unsafe location: " + location);
@@ -191,7 +191,7 @@ public class TeleportUtils {
                         tempmaterial = tempblock.getType();
                     }
                 }
-                if (tempmaterial != Material.WATER && tempmaterial != Material.WATER && tempmaterial != Material.RAILS && tempmaterial != Material.AIR)
+                if (tempmaterial != Material.WATER && tempmaterial != Material.RAILS && tempmaterial != Material.AIR)
                 {
                     WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "2nd up="+ secondstagedistance + " material=" + tempmaterial);
                     secondstagedistance++;

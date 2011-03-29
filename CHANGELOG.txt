@@ -1,6 +1,6 @@
 Changes 0.820:
 
-- Initial support for CraftBukkit Build 560+.
+- Initial support for CraftBukkit Build 570+.
 
 - Got rid of the stupid double error that people got by not reading the readme. Now when
   we parse settings.txt, if the value is integer for the iconomy settings, we change it
@@ -15,8 +15,8 @@ Changes 0.820:
 - Gate block protection should now be compatible with plugins like mcMMO. "Should" being
   the operating word.
 
-- Buttons and Levers now properly move when used. Event for them is only canceled on
-  permission deny. 
+- Levers now properly move when used and toggle on and off when stargate
+  and iris are activated.
   
 - All Permissions deny events now log at Level.FINE. Got permissions problems with WXT?
   Now see what is happening.
@@ -24,6 +24,26 @@ Changes 0.820:
 - Optimized fire protection. Now we use timer events that go off 2 seconds after gates 
   close. This way we don't have to listen for fire type events 24/7. :)
   
+- Fixed teleportation dropping people into very unsafe locations. Now we scan for safe
+  place to drop people, if we can't find one we drop the player in front of the DHD. 
+  
+- We now support using the help plugin along with WXT. 
+
+- We now have settings.txt options to hard disable support of iConomy, Permissions, and
+  the help plugin. No longer do we log a warning when unable to find the plugin we depend
+  on. We log at INFO. :P
+  
+- Buttons are no longer really used. If a button exists on a stargate, it will be replaced
+  with a shiny new lever on the first use. 
+
+- Lava stargates are *really* safe to use now. For trees even.
+
+- A whole host of debugging information has been added at Level.FINE. If you can trigger
+  a bug reliably, set yourself to fine and provide the server.log details surrounding the
+  bug. Not recomended for production servers as well... its exceissive.
+  
+- the '/wormhole regenerate' command is partially added. Will regenerate missing activation
+  and iris levers.
 
 Changes 0.812 (3/23/11 @ 15:17 PST):
 

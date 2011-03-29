@@ -103,7 +103,7 @@ public class Dial implements CommandExecutor {
                     {
                         targetnetwork = "Public";
                     }
-                    WormholeXTreme.thisPlugin.prettyLog(Level.FINEST, false, "Dial Target - Gate: \"" + target.Name + "\" Network: \"" + targetnetwork + "\"");
+                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Dial Target - Gate: \"" + target.Name + "\" Network: \"" + targetnetwork + "\"");
                     // Not on same network
                     if (!startnetwork.equals(targetnetwork))
                     {

@@ -91,7 +91,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 
 	    if (clicked != null && (clicked.getType() == Material.STONE_BUTTON || clicked.getType() == Material.LEVER ))
 	    {
-	        if ( !ButtonLeverHit(player, clicked, null) )
+	        if ( ButtonLeverHit(player, clicked, null) )
 	        {  
 	            return true;
 	        }
@@ -281,7 +281,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
                 p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
             }
             
-            return false;
+            return true;
         }
         else 
         {
@@ -305,7 +305,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
                 
                 if ( direction == null)
                 {
-                    return true;
+                    return false;
                 }
             }
             // Check to see if player has already run the "build" command.
@@ -345,7 +345,6 @@ public class WormholeXTremePlayerListener extends PlayerListener
                             else
                             {
                                 p.sendMessage("Stargate constrution failed!?");
-                                return false;
                             }
                         }
                         
@@ -375,15 +374,15 @@ public class WormholeXTremePlayerListener extends PlayerListener
                     }
                     StargateManager.RemoveIncompleteStargate(p);
                     p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
-                    return false;
+                    return true;
                 }   
             }
             else
             {
-                WormholeXTreme.thisPlugin.prettyLog(Level.FINEST, false, p.getName() + " has pressed a button or lever but did not find any properly created gates.");
-                return true;
+                WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, p.getName() + " has pressed a button or lever but did not find any properly created gates.");
             }
-        } 
+        }
+        return false;
     }
 
     /**

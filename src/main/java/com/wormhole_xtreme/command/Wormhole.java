@@ -401,25 +401,13 @@ public class Wormhole implements CommandExecutor
 	        Stargate stargate = StargateManager.GetStargate(args[1]);
 	        if (stargate != null)
 	        {
-	            // TODO: Finish this.
-	            Stargate tempgate = new Stargate();
-	            tempgate.Name = stargate.Name;
-	            tempgate.Owner = stargate.Owner;
-	            tempgate.Network = stargate.Network;
-	            if (stargate.GateShape != null)
+	            stargate.DialButtonLeverState(true);
+	            if (stargate.IrisDeactivationCode != "")
 	            {
-	                tempgate.GateShape = stargate.GateShape;
+	                stargate.SetupIrisLever(false);
+	                stargate.SetupIrisLever(true);
 	            }
-	            tempgate.IrisDeactivationCode = stargate.IrisDeactivationCode;
-	            tempgate.Facing = stargate.Facing;
-	            tempgate.TeleportLocation = stargate.TeleportLocation;
-	            tempgate.IsSignPowered = stargate.IsSignPowered;
-	            // ArrayList<Location> blocklist = stargate.Blocks;
-	            //if (stargate.IsSignPowered && stargate.TeleportSignBlock == null)
-	            //{
-	            //    stargate.ResetTeleportSign();
-	            //}
-	            sender.sendMessage(ConfigManager.normalheader + "Regenerating Gate: " + tempgate.Name );
+	            sender.sendMessage(ConfigManager.normalheader + "Regenerating Gate: " + stargate.Name );
 	        }
 	        else
 	        {

@@ -640,7 +640,10 @@ public class Stargate
 		    this.SetupGateSign(true);
 		}
 		// 2. Set up Iris stuff
-		SetIrisDeactivationCode(idc);
+		if (idc != "")
+		{
+		    SetIrisDeactivationCode(idc);
+		}
 	}
 	
 
@@ -698,10 +701,12 @@ public class Stargate
 	    }
 	}
 
+
 	/**
 	 * Setup or remove IRIS control lever.
 	 *
 	 * @param create true for create, false for destroy.
+	 * @param regenerate true for regeneration of lever.
 	 */
 	public void SetupIrisLever(boolean create)
 	{
@@ -709,8 +714,8 @@ public class Stargate
 		{
 	    	Block iris_block = this.ActivationBlock.getFace(BlockFace.DOWN);
 	    	this.IrisActivationBlock = iris_block;
-			this.Blocks.add(IrisActivationBlock.getLocation());
-			
+	    	this.Blocks.add(IrisActivationBlock.getLocation());
+	    	
 			this.IrisActivationBlock.setType(Material.LEVER);
 			switch (Facing)
 			{
@@ -747,8 +752,6 @@ public class Stargate
 	public void SetIrisDeactivationCode ( String idc )
 	{
 		this.IrisDeactivationCode = idc;
-		this.ToggleIrisActive(false);
-		
 		// If empty string make sure to make lever area air instead of lever.
 		if ( !idc.equals("") )
 		{
@@ -819,13 +822,47 @@ public class Stargate
 	}
 
 	/**
-	 * Set the dial button and lever block state based on gate activation status.
+	 * Dial button lever state. 
+	 * Same as calling {@link #DialButtonLeverState(boolean)} with boolean true.
 	 */
 	public void DialButtonLeverState()
+	{
+	    this.DialButtonLeverState(false);
+	}
+	
+	/**
+	 * Set the dial button and lever block state based on gate activation status.
+	 *
+	 * @param regenerate true, to replace missing activation lever.
+	 */
+	public void DialButtonLeverState(boolean regenerate)
 	{
 	    if (this.ActivationBlock != null)
 	    {
 	        Material material = this.ActivationBlock.getType();
+	        if (regenerate)
+	        {
+	            if (material != Material.LEVER && material != Material.STONE_BUTTON)
+	            {
+	                this.ActivationBlock.setType(Material.LEVER);
+	                switch (Facing)
+	                {
+	                    case SOUTH:
+	                        this.ActivationBlock.setData((byte)0x01);
+	                        break;
+	                    case NORTH:
+	                        this.ActivationBlock.setData((byte)0x02);
+	                        break;
+	                    case WEST:
+	                        this.ActivationBlock.setData((byte)0x03);
+	                        break;
+	                    case EAST:
+	                        this.ActivationBlock.setData((byte)0x04);
+	                        break;   
+	                }
+	            }
+	            material = this.ActivationBlock.getType();
+	        }
 	        if (material == Material.LEVER || material == Material.STONE_BUTTON)
 	        {
 	            int state = (int)this.ActivationBlock.getData();

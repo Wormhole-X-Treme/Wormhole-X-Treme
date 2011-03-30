@@ -197,7 +197,15 @@ public class Stargate
 	public void AnimateOpening()
 	{
 		Material woosh_material = ConfigManager.getPortalMaterial();
-		int woosh_depth = this.GateShape.woosh_depth;
+		int woosh_depth;
+		if (this.GateShape != null )
+		{
+		     woosh_depth = this.GateShape.woosh_depth;
+		}
+		else 
+		{
+		    woosh_depth = 0;
+		}
 		
 		if ( animation_step == 0 && woosh_depth > 0)
 		{

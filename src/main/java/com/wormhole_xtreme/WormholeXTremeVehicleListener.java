@@ -25,6 +25,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.vehicle.VehicleListener;
@@ -175,7 +176,9 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 				new_speed.multiply(speed * 5);
 				if (st.Target.IrisActive)
 				{
-				    veh.teleport(st.TeleportLocation);
+				    target = TeleportUtils.findSafeTeleportFromStargate(st);
+				    veh.teleport(target);
+				    veh.setVelocity(new_speed);
 				}
 				else 
 				{
@@ -184,31 +187,30 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 		                target = TeleportUtils.findSafeTeleportFromStargate(st.Target);
 		                st.Target.TeleportLocation = target;
 		            }
-				    if (target.getWorld() != st.TeleportLocation.getWorld())
-				    {
-				        if (e != null)
-				        {
-				            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Not same world, removing player from cart and doing some teleport hackery");
-				            veh.eject();
-				            target.getWorld().loadChunk(target.getBlockX(), target.getBlockZ(), false);
-				            veh.teleport(target);
-				            e.teleport(target);
-				            if (e instanceof Player && !veh.setPassenger(e))
-				            {
-				                WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Unable to set \"" + ((Player) e).getName() + "\" as passenger of minecart");
-				            }
-				        }
-				        else
-				        {
-				            // WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Not same world, empty minecarts not allowed.");
-				            veh.teleport(target);
-				        }
-				    }
-				    else 
-				    {
-				        veh.teleport(target);
-				    }
-				    veh.setVelocity(new_speed);
+		            if (e != null)
+		            {
+		                WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Removing player from cart and doing some teleport hackery");
+		                veh.eject();
+		                veh.remove();
+		                // target.getWorld().loadChunk(target.getBlockX(), target.getBlockZ(), false);
+		                // veh.teleport(target);
+		                final Minecart newveh = target.getWorld().spawnMinecart(target);
+		                final Entity newe = e;
+		                newe.teleport(target);
+		                final Vector newnew_speed = new_speed;
+		                WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new Runnable() {
+		                    public void run()
+		                    {
+		                        newveh.setPassenger(newe);
+		                        newveh.setVelocity(newnew_speed);
+		                    }
+		                }, 5);
+		            }
+		            else
+		            {
+		                veh.teleport(target);
+		                veh.setVelocity(new_speed);
+		            } 
 				}
 
 				if (ConfigManager.getTimeoutShutdown() == 0)

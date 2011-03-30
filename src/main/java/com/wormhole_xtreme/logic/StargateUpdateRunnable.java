@@ -111,7 +111,7 @@ public class StargateUpdateRunnable implements Runnable
 		DEACTIVATE,
 		
 		/** The AFTERSHUTDOWN task. */
-		AFTERSHUTDOWN
+		AFTERSHUTDOWN,
 	}
 	
 }

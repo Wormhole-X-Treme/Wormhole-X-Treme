@@ -1,6 +1,6 @@
-Changes 0.820:
+Changes 0.820 (3/29/11 @ 17:31 PST):
 
-- Initial support for CraftBukkit Build 570+.
+- Initial support for CraftBukkit Build 600.
 
 - Got rid of the stupid double error that people got by not reading the readme. Now when
   we parse settings.txt, if the value is integer for the iconomy settings, we change it
@@ -26,6 +26,8 @@ Changes 0.820:
   
 - Fixed teleportation dropping people into very unsafe locations. Now we scan for safe
   place to drop people, if we can't find one we drop the player in front of the DHD. 
+  This will also FIX wormholes by setting the stored teleport location to the new clean
+  and safe location. 
   
 - We now support using the help plugin along with WXT. 
 
@@ -44,6 +46,9 @@ Changes 0.820:
   
 - the '/wormhole regenerate' command is partially added. Will regenerate missing activation
   and iris levers.
+  
+- Minecarts work across chunks and worlds now! If you run into a location where it doesn't work,
+  use the wormhole in both directions to correct the wormhole, then try again. :)
 
 Changes 0.812 (3/23/11 @ 15:17 PST):
 

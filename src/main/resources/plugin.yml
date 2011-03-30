@@ -1,5 +1,5 @@
 name: WormholeXTreme
-main: com.wormhole_xtreme.WormholeXTreme
+main: com.wormhole_xtreme.wormhole.WormholeXTreme
 version: 0.821
 author: By Lologarithm & alron
 description: >

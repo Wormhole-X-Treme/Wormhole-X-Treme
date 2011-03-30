@@ -1,4 +1,4 @@
-Changes 0.821 (3/30/11 @
+Changes 0.821 (3/30/11 @ 15:09 PST):
 
 - Update version of iConomy we build against and test for.
 
@@ -7,6 +7,9 @@ Changes 0.821 (3/30/11 @
 - Added custom StargateTeleportEvent for MinecartMania as we nuke the minecarts before 
   teleporting them.
 
+- Refactored package to com.wormhole_xtreme.wormhole in anticipation of adding more 
+  stargate related projects.
+  
 Changes 0.820 (3/29/11 @ 17:31 PST):
 
 - Initial support for CraftBukkit Build 600.

@@ -42,10 +42,10 @@ public class HelpSupport {
     {
         if (WormholeXTreme.help == null && !ConfigManager.getHelpSupportDisable())
         {
-            Plugin helptest = WormholeXTreme.thisPlugin.getServer().getPluginManager().getPlugin("Help");
+            final Plugin helptest = WormholeXTreme.thisPlugin.getServer().getPluginManager().getPlugin("Help");
             if (helptest != null)
             {
-                String version = helptest.getDescription().getVersion();
+                final String version = helptest.getDescription().getVersion();
                 checkHelpVersion(version);
                 try 
                 {

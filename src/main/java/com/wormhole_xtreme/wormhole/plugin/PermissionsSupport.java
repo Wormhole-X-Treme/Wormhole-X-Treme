@@ -41,10 +41,10 @@ public class PermissionsSupport {
     {
         if(WormholeXTreme.permissions == null && !ConfigManager.getPermissionsSupportDisable()) 
         {
-            Plugin test = WormholeXTreme.thisPlugin.getServer().getPluginManager().getPlugin("Permissions");
+            final Plugin test = WormholeXTreme.thisPlugin.getServer().getPluginManager().getPlugin("Permissions");
             if(test != null)
             {
-                String v = test.getDescription().getVersion();
+                final String v = test.getDescription().getVersion();
                 checkPermissionsVersion(v);
                 try
                 {

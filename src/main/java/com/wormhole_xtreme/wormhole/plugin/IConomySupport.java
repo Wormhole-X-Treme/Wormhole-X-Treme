@@ -41,10 +41,10 @@ public class IConomySupport {
     {
         if(WormholeXTreme.iconomy == null && !ConfigManager.getIconomySupportDisable()) 
         {
-            Plugin test = WormholeXTreme.thisPlugin.getServer().getPluginManager().getPlugin("iConomy");
+            final Plugin test = WormholeXTreme.thisPlugin.getServer().getPluginManager().getPlugin("iConomy");
             if(test != null) 
             {
-                String v = test.getDescription().getVersion();
+                final String v = test.getDescription().getVersion();
                 checkIconomyVersion(v);
                 try
                 {

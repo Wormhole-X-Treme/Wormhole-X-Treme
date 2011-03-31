@@ -47,8 +47,8 @@ public class TeleportUtils {
     {
         Location location = stargate.TeleportLocation;
         WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Unsafe location: " + location);
-        double tlyaxis = Math.floor(stargate.TeleportLocation.getY());
-        double abyaxis = Math.floor(stargate.ActivationBlock.getY());
+        final double tlyaxis = Math.floor(stargate.TeleportLocation.getY());
+        final double abyaxis = Math.floor(stargate.ActivationBlock.getY());
         if (tlyaxis != abyaxis && (tlyaxis <= abyaxis - 6.0 || tlyaxis >= abyaxis + 6.0))
         {
             location.setY(abyaxis - 1.0);

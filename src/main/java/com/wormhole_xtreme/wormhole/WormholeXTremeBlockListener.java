@@ -23,6 +23,7 @@ import java.util.logging.Level;
 
 import org.bukkit.Location;
 import org.bukkit.Material; 
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player; 
 
 import org.bukkit.event.block.BlockBreakEvent;
@@ -61,11 +62,11 @@ public class WormholeXTremeBlockListener extends BlockListener
 	    {
 	        if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
 	        {
-	            Location current = event.getBlock().getLocation();
-	            Stargate closest = Stargate.FindClosestStargate(current);
+	            final Location current = event.getBlock().getLocation();
+	            final Stargate closest = Stargate.FindClosestStargate(current);
 	            if ( closest != null && (closest.Active || closest.RecentActive))
 	            {
-	                double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
+	                final double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
 	                if ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 25 ) 
 	                {
 	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Block Type: \"" + event.getBlock().getType().toString() + "\" Proximity Block Ignite: \"" + event.getCause().toString() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
@@ -86,11 +87,11 @@ public class WormholeXTremeBlockListener extends BlockListener
 	    {
 	        if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
 	        {
-	            Location current = event.getBlock().getLocation();
-	            Stargate closest = Stargate.FindClosestStargate(current);
+	            final Location current = event.getBlock().getLocation();
+	            final Stargate closest = Stargate.FindClosestStargate(current);
 	            if ( closest != null && (closest.Active || closest.RecentActive))
 	            {
-	                double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
+	                final double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
 	                if ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 25 ) 
 	                {
 	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Proximity Block Burn Distance Squared: \"" + blockDistanceSquared + "\"");
@@ -117,6 +118,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 	    }
 	}
 	
+	
 	/* (non-Javadoc)
 	 * @see org.bukkit.event.block.BlockListener#onBlockDamage(org.bukkit.event.block.BlockDamageEvent)
 	 */
@@ -125,7 +127,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 	{
 	    if (!event.isCancelled())
 	    {
-	        Stargate stargate = StargateManager.getGateFromBlock(event.getBlock());
+	        final Stargate stargate = StargateManager.getGateFromBlock(event.getBlock());
 	        if (stargate != null)
 	        {
 	            boolean allowed = false;
@@ -155,71 +157,78 @@ public class WormholeXTremeBlockListener extends BlockListener
 	{
 	    if (!event.isCancelled())
 	    {
-	        Stargate stargate = StargateManager.getGateFromBlock(event.getBlock());
-	        if (stargate != null)
+	        final Stargate stargate = StargateManager.getGateFromBlock(event.getBlock());
+	        final Player player = event.getPlayer();
+	        final Block block = event.getBlock();
+	        if (stargate != null && handleBlockBreak(player,stargate,block))
 	        {
-	            boolean allowed = false;
-	            Player player = null;
-	            if (event.getPlayer() != null )
-	            {
-	                player = event.getPlayer();
-	                allowed = WXPermissions.checkWXPermissions(player, stargate, PermissionType.DAMAGE);
-	            }
-	            if (allowed)
-	            {
-	                if ( !WorldUtils.isSameBlock(stargate.ActivationBlock, event.getBlock()) )
-	                {
-	                    if ( stargate.TeleportSignBlock != null && WorldUtils.isSameBlock(stargate.TeleportSignBlock, event.getBlock()) )
-	                    {
-	                        player.sendMessage("Destroyed DHD Sign. You will be unable to change dialing target from this gate.");
-	                        player.sendMessage("You can rebuild it later.");
-	                        stargate.TeleportSign = null;
-	                    } 
-	                    else if (event.getBlock().getType().equals(ConfigManager.getIrisMaterial()))
-	                    {
-	                        event.setCancelled(true);
-	                    } 
-	                    else
-	                    {
-	                        if (stargate.Active) 
-	                        {
-	                            stargate.DeActivateStargate();
-	                            stargate.FillGateInterior(Material.AIR);
-	                        }
-	                        if (stargate.LitGate) 
-	                        {
-	                            stargate.UnLightStargate();
-	                            stargate.StopActivationTimer(player);
-	                            StargateManager.RemoveActivatedStargate(player);
-	                        }
-	                        stargate.ResetTeleportSign();
-	                        stargate.SetupGateSign(false);
-	                        if (!stargate.IrisDeactivationCode.equals(""))
-	                        {
-	                            stargate.SetupIrisLever(false);
-	                        }
-	                        StargateManager.RemoveStargate(stargate);
-	                        player.sendMessage("Stargate Destroyed: " + stargate.Name);
-	                    }
-	                }
-	                else
-	                {
-	                    player.sendMessage("Destroyed DHD. You will be unable to dial out from this gate.");
-	                    player.sendMessage("You can rebuild it later.");
-	                }
-	            }
-	            else
-	            {
-	                if (player != null)
-	                {
-	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied block destroy on: " + stargate.Name);
-	                }
-	                event.setCancelled(true);
-	            }
+	            event.setCancelled(true);
 	        }
 	    }
 	}
-	
+
+	private static boolean handleBlockBreak(Player player, Stargate stargate, Block block)
+	{
+	    final Stargate s = stargate;
+	    final Player p = player;
+	    final Block b = block;
+	    final boolean allowed = WXPermissions.checkWXPermissions(p, s, PermissionType.DAMAGE);
+	    if (allowed)
+	    {
+	        if ( !WorldUtils.isSameBlock(s.ActivationBlock, b) )
+	        {
+	            if ( s.TeleportSignBlock != null && WorldUtils.isSameBlock(s.TeleportSignBlock, b) )
+	            {
+	                p.sendMessage("Destroyed DHD Sign. You will be unable to change dialing target from this gate.");
+	                p.sendMessage("You can rebuild it later.");
+	                s.TeleportSign = null;
+	            } 
+	            else if (b.getType().equals(ConfigManager.getIrisMaterial()))
+	            {
+	                return true;
+	            } 
+	            else
+	            {
+	                if (s.Active) 
+	                {
+	                    s.DeActivateStargate();
+	                    s.FillGateInterior(Material.AIR);
+	                }
+	                if (s.LitGate) 
+	                {
+	                    s.UnLightStargate();
+	                    s.StopActivationTimer(p);
+	                    StargateManager.RemoveActivatedStargate(p);
+	                }
+	                s.ResetTeleportSign();
+	                s.SetupGateSign(false);
+	                if (!s.IrisDeactivationCode.equals(""))
+	                {
+	                    s.SetupIrisLever(false);
+	                }
+	                StargateManager.RemoveStargate(stargate);
+	                p.sendMessage("Stargate Destroyed: " + s.Name);
+	            }
+	        }
+	        else
+	        {
+	            p.sendMessage("Destroyed DHD. You will be unable to dial out from this gate.");
+	            p.sendMessage("You can rebuild it later.");
+	        }
+	        return false;
+	    }
+	    else
+	    {
+	        if (p != null)
+	        {
+	            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + p.getName() + " denied block destroy on: " + s.Name);
+	        }
+	    }
+	    return true;
+	}
+
+
+
 
 	/* (non-Javadoc)
 	 * @see org.bukkit.event.block.BlockListener#onBlockPhysics(org.bukkit.event.block.BlockPhysicsEvent)

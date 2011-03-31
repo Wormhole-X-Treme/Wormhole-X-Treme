@@ -402,7 +402,7 @@ public class Wormhole implements CommandExecutor
 	        if (stargate != null)
 	        {
 	            stargate.DialButtonLeverState(true);
-	            if (stargate.IrisDeactivationCode != "")
+	            if (stargate.IrisDeactivationCode != null && stargate.IrisDeactivationCode != "" && stargate.IrisDeactivationCode != " ")
 	            {
 	                stargate.SetupIrisLever(false);
 	                stargate.SetupIrisLever(true);

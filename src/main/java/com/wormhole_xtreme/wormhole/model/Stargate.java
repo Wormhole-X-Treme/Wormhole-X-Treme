@@ -714,7 +714,6 @@ public class Stargate
 	 * Setup or remove IRIS control lever.
 	 *
 	 * @param create true for create, false for destroy.
-	 * @param regenerate true for regeneration of lever.
 	 */
 	public void SetupIrisLever(boolean create)
 	{

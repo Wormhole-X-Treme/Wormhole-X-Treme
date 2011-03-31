@@ -109,7 +109,8 @@ public class WormholeXTremeBlockListener extends BlockListener
 	{
 	    if (!event.isCancelled())
 	    {
-	        if ( StargateManager.isBlockInGate(event.getBlock()) )
+	        final Stargate stargate = StargateManager.getGateFromBlock(event.getToBlock());
+	        if (stargate != null || StargateManager.isBlockInGate(event.getBlock()))
 	        {
 	            event.setCancelled(true);
 	        }

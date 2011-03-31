@@ -178,6 +178,8 @@ public class WormholeXTreme extends JavaPlugin
 		// To handle teleporting when walking into a gate.
 		pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.High, this);
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.High, this);
+		pm.registerEvent(Event.Type.PLAYER_BUCKET_FILL, playerListener, Priority.High, this);
+		pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, playerListener, Priority.High, this);
 		// Handle removing player data
 		// pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Normal, this);
 

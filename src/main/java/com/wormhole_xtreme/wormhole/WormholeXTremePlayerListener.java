@@ -25,6 +25,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener; 
 import org.bukkit.event.player.PlayerMoveEvent; 
@@ -64,6 +66,38 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	    {
 	        WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false,"Cancelled Player: \"" + event.getPlayer().getName() + "\" Event type: \"" + event.getType() + "\" Action Type: \"" + event.getAction() + "\"");
 	        event.setCancelled(true);
+	    }
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.bukkit.event.player.PlayerListener#onPlayerBucketFill(org.bukkit.event.player.PlayerBucketFillEvent)
+	 */
+	@Override
+	public void onPlayerBucketFill(PlayerBucketFillEvent event)
+	{
+	    if (!event.isCancelled())
+	    {
+	        final Stargate stargate = StargateManager.getGateFromBlock(event.getBlockClicked());
+	        if (stargate != null || StargateManager.isBlockInGate(event.getBlockClicked()))
+	        {
+	            event.setCancelled(true);
+	        }
+	    }
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.bukkit.event.player.PlayerListener#onPlayerBucketEmpty(org.bukkit.event.player.PlayerBucketEmptyEvent)
+	 */
+	@Override
+	public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event)
+	{
+	    if (!event.isCancelled())
+	    {
+	        final Stargate stargate = StargateManager.getGateFromBlock(event.getBlockClicked());
+	        if (stargate != null || StargateManager.isBlockInGate(event.getBlockClicked()))
+	        {
+	            event.setCancelled(true);
+	        }
 	    }
 	}
 	

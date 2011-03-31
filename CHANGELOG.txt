@@ -1,4 +1,4 @@
-Changes 0.821 (3/30/11 @ 15:09 PST):
+Changes 0.821 (3/30/11 @ 17:42 PST):
 
 - Update version of iConomy we build against and test for.
 

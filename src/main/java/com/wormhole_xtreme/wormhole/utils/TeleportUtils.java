@@ -165,7 +165,6 @@ public class TeleportUtils {
                 {
                     if (down)
                     {
-                        WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "down" );
                         if (firststagedistance - secondstagedistance > 0)
                         {
                             tempblock = initialblock.getFace(BlockFace.DOWN,firststagedistance - secondstagedistance);

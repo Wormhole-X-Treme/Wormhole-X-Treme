@@ -81,12 +81,12 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 	
 	private static boolean handleStargateMinecartTeleportEvent(VehicleMoveEvent event)
 	{
-	    Location l = event.getTo();
-	    Block ch = l.getWorld().getBlockAt( l.getBlockX(), l.getBlockY(), l.getBlockZ());
+	    final Location l = event.getTo();
+	    final Block ch = l.getWorld().getBlockAt( l.getBlockX(), l.getBlockY(), l.getBlockZ());
 	    //if ( ch.getType() == ConfigManager.getPortalMaterial() )
 	    //{
 	    // This means that the cart is in a stargate that is active.
-	    Stargate st = StargateManager.getGateFromBlock( ch );
+	    final Stargate st = StargateManager.getGateFromBlock( ch );
 
 	    if ( st != null &&  st.Active && st.Target != null )
 	    {
@@ -100,16 +100,15 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 	            gatenetwork = "Public";
 	        }
 	        Location target = st.Target.TeleportLocation;
-	        WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, target.toString());
-	        Minecart veh = (Minecart)event.getVehicle();
+	        final Minecart veh = (Minecart)event.getVehicle();
 	        Vector v = veh.getVelocity();
 	        veh.setVelocity(nospeed);
-	        Entity e = veh.getPassenger();
+	        final Entity e = veh.getPassenger();
 	        if ( e != null )
 	        {
 	            if ( e instanceof Player )
 	            {
-	                Player p = (Player)e;
+	                final Player p = (Player)e;
 	                WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Minecart Player in gate:" + st.Name + " gate Active: " + st.Active + " Target Gate: " + st.Target.Name + " Network: " + gatenetwork );
 	                if (ConfigManager.getWormholeUseIsTeleport() && ((st.IsSignPowered && !WXPermissions.checkWXPermissions(p, st, PermissionType.SIGN)) ||
 	                    (!st.IsSignPowered && !WXPermissions.checkWXPermissions(p, st, PermissionType.DIALER))))
@@ -202,13 +201,12 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 	                final Minecart newveh = target.getWorld().spawnMinecart(target);
 	                final Event teleportevent = new StargateMinecartTeleportEvent(veh, newveh);
 	                WormholeXTreme.thisPlugin.getServer().getPluginManager().callEvent(teleportevent);
-	                final Entity newe = e;
-	                newe.teleport(target);
+	                e.teleport(target);
 	                final Vector newnew_speed = new_speed;
 	                WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new Runnable() {
 	                    public void run()
 	                    {
-	                        newveh.setPassenger(newe);
+	                        newveh.setPassenger(e);
 	                        newveh.setVelocity(newnew_speed);
 	                    }
 	                }, 5);

@@ -68,26 +68,42 @@ public class WormholeXTremeEntityListener extends EntityListener
 		{
 			if ( event.getEntity() instanceof Player )
 			{
-				Player p = (Player) event.getEntity();
-				if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
-				{
-				    Location current = p.getLocation();
-				    Stargate closest = Stargate.FindClosestStargate(current);
-				    if(closest != null)
-				    {
-				        double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
-				        if ((closest.Active || closest.RecentActive) && ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 16 ))
-				        {
-				            WormholeXTreme.thisPlugin.prettyLog(Level.FINE,false,"Blocked Gate: \""+ closest.Name + "\" Proximity Event: \"" + event.getCause().toString() +
-				                    "\" On: \"" + p.getName() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
-				            event.setCancelled(true);
-				            p.setFireTicks(0);
-				        }
-				    }
-				}
+			    if (handleEntityDamageEvent(event))
+			    {
+			        event.setCancelled(true);
+			    }
 			}
 		}
 	}
+	
+	/**
+	 * Handle entity damage event.
+	 *
+	 * @param event the event
+	 * @return true, if successful
+	 */
+	private static boolean handleEntityDamageEvent(EntityDamageEvent event)
+	{
+	    final Player p = (Player) event.getEntity();
+	    if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
+	    {
+	        final Location current = p.getLocation();
+	        final Stargate closest = Stargate.FindClosestStargate(current);
+	        if(closest != null)
+	        {
+	            final double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
+	            if ((closest.Active || closest.RecentActive) && ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 16 ))
+	            {
+	                WormholeXTreme.thisPlugin.prettyLog(Level.FINE,false,"Blocked Gate: \""+ closest.Name + "\" Proximity Event: \"" + event.getCause().toString() +
+	                                                    "\" On: \"" + p.getName() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
+	                p.setFireTicks(0);
+	                return true;
+	            }
+	        }
+	    }
+	    return false;
+	}
+
 	
 	/* (non-Javadoc)
 	 * @see org.bukkit.event.entity.EntityListener#onEntityExplode(org.bukkit.event.entity.EntityExplodeEvent)
@@ -95,15 +111,33 @@ public class WormholeXTremeEntityListener extends EntityListener
 	@Override
 	public void onEntityExplode(EntityExplodeEvent event)
 	{
-	    List<Block> explodeblocks = event.blockList();
+	    if (!event.isCancelled())
+	    {
+	        if (handleEntityExplodeEvent(event))
+	        {
+	            event.setCancelled(true);
+	        }
+	    }
+	}
+
+	/**
+	 * Handle entity explode event.
+	 *
+	 * @param event the event
+	 * @return true, if successful
+	 */
+	private static boolean handleEntityExplodeEvent(EntityExplodeEvent event)
+	{
+	    final List<Block> explodeblocks = event.blockList();
 	    for ( int i = 0; i < explodeblocks.size(); i++)
 	    {
 	        if (StargateManager.isBlockInGate(explodeblocks.get(i)))
 	        {
-	            Stargate explodegate = StargateManager.getGateFromBlock(explodeblocks.get(i));
+	            final Stargate explodegate = StargateManager.getGateFromBlock(explodeblocks.get(i));
 	            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Creeper Explosion on Stargate: \"" + explodegate.Name + "\"" );
-	            event.setCancelled(true);
+	            return true;
 	        }
 	    }
+	    return false;
 	}
 } 

@@ -18,13 +18,11 @@
  */
 package com.wormhole_xtreme.wormhole.command;
 
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.wormhole.model.Stargate;
@@ -34,17 +32,11 @@ import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 import com.wormhole_xtreme.wormhole.utils.TeleportUtils;
 
 /**
- * @author alron
+ * The Class Go.
  *
+ * @author alron
  */
-public class WXGo implements CommandExecutor {
-
-    /**
-     * 
-     */
-    public WXGo(WormholeXTreme wormholeXTreme) {
-        // TODO Auto-generated constructor stub
-    }
+public class Go implements CommandExecutor {
 
     /* (non-Javadoc)
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
@@ -52,30 +44,43 @@ public class WXGo implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
     {
-        Player player = null;
-        if (!CommandUtilities.playerCheck(sender))
+        if (CommandUtilities.playerCheck(sender))
         {
-            return true;
-        }
-        else
-        {
-            player = (Player)sender;
-        }
-        if (WXPermissions.checkWXPermissions(player, PermissionType.GO))
-        {
-            args = CommandUtilities.commandEscaper(args);
-            if ( args.length == 1)
+            final String[] arguments = CommandUtilities.commandEscaper(args);
+            if (arguments.length < 3 || arguments.length != 0 )
             {
-                String gogate = args[0].trim().replace("\n", "").replace("\r", "");
-                Stargate s = StargateManager.GetStargate(gogate);
+                final Player player = (Player)sender;
+                return doGo(player, arguments);
+            }
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * Do go.
+     *
+     * @param player the player
+     * @param args the args
+     * @return true, if successful
+     */
+    private static boolean doGo(Player player, String[] args)
+    {
+        final Player p = player;
+        final String[] a = args;
+        if (WXPermissions.checkWXPermissions(p, PermissionType.GO))
+        {
+            if ( a.length == 1)
+            {
+                final String goGate = a[0].trim().replace("\n", "").replace("\r", "");
+                final Stargate s = StargateManager.GetStargate(goGate);
                 if ( s != null)
                 {
-                    Location tp = TeleportUtils.findSafeTeleportFromStargate(s);
-                    player.teleport(tp);
+                    p.teleport(TeleportUtils.findSafeTeleportFromStargate(s));
                 }
                 else
                 {
-                    player.sendMessage(ConfigManager.errorheader + "Gate does not exist: " + args[0]);
+                    p.sendMessage(ConfigManager.errorheader + "Gate does not exist: " + a[0]);
                 }
             }
             else
@@ -85,7 +90,7 @@ public class WXGo implements CommandExecutor {
         }
         else
         {
-            player.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+            p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
         }
         return true;
     }

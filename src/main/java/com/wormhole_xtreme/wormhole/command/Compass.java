@@ -23,7 +23,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.wormhole.model.Stargate;
@@ -31,19 +30,11 @@ import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 
 /**
- * @author alron
+ * The Class Compass.
  *
+ * @author alron
  */
-public class WXCompass implements CommandExecutor {
-
-    /**
-     * Instantiates a new wX compass.
-     *
-     * @param wormholeXTreme the wormhole x treme
-     */
-    public WXCompass(WormholeXTreme wormholeXTreme) {
-        // TODO Auto-generated constructor stub
-    }
+public class Compass implements CommandExecutor {
 
     /* (non-Javadoc)
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
@@ -51,18 +42,26 @@ public class WXCompass implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
     {
-        Player p = null;
         if (CommandUtilities.playerCheck(sender))
         {
-            p = (Player)sender;
-        } 
-        else
-        {
-            return true;
+                final Player player = (Player)sender;
+                return doCompass(player);
         }
+        return true;
+    }
+    
+    /**
+     * Do compass.
+     *
+     * @param player the player
+     * @return true, if successful
+     */
+    private static boolean doCompass(Player player)
+    {   
+        final Player p = player;
         if (WXPermissions.checkWXPermissions(p, PermissionType.COMPASS))
         {
-            Stargate closest = Stargate.FindClosestStargate(p.getLocation());
+            final Stargate closest = Stargate.FindClosestStargate(p.getLocation());
             if(closest != null)
             {
                 p.setCompassTarget(closest.TeleportLocation);

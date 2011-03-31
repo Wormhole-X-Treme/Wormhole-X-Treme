@@ -23,7 +23,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.wormhole.logic.StargateHelper;
@@ -33,19 +32,11 @@ import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 
 /**
- * @author alron
+ * The Class Build.
  *
+ * @author alron
  */
-public class WXBuild implements CommandExecutor {
-
-    /**
-     * Instantiates a new wX build.
-     *
-     * @param wormholeXTreme the wormhole x treme
-     */
-    public WXBuild(WormholeXTreme wormholeXTreme) {
-        // TODO Auto-generated constructor stub
-    }
+public class Build implements CommandExecutor {
 
     /* (non-Javadoc)
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
@@ -53,34 +44,48 @@ public class WXBuild implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
-        Player player = null;
-        if (!CommandUtilities.playerCheck(sender) )
+        if (CommandUtilities.playerCheck(sender))
         {
-            return true;
-        }
-        else
-        {
-            player = (Player)sender;
-        }
-        args = CommandUtilities.commandEscaper(args);
-        if (args.length == 1) 
-        {
-            if ( WXPermissions.checkWXPermissions(player, PermissionType.CONFIG) )
+            final String[] arguments = CommandUtilities.commandEscaper(args);
+            if (arguments.length < 3 || arguments.length != 0 )
             {
-                StargateShape shape = StargateHelper.getShape(args[0]);
+                final Player player = (Player)sender;
+                return doBuild(player,arguments);
+            }
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * Do build.
+     *
+     * @param player the player
+     * @param args the args
+     * @return true, if successful
+     */
+    private static boolean doBuild(Player player, String[] args)
+    {
+        final Player p = player;
+        final String[] a = args; 
+        if (a.length == 1) 
+        {
+            if ( WXPermissions.checkWXPermissions(p, PermissionType.CONFIG) )
+            {
+                final StargateShape shape = StargateHelper.getShape(a[0]);
                 if  ( shape != null)
                 {
-                    StargateManager.AddPlayerBuilderShape(player, shape);
-                    player.sendMessage(ConfigManager.normalheader + "Press Activation button on new DHD to autobuild Stargate in the shape of: " + args[0] );
+                    StargateManager.AddPlayerBuilderShape(p, shape);
+                    p.sendMessage(ConfigManager.normalheader + "Press Activation button on new DHD to autobuild Stargate in the shape of: " + a[0] );
                 }
                 else
                 {
-                    player.sendMessage(ConfigManager.errorheader + "Invalid shape: " + args[0]);
+                    p.sendMessage(ConfigManager.errorheader + "Invalid shape: " + a[0]);
                 }
             }
             else
             {
-                player.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+                p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
             }
         }
         else

@@ -46,18 +46,6 @@ import com.wormhole_xtreme.wormhole.model.StargateManager;
  */ 
 public class WormholeXTremeEntityListener extends EntityListener 
 { 
-
-	//private final Stargates plugin;
-	/**
-	 * Instantiates a new wormhole x treme entity listener.
-	 *
-	 * @param instance the instance
-	 */
-	public WormholeXTremeEntityListener(WormholeXTreme instance) 
-	{ 
-		//plugin = instance;
-	}
-	    
 	/* (non-Javadoc)
 	 * @see org.bukkit.event.entity.EntityListener#onEntityDamage(org.bukkit.event.entity.EntityDamageEvent)
 	 */

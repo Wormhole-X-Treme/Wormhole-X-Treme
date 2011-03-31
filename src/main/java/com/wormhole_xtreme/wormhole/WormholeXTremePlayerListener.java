@@ -52,17 +52,6 @@ import com.wormhole_xtreme.wormhole.utils.WorldUtils;
  */ 
 public class WormholeXTremePlayerListener extends PlayerListener 
 { 
-	//private ConcurrentHashMap<String, Integer> PlayerCompassOn = new ConcurrentHashMap<String, Integer>(); 
-	//private final WormholeXTreme plugin;
-	/**
-	 * Instantiates a new wormhole x treme player listener.
-	 *
-	 * @param wormholeXTreme the wormhole x treme
-	 */
-	public WormholeXTremePlayerListener(WormholeXTreme wormholeXTreme) 
-	{ 
-		//plugin = instance; 
-	}
  
 	/* (non-Javadoc)
 	 * @see org.bukkit.event.player.PlayerListener#onPlayerInteract(org.bukkit.event.player.PlayerInteractEvent)

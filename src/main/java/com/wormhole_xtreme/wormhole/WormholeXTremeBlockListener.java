@@ -51,18 +51,6 @@ import com.wormhole_xtreme.wormhole.utils.WorldUtils;
  */ 
 public class WormholeXTremeBlockListener extends BlockListener
 {
-	//private final Stargates plugin;
-	
-	/**
-	 * Instantiates a new wormhole x treme block listener.
-	 *
-	 * @param plugin the plugin
-	 */
-	public WormholeXTremeBlockListener(final WormholeXTreme plugin)
-	{
-		//this.plugin = plugin;
-	}
-	
 	/* (non-Javadoc)
 	 * @see org.bukkit.event.block.BlockListener#onBlockIgnite(org.bukkit.event.block.BlockIgniteEvent)
 	 */

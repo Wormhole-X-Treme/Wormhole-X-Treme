@@ -60,17 +60,15 @@ public class WormholeXTreme extends JavaPlugin
 {
 
 	/** The player listener. */
-	private final WormholeXTremePlayerListener playerListener = new WormholeXTremePlayerListener(this);
-	
+	private final WormholeXTremePlayerListener playerListener = new WormholeXTremePlayerListener();
 	/** The block listener. */
-	private final WormholeXTremeBlockListener blockListener = new WormholeXTremeBlockListener(this);
-	
+	private final WormholeXTremeBlockListener blockListener = new WormholeXTremeBlockListener();
 	/** The vehicle listener. */
-	private final WormholeXTremeVehicleListener vehicleListener = new WormholeXTremeVehicleListener(this);
+	private final WormholeXTremeVehicleListener vehicleListener = new WormholeXTremeVehicleListener();
 	/** The entity listener. */
-	private final WormholeXTremeEntityListener entityListener = new WormholeXTremeEntityListener(this);
+	private final WormholeXTremeEntityListener entityListener = new WormholeXTremeEntityListener();
 	/** The server listener. */
-	private final WormholeXTremeServerListener serverListener = new WormholeXTremeServerListener(this);
+	private final WormholeXTremeServerListener serverListener = new WormholeXTremeServerListener();
 	
 	/** The debugees. */
 	private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
@@ -149,15 +147,15 @@ public class WormholeXTreme extends JavaPlugin
 	 */
 	private void registerCommands()
 	{
-	    getCommand("wxforce").setExecutor(new Force(this));
+	    getCommand("wxforce").setExecutor(new Force());
 		getCommand("wxidc").setExecutor(new WXIDC(this));
-		getCommand("wxcompass").setExecutor(new WXCompass(this));
-		getCommand("wxcomplete").setExecutor(new WXComplete(this));
+		getCommand("wxcompass").setExecutor(new Compass());
+		getCommand("wxcomplete").setExecutor(new Complete());
 		getCommand("wxremove").setExecutor(new WXRemove(this));
 		getCommand("wxlist").setExecutor(new WXList(this));
-		getCommand("wxgo").setExecutor(new WXGo(this));
-		getCommand("dial").setExecutor(new Dial(this));
-		getCommand("wxbuild").setExecutor(new WXBuild(this));
+		getCommand("wxgo").setExecutor(new Go());
+		getCommand("dial").setExecutor(new Dial());
+		getCommand("wxbuild").setExecutor(new Build());
 		getCommand("wormhole").setExecutor(new Wormhole(this));
 	}
 
@@ -166,7 +164,7 @@ public class WormholeXTreme extends JavaPlugin
      */
     private void registerEvents() 
     {
-		PluginManager pm = getServer().getPluginManager(); 
+		final PluginManager pm = getServer().getPluginManager(); 
 		
 		//Listen for Interact, Physics, Break, Flow, and RightClick events. Pass to blockListener
 		

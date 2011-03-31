@@ -53,17 +53,6 @@ import com.wormhole_xtreme.wormhole.utils.TeleportUtils;
 public class WormholeXTremeVehicleListener extends VehicleListener 
 { 
 	
-
-	/**
-	 * Instantiates a new wormhole x treme vehicle listener.
-	 *
-	 * @param instance the instance
-	 */
-	public WormholeXTremeVehicleListener(WormholeXTreme instance) 
-	{ 
-		//plugin = instance; 
-	} 
-	
 	/** The nospeed. */
 	private static Vector nospeed = new Vector();
 	
@@ -79,6 +68,12 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 	    }
 	}
 	
+	/**
+	 * Handle stargate minecart teleport event.
+	 *
+	 * @param event the event
+	 * @return true, if successful
+	 */
 	private static boolean handleStargateMinecartTeleportEvent(VehicleMoveEvent event)
 	{
 	    final Location l = event.getTo();

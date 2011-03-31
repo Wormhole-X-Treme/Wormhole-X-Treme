@@ -42,15 +42,6 @@ import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
  */
 public class Force implements CommandExecutor {
 
-    /**
-     * Instantiates a new force.
-     *
-     * @param wormholeXTreme the wormhole x treme
-     */
-    public Force(WormholeXTreme wormholeXTreme) {
-        // TODO Auto-generated constructor stub
-    }
-
     /* (non-Javadoc)
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
      */
@@ -92,9 +83,9 @@ public class Force implements CommandExecutor {
                         drop = true;
                     }
                 }
-                ArrayList<Stargate> gates = StargateManager.GetAllGates();
-                ArrayList<String> activelist = new ArrayList<String>();
-                ArrayList<String> droplist = new ArrayList<String>();
+                final ArrayList<Stargate> gates = StargateManager.GetAllGates();
+                final ArrayList<String> activelist = new ArrayList<String>();
+                final ArrayList<String> droplist = new ArrayList<String>();
                 for ( Stargate gate : gates )
                 {
                     if (gate.Active && close)

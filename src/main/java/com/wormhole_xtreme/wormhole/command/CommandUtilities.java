@@ -132,4 +132,40 @@ class CommandUtilities {
         }
         StargateManager.RemoveStargate(stargate);
 	}
+	
+	/**
+	 * Gets the gate network.
+	 *
+	 * @param stargate the stargate
+	 * @return the gate network
+	 */
+	static String getGateNetwork(Stargate stargate)
+	{
+	    if (stargate != null)
+	    {
+	        if (stargate.Network != null)
+	        {
+	            return stargate.Network.netName;
+	        }
+	    }
+	    return "Public";
+	}
+	
+	/**
+	 * Close gate.
+	 *
+	 * @param stargate the stargate
+	 * @param player the player
+	 */
+	static final void closeGate(Stargate stargate, Player player)
+	{
+	    if (stargate != null && player != null)
+	    {
+	        final Stargate gate = stargate;
+	        final Player p = player;
+            gate.StopActivationTimer(p);
+            gate.DeActivateStargate();
+            gate.UnLightStargate();
+	    }
+	}
 }

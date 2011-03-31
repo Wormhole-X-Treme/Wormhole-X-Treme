@@ -21,14 +21,11 @@ package com.wormhole_xtreme.wormhole;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerListener;
-import org.bukkit.plugin.Plugin;
-
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.plugin.HelpSupport;
 import com.wormhole_xtreme.wormhole.plugin.IConomySupport;
 import com.wormhole_xtreme.wormhole.plugin.PermissionsSupport;
 
-// TODO: Auto-generated Javadoc
 /**
  * WormholeXTreme Server Listener.
  *
@@ -37,16 +34,6 @@ import com.wormhole_xtreme.wormhole.plugin.PermissionsSupport;
  */
 public class WormholeXTremeServerListener extends ServerListener 
 {
-	
-	/**
-	 * Instantiates a new wormhole x treme server listener.
-	 *
-	 * @param this_plugin the this_plugin
-	 */
-	public WormholeXTremeServerListener(Plugin this_plugin)
-	{
-		
-	}
 	
     /* (non-Javadoc)
      * @see org.bukkit.event.server.ServerListener#onPluginEnabled(org.bukkit.event.server.PluginEvent)

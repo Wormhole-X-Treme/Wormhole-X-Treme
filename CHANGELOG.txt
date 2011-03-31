@@ -1,3 +1,13 @@
+Changes 0.822
+
+- Water now will not flow over Stargate anythings. No more broken levers and magic 
+  blocks of water floating in their place.
+
+- Buckets now will no longer work with stargate anythings. No free water and lava.
+
+- Minor optimizations and code cleanups.
+
+
 Changes 0.821 (3/30/11 @ 17:42 PST):
 
 - Update version of iConomy we build against and test for.

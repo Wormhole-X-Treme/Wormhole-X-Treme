@@ -868,7 +868,15 @@ public class StargateHelper
 						bufferedReader.close();
 
 						StargateShape shape = new StargateShape(fileLines.toArray(new String[]{}));
-						shapes.put(shape.shapeName, shape);
+
+						if ( shapes.containsKey(shape.shapeName) )
+						{
+							WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Shape File: " + fi.getName() + " contains shape name: " + shape.shapeName + " which already exists. This shape will be unavailable.");
+						}
+						else
+						{
+							shapes.put(shape.shapeName, shape);
+						}
 					}
 					catch (FileNotFoundException e) 
 					{

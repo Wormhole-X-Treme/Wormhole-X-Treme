@@ -289,7 +289,7 @@ public class WormholeXTreme extends JavaPlugin
      *
      * @param thisPlugin the new this plugin
      */
-    private static void setThisPlugin(WormholeXTreme thisPlugin) 
+    private static void setThisPlugin(WormholeXTreme thisPlugin)
     {
         WormholeXTreme.thisPlugin = thisPlugin;
     }
@@ -299,7 +299,7 @@ public class WormholeXTreme extends JavaPlugin
      *
      * @return the this plugin
      */
-    public static WormholeXTreme getThisPlugin() 
+    public static WormholeXTreme getThisPlugin()
     {
         return thisPlugin;
     }
@@ -339,7 +339,8 @@ public class WormholeXTreme extends JavaPlugin
      *
      * @param iconomy the new iconomy
      */
-    public static void setIconomy(iConomy iconomy) {
+    public static void setIconomy(iConomy iconomy)
+    {
         WormholeXTreme.iconomy = iconomy;
     }
 
@@ -348,7 +349,8 @@ public class WormholeXTreme extends JavaPlugin
      *
      * @return the iconomy
      */
-    public static iConomy getIconomy() {
+    public static iConomy getIconomy()
+    {
         return iconomy;
     }
 
@@ -357,7 +359,8 @@ public class WormholeXTreme extends JavaPlugin
      *
      * @param permissions the new permissions
      */
-    public static void setPermissions(PermissionHandler permissions) {
+    public static void setPermissions(PermissionHandler permissions)
+    {
         WormholeXTreme.permissions = permissions;
     }
 
@@ -366,7 +369,8 @@ public class WormholeXTreme extends JavaPlugin
      *
      * @return the permissions
      */
-    public static PermissionHandler getPermissions() {
+    public static PermissionHandler getPermissions()
+    {
         return permissions;
     }
 
@@ -375,7 +379,8 @@ public class WormholeXTreme extends JavaPlugin
      *
      * @param help the new help
      */
-    public static void setHelp(Help help) {
+    public static void setHelp(Help help)
+    {
         WormholeXTreme.help = help;
     }
 

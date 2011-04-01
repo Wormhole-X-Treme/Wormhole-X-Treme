@@ -34,7 +34,6 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockListener; 
 import org.bukkit.event.block.BlockPhysicsEvent;
 
-import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.model.Stargate;
 import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
@@ -76,7 +75,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 	                p.sendMessage("You can rebuild it later.");
 	                s.teleportSign = null;
 	            } 
-	            else if (b.getType().equals(ConfigManager.getIrisMaterial()))
+	            else if (b.getType().equals( s.gateShape.iris_material ))
 	            {
 	                return true;
 	            } 
@@ -170,11 +169,12 @@ public class WormholeXTremeBlockListener extends BlockListener
 	{
 	    if (!event.isCancelled())
 	    {
-	        if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
-	        {
+	        //if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
+	        //{
 	            final Location current = event.getBlock().getLocation();
 	            final Stargate closest = StargateManager.findClosestStargate(current);
-	            if ( closest != null && (closest.active || closest.recentActive))
+	            //TODO This is bad, very bad for performance!
+	            if ( closest != null && (closest.active || closest.recentActive) && closest.gateShape.portal_material == Material.STATIONARY_LAVA )
 	            {
 	                final double blockDistanceSquared = StargateManager.distanceSquaredToClosestGateBlock(current, closest);
 	                if ((blockDistanceSquared <= closest.gateShape.woosh_depth_squared && closest.gateShape.woosh_depth != 0) || blockDistanceSquared <= 25 ) 
@@ -183,7 +183,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 	                    event.setCancelled(true);
 	                }
 	            }
-	        }
+	        //}
 	    }
 	}
 	
@@ -233,11 +233,11 @@ public class WormholeXTremeBlockListener extends BlockListener
 	{
 	    if (!event.isCancelled())
 	    {
-	        if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
-	        {
+	        //if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
+	        //{
 	            final Location current = event.getBlock().getLocation();
 	            final Stargate closest = StargateManager.findClosestStargate(current);
-	            if ( closest != null && (closest.active || closest.recentActive))
+	            if ( closest != null && (closest.active || closest.recentActive) && closest.gateShape.portal_material == Material.STATIONARY_LAVA )
 	            {
 	                final double blockDistanceSquared = StargateManager.distanceSquaredToClosestGateBlock(current, closest);
 	                if ((blockDistanceSquared <= closest.gateShape.woosh_depth_squared && closest.gateShape.woosh_depth != 0) || blockDistanceSquared <= 25 ) 
@@ -246,7 +246,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 	                    event.setCancelled(true);
 	                }
 	            }
-	        }
+	        //}
 	    }
 	}
 

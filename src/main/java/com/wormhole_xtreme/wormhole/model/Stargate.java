@@ -196,7 +196,7 @@ public class Stargate
 	 */
 	public void animateOpening()
 	{
-		Material woosh_material = ConfigManager.getPortalMaterial();
+		Material woosh_material = this.gateShape.portal_material;
 		int woosh_depth;
 		if (this.gateShape != null )
 		{
@@ -301,7 +301,7 @@ public class Stargate
 			for ( Location l : lightBlocks)
 			{
 				Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ()); 
-				b.setType(ConfigManager.getActivateMaterial());
+				b.setType(this.gateShape.active_material);
 			}
 		}
 	}
@@ -404,7 +404,7 @@ public class Stargate
 			for ( Location l : lightBlocks)
 			{
 				Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ()); 
-				b.setType(ConfigManager.getStargateMaterial());
+				b.setType(this.gateShape.stargate_material);
 			}
 		}
 		
@@ -455,9 +455,9 @@ public class Stargate
 			// Show water if you are dialing out OR if the iris isn't active
 			if ( this.target != null || !this.irisActive )
 			{
-			    this.fillGateInterior(ConfigManager.getPortalMaterial());
+			    this.fillGateInterior(this.gateShape.portal_material);
 				
-				if (ConfigManager.getPortalWoosh())
+				if ( this.gateShape.woosh_depth > 0 )
 				{
 					WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING));
 				}
@@ -806,7 +806,7 @@ public class Stargate
 	        {
 	            leverstate = leverstate + 8;
 	        }
-	        this.fillGateInterior(ConfigManager.getIrisMaterial());
+	        this.fillGateInterior(this.gateShape.iris_material);
 	    }
 	    else
 	    {
@@ -816,7 +816,7 @@ public class Stargate
 	        }
 	        if (this.active)
 	        {
-	            this.fillGateInterior(ConfigManager.getPortalMaterial());
+	            this.fillGateInterior(this.gateShape.portal_material);
 	        }
 	        else
 	        {

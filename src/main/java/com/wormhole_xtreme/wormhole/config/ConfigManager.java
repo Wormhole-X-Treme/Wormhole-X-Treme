@@ -21,8 +21,6 @@ package com.wormhole_xtreme.wormhole.config;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
-
-import org.bukkit.Material;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 import com.wormhole_xtreme.wormhole.permissions.PermissionsManager.PermissionLevel;
@@ -70,65 +68,6 @@ public class ConfigManager
 		}
 	}
 
-	/**
-	 * Get portal material setting from ConfigKeys, return sane Material value.
-	 * Return default value if key is missing or broken.
-	 *
-	 * @return the portal material
-	 */
-	public static Material getPortalMaterial()
-	{
-		Setting pm;
-		if ((pm = ConfigManager.configurations.get(ConfigKeys.PORTAL_MATERIAL)) != null) 
-		{
-			return pm.getMaterialValue();
-		}
-		else 
-		{
-			Material m = Material.STATIONARY_WATER;
-			return m;
-		}
-	}
-	
-	/**
-	 * Set portal material value in ConfigKeys.
-	 *
-	 * @param m the new portal material
-	 */
-	public static void setPortalMaterial(Material m)
-	{
-		ConfigManager.setConfigValue(ConfigKeys.PORTAL_MATERIAL, m);
-	}
-	
-	/**
-	 * Get Iris material setting from ConfigKeys. Return sane Material value.
-	 * Return default value if key is missing or broken.
-	 *
-	 * @return the iris material
-	 */
-	public static Material getIrisMaterial()
-	{
-		Setting im;
-		if ((im = ConfigManager.configurations.get(ConfigKeys.IRIS_MATERIAL)) != null)
-		{
-			return im.getMaterialValue();
-		}
-		else
-		{
-			Material m = Material.STONE;
-			return m;
-		}
-	}
-	
-	/**
-	 * Set Iris material value in ConfigKeys.
-	 * @param m Material to set.
-	 */
-	public static void setIrisMaterial(Material m)
-	{
-		ConfigManager.setConfigValue(ConfigKeys.IRIS_MATERIAL, m);
-	}
-	
 	/**
 	 * Get Timeout Activate setting from ConfigKeys.
 	 * Return default value if key is missing or broken.
@@ -185,47 +124,6 @@ public class ConfigManager
 	public static void setTimeoutShutdown(int i)
 	{
 		ConfigManager.setConfigValue(ConfigKeys.TIMEOUT_SHUTDOWN,i);
-	}
-	
-	/**
-	 * Get Portal Woosh setting from ConfigKeys. Return sane boolean value.
-	 * @return Woosh enabled?
-	 */
-	public static boolean getPortalWoosh()
-	{
-		Setting pw;
-		if ((pw = ConfigManager.configurations.get(ConfigKeys.PORTAL_WOOSH)) != null)
-		{
-			return pw.getBooleanValue();
-		}
-		else
-		{
-			return true;
-		}
-	}
-	
-	/**
-	 * Placeholder:
-	 * Get Stargate Material settings from ConfigKeys. Return sane Material value.
-	 * Return default if setting is missing or broken.
-	 *
-	 * @return the stargate material
-	 */
-	public static Material getStargateMaterial()
-	{
-		return Material.OBSIDIAN;
-	}
-	
-	/**
-	 * Placeholder:
-	 * Get Stargate Material settings from ConfigKeys. Return sane Material value.
-	 * Return default if setting is missing or broken.
-	 *
-	 * @return the activate material
-	 */
-	public static Material getActivateMaterial()
-	{
-		return Material.GLOWSTONE;
 	}
 	
 	/**
@@ -577,15 +475,6 @@ public class ConfigManager
 		
 		/** The TIMEOU t_ shutdown. */
 		TIMEOUT_SHUTDOWN,
-		
-		/** The PORTA l_ material. */
-		PORTAL_MATERIAL,
-		
-		/** The PORTA l_ woosh. */
-		PORTAL_WOOSH,
-		
-		/** The IRI s_ material. */
-		IRIS_MATERIAL,
 		
 		/** The ICONOMY SUPPORT DISABLE. */
 		ICONOMY_SUPPORT_DISABLE,

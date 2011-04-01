@@ -39,3 +39,13 @@ BUTTON_AWAY=4
 
 #Woosh depth is how many blocks of portal material shoot out when gate is activated
 WOOSH_DEPTH=3
+
+# None of the follow materials are required, they will default if not set.
+# Portal material the material the [P] blocks will be when gate is active.
+PORTAL_MATERIAL=STATIONARY_WATER
+# Iris material is the material the [P] block become when iris is active
+IRIS_MATERIAL=STONE
+# Stargate material is the material the [O] blocks are made of
+STARGATE_MATERIAL=OBISDIAN
+# Active material is the material that :L blocks become when gate is active
+ACTIVE_MATERIAL=GLOWSTONE

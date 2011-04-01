@@ -20,7 +20,6 @@ package com.wormhole_xtreme.wormhole.command;
 
 import java.util.logging.Level;
 
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -187,7 +186,7 @@ public class Wormhole implements CommandExecutor
      */
 	private static boolean doPortalMaterial(CommandSender sender, String[] args)
 	{
-		if ( args.length == 2)
+		/*if ( args.length == 2)
 		{
 			Material m = Material.STONE;
 			try
@@ -216,6 +215,8 @@ public class Wormhole implements CommandExecutor
 		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Portal material is currently: " + ConfigManager.getPortalMaterial());
 		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid materials are: STATIONARY_WATER, STATIONARY_LAVA, AIR, PORTAL");
 		}
+		return true;*/
+		sender.sendMessage("This command is disabled. Material is now set in gate shape.");
 		return true;
 	}
 	
@@ -228,7 +229,7 @@ public class Wormhole implements CommandExecutor
 	 */
 	private static boolean doIrisMaterial(CommandSender sender, String[] args)
 	{
-		if ( args.length == 2)
+		/*if ( args.length == 2)
 		{
 			Material m = Material.STONE;
 			try
@@ -257,6 +258,8 @@ public class Wormhole implements CommandExecutor
 		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Iris material is currently: " + ConfigManager.getIrisMaterial());
 		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid materials are: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, and LAPIS_BLOCK");
 		}
+		return true;*/
+		sender.sendMessage("This command is disabled. Material is now set in gate shape.");
 		return true;
 	}
 	

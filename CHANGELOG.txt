@@ -7,6 +7,19 @@ Changes 0.822
 
 - Minor optimizations and code cleanups.
 
+- PORTAL_MATERIAL, IRIS_MATERIAL, STARGATE_MATERIAL, ACTIVE_MATERIAL are all part of gate shape now.
+    - All configuration values associated with these are gone now.
+    - Gate shapes without these default to 
+      PORTAL_MATERIAL = STATIONARY_WATER
+      IRIS_MATERIAL = STONE
+      STARGATE_MATERIAL = OBSIDIAN
+      ACTIVE_MATERIAL = GLOWSTONE
+    - Updated default gate shapes that come in the zip to include these new values.
+    - See gate shape files for more details
+       
+- Removed version 1 DB conversion because new design doesn't allow for it anymore. 
+    - For users this means if you are upgrading from version 0.3 or less to this
+      version you will need to remake your gates.
 
 Changes 0.821 (3/30/11 @ 17:42 PST):
 

@@ -76,9 +76,10 @@ public class StargateShape
 	/** The square of the woosh_depth, used in comparisions with squared distance */
 	public final int woosh_depth_squared;
 	
-	public Material portal_material;
-	public Material iris_material;
-	public Material stargate_material;
+	public Material portal_material = Material.STATIONARY_WATER;
+	public Material iris_material = Material.STONE;
+	public Material stargate_material = Material.OBSIDIAN;
+	public Material active_material = Material.GLOWSTONE;
 	
 	/**
 	 * Instantiates a new stargate shape.
@@ -221,6 +222,10 @@ public class StargateShape
 			else if ( line.contains("STARGATE_MATERIAL") )
 			{
 				stargate_material = Material.valueOf(line.split("=")[1]);
+			}
+			else if ( line.contains("ACTIVE_MATERIAL") )
+			{
+				active_material = Material.valueOf(line.split("=")[1]);
 			}
 		}
 		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Sign Position: \"" + Arrays.toString(sign_position) + "\"");

@@ -294,7 +294,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
                     s.toggleIrisDefault();
                     if ((s.active) && (!s.irisActive)) 
                     {
-                        s.fillGateInterior(ConfigManager.getPortalMaterial());
+                        s.fillGateInterior(s.gateShape.portal_material);
                     }
                 }
             }

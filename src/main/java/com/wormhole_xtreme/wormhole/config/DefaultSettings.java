@@ -49,12 +49,6 @@ public class DefaultSettings
                     "WormholeXTreme"
         ),
         new Setting(
-                    ConfigKeys.PORTAL_MATERIAL, 
-                    "STATIONARY_WATER", 
-                    "Material to be used when a gate is active. Values are 'STATIONARY_WATER', 'STATIONARY_LAVA', 'AIR', 'PORTAL'.",
-                    "WormholeXTreme"
-        ),
-        new Setting(
                     ConfigKeys.BUILT_IN_PERMISSIONS_ENABLED, 
                     false, 
                     "This should be set to true if you want the built in permissions enabled. This setting does nothing if you have Permissions plugin installed.",
@@ -112,18 +106,6 @@ public class DefaultSettings
                     ConfigKeys.ICONOMY_WORMHOLE_OWNER_PERCENT, 
                     0.0, 
                     "Percent ( from 0.0 - 1.0 ) of wormhole use cost the builder of a gate is given.",
-                    "WormholeXTreme"
-        ),
-        new Setting(
-                    ConfigKeys.PORTAL_WOOSH, 
-                    true, 
-                    "On activate of portal should the 'woosh' animation be played.",
-                    "WormholeXTreme"
-        ),
-        new Setting(
-                    ConfigKeys.IRIS_MATERIAL,
-                    "STONE", 
-                    "Material to be used for the gate Iris. Values are 'IRON_BLOCK', 'STONE', 'BEDROCK', 'GLASS', 'DIAMOND_BLOCK', and 'LAPIS_BLOCK'.",
                     "WormholeXTreme"
         ),
         new Setting(

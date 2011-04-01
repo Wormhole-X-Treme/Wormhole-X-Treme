@@ -30,7 +30,6 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityListener;
 
-import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.model.Stargate;
 import com.wormhole_xtreme.wormhole.model.StargateManager;
 
@@ -54,11 +53,12 @@ public class WormholeXTremeEntityListener extends EntityListener
 	private static boolean handleEntityDamageEvent(EntityDamageEvent event)
 	{
 	    final Player p = (Player) event.getEntity();
-	    if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
-	    {
+	    //if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
+	    //{
+	    // TODO : This is bad for performance!!
 	        final Location current = p.getLocation();
 	        final Stargate closest = StargateManager.findClosestStargate(current);
-	        if(closest != null)
+	        if(closest != null && closest.gateShape.portal_material == Material.STATIONARY_LAVA)
 	        {
 	            final double blockDistanceSquared = StargateManager.distanceSquaredToClosestGateBlock(current, closest);
 	            if ((closest.active || closest.recentActive) && ((blockDistanceSquared <= closest.gateShape.woosh_depth_squared && closest.gateShape.woosh_depth != 0) || blockDistanceSquared <= 16 ))
@@ -69,7 +69,7 @@ public class WormholeXTremeEntityListener extends EntityListener
 	                return true;
 	            }
 	        }
-	    }
+	    //}
 	    return false;
 	}
 	

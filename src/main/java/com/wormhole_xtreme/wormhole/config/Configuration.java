@@ -29,8 +29,6 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.logging.Level;
 
-
-import org.bukkit.Material;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
@@ -296,16 +294,6 @@ public class Configuration
 						if ( DefaultSettings.config[i].getName() == ConfigKeys.BUILT_IN_DEFAULT_PERMISSION_LEVEL )
 						{
 							s = new Setting(DefaultSettings.config[i].getName(), PermissionLevel.valueOf(value), DefaultSettings.config[i].getDescription(), "WormholeXTreme");
-						}
-						// TODO: Build PORTAL_MATRIAL white-list and verify against it for PORTAL_MATERIAL configuration entry. Until then blindly accept any material value.
-						else if ( DefaultSettings.config[i].getName() == ConfigKeys.PORTAL_MATERIAL )
-						{
-							s = new Setting(DefaultSettings.config[i].getName(), Material.valueOf(value), DefaultSettings.config[i].getDescription(), "WormholeXTreme");
-						}
-						// TODO: Build IRIS_MATERIAL white-list and verify against it for IRIS_MATERIAL configuration entry. Until then blindly accept any material value.
-						else if ( DefaultSettings.config[i].getName() == ConfigKeys.IRIS_MATERIAL )
-						{
-							s = new Setting(DefaultSettings.config[i].getName(), Material.valueOf(value), DefaultSettings.config[i].getDescription(), "WormholeXTreme");
 						}
 						else
 						{

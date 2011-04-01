@@ -16,6 +16,8 @@ Changes 0.822
       ACTIVE_MATERIAL = GLOWSTONE
     - Updated default gate shapes that come in the zip to include these new values.
     - See gate shape files for more details
+    - Known bug: If you teleport from a gate with portal type lava, to a gate
+      that is NOT lava, you will be burned once you reach the other side.
        
 - Removed version 1 DB conversion because new design doesn't allow for it anymore. 
     - For users this means if you are upgrading from version 0.3 or less to this

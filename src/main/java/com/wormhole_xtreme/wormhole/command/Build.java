@@ -24,7 +24,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
-import com.wormhole_xtreme.wormhole.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.wormhole.logic.StargateHelper;
 import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.model.StargateShape;
@@ -75,17 +74,17 @@ public class Build implements CommandExecutor {
                 final StargateShape shape = StargateHelper.getShape(a[0]);
                 if  ( shape != null)
                 {
-                    StargateManager.AddPlayerBuilderShape(p, shape);
-                    p.sendMessage(ConfigManager.normalheader + "Press Activation button on new DHD to autobuild Stargate in the shape of: " + a[0] );
+                    StargateManager.addPlayerBuilderShape(p, shape);
+                    p.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Press Activation button on new DHD to autobuild Stargate in the shape of: " + a[0] );
                 }
                 else
                 {
-                    p.sendMessage(ConfigManager.errorheader + "Invalid shape: " + a[0]);
+                    p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid shape: " + a[0]);
                 }
             }
             else
             {
-                p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+                p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
             }
         }
         else

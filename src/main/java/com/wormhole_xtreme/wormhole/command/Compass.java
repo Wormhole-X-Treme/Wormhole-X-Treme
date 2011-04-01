@@ -24,8 +24,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
-import com.wormhole_xtreme.wormhole.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.wormhole.model.Stargate;
+import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 
@@ -61,20 +61,20 @@ public class Compass implements CommandExecutor {
         final Player p = player;
         if (WXPermissions.checkWXPermissions(p, PermissionType.COMPASS))
         {
-            final Stargate closest = Stargate.FindClosestStargate(p.getLocation());
+            final Stargate closest = StargateManager.findClosestStargate(p.getLocation());
             if(closest != null)
             {
-                p.setCompassTarget(closest.TeleportLocation);
-                p.sendMessage(ConfigManager.normalheader + "Compass set to wormhole: " + closest.Name);
+                p.setCompassTarget(closest.teleportLocation);
+                p.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Compass set to wormhole: " + closest.name);
             }
             else
             {
-                p.sendMessage(ConfigManager.errorheader + "No wormholes to track!");
+                p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "No wormholes to track!");
             }
         }
         else 
         {
-            p.sendMessage( ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+            p.sendMessage( ConfigManager.MessageStrings.permissionNo.toString());
         }
         return true;
     }

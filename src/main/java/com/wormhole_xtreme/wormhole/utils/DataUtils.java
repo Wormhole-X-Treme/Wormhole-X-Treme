@@ -39,7 +39,7 @@ public class DataUtils
 	 * @param l the l
 	 * @return the byte[]
 	 */
-	public static byte[] LocationToBytes(Location l)
+	public static byte[] locationToBytes(Location l)
 	{
 		ByteBuffer b = ByteBuffer.allocate(32);
 		b.putDouble(l.getX());
@@ -57,7 +57,7 @@ public class DataUtils
 	 * @param b the b
 	 * @return the byte[]
 	 */
-	public static byte[] BlockToBytes(Block b)
+	public static byte[] blockToBytes(Block b)
 	{
 		ByteBuffer bb = ByteBuffer.allocate(12);
 		
@@ -74,7 +74,7 @@ public class DataUtils
 	 * @param l the l
 	 * @return the byte[]
 	 */
-	public static byte[] BlockLocationToBytes(Location l)
+	public static byte[] blockLocationToBytes(Location l)
 	{
 		ByteBuffer bb = ByteBuffer.allocate(12);
 		
@@ -93,7 +93,7 @@ public class DataUtils
 	 * @param w the w
 	 * @return the block
 	 */
-	public static Block BlockFromBytes(byte[] bytes, World w)
+	public static Block blockFromBytes(byte[] bytes, World w)
 	{
 		ByteBuffer b = ByteBuffer.wrap(bytes);
 		return w.getBlockAt( b.getInt(), b.getInt(), b.getInt() );
@@ -106,7 +106,7 @@ public class DataUtils
 	 * @param w the w
 	 * @return the location
 	 */
-	public static Location LocationFromBytes(byte[] bytes, World w)
+	public static Location locationFromBytes(byte[] bytes, World w)
 	{
 		ByteBuffer b = ByteBuffer.wrap(bytes);
 		return new Location(w, b.getDouble(), b.getDouble(), b.getDouble(), b.getFloat(), b.getFloat());

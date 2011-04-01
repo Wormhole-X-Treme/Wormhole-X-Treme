@@ -63,7 +63,7 @@ public class StargateHelper
 	public static final byte StargateSaveVersion = 5;
 	
 	/** The Empty block. */
-	private static byte[] EmptyBlock = { 0,0,0,0,0,0,0,0,0,0,0,0 };
+	private static byte[] emptyBlock = { 0,0,0,0,0,0,0,0,0,0,0,0 };
 	
 	/**
 	 * Stargateto binary.
@@ -77,12 +77,12 @@ public class StargateHelper
 		byte[] utf_idc_bytes;
 		try
 		{
-			utf_face_bytes = s.Facing.toString().getBytes("UTF8");
-			utf_idc_bytes = s.IrisDeactivationCode.getBytes("UTF8");
+			utf_face_bytes = s.facing.toString().getBytes("UTF8");
+			utf_idc_bytes = s.irisDeactivationCode.getBytes("UTF8");
 		}
 		catch ( Exception e)
 		{
-			WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Unable to store gate in DB, byte encoding failed: " + e.getMessage());
+			WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to store gate in DB, byte encoding failed: " + e.getMessage());
 			return null;
 		}
 
@@ -99,53 +99,53 @@ public class StargateHelper
 		// Size of all the basic sizes we know
 		int size = num_bytes_with_version + (num_ints * 4) + (num_longs * 8) + (num_blocks * block_size) + (num_locations * location_size);
 		// Size of the gate blocks
-		size += (s.Blocks.size() * block_size ) + (s.WaterBlocks.size() * block_size ) + s.LightBlocks.size() * block_size;
+		size += (s.blocks.size() * block_size ) + (s.waterBlocks.size() * block_size ) + s.lightBlocks.size() * block_size;
 		// Size of the strings.
 		size += utf_face_bytes.length + utf_idc_bytes.length;
 		
 		ByteBuffer data_arr = ByteBuffer.allocate(size);
 		
 		data_arr.put(StargateSaveVersion);
-		data_arr.put(DataUtils.BlockToBytes(s.ActivationBlock));
+		data_arr.put(DataUtils.blockToBytes(s.activationBlock));
 		
-		if ( s.IrisActivationBlock != null )
-			data_arr.put(DataUtils.BlockToBytes(s.IrisActivationBlock));
+		if ( s.irisActivationBlock != null )
+			data_arr.put(DataUtils.blockToBytes(s.irisActivationBlock));
 		else
-			data_arr.put(EmptyBlock);
+			data_arr.put(emptyBlock);
 
-		if ( s.NameBlockHolder != null )
-			data_arr.put(DataUtils.BlockToBytes(s.NameBlockHolder));
+		if ( s.nameBlockHolder != null )
+			data_arr.put(DataUtils.blockToBytes(s.nameBlockHolder));
 		else
-			data_arr.put(EmptyBlock);
+			data_arr.put(emptyBlock);
 		
-		data_arr.put(DataUtils.LocationToBytes(s.TeleportLocation));
+		data_arr.put(DataUtils.locationToBytes(s.teleportLocation));
 
-		if ( s.IsSignPowered )
+		if ( s.isSignPowered )
 		{
 			data_arr.put((byte)1);
-			data_arr.put(DataUtils.BlockToBytes(s.TeleportSignBlock));
+			data_arr.put(DataUtils.blockToBytes(s.teleportSignBlock));
 
 			// SignIndex
-			data_arr.putInt(s.SignIndex);
+			data_arr.putInt(s.signIndex);
 			
 			// SignTarget
-			if ( s.SignTarget != null )
-				data_arr.putLong(s.SignTarget.GateId);
+			if ( s.signTarget != null )
+				data_arr.putLong(s.signTarget.gateId);
 			else
 				data_arr.putLong(-1);
 		}
 		else
 		{
 			data_arr.put((byte)0);
-			data_arr.put(EmptyBlock);
+			data_arr.put(emptyBlock);
 			data_arr.putInt(-1);
 			data_arr.putLong(-1);
 		}
 		
-		if ( s.Active && s.Target != null)
+		if ( s.active && s.target != null)
 		{
 			data_arr.put((byte)1);
-			data_arr.putLong(s.Target.GateId);
+			data_arr.putLong(s.target.gateId);
 		}
 		else
 		{
@@ -160,27 +160,27 @@ public class StargateHelper
 		data_arr.putInt(utf_idc_bytes.length);
 		data_arr.put(utf_idc_bytes);
 
-		if ( s.IrisActive )
+		if ( s.irisActive )
 			data_arr.put((byte)1);
 		else
 			data_arr.put((byte)0);
 
-		if ( s.LitGate )
+		if ( s.litGate )
 			data_arr.put((byte)1);
 		else
 			data_arr.put((byte)0);
 		
-		data_arr.putInt(s.Blocks.size());
-		for ( int i = 0; i < s.Blocks.size(); i++ )
-			data_arr.put(DataUtils.BlockLocationToBytes(s.Blocks.get(i)));
+		data_arr.putInt(s.blocks.size());
+		for ( int i = 0; i < s.blocks.size(); i++ )
+			data_arr.put(DataUtils.blockLocationToBytes(s.blocks.get(i)));
 		
-		data_arr.putInt(s.WaterBlocks.size());
-		for ( int i = 0; i < s.WaterBlocks.size(); i++ )
-			data_arr.put(DataUtils.BlockLocationToBytes(s.WaterBlocks.get(i)));
+		data_arr.putInt(s.waterBlocks.size());
+		for ( int i = 0; i < s.waterBlocks.size(); i++ )
+			data_arr.put(DataUtils.blockLocationToBytes(s.waterBlocks.get(i)));
 
-		data_arr.putInt(s.LightBlocks.size());
-		for ( int i = 0; i < s.LightBlocks.size(); i++ )
-			data_arr.put(DataUtils.BlockLocationToBytes(s.LightBlocks.get(i)));
+		data_arr.putInt(s.lightBlocks.size());
+		for ( int i = 0; i < s.lightBlocks.size(); i++ )
+			data_arr.put(DataUtils.blockLocationToBytes(s.lightBlocks.get(i)));
 		
 		return data_arr.array();
 	} 
@@ -241,12 +241,12 @@ public class StargateHelper
 			//System.out.println("");
 			// Probably a stargate, lets start checking!
 			Stargate temp_gate = new Stargate();
-			temp_gate.MyWorld = button_block.getWorld();
-			temp_gate.Name = "";
-			temp_gate.ActivationBlock = button_block;
-			temp_gate.Facing = facing;
-			temp_gate.Blocks.add( button_block.getLocation() );
-			temp_gate.GateShape = shape;
+			temp_gate.myWorld = button_block.getWorld();
+			temp_gate.name = "";
+			temp_gate.activationBlock = button_block;
+			temp_gate.facing = facing;
+			temp_gate.blocks.add( button_block.getLocation() );
+			temp_gate.gateShape = shape;
 			if ( !isStargateMaterial( holding_block.getRelative(BlockFace.DOWN) ) )
 			{
 				return null;
@@ -256,25 +256,25 @@ public class StargateHelper
 			if ( isStargateMaterial( possible_sign_holder) )
 			{
 				// This might be a public gate with activation method of sign instead of name.
-				Block sign_block = possible_sign_holder.getRelative(temp_gate.Facing);
+				Block sign_block = possible_sign_holder.getRelative(temp_gate.facing);
 				if ( sign_block.getType() == Material.WALL_SIGN )
 				{
-					temp_gate.IsSignPowered = true;
-					temp_gate.TeleportSignBlock = sign_block;
-					temp_gate.TeleportSign = (Sign) sign_block.getState();
-					temp_gate.Blocks.add( sign_block.getLocation() );
+					temp_gate.isSignPowered = true;
+					temp_gate.teleportSignBlock = sign_block;
+					temp_gate.teleportSign = (Sign) sign_block.getState();
+					temp_gate.blocks.add( sign_block.getLocation() );
 					
-					String name = temp_gate.TeleportSign.getLine(0);
-					Stargate pos_dupe = StargateManager.GetStargate(name);
+					String name = temp_gate.teleportSign.getLine(0);
+					Stargate pos_dupe = StargateManager.getStargate(name);
 					if ( pos_dupe != null )
 					{
-						temp_gate.Name = "";
+						temp_gate.name = "";
 						return temp_gate;
 					}
 					
 					if ( name.length() > 2 )
 					{
-						temp_gate.Name = name;
+						temp_gate.name = name;
 					}
 				}
 			}
@@ -323,19 +323,19 @@ public class StargateHelper
 					
 				if ( isStargateMaterial(maybe_block) )
 				{
-					temp_gate.Blocks.add( maybe_block.getLocation() );
+					temp_gate.blocks.add( maybe_block.getLocation() );
 					for ( int j = 0; j < shape.light_positions.length; j++ )
 					{
 						if ( shape.light_positions[j] == i)
 						{
-							temp_gate.LightBlocks.add(maybe_block.getLocation());
+							temp_gate.lightBlocks.add(maybe_block.getLocation());
 						}
 					}
 				}
 				else
 				{
-					if ( temp_gate.Network != null )
-						temp_gate.Network.gate_list.remove(temp_gate);
+					if ( temp_gate.network != null )
+						temp_gate.network.gate_list.remove(temp_gate);
 					
 					return null;
 				}
@@ -346,7 +346,7 @@ public class StargateHelper
 			{
 				int[] sign_location_array = {shape.sign_position[2] * direction_vector[0] * -1, shape.sign_position[1], shape.sign_position[2] * direction_vector[2] * -1};
 				Block name_block = w.getBlockAt(sign_location_array[0] + starting_position[0], sign_location_array[1] + starting_position[1], sign_location_array[2] + starting_position[2]);
-				temp_gate.NameBlockHolder = name_block;
+				temp_gate.nameBlockHolder = name_block;
 			}
 			// Now set teleport in location
 			int[] teleport_loc_array = {shape.enter_position[2] * direction_vector[0] * -1, shape.enter_position[1], shape.enter_position[2] * direction_vector[2] * -1};
@@ -367,7 +367,7 @@ public class StargateHelper
 			tele_loc.setX(tele_loc.getX() + 0.5);
 			tele_loc.setY(tele_loc.getY() + 0.66);
 			tele_loc.setZ(tele_loc.getZ() + 0.5);
-			temp_gate.TeleportLocation = tele_loc;
+			temp_gate.teleportLocation = tele_loc;
 			
 			for ( int[] b_vect : shape.water_positions)
 			{
@@ -375,34 +375,34 @@ public class StargateHelper
 				
 				Block maybe_block = w.getBlockAt(block_location[0] + starting_position[0], block_location[1] + starting_position[1], block_location[2] + starting_position[2]);
 				if ( maybe_block.getType() == Material.AIR )
-					temp_gate.WaterBlocks.add( maybe_block.getLocation() );
+					temp_gate.waterBlocks.add( maybe_block.getLocation() );
 				else
 				{
-					if ( temp_gate.Network != null )
-						temp_gate.Network.gate_list.remove(temp_gate);
+					if ( temp_gate.network != null )
+						temp_gate.network.gate_list.remove(temp_gate);
 					
 					return null;
 				}
 			}
 			
 			// Moved this here so that it only creates the sign if the gate is correctly built.
-			if ( temp_gate.Name != null && temp_gate.Name.length() > 0 )
+			if ( temp_gate.name != null && temp_gate.name.length() > 0 )
 			{
 				String network_name = "Public";
 				
-				if ( temp_gate.TeleportSign != null && !temp_gate.TeleportSign.getLine(1).equals("") )
+				if ( temp_gate.teleportSign != null && !temp_gate.teleportSign.getLine(1).equals("") )
 				{
 					// We have a specific network
-					network_name = temp_gate.TeleportSign.getLine(1);
+					network_name = temp_gate.teleportSign.getLine(1);
 				}
-				StargateNetwork	net = StargateManager.GetStargateNetwork(network_name);
+				StargateNetwork	net = StargateManager.getStargateNetwork(network_name);
 				if ( net == null )
-					net = StargateManager.AddStargateNetwork(network_name);
-				StargateManager.AddGateToNetwork(temp_gate, network_name);
+					net = StargateManager.addStargateNetwork(network_name);
+				StargateManager.addGateToNetwork(temp_gate, network_name);
 
-				temp_gate.Network = net;
-				temp_gate.SignIndex = -1;
-				temp_gate.TeleportSignClicked();
+				temp_gate.network = net;
+				temp_gate.signIndex = -1;
+				temp_gate.teleportSignClicked();
 			}
 			
 			return temp_gate; 
@@ -435,14 +435,14 @@ public class StargateHelper
 	public static Stargate parseVersionedData(byte[] gate_data, World w, String name, StargateNetwork network)
 	{
 		Stargate s = new Stargate();
-		s.Name = name;
-		s.Network = network;
+		s.name = name;
+		s.network = network;
 		ByteBuffer byte_buff = ByteBuffer.wrap(gate_data);
 
 		// First get version byte
-		s.LoadedVersion = byte_buff.get();
-		s.MyWorld = w;
-		if ( s.LoadedVersion == 1 )
+		s.loadedVersion = byte_buff.get();
+		s.myWorld = w;
+		if ( s.loadedVersion == 1 )
 		{
 			byte[] loc_array = new byte[32];
 			byte[] bloc_array = new byte[12];
@@ -450,34 +450,34 @@ public class StargateHelper
 			//  facing_len|facing_string|idc_len|idc|IrisActive|num_blocks|Blocks|num_water_blocks|WaterBlocks
 
 			byte_buff.get(bloc_array);
-			s.ActivationBlock = DataUtils.BlockFromBytes(bloc_array, w);
+			s.activationBlock = DataUtils.blockFromBytes(bloc_array, w);
 
 			byte_buff.get(bloc_array); 
-			s.IrisActivationBlock = DataUtils.BlockFromBytes(bloc_array, w);
+			s.irisActivationBlock = DataUtils.blockFromBytes(bloc_array, w);
 			
 			byte_buff.get(bloc_array); 
-			s.NameBlockHolder = DataUtils.BlockFromBytes(bloc_array, w);
+			s.nameBlockHolder = DataUtils.blockFromBytes(bloc_array, w);
 			
 			byte_buff.get(loc_array);
-			s.TeleportLocation = DataUtils.LocationFromBytes(loc_array, w);
+			s.teleportLocation = DataUtils.locationFromBytes(loc_array, w);
 			
-			s.IsSignPowered = DataUtils.byteToBoolean(byte_buff.get());// index++;
+			s.isSignPowered = DataUtils.byteToBoolean(byte_buff.get());// index++;
 			
 			byte_buff.get(bloc_array);
-			if ( s.IsSignPowered  )
+			if ( s.isSignPowered  )
 			{
-				s.TeleportSignBlock = DataUtils.BlockFromBytes(bloc_array, w);
+				s.teleportSignBlock = DataUtils.blockFromBytes(bloc_array, w);
 				
-				if ( w.isChunkLoaded(s.TeleportSignBlock.getChunk()))
+				if ( w.isChunkLoaded(s.teleportSignBlock.getChunk()))
 				{
 					try
 					{
-						s.TeleportSign = (Sign)s.TeleportSignBlock.getState();
-						s.TryClickTeleportSign(s.TeleportSignBlock);
+						s.teleportSign = (Sign)s.teleportSignBlock.getState();
+						s.tryClickTeleportSign(s.teleportSignBlock);
 					}
 					catch (Exception e)
 					{
-						WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.Name + " and will be unable to dial out.");
+						WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.name + " and will be unable to dial out.");
 					}
 				}
 			}
@@ -487,37 +487,37 @@ public class StargateHelper
 			//System.arraycopy(gate_data, index, str_bytes, 0, facing_size); index += facing_size;
 			byte_buff.get(str_bytes);
 			String face_str = new String(str_bytes);
-			s.Facing = BlockFace.valueOf(face_str);
+			s.facing = BlockFace.valueOf(face_str);
 			
-			s.TeleportLocation.setYaw( WorldUtils.getDegreesFromBlockFace(s.Facing));
-			s.TeleportLocation.setPitch(0);
+			s.teleportLocation.setYaw( WorldUtils.getDegreesFromBlockFace(s.facing));
+			s.teleportLocation.setPitch(0);
 
-			if ( s.TeleportLocation.getX() - ((int)s.TeleportLocation.getX()) == 0.0 )
+			if ( s.teleportLocation.getX() - ((int)s.teleportLocation.getX()) == 0.0 )
 			{
 				// This means the data hasn't been corrected yet.
-				s.TeleportLocation.setX(s.TeleportLocation.getX() + 0.5);
-				s.TeleportLocation.setZ(s.TeleportLocation.getZ() + 0.5);
-				s.TeleportLocation.setY(s.TeleportLocation.getY() + 0.1);
+				s.teleportLocation.setX(s.teleportLocation.getX() + 0.5);
+				s.teleportLocation.setZ(s.teleportLocation.getZ() + 0.5);
+				s.teleportLocation.setY(s.teleportLocation.getY() + 0.1);
 			}
 			
 			int idc_len = byte_buff.getInt();
 			byte[] idc_bytes = new byte[idc_len];
 			byte_buff.get(idc_bytes);
-			s.IrisDeactivationCode = new String(idc_bytes);
+			s.irisDeactivationCode = new String(idc_bytes);
 			
-			s.IrisActive = DataUtils.byteToBoolean(byte_buff.get()); // index++;
+			s.irisActive = DataUtils.byteToBoolean(byte_buff.get()); // index++;
 			
-			WorldUtils.checkChunkLoad(s.ActivationBlock);
+			WorldUtils.checkChunkLoad(s.activationBlock);
 			
 			int num_blocks = byte_buff.getInt(); //DataUtils.byteArrayToInt(gate_data, index); index += 4;
 			Material m = ConfigManager.getPortalMaterial();
 			for ( int i = 0; i < num_blocks; i++ )
 			{
 				byte_buff.get(bloc_array);
-				Block bl = DataUtils.BlockFromBytes(bloc_array, w);
+				Block bl = DataUtils.blockFromBytes(bloc_array, w);
 				if ( bl.getType() != m )
 				{
-					s.Blocks.add( bl.getLocation() );
+					s.blocks.add( bl.getLocation() );
 				}
 			}
 			
@@ -525,13 +525,13 @@ public class StargateHelper
 			for ( int i = 0; i < num_blocks; i++ )
 			{
 				byte_buff.get(bloc_array);
-				Block bl = DataUtils.BlockFromBytes(bloc_array, w);
-				s.WaterBlocks.add( bl.getLocation() );
+				Block bl = DataUtils.blockFromBytes(bloc_array, w);
+				s.waterBlocks.add( bl.getLocation() );
 			}
 			
 			return s;
 		}
-		if ( s.LoadedVersion == 2 )
+		if ( s.loadedVersion == 2 )
 		{
 			byte[] loc_array = new byte[32];
 			byte[] bloc_array = new byte[12];
@@ -539,35 +539,35 @@ public class StargateHelper
 			//  facing_len|facing_string|idc_len|idc|IrisActive|num_blocks|Blocks|num_water_blocks|WaterBlocks
 
 			byte_buff.get(bloc_array);
-			s.ActivationBlock = DataUtils.BlockFromBytes(bloc_array, w);
-			WorldUtils.checkChunkLoad(s.ActivationBlock);
+			s.activationBlock = DataUtils.blockFromBytes(bloc_array, w);
+			WorldUtils.checkChunkLoad(s.activationBlock);
 			
 			byte_buff.get(bloc_array); 
-			s.IrisActivationBlock = DataUtils.BlockFromBytes(bloc_array, w);
+			s.irisActivationBlock = DataUtils.blockFromBytes(bloc_array, w);
 			
 			byte_buff.get(bloc_array); 
-			s.NameBlockHolder = DataUtils.BlockFromBytes(bloc_array, w);
+			s.nameBlockHolder = DataUtils.blockFromBytes(bloc_array, w);
 			
 			byte_buff.get(loc_array);
-			s.TeleportLocation = DataUtils.LocationFromBytes(loc_array, w);
+			s.teleportLocation = DataUtils.locationFromBytes(loc_array, w);
 			
-			s.IsSignPowered = DataUtils.byteToBoolean(byte_buff.get());// index++;
+			s.isSignPowered = DataUtils.byteToBoolean(byte_buff.get());// index++;
 			
 			byte_buff.get(bloc_array);
-			if ( s.IsSignPowered  )
+			if ( s.isSignPowered  )
 			{
-				s.TeleportSignBlock = DataUtils.BlockFromBytes(bloc_array, w);
+				s.teleportSignBlock = DataUtils.blockFromBytes(bloc_array, w);
 				
-				if ( w.isChunkLoaded(s.TeleportSignBlock.getChunk()))
+				if ( w.isChunkLoaded(s.teleportSignBlock.getChunk()))
 				{
 					try
 					{
-						s.TeleportSign = (Sign)s.TeleportSignBlock.getState();
-						s.TryClickTeleportSign(s.TeleportSignBlock);
+						s.teleportSign = (Sign)s.teleportSignBlock.getState();
+						s.tryClickTeleportSign(s.teleportSignBlock);
 					}
 					catch (Exception e)
 					{
-						WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.Name + " and will be unable to dial out.");
+						WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.name + " and will be unable to dial out.");
 					}
 				}
 			}
@@ -576,37 +576,37 @@ public class StargateHelper
 			byte[] str_bytes = new byte[facing_size];
 			byte_buff.get(str_bytes);
 			String face_str = new String(str_bytes);
-			s.Facing = BlockFace.valueOf(face_str);
+			s.facing = BlockFace.valueOf(face_str);
 			
-			s.TeleportLocation.setYaw( WorldUtils.getDegreesFromBlockFace(s.Facing));
-			s.TeleportLocation.setPitch(0);
+			s.teleportLocation.setYaw( WorldUtils.getDegreesFromBlockFace(s.facing));
+			s.teleportLocation.setPitch(0);
 
 			int idc_len = byte_buff.getInt();
 			byte[] idc_bytes = new byte[idc_len];
 			byte_buff.get(idc_bytes);
-			s.IrisDeactivationCode = new String(idc_bytes);
+			s.irisDeactivationCode = new String(idc_bytes);
 			
-			s.IrisActive = DataUtils.byteToBoolean(byte_buff.get()); // index++;
+			s.irisActive = DataUtils.byteToBoolean(byte_buff.get()); // index++;
 			
 			int num_blocks = byte_buff.getInt(); //DataUtils.byteArrayToInt(gate_data, index); index += 4;
 			for ( int i = 0; i < num_blocks; i++ )
 			{
 				byte_buff.get(bloc_array);
-				Block bl = DataUtils.BlockFromBytes(bloc_array, w);
-				s.Blocks.add( bl.getLocation() );
+				Block bl = DataUtils.blockFromBytes(bloc_array, w);
+				s.blocks.add( bl.getLocation() );
 			}
 			
 			num_blocks = byte_buff.getInt(); //DataUtils.byteArrayToInt(gate_data, index); index += 4;
 			for ( int i = 0; i < num_blocks; i++ )
 			{
 				byte_buff.get(bloc_array);
-				Block bl = DataUtils.BlockFromBytes(bloc_array, w);
-				s.WaterBlocks.add( bl.getLocation() );
+				Block bl = DataUtils.blockFromBytes(bloc_array, w);
+				s.waterBlocks.add( bl.getLocation() );
 			}
 			
 			return s;
 		}
-		else if ( s.LoadedVersion == 3)
+		else if ( s.loadedVersion == 3)
 		{
 			byte[] loc_array = new byte[32];
 			byte[] bloc_array = new byte[12];
@@ -614,80 +614,80 @@ public class StargateHelper
 			//  facing_len|facing_string|idc_len|idc|IrisActive|num_blocks|Blocks|num_water_blocks|WaterBlocks
 
 			byte_buff.get(bloc_array);
-			s.ActivationBlock = DataUtils.BlockFromBytes(bloc_array, w);
-			WorldUtils.checkChunkLoad(s.ActivationBlock);
+			s.activationBlock = DataUtils.blockFromBytes(bloc_array, w);
+			WorldUtils.checkChunkLoad(s.activationBlock);
 			
 			byte_buff.get(bloc_array); 
-			s.IrisActivationBlock = DataUtils.BlockFromBytes(bloc_array, w);
+			s.irisActivationBlock = DataUtils.blockFromBytes(bloc_array, w);
 			
 			byte_buff.get(bloc_array); 
-			s.NameBlockHolder = DataUtils.BlockFromBytes(bloc_array, w);
+			s.nameBlockHolder = DataUtils.blockFromBytes(bloc_array, w);
 			
 			byte_buff.get(loc_array);
-			s.TeleportLocation = DataUtils.LocationFromBytes(loc_array, w);
+			s.teleportLocation = DataUtils.locationFromBytes(loc_array, w);
 			
-			s.IsSignPowered = DataUtils.byteToBoolean(byte_buff.get());
+			s.isSignPowered = DataUtils.byteToBoolean(byte_buff.get());
 			
 			byte_buff.get(bloc_array);
-			s.SignIndex = byte_buff.getInt();
-			s.temp_sign_target = byte_buff.getInt();
-			if ( s.IsSignPowered  )
+			s.signIndex = byte_buff.getInt();
+			s.tempSignTarget = byte_buff.getInt();
+			if ( s.isSignPowered  )
 			{
-				s.TeleportSignBlock = DataUtils.BlockFromBytes(bloc_array, w);
+				s.teleportSignBlock = DataUtils.blockFromBytes(bloc_array, w);
 					
-				if ( w.isChunkLoaded(s.TeleportSignBlock.getChunk()))
+				if ( w.isChunkLoaded(s.teleportSignBlock.getChunk()))
 				{
 					try
 					{
-						s.TeleportSign = (Sign)s.TeleportSignBlock.getState();
-						s.TryClickTeleportSign(s.TeleportSignBlock);
+						s.teleportSign = (Sign)s.teleportSignBlock.getState();
+						s.tryClickTeleportSign(s.teleportSignBlock);
 					}
 					catch (Exception e)
 					{
-						WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.Name + " and will be unable to change dial target.");
+						WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.name + " and will be unable to change dial target.");
 					}
 				}
 			}
 
 			
-			s.Active = DataUtils.byteToBoolean(byte_buff.get());
-			s.temp_target_id = byte_buff.getInt();
+			s.active = DataUtils.byteToBoolean(byte_buff.get());
+			s.tempTargetId = byte_buff.getInt();
 			
 			int facing_size = byte_buff.getInt();
 			byte[] str_bytes = new byte[facing_size];
 			byte_buff.get(str_bytes);
 			String face_str = new String(str_bytes);
-			s.Facing = BlockFace.valueOf(face_str);
+			s.facing = BlockFace.valueOf(face_str);
 			
-			s.TeleportLocation.setYaw( WorldUtils.getDegreesFromBlockFace(s.Facing));
-			s.TeleportLocation.setPitch(0);
+			s.teleportLocation.setYaw( WorldUtils.getDegreesFromBlockFace(s.facing));
+			s.teleportLocation.setPitch(0);
 
 			int idc_len = byte_buff.getInt();
 			byte[] idc_bytes = new byte[idc_len];
 			byte_buff.get(idc_bytes);
-			s.IrisDeactivationCode = new String(idc_bytes);
+			s.irisDeactivationCode = new String(idc_bytes);
 			
-			s.IrisActive = DataUtils.byteToBoolean(byte_buff.get()); // index++;
+			s.irisActive = DataUtils.byteToBoolean(byte_buff.get()); // index++;
 			
 			int num_blocks = byte_buff.getInt(); //DataUtils.byteArrayToInt(gate_data, index); index += 4;
 			for ( int i = 0; i < num_blocks; i++ )
 			{
 				byte_buff.get(bloc_array);
-				Block bl = DataUtils.BlockFromBytes(bloc_array, w);
-				s.Blocks.add( bl.getLocation() );
+				Block bl = DataUtils.blockFromBytes(bloc_array, w);
+				s.blocks.add( bl.getLocation() );
 			}
 			
 			num_blocks = byte_buff.getInt(); //DataUtils.byteArrayToInt(gate_data, index); index += 4;
 			for ( int i = 0; i < num_blocks; i++ )
 			{
 				byte_buff.get(bloc_array);
-				Block bl = DataUtils.BlockFromBytes(bloc_array, w);
-				s.WaterBlocks.add( bl.getLocation() );
+				Block bl = DataUtils.blockFromBytes(bloc_array, w);
+				s.waterBlocks.add( bl.getLocation() );
 			}
 			
 			return s;
 		}
-		else if ( s.LoadedVersion == 4 )
+		else if ( s.loadedVersion == 4 )
 		{
 			byte[] loc_array = new byte[32];
 			byte[] bloc_array = new byte[12];
@@ -695,80 +695,80 @@ public class StargateHelper
 			//  facing_len|facing_string|idc_len|idc|IrisActive|num_blocks|Blocks|num_water_blocks|WaterBlocks
 
 			byte_buff.get(bloc_array);
-			s.ActivationBlock = DataUtils.BlockFromBytes(bloc_array, w);
-			WorldUtils.checkChunkLoad(s.ActivationBlock);
+			s.activationBlock = DataUtils.blockFromBytes(bloc_array, w);
+			WorldUtils.checkChunkLoad(s.activationBlock);
 			
 			byte_buff.get(bloc_array); 
-			s.IrisActivationBlock = DataUtils.BlockFromBytes(bloc_array, w);
+			s.irisActivationBlock = DataUtils.blockFromBytes(bloc_array, w);
 			
 			byte_buff.get(bloc_array); 
-			s.NameBlockHolder = DataUtils.BlockFromBytes(bloc_array, w);
+			s.nameBlockHolder = DataUtils.blockFromBytes(bloc_array, w);
 			
 			byte_buff.get(loc_array);
-			s.TeleportLocation = DataUtils.LocationFromBytes(loc_array, w);
+			s.teleportLocation = DataUtils.locationFromBytes(loc_array, w);
 			
-			s.IsSignPowered = DataUtils.byteToBoolean(byte_buff.get());
+			s.isSignPowered = DataUtils.byteToBoolean(byte_buff.get());
 			
 			byte_buff.get(bloc_array);
-			s.SignIndex = byte_buff.getInt();
-			s.temp_sign_target = byte_buff.getLong();
-			if ( s.IsSignPowered  )
+			s.signIndex = byte_buff.getInt();
+			s.tempSignTarget = byte_buff.getLong();
+			if ( s.isSignPowered  )
 			{
-				s.TeleportSignBlock = DataUtils.BlockFromBytes(bloc_array, w);
+				s.teleportSignBlock = DataUtils.blockFromBytes(bloc_array, w);
 				
-				if ( w.isChunkLoaded(s.TeleportSignBlock.getChunk()))
+				if ( w.isChunkLoaded(s.teleportSignBlock.getChunk()))
 				{
 					try
 					{
-						s.TeleportSign = (Sign)s.TeleportSignBlock.getState();
-						s.TryClickTeleportSign(s.TeleportSignBlock);
+						s.teleportSign = (Sign)s.teleportSignBlock.getState();
+						s.tryClickTeleportSign(s.teleportSignBlock);
 					}
 					catch (Exception e)
 					{
-						WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.Name + " and will be unable to change dial target.");
+						WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.name + " and will be unable to change dial target.");
 					}
 				}
 			}
 
 			
-			s.Active = DataUtils.byteToBoolean(byte_buff.get());
-			s.temp_target_id = byte_buff.getLong();
+			s.active = DataUtils.byteToBoolean(byte_buff.get());
+			s.tempTargetId = byte_buff.getLong();
 			
 			int facing_size = byte_buff.getInt();
 			byte[] str_bytes = new byte[facing_size];
 			byte_buff.get(str_bytes);
 			String face_str = new String(str_bytes);
-			s.Facing = BlockFace.valueOf(face_str);
+			s.facing = BlockFace.valueOf(face_str);
 			
-			s.TeleportLocation.setYaw( WorldUtils.getDegreesFromBlockFace(s.Facing));
-			s.TeleportLocation.setPitch(0);
+			s.teleportLocation.setYaw( WorldUtils.getDegreesFromBlockFace(s.facing));
+			s.teleportLocation.setPitch(0);
 
 			int idc_len = byte_buff.getInt();
 			byte[] idc_bytes = new byte[idc_len];
 			byte_buff.get(idc_bytes);
-			s.IrisDeactivationCode = new String(idc_bytes);
+			s.irisDeactivationCode = new String(idc_bytes);
 			
-			s.IrisActive = DataUtils.byteToBoolean(byte_buff.get()); // index++;
-			s.IrisDefaultActive = s.IrisActive;
+			s.irisActive = DataUtils.byteToBoolean(byte_buff.get()); // index++;
+			s.irisDefaultActive = s.irisActive;
 			int num_blocks = byte_buff.getInt(); //DataUtils.byteArrayToInt(gate_data, index); index += 4;
 			for ( int i = 0; i < num_blocks; i++ )
 			{
 				byte_buff.get(bloc_array);
-				Block bl = DataUtils.BlockFromBytes(bloc_array, w);
-				s.Blocks.add( bl.getLocation() );
+				Block bl = DataUtils.blockFromBytes(bloc_array, w);
+				s.blocks.add( bl.getLocation() );
 			}
 			
 			num_blocks = byte_buff.getInt(); //DataUtils.byteArrayToInt(gate_data, index); index += 4;
 			for ( int i = 0; i < num_blocks; i++ )
 			{
 				byte_buff.get(bloc_array);
-				Block bl = DataUtils.BlockFromBytes(bloc_array, w);
-				s.WaterBlocks.add( bl.getLocation() );
+				Block bl = DataUtils.blockFromBytes(bloc_array, w);
+				s.waterBlocks.add( bl.getLocation() );
 			}
 			
 			return s;
 		}
-		else if ( s.LoadedVersion == 5 )
+		else if ( s.loadedVersion == 5 )
 		{
 			byte[] loc_array = new byte[32];
 			byte[] bloc_array = new byte[12];
@@ -776,85 +776,85 @@ public class StargateHelper
 			//  facing_len|facing_string|idc_len|idc|IrisActive|num_blocks|Blocks|num_water_blocks|WaterBlocks
 
 			byte_buff.get(bloc_array);
-			s.ActivationBlock = DataUtils.BlockFromBytes(bloc_array, w);
-			WorldUtils.checkChunkLoad(s.ActivationBlock);
+			s.activationBlock = DataUtils.blockFromBytes(bloc_array, w);
+			WorldUtils.checkChunkLoad(s.activationBlock);
 			
 			byte_buff.get(bloc_array); 
-			s.IrisActivationBlock = DataUtils.BlockFromBytes(bloc_array, w);
+			s.irisActivationBlock = DataUtils.blockFromBytes(bloc_array, w);
 			
 			byte_buff.get(bloc_array); 
-			s.NameBlockHolder = DataUtils.BlockFromBytes(bloc_array, w);
+			s.nameBlockHolder = DataUtils.blockFromBytes(bloc_array, w);
 			
 			byte_buff.get(loc_array);
-			s.TeleportLocation = DataUtils.LocationFromBytes(loc_array, w);
+			s.teleportLocation = DataUtils.locationFromBytes(loc_array, w);
 			
-			s.IsSignPowered = DataUtils.byteToBoolean(byte_buff.get());
+			s.isSignPowered = DataUtils.byteToBoolean(byte_buff.get());
 			
 			byte_buff.get(bloc_array);
-			s.SignIndex = byte_buff.getInt();
-			s.temp_sign_target = byte_buff.getLong();
-			if ( s.IsSignPowered  )
+			s.signIndex = byte_buff.getInt();
+			s.tempSignTarget = byte_buff.getLong();
+			if ( s.isSignPowered  )
 			{
-				s.TeleportSignBlock = DataUtils.BlockFromBytes(bloc_array, w);
+				s.teleportSignBlock = DataUtils.blockFromBytes(bloc_array, w);
 				
-				if ( w.isChunkLoaded(s.TeleportSignBlock.getChunk()))
+				if ( w.isChunkLoaded(s.teleportSignBlock.getChunk()))
 				{
 					try
 					{
-						s.TeleportSign = (Sign)s.TeleportSignBlock.getState();
-						s.TryClickTeleportSign(s.TeleportSignBlock);
+						s.teleportSign = (Sign)s.teleportSignBlock.getState();
+						s.tryClickTeleportSign(s.teleportSignBlock);
 					}
 					catch (Exception e)
 					{
-						WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.Name + " and will be unable to change dial target.");
+						WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.name + " and will be unable to change dial target.");
 					}
 				}
 			}
 
 			
-			s.Active = DataUtils.byteToBoolean(byte_buff.get());
-			s.temp_target_id = byte_buff.getLong();
+			s.active = DataUtils.byteToBoolean(byte_buff.get());
+			s.tempTargetId = byte_buff.getLong();
 			
 			int facing_size = byte_buff.getInt();
 			byte[] str_bytes = new byte[facing_size];
 			byte_buff.get(str_bytes);
 			String face_str = new String(str_bytes);
-			s.Facing = BlockFace.valueOf(face_str);
+			s.facing = BlockFace.valueOf(face_str);
 			
-			s.TeleportLocation.setYaw( WorldUtils.getDegreesFromBlockFace(s.Facing));
-			s.TeleportLocation.setPitch(0);
+			s.teleportLocation.setYaw( WorldUtils.getDegreesFromBlockFace(s.facing));
+			s.teleportLocation.setPitch(0);
 
 			int idc_len = byte_buff.getInt();
 			byte[] idc_bytes = new byte[idc_len];
 			byte_buff.get(idc_bytes);
-			s.IrisDeactivationCode = new String(idc_bytes);
+			s.irisDeactivationCode = new String(idc_bytes);
 			
-			s.IrisActive = DataUtils.byteToBoolean(byte_buff.get());
-			s.IrisDefaultActive = s.IrisActive;
-			s.LitGate = DataUtils.byteToBoolean(byte_buff.get());
+			s.irisActive = DataUtils.byteToBoolean(byte_buff.get());
+			s.irisDefaultActive = s.irisActive;
+			s.litGate = DataUtils.byteToBoolean(byte_buff.get());
 			
 			int num_blocks = byte_buff.getInt();
 			for ( int i = 0; i < num_blocks; i++ )
 			{
 				byte_buff.get(bloc_array);
-				Block bl = DataUtils.BlockFromBytes(bloc_array, w);
-				s.Blocks.add( bl.getLocation() );
+				Block bl = DataUtils.blockFromBytes(bloc_array, w);
+				s.blocks.add( bl.getLocation() );
 			}
 			
 			num_blocks = byte_buff.getInt();
 			for ( int i = 0; i < num_blocks; i++ )
 			{
 				byte_buff.get(bloc_array);
-				Block bl = DataUtils.BlockFromBytes(bloc_array, w);
-				s.WaterBlocks.add( bl.getLocation() );
+				Block bl = DataUtils.blockFromBytes(bloc_array, w);
+				s.waterBlocks.add( bl.getLocation() );
 			}
 			
 			num_blocks = byte_buff.getInt();
 			for ( int i = 0; i < num_blocks; i++ )
 			{
 				byte_buff.get(bloc_array);
-				Block bl = DataUtils.BlockFromBytes(bloc_array, w);
-				s.LightBlocks.add( bl.getLocation() );
+				Block bl = DataUtils.blockFromBytes(bloc_array, w);
+				s.lightBlocks.add( bl.getLocation() );
 			}
 			
 			return s;
@@ -891,7 +891,7 @@ public class StargateHelper
 			} 
 			catch (Exception e) 
 			{
-				WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Unable to make directory: " + e.getMessage());
+				WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to make directory: " + e.getMessage());
 			}
 			try 
 			{
@@ -912,7 +912,7 @@ public class StargateHelper
 			} 
 			catch (Exception e) 
 			{
-				WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Unable to create files: " + e.getMessage());
+				WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to create files: " + e.getMessage());
 			}
 		}
 		
@@ -921,7 +921,7 @@ public class StargateHelper
 			{
 				if ( fi.getName().contains(".shape") )
 				{
-					WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Loading shape file: \"" + (String)fi.getName() + "\"");
+					WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Loading shape file: \"" + (String)fi.getName() + "\"");
 					try
 					{
 						ArrayList<String> file_lines = new ArrayList<String>();
@@ -937,9 +937,9 @@ public class StargateHelper
 					}
 					catch (Exception e) 
 					{
-						WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE, false, "Unable to read shape file: " + e.getMessage());
+						WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to read shape file: " + e.getMessage());
 					}
-					WormholeXTreme.thisPlugin.prettyLog(Level.CONFIG, false, "Completed loading shape file: \"" + (String)fi.getName() + "\"");
+					WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Completed loading shape file: \"" + (String)fi.getName() + "\"");
 				}
 			}
 			

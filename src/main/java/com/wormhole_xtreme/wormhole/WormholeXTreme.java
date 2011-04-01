@@ -75,19 +75,19 @@ public class WormholeXTreme extends JavaPlugin
 
 	
 	/** The Permissions. */
-	public static volatile PermissionHandler permissions = null;
+	private static PermissionHandler permissions = null;
 	
 	/** The Iconomy. */
-	public static volatile iConomy iconomy = null;
+	private static iConomy iconomy = null;
 	
 	/** The Help. */
-	public static volatile Help help = null;
+	private static Help help = null;
 	
 	/** The Scheduler. */
-	public static BukkitScheduler scheduler = null;
+	private static BukkitScheduler scheduler = null;
 	
 	/** The This plugin. */
-	public static WormholeXTreme thisPlugin = null;
+	private static WormholeXTreme thisPlugin = null;
 	 
 	/** The log. */
 //	private static Logger log;
@@ -99,9 +99,9 @@ public class WormholeXTreme extends JavaPlugin
 	@Override
 	public void onLoad()
 	{
-	   log = this.getServer().getLogger(); 
-	   thisPlugin = this; 
-	   scheduler = getServer().getScheduler();
+	   setLog(getServer().getLogger());
+	   setThisPlugin(this); 
+	   setScheduler(getServer().getScheduler());
 	   PluginDescriptionFile pdfFile = this.getDescription();
 	   
 	   prettyLog(Level.INFO,true, pdfFile.getAuthors() + "Load Beginning." );
@@ -112,8 +112,8 @@ public class WormholeXTreme extends JavaPlugin
 	   DBUpdateUtil.updateDB();
 	   // Load our shapes, stargates, and internal permissions.
 	   StargateHelper.loadShapes();	 
-	   StargateDBManager.LoadStargates(getServer());
-	   PermissionsManager.LoadPermissions();
+	   StargateDBManager.loadStargates(getServer());
+	   PermissionsManager.loadPermissions();
 	   prettyLog(Level.INFO,true, "Load Completed.");
 	}
 	
@@ -133,7 +133,7 @@ public class WormholeXTreme extends JavaPlugin
 		}
 		catch ( Exception e)
 		{
-			
+		    prettyLog(Level.WARNING,false, "Caught Exception while trying to load support plugins." + e.getMessage());
 		}
 		// Register our events and commands
 		registerEvents();
@@ -148,11 +148,11 @@ public class WormholeXTreme extends JavaPlugin
 	private void registerCommands()
 	{
 	    getCommand("wxforce").setExecutor(new Force());
-		getCommand("wxidc").setExecutor(new WXIDC(this));
+		getCommand("wxidc").setExecutor(new WXIDC());
 		getCommand("wxcompass").setExecutor(new Compass());
 		getCommand("wxcomplete").setExecutor(new Complete());
-		getCommand("wxremove").setExecutor(new WXRemove(this));
-		getCommand("wxlist").setExecutor(new WXList(this));
+		getCommand("wxremove").setExecutor(new WXRemove());
+		getCommand("wxlist").setExecutor(new WXList());
 		getCommand("wxgo").setExecutor(new Go());
 		getCommand("dial").setExecutor(new Dial());
 		getCommand("wxbuild").setExecutor(new Build());
@@ -207,15 +207,15 @@ public class WormholeXTreme extends JavaPlugin
 		try
 		{
 			Configuration.writeFile(this.getDescription());
-			final ArrayList<Stargate> gates = StargateManager.GetAllGates();
+			final ArrayList<Stargate> gates = StargateManager.getAllGates();
 			// Store all our gates
 			for ( Stargate gate : gates )
 			{
-				gate.ShutdownStargate(false);
-				StargateDBManager.StargateToSQL(gate);
+				gate.shutdownStargate(false);
+				StargateDBManager.stargateToSQL(gate);
 			}
 			
-			StargateDBManager.Shutdown();
+			StargateDBManager.shutdown();
 			prettyLog(Level.INFO, true, "Successfully shutdown.");
 		}
 		catch ( Exception e)
@@ -283,5 +283,109 @@ public class WormholeXTreme extends JavaPlugin
 		log.setLevel(level);
 		this.prettyLog(Level.CONFIG, false, "Logging set to: " + level );
 	}
+
+    /**
+     * Sets the this plugin.
+     *
+     * @param thisPlugin the new this plugin
+     */
+    private static void setThisPlugin(WormholeXTreme thisPlugin) 
+    {
+        WormholeXTreme.thisPlugin = thisPlugin;
+    }
+
+    /**
+     * Gets the this plugin.
+     *
+     * @return the this plugin
+     */
+    public static WormholeXTreme getThisPlugin() 
+    {
+        return thisPlugin;
+    }
+
+    /**
+     * Sets the scheduler.
+     *
+     * @param scheduler the new scheduler
+     */
+    private static void setScheduler(BukkitScheduler scheduler)
+    {
+        WormholeXTreme.scheduler = scheduler;
+    }
+
+    /**
+     * Gets the scheduler.
+     *
+     * @return the scheduler
+     */
+    public static BukkitScheduler getScheduler()
+    {
+        return scheduler;
+    }
+    
+    /**
+     * Sets the log.
+     *
+     * @param log the new log
+     */
+    private static void setLog(Logger log)
+    {
+        WormholeXTreme.log = log;
+    }
+
+    /**
+     * Sets the iconomy.
+     *
+     * @param iconomy the new iconomy
+     */
+    public static void setIconomy(iConomy iconomy) {
+        WormholeXTreme.iconomy = iconomy;
+    }
+
+    /**
+     * Gets the iconomy.
+     *
+     * @return the iconomy
+     */
+    public static iConomy getIconomy() {
+        return iconomy;
+    }
+
+    /**
+     * Sets the permissions.
+     *
+     * @param permissions the new permissions
+     */
+    public static void setPermissions(PermissionHandler permissions) {
+        WormholeXTreme.permissions = permissions;
+    }
+
+    /**
+     * Gets the permissions.
+     *
+     * @return the permissions
+     */
+    public static PermissionHandler getPermissions() {
+        return permissions;
+    }
+
+    /**
+     * Sets the help.
+     *
+     * @param help the new help
+     */
+    public static void setHelp(Help help) {
+        WormholeXTreme.help = help;
+    }
+
+    /**
+     * Gets the help.
+     *
+     * @return the help
+     */
+    public static Help getHelp() {
+        return help;
+    }
 } 
  

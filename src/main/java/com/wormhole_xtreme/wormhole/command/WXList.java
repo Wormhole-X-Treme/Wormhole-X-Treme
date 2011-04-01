@@ -25,30 +25,18 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
-import com.wormhole_xtreme.wormhole.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.wormhole.model.Stargate;
 import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class WXList.
  *
  * @author alron
  */
 public class WXList implements CommandExecutor {
-
-    /**
-     * Instantiates a new wX list.
-     *
-     * @param wormholeXTreme the wormhole x treme
-     */
-    public WXList(WormholeXTreme wormholeXTreme) {
-        // TODO Auto-generated constructor stub
-    }
 
     /* (non-Javadoc)
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
@@ -62,13 +50,13 @@ public class WXList implements CommandExecutor {
         }
         if (!CommandUtilities.playerCheck(sender) || (player != null && WXPermissions.checkWXPermissions(player, PermissionType.LIST)) )
         {
-            ArrayList<Stargate> gates = StargateManager.GetAllGates();
-            sender.sendMessage(ConfigManager.normalheader + "Available gates \u00A73::");
+            ArrayList<Stargate> gates = StargateManager.getAllGates();
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Available gates \u00A73::");
             StringBuilder sb = new StringBuilder();
             // TODO: Add checks for complex permissions enabled users running this command and only display what they have access to use.
             for ( int i = 0; i < gates.size(); i++)
             {
-                sb.append("\u00A77" + gates.get(i).Name);
+                sb.append("\u00A77" + gates.get(i).name);
                 if ( i != gates.size() - 1)
                 {
                     sb.append("\u00A78, ");
@@ -87,7 +75,7 @@ public class WXList implements CommandExecutor {
         }
         else
         {
-            sender.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+            sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
         }
         return true;
     }

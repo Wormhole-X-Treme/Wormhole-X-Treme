@@ -27,7 +27,6 @@ import org.bukkit.entity.Player;
 
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
-import com.wormhole_xtreme.wormhole.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.wormhole.model.Stargate;
 import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
@@ -70,72 +69,72 @@ public class Dial implements CommandExecutor {
     private static boolean doDial(Player player, String[] args)
     {  
         final Player p = player;
-        final Stargate start = StargateManager.RemoveActivatedStargate(p);
+        final Stargate start = StargateManager.removeActivatedStargate(p);
         final String[] arguments = args;
         if (start != null)
         {               
             if ( WXPermissions.checkWXPermissions(p, start, PermissionType.DIALER))
             {
                 final String startnetwork = CommandUtilities.getGateNetwork(start);
-                if ( !start.Name.equals(arguments[0]) )
+                if ( !start.name.equals(arguments[0]) )
                 {
-                    final Stargate target = StargateManager.GetStargate(arguments[0]);
+                    final Stargate target = StargateManager.getStargate(arguments[0]);
                     // No target
                     if ( target == null)
                     {
                         CommandUtilities.closeGate(start,p);
-                        p.sendMessage(ConfigManager.output_strings.get(StringTypes.TARGET_INVALID));
+                        p.sendMessage(ConfigManager.MessageStrings.targetInvalid.toString());
                         return true;
                     }
                     final String targetnetwork = CommandUtilities.getGateNetwork(target);
-                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Dial Target - Gate: \"" + target.Name + "\" Network: \"" + targetnetwork + "\"");
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Dial Target - Gate: \"" + target.name + "\" Network: \"" + targetnetwork + "\"");
                     // Not on same network
                     if (!startnetwork.equals(targetnetwork))
                     {
                         CommandUtilities.closeGate(start,p);
-                        p.sendMessage(ConfigManager.output_strings.get(StringTypes.TARGET_INVALID) + " Not on same network.");
+                        p.sendMessage(ConfigManager.MessageStrings.targetInvalid.toString() + " Not on same network.");
                         return true;
                     }
-                    if (start.IrisActive)
+                    if (start.irisActive)
                     {
-                        start.ToggleIrisActive();
+                        start.toggleIrisActive();
                     }
-                    if (!target.IrisDeactivationCode.equals("") && target.IrisActive)
+                    if (!target.irisDeactivationCode.equals("") && target.irisActive)
                     {
-                        if ( arguments.length >= 2 && target.IrisDeactivationCode.equals(arguments[1]))
+                        if ( arguments.length >= 2 && target.irisDeactivationCode.equals(arguments[1]))
                         {
-                            if ( target.IrisActive )
+                            if ( target.irisActive )
                             {
-                                target.ToggleIrisActive();
-                                p.sendMessage(ConfigManager.normalheader + "IDC accepted. Iris has been deactivated.");
+                                target.toggleIrisActive();
+                                p.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "IDC accepted. Iris has been deactivated.");
                             }
                         }
                     }
 
-                    if ( start.DialStargate(target) ) 
+                    if ( start.dialStargate(target) ) 
                     {
-                        p.sendMessage(ConfigManager.normalheader + "Stargates connected!");
+                        p.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Stargates connected!");
                     }
                     else
                     {
                         CommandUtilities.closeGate(start,p);
-                        p.sendMessage(ConfigManager.output_strings.get(StringTypes.TARGET_IS_ACTIVE));
+                        p.sendMessage(ConfigManager.MessageStrings.targetIsActive.toString());
                     }
                 }
                 else
                 {
                     CommandUtilities.closeGate(start,p);
-                    p.sendMessage(ConfigManager.output_strings.get(StringTypes.TARGET_IS_SELF));
+                    p.sendMessage(ConfigManager.MessageStrings.targetIsSelf.toString());
                 }
             }
             else
             {
-                p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+                p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
             }
         }
         else
         {
-            p.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_NOT_ACTIVE));
+            p.sendMessage(ConfigManager.MessageStrings.gateNotActive.toString());
         }
         return true;
     }

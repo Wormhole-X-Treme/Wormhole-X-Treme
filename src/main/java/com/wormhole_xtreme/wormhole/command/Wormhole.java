@@ -28,7 +28,6 @@ import org.bukkit.entity.Player;
 
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
-import com.wormhole_xtreme.wormhole.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.wormhole.model.Stargate;
 import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.permissions.PermissionsManager;
@@ -106,13 +105,13 @@ public class Wormhole implements CommandExecutor
             }
             else 
             {
-                sender.sendMessage(ConfigManager.output_strings.get(StringTypes.REQUEST_INVALID) + ": " + args[0]);
-                sender.sendMessage(ConfigManager.errorheader + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'shutdown_timeout', 'activate_timeout', 'simple' and 'regenerate'.");
+                sender.sendMessage(ConfigManager.MessageStrings.requestInvalid.toString() + ": " + args[0]);
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'shutdown_timeout', 'activate_timeout', 'simple' and 'regenerate'.");
             }
         }
         else
         {
-            sender.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+            sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
         }
         return true;
     }
@@ -140,41 +139,41 @@ public class Wormhole implements CommandExecutor
             }
             else
             {
-                sender.sendMessage(ConfigManager.errorheader + "Invalid Setting: " + args[1]);
-                sender.sendMessage(ConfigManager.errorheader + "Valid options: true/yes, false/no");
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid Setting: " + args[1]);
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid options: true/yes, false/no");
                 return false;
             }
-            if (WormholeXTreme.permissions != null && CommandUtilities.playerCheck(sender))
+            if (WormholeXTreme.getPermissions() != null && CommandUtilities.playerCheck(sender))
             {
                 player = (Player)sender;
-                if (simple && !WormholeXTreme.permissions.has(player, "wormhole.simple.config"))
+                if (simple && !WormholeXTreme.getPermissions().has(player, "wormhole.simple.config"))
                 {
-                    sender.sendMessage(ConfigManager.errorheader + "You currently do not have the 'wormhole.simple.config' permission.");
-                    sender.sendMessage(ConfigManager.errorheader + "Please make sure you have this permission before running this command again.");
+                    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "You currently do not have the 'wormhole.simple.config' permission.");
+                    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Please make sure you have this permission before running this command again.");
                     return true;
                 }
-                else if (!simple && !WormholeXTreme.permissions.has(player, "wormhole.config"))
+                else if (!simple && !WormholeXTreme.getPermissions().has(player, "wormhole.config"))
                 {
-                    sender.sendMessage(ConfigManager.errorheader + "You currently do not have the 'wormhole.config' permission.");
-                    sender.sendMessage(ConfigManager.errorheader + "Please make sure you have this permission before running this command again.");
+                    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "You currently do not have the 'wormhole.config' permission.");
+                    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Please make sure you have this permission before running this command again.");
                     return true;
                 }
             }
             ConfigManager.setSimplePermissions(simple);
-            sender.sendMessage(ConfigManager.normalheader + "Simple Permissions set to: " + ConfigManager.getSimplePermissions());
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Simple Permissions set to: " + ConfigManager.getSimplePermissions());
             if (!ConfigManager.getHelpSupportDisable())
             {
                 HelpSupport.registerHelpCommands();
             }
             if (player != null)
             {
-                WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Simple Permissions set to: \"" + simple + "\" by: \"" + player.getName() + "\"");
+                WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Simple Permissions set to: \"" + simple + "\" by: \"" + player.getName() + "\"");
             }
         }
         else
         {
-            sender.sendMessage(ConfigManager.normalheader + "Simple Permissions: " + ConfigManager.getSimplePermissions());
-            sender.sendMessage(ConfigManager.normalheader + "Valid options: true/yes, false/no");
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Simple Permissions: " + ConfigManager.getSimplePermissions());
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid options: true/yes, false/no");
         }
         return true;
     }
@@ -197,24 +196,25 @@ public class Wormhole implements CommandExecutor
 			}
 			catch (Exception e)
 			{
+			    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught Exception on iris material" + e.getMessage());
 			}
 			
 			if ( m == Material.STATIONARY_LAVA || m == Material.STATIONARY_WATER || m == Material.AIR || m == Material.PORTAL )
 			{
 				ConfigManager.setPortalMaterial(m);
-				sender.sendMessage(ConfigManager.normalheader + "Portal material set to: " + ConfigManager.getPortalMaterial());
+				sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Portal material set to: " + ConfigManager.getPortalMaterial());
 			}
 			else
 			{
-			    sender.sendMessage(ConfigManager.errorheader + "Invalid Portal Material: " + args[1]);
-			    sender.sendMessage(ConfigManager.errorheader + "Valid materials are: STATIONARY_WATER, STATIONARY_LAVA, AIR, PORTAL");
+			    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid Portal Material: " + args[1]);
+			    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid materials are: STATIONARY_WATER, STATIONARY_LAVA, AIR, PORTAL");
 			    return false;
 			}
 		}
 		else
 		{
-		    sender.sendMessage(ConfigManager.normalheader + "Portal material is currently: " + ConfigManager.getPortalMaterial());
-		    sender.sendMessage(ConfigManager.normalheader + "Valid materials are: STATIONARY_WATER, STATIONARY_LAVA, AIR, PORTAL");
+		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Portal material is currently: " + ConfigManager.getPortalMaterial());
+		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid materials are: STATIONARY_WATER, STATIONARY_LAVA, AIR, PORTAL");
 		}
 		return true;
 	}
@@ -237,24 +237,25 @@ public class Wormhole implements CommandExecutor
 			}
 			catch (Exception e)
 			{
+			    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught Exception on iris material" + e.getMessage());
 			}
 			
 			if ( m == Material.DIAMOND_BLOCK || m == Material.GLASS || m == Material.IRON_BLOCK || m == Material.BEDROCK || m == Material.STONE || m == Material.LAPIS_BLOCK )
 			{
 				ConfigManager.setIrisMaterial(m);
-				sender.sendMessage(ConfigManager.normalheader + "Iris material set to: " + ConfigManager.getIrisMaterial());
+				sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Iris material set to: " + ConfigManager.getIrisMaterial());
 			}
 			else 
 			{
-			    sender.sendMessage(ConfigManager.errorheader + "Invalid Iris Material: " + args[1]);
-			    sender.sendMessage(ConfigManager.errorheader + "Valid materials are: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, and LAPIS_BLOCK");
+			    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid Iris Material: " + args[1]);
+			    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid materials are: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, and LAPIS_BLOCK");
 			    return false;
 			}
 		}
 		else 
 		{
-		    sender.sendMessage(ConfigManager.normalheader + "Iris material is currently: " + ConfigManager.getIrisMaterial());
-		    sender.sendMessage(ConfigManager.normalheader + "Valid materials are: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, and LAPIS_BLOCK");
+		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Iris material is currently: " + ConfigManager.getIrisMaterial());
+		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid materials are: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, and LAPIS_BLOCK");
 		}
 		return true;
 	}
@@ -276,26 +277,26 @@ public class Wormhole implements CommandExecutor
 				if (  timeout > -1 && timeout <= 60)
 				{
 					ConfigManager.setTimeoutShutdown(timeout);
-					sender.sendMessage(ConfigManager.normalheader + "shutdown_timeout set to: " + ConfigManager.getTimeoutShutdown());
+					sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "shutdown_timeout set to: " + ConfigManager.getTimeoutShutdown());
 				}
 				else
 				{
-				    sender.sendMessage(ConfigManager.errorheader + "Invalid shutdown_timeout: " + args[1]);
-					sender.sendMessage(ConfigManager.errorheader + "Valid timeout is between 0 and 60 seconds.");
+				    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid shutdown_timeout: " + args[1]);
+					sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid timeout is between 0 and 60 seconds.");
 					return false;
 				}
 			}
-			catch (Exception e)
+			catch (NumberFormatException e)
 			{
-			    sender.sendMessage(ConfigManager.errorheader + "Invalid shutdown_timeout: " + args[1]);
-				sender.sendMessage(ConfigManager.errorheader + "Valid timeout is between 0 and 60 seconds.");
+			    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid shutdown_timeout: " + args[1]);
+				sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid timeout is between 0 and 60 seconds.");
 				return false;
 			}
 		}
 		else
 		{
-		    sender.sendMessage(ConfigManager.normalheader + "Current shutdown_timeout is: " + ConfigManager.getTimeoutShutdown() );
-		    sender.sendMessage(ConfigManager.normalheader + "Valid timeout is between 0 and 60 seconds.");
+		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Current shutdown_timeout is: " + ConfigManager.getTimeoutShutdown() );
+		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid timeout is between 0 and 60 seconds.");
 		}
 		return true;
 	}
@@ -317,26 +318,26 @@ public class Wormhole implements CommandExecutor
 				if (  timeout >= 10 && timeout <= 60)
 				{
 					ConfigManager.setTimeoutActivate(timeout);
-					sender.sendMessage(ConfigManager.normalheader + "activate_timeout set to: " + ConfigManager.getTimeoutActivate() );
+					sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "activate_timeout set to: " + ConfigManager.getTimeoutActivate() );
 				}
 				else 
 				{
-				    sender.sendMessage(ConfigManager.errorheader + "Invalid activate_timeout: " + args[1]);
-					sender.sendMessage(ConfigManager.errorheader + "Valid timeout is between 10 and 60 seconds.");
+				    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid activate_timeout: " + args[1]);
+					sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid timeout is between 10 and 60 seconds.");
 					return false;
 				}
 			}
-			catch (Exception e)
+			catch (NumberFormatException e)
 			{
-			    sender.sendMessage(ConfigManager.errorheader + "Invalid activate_timeout: " + args[1]);
-				sender.sendMessage(ConfigManager.errorheader + "Valid timeout is between 10 and 60 seconds.");
+			    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid activate_timeout: " + args[1]);
+				sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid timeout is between 10 and 60 seconds.");
 				return false;
 			}
 		}
 		else
 		{
-		    sender.sendMessage(ConfigManager.normalheader + "Current activate_timeout is: " + ConfigManager.getTimeoutActivate() );
-		    sender.sendMessage(ConfigManager.normalheader + "Valid timeout is between 10 and 60 seconds.");
+		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Current activate_timeout is: " + ConfigManager.getTimeoutActivate() );
+		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid timeout is between 10 and 60 seconds.");
 		}
 		return true;
 	}
@@ -352,27 +353,27 @@ public class Wormhole implements CommandExecutor
 	{
 		if ( args.length >= 2 )
 		{
-			Stargate s = StargateManager.GetStargate(args[1]);
+			Stargate s = StargateManager.getStargate(args[1]);
 			if (s != null )
 			{
 				if ( args.length == 3)
 				{
-					s.Owner = args[2];
-					sender.sendMessage(ConfigManager.normalheader + "Gate: " + s.Name + " Now owned by: " + s.Owner);
+					s.owner = args[2];
+					sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Gate: " + s.name + " Now owned by: " + s.owner);
 				}
 				else if ( args.length == 2)
 				{
-				    sender.sendMessage(ConfigManager.normalheader + "Gate: " + s.Name + " Owned by: " + s.Owner);
+				    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Gate: " + s.name + " Owned by: " + s.owner);
 				}
 			}
 			else
 			{
-				sender.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_INVALID) + "\"" + args[1] + "\"");
+				sender.sendMessage(ConfigManager.MessageStrings.constructNameInvalid.toString() + "\"" + args[1] + "\"");
 			}
 		}
 		else
 		{
-		    sender.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_NOT_SPECIFIED));
+		    sender.sendMessage(ConfigManager.MessageStrings.gateNotSpecified.toString());
 		    return false;
 		}
 		return true;
@@ -390,7 +391,7 @@ public class Wormhole implements CommandExecutor
 		if (CommandUtilities.playerCheck(sender))
 		{
 			Player p = (Player) sender;
-			PermissionsManager.HandlePermissionRequest(p, args);
+			PermissionsManager.handlePermissionRequest(p, args);
 		}
 	}
     
@@ -400,25 +401,25 @@ public class Wormhole implements CommandExecutor
 	    final String[] a = args;
 	    if ( a.length >= 2 )
 	    {
-	        final Stargate s = StargateManager.GetStargate(args[1]);
+	        final Stargate s = StargateManager.getStargate(args[1]);
 	        if (s != null)
 	        {
-	            s.DialButtonLeverState(true);
-	            if (!s.IrisDeactivationCode.equals(""))
+	            s.dialButtonLeverState(true);
+	            if (!s.irisDeactivationCode.equals(""))
 	            {
-	                s.SetupIrisLever(false);
-	                s.SetupIrisLever(true);
+	                s.setupIrisLever(false);
+	                s.setupIrisLever(true);
 	            }
-	            cs.sendMessage(ConfigManager.normalheader + "Regenerating Gate: " + s.Name );
+	            cs.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Regenerating Gate: " + s.name );
 	        }
 	        else
 	        {
-	            cs.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_INVALID) + "\"" + a[1] + "\"");
+	            cs.sendMessage(ConfigManager.MessageStrings.constructNameInvalid.toString() + "\"" + a[1] + "\"");
 	        }
 	    }
 	    else
 	    {
-	        cs.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_NOT_SPECIFIED));
+	        cs.sendMessage(ConfigManager.MessageStrings.gateNotSpecified.toString());
 	        return false;
 	    }
 	    return true;

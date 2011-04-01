@@ -64,7 +64,7 @@ public class PermissionsManager
 			
 		}
 		// 2. Check for individual general rights
-		PermissionLevel lvl =  GetIndividualPermissionLevel(p.getName());
+		PermissionLevel lvl =  getIndividualPermissionLevel(p.getName());
 		if ( lvl != PermissionLevel.NO_PERMISSION_SET )
 			return lvl;
 		// 3. Check for group network rights
@@ -98,11 +98,11 @@ public class PermissionsManager
 	 * @param player the player
 	 * @param lvl the lvl
 	 */
-	public static void SetIndividualPermissionLevel( String player, PermissionLevel lvl )
+	public static void setIndividualPermissionLevel( String player, PermissionLevel lvl )
 	{
 		String pl_lower = player.toLowerCase();
 		player_general_permission.put(pl_lower, lvl);
-		StargateDBManager.StoreIndividualPermissionInDB(pl_lower, lvl);
+		StargateDBManager.storeIndividualPermissionInDB(pl_lower, lvl);
 	}
 	
 	/**
@@ -111,7 +111,7 @@ public class PermissionsManager
 	 * @param player the player
 	 * @return the permission level
 	 */
-	public static PermissionLevel GetIndividualPermissionLevel( String player )
+	public static PermissionLevel getIndividualPermissionLevel( String player )
 	{
 		String pl_lower = player.toLowerCase();
 		if (player_general_permission.containsKey(pl_lower))
@@ -123,9 +123,9 @@ public class PermissionsManager
 	/**
 	 * Load permissions.
 	 */
-	public static void LoadPermissions()
+	public static void loadPermissions()
 	{
-		player_general_permission = StargateDBManager.GetAllIndividualPermissions();
+		player_general_permission = StargateDBManager.getAllIndividualPermissions();
 		// StargateDBManager.GetAllGroupPermissions();
 	}
 	
@@ -162,7 +162,7 @@ public class PermissionsManager
 	 * @param p the p
 	 * @param message_parts the message_parts
 	 */
-	public static void HandlePermissionRequest(Player p, String[] message_parts) 
+	public static void handlePermissionRequest(Player p, String[] message_parts) 
 	{
 		if ( p.isOp() )
 		{
@@ -190,7 +190,7 @@ public class PermissionsManager
 					{
 						try
 						{
-							PermissionsManager.SetIndividualPermissionLevel(message_parts[3].toLowerCase(), PermissionsManager.PermissionLevel.valueOf(message_parts[4]));
+							PermissionsManager.setIndividualPermissionLevel(message_parts[3].toLowerCase(), PermissionsManager.PermissionLevel.valueOf(message_parts[4]));
 						}
 						catch ( Exception e)
 						{
@@ -201,7 +201,7 @@ public class PermissionsManager
 						}
 					}
 					
-					p.sendMessage("Permissions for " + message_parts[3] + ": " + PermissionsManager.GetIndividualPermissionLevel(message_parts[3].toLowerCase()));
+					p.sendMessage("Permissions for " + message_parts[3] + ": " + PermissionsManager.getIndividualPermissionLevel(message_parts[3].toLowerCase()));
 				}	
 				else if ( message_parts[2].equalsIgnoreCase("default") )
 				{

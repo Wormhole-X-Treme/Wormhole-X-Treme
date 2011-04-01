@@ -114,23 +114,23 @@ class CommandUtilities {
 	 */
 	static void gateRemove(Stargate stargate, boolean destroy)
 	{
-	    stargate.SetupGateSign(false);
-        stargate.ResetTeleportSign();
-        if (!stargate.IrisDeactivationCode.equals(""))
+	    stargate.setupGateSign(false);
+        stargate.resetTeleportSign();
+        if (!stargate.irisDeactivationCode.equals(""))
         {
-            if (stargate.IrisActive)
+            if (stargate.irisActive)
             {
-                stargate.ToggleIrisActive();
+                stargate.toggleIrisActive();
             }
-            stargate.SetupIrisLever(false);
+            stargate.setupIrisLever(false);
         }
         if (destroy)
         {
-            stargate.DeleteGateBlocks();
-            stargate.DeletePortalBlocks();
-            stargate.DeleteTeleportSign();
+            stargate.deleteGateBlocks();
+            stargate.deletePortalBlocks();
+            stargate.deleteTeleportSign();
         }
-        StargateManager.RemoveStargate(stargate);
+        StargateManager.removeStargate(stargate);
 	}
 	
 	/**
@@ -143,9 +143,9 @@ class CommandUtilities {
 	{
 	    if (stargate != null)
 	    {
-	        if (stargate.Network != null)
+	        if (stargate.network != null)
 	        {
-	            return stargate.Network.netName;
+	            return stargate.network.netName;
 	        }
 	    }
 	    return "Public";
@@ -163,9 +163,9 @@ class CommandUtilities {
 	    {
 	        final Stargate gate = stargate;
 	        final Player p = player;
-            gate.StopActivationTimer(p);
-            gate.DeActivateStargate();
-            gate.UnLightStargate();
+            gate.stopActivationTimer(p);
+            gate.deActivateStargate();
+            gate.unLightStargate();
 	    }
 	}
 }

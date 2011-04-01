@@ -76,25 +76,25 @@ public class Configuration
 			try {
 				directory.mkdir();
 			} catch (Exception e) {
-				WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Unable to make directory: " + e.getMessage());
+				WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to make directory: " + e.getMessage());
 			}
 		}
 		String input = directory.getPath() + File.separator + "Settings.txt";
 		options = new File(input);
 		if (!options.exists() )
 		{
-			WriteFile(options, desc, DefaultSettings.config);
+			writeFile(options, desc, DefaultSettings.config);
 		}
 		/*else if (invalidFile(options)) {
 			updateFile(options);
 		}*/
 		try 
 		{
-			ReadFile(options, desc);
+			readFile(options, desc);
 		}
 		catch (IOException e) 
 		{
-			WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE, false, "Failed to read fiele: " + e.getMessage() );
+			WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Failed to read fiele: " + e.getMessage() );
 		}
 		if( invalidFile(options, desc))
 		{
@@ -138,7 +138,7 @@ public class Configuration
 		    }
 		    catch (IOException e) 
 		    { 
-		        WormholeXTreme.thisPlugin.prettyLog(Level.WARNING, false, "Failure to close stream: " + e.getMessage()); 
+		        WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failure to close stream: " + e.getMessage()); 
 		    }
 		}
 		return true;
@@ -178,7 +178,7 @@ public class Configuration
 			try {
 				options.createNewFile();
 			} catch (Exception e) {
-				WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Unable to create new file: " + e.getMessage());
+				WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to create new file: " + e.getMessage());
 			}
 			BufferedWriter bufferedwriter = new BufferedWriter(new FileWriter(options));
 
@@ -216,14 +216,14 @@ public class Configuration
 	 * @param desc the desc
 	 * @param config the config
 	 */
-	private static void WriteFile(File file, PluginDescriptionFile desc, Setting[] config)
+	private static void writeFile(File file, PluginDescriptionFile desc, Setting[] config)
 	{
 		try 
 		{
 			try {
 				file.createNewFile();
 			} catch (Exception e) {
-				WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Unable to Create File: " + e.getMessage());
+				WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to Create File: " + e.getMessage());
 			}
 			BufferedWriter bufferedwriter = new BufferedWriter(new FileWriter(file));
 
@@ -257,7 +257,7 @@ public class Configuration
 	 * @param desc the desc
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private static void ReadFile(File file, PluginDescriptionFile desc) throws IOException
+	private static void readFile(File file, PluginDescriptionFile desc) throws IOException
 	{
 
 		for (int i = 0; i < DefaultSettings.config.length; i++) 

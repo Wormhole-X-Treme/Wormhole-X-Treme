@@ -147,7 +147,7 @@ public class ConfigurationFlatFile
 			}
 			catch ( Exception e)
 			{
-				WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Error parsing setting enum:" + e.toString());
+				WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Error parsing setting enum:" + e.toString());
 			}
 		}
 		bufferedreader.close();

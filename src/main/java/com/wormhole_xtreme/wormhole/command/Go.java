@@ -24,7 +24,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
-import com.wormhole_xtreme.wormhole.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.wormhole.model.Stargate;
 import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
@@ -73,14 +72,14 @@ public class Go implements CommandExecutor {
             if ( a.length == 1)
             {
                 final String goGate = a[0].trim().replace("\n", "").replace("\r", "");
-                final Stargate s = StargateManager.GetStargate(goGate);
+                final Stargate s = StargateManager.getStargate(goGate);
                 if ( s != null)
                 {
                     p.teleport(TeleportUtils.findSafeTeleportFromStargate(s));
                 }
                 else
                 {
-                    p.sendMessage(ConfigManager.errorheader + "Gate does not exist: " + a[0]);
+                    p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Gate does not exist: " + a[0]);
                 }
             }
             else
@@ -90,7 +89,7 @@ public class Go implements CommandExecutor {
         }
         else
         {
-            p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+            p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
         }
         return true;
     }

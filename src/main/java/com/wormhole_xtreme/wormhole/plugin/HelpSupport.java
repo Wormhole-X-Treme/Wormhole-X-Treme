@@ -40,31 +40,31 @@ public class HelpSupport {
      */
     public static void enableHelp()
     {
-        if (WormholeXTreme.help == null && !ConfigManager.getHelpSupportDisable())
+        if (WormholeXTreme.getHelp() == null && !ConfigManager.getHelpSupportDisable())
         {
-            final Plugin helptest = WormholeXTreme.thisPlugin.getServer().getPluginManager().getPlugin("Help");
+            final Plugin helptest = WormholeXTreme.getThisPlugin().getServer().getPluginManager().getPlugin("Help");
             if (helptest != null)
             {
                 final String version = helptest.getDescription().getVersion();
                 checkHelpVersion(version);
                 try 
                 {
-                    WormholeXTreme.help = ((Help)helptest);
-                    WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Attached to Help version " + version);
+                    WormholeXTreme.setHelp(((Help)helptest));
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Attached to Help version " + version);
                 }
                 catch (Exception e)
                 {
-                    WormholeXTreme.thisPlugin.prettyLog(Level.WARNING, false, "Failed to get cast to Help: " + e.getMessage() );
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failed to get cast to Help: " + e.getMessage() );
                 }
             }
             else
             {
-                WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Help Plugin not yet available - there will be no Help integration until loaded.");
+                WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Help Plugin not yet available - there will be no Help integration until loaded.");
             }
         }
         else
         {
-            WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Help Plugin support disabled via settings.txt.");
+            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Help Plugin support disabled via settings.txt.");
         }
     }
     
@@ -73,10 +73,10 @@ public class HelpSupport {
      */
     public static void disableHelp()
     {
-        if (WormholeXTreme.help != null)
+        if (WormholeXTreme.getHelp() != null)
         {
-            WormholeXTreme.help = null;
-            WormholeXTreme.thisPlugin.prettyLog(Level.INFO, false, "Detached from Help plugin.");
+            WormholeXTreme.setHelp(null);
+            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Detached from Help plugin.");
         }
     }
     /**
@@ -88,7 +88,7 @@ public class HelpSupport {
     {
         if (!version.startsWith("0.2"))
         {
-            WormholeXTreme.thisPlugin.prettyLog(Level.WARNING, false, "Not a supported version of Help. Recommended is 0.2" );
+            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Not a supported version of Help. Recommended is 0.2" );
         }
     }
     
@@ -97,7 +97,7 @@ public class HelpSupport {
      */
     public static void registerHelpCommands()
     {
-        if (WormholeXTreme.help != null && !ConfigManager.getHelpSupportDisable())
+        if (WormholeXTreme.getHelp() != null && !ConfigManager.getHelpSupportDisable())
         {
             final String[] cp = new String[] { "wormhole.use.sign",
                                                          "wormhole.use.dialer",
@@ -125,7 +125,7 @@ public class HelpSupport {
             String wxgo;
             String wxbuild;
             String wormhole;
-            if (WormholeXTreme.permissions != null)
+            if (WormholeXTreme.getPermissions() != null)
             {
                 if (ConfigManager.getSimplePermissions())
                 {
@@ -168,22 +168,22 @@ public class HelpSupport {
                 wormhole = "OP";
             }
           
-            WormholeXTreme.help.registerCommand("dial [stargate] <idc>","Dial [stargate] and optionally unlock <idc>" , WormholeXTreme.thisPlugin, true, dial);
-            WormholeXTreme.help.registerCommand("wxidc [stargate] <idc|-clear>", "Display [stargate] idc, optionally set <idc> or <-clear> idc", WormholeXTreme.thisPlugin, wxidc);
-            WormholeXTreme.help.registerCommand("wxforce [close|drop]", "Forcefully [close] all gates or [drop] all iris", WormholeXTreme.thisPlugin, wxforce);
-            WormholeXTreme.help.registerCommand("wxcompass", "Point compass at nearest Stargate", WormholeXTreme.thisPlugin, wxcompass);
-            WormholeXTreme.help.registerCommand("wxcomplete [stargate] <idc=[idc]> <net=[net]>", "Complete [stargate] construction, optional [idc] and [net]", WormholeXTreme.thisPlugin, true, wxcomplete);
-            WormholeXTreme.help.registerCommand("wxremove [stargate] <-all>", "Remove a [stargate], optionally destroy <-all> its blocks", WormholeXTreme.thisPlugin, wxremove);
-            WormholeXTreme.help.registerCommand("wxlist", "List all stargates", WormholeXTreme.thisPlugin, wxlist);
-            WormholeXTreme.help.registerCommand("wxgo [stargate]", "Teleport to [stargate]", WormholeXTreme.thisPlugin, wxgo);
-            WormholeXTreme.help.registerCommand("wxbuild [gateshape]", "Automaticially build a stargate in the specified [gateshape]", WormholeXTreme.thisPlugin, wxbuild);
-            WormholeXTreme.help.registerCommand("wormhole","Wormhole administration and configuration command", WormholeXTreme.thisPlugin, true, wormhole);
-            WormholeXTreme.help.registerCommand("wormhole owner [stargate] <owner>","Display owner of [stargate], optionally change <owner>", WormholeXTreme.thisPlugin, wormhole);
-            WormholeXTreme.help.registerCommand("wormhole portalmaterial <material>","Display portal material, optionally change <material>", WormholeXTreme.thisPlugin, wormhole);
-            WormholeXTreme.help.registerCommand("wormhole irismaterial <material>","Display iris material, optionally change <material>", WormholeXTreme.thisPlugin, wormhole);
-            WormholeXTreme.help.registerCommand("wormhole shutdown_timeout <timeout>","Display shutdown timeout, optionally change <timeout>", WormholeXTreme.thisPlugin, wormhole);
-            WormholeXTreme.help.registerCommand("wormhole activate_timeout <timeout>","Display activation timeout, optionally change <timeout>", WormholeXTreme.thisPlugin, wormhole);
-            WormholeXTreme.help.registerCommand("wormhole simple <boolean>","Display simple permissions, optionally change via <boolean>", WormholeXTreme.thisPlugin, wormhole);
+            WormholeXTreme.getHelp().registerCommand("dial [stargate] <idc>","Dial [stargate] and optionally unlock <idc>" , WormholeXTreme.getThisPlugin(), true, dial);
+            WormholeXTreme.getHelp().registerCommand("wxidc [stargate] <idc|-clear>", "Display [stargate] idc, optionally set <idc> or <-clear> idc", WormholeXTreme.getThisPlugin(), wxidc);
+            WormholeXTreme.getHelp().registerCommand("wxforce [close|drop]", "Forcefully [close] all gates or [drop] all iris", WormholeXTreme.getThisPlugin(), wxforce);
+            WormholeXTreme.getHelp().registerCommand("wxcompass", "Point compass at nearest Stargate", WormholeXTreme.getThisPlugin(), wxcompass);
+            WormholeXTreme.getHelp().registerCommand("wxcomplete [stargate] <idc=[idc]> <net=[net]>", "Complete [stargate] construction, optional [idc] and [net]", WormholeXTreme.getThisPlugin(), true, wxcomplete);
+            WormholeXTreme.getHelp().registerCommand("wxremove [stargate] <-all>", "Remove a [stargate], optionally destroy <-all> its blocks", WormholeXTreme.getThisPlugin(), wxremove);
+            WormholeXTreme.getHelp().registerCommand("wxlist", "List all stargates", WormholeXTreme.getThisPlugin(), wxlist);
+            WormholeXTreme.getHelp().registerCommand("wxgo [stargate]", "Teleport to [stargate]", WormholeXTreme.getThisPlugin(), wxgo);
+            WormholeXTreme.getHelp().registerCommand("wxbuild [gateshape]", "Automaticially build a stargate in the specified [gateshape]", WormholeXTreme.getThisPlugin(), wxbuild);
+            WormholeXTreme.getHelp().registerCommand("wormhole","Wormhole administration and configuration command", WormholeXTreme.getThisPlugin(), true, wormhole);
+            WormholeXTreme.getHelp().registerCommand("wormhole owner [stargate] <owner>","Display owner of [stargate], optionally change <owner>", WormholeXTreme.getThisPlugin(), wormhole);
+            WormholeXTreme.getHelp().registerCommand("wormhole portalmaterial <material>","Display portal material, optionally change <material>", WormholeXTreme.getThisPlugin(), wormhole);
+            WormholeXTreme.getHelp().registerCommand("wormhole irismaterial <material>","Display iris material, optionally change <material>", WormholeXTreme.getThisPlugin(), wormhole);
+            WormholeXTreme.getHelp().registerCommand("wormhole shutdown_timeout <timeout>","Display shutdown timeout, optionally change <timeout>", WormholeXTreme.getThisPlugin(), wormhole);
+            WormholeXTreme.getHelp().registerCommand("wormhole activate_timeout <timeout>","Display activation timeout, optionally change <timeout>", WormholeXTreme.getThisPlugin(), wormhole);
+            WormholeXTreme.getHelp().registerCommand("wormhole simple <boolean>","Display simple permissions, optionally change via <boolean>", WormholeXTreme.getThisPlugin(), wormhole);
         }
     }
 }

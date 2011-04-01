@@ -34,12 +34,6 @@ import com.wormhole_xtreme.wormhole.permissions.PermissionsManager.PermissionLev
  */
 public class ConfigManager 
 {
-	/*
-	 * Set of standard text strings when a message is sent to users.
-	 * Hopefully this will reduce any wrong messsages being sent. 
-	 */
-	/** The Constant output_strings. */
-	public static final ConcurrentHashMap<StringTypes, String> output_strings = new ConcurrentHashMap<StringTypes, String>();
 	
 	/** The Constant configurations. */
 	public static final ConcurrentHashMap<ConfigKeys, Setting> configurations = new ConcurrentHashMap<ConfigKeys, Setting>(); 
@@ -51,38 +45,12 @@ public class ConfigManager
 	 */
 	public static void setupConfigs(PluginDescriptionFile pdf)
 	{
-		setupStrings();
 		Configuration.loadConfiguration(pdf);
 	}
 	
-	/** The Constant errorheader. */
-	public static final String errorheader = "\u00A73:: \u00A75error \u00A73:: \u00A77";
+
 	
-	/** The Constant normalheader. */
-	public static final String normalheader = "\u00A73:: \u00A77";
-	// Used so that I don't have to retype strings over and over again.
-	/**
-	 * Setup strings.
-	 */
-	private static void setupStrings() 
-	{
-		output_strings.put(StringTypes.PERMISSION_NO, errorheader + "You lack the permissions to do this.");
-		output_strings.put(StringTypes.TARGET_IS_SELF, errorheader + "Can't dial own gate without solar flare");
-		output_strings.put(StringTypes.TARGET_INVALID, errorheader + "Invalid remote gate target.");
-		output_strings.put(StringTypes.TARGET_IS_ACTIVE, errorheader + "Target gate is currently active.");
-		output_strings.put(StringTypes.GATE_NOT_ACTIVE, errorheader + "No gate activated to dial.");
-		output_strings.put(StringTypes.GATE_REMOTE_ACTIVE, errorheader + "Gate remotely activated.");
-		output_strings.put(StringTypes.GATE_SHUTDOWN, normalheader + "Gate successfully shutdown.");
-		output_strings.put(StringTypes.GATE_ACTIVATED, normalheader + "Gate successfully activated.");
-		output_strings.put(StringTypes.GATE_DEACTIVATED, normalheader + "Gate successfully deactivated.");
-		output_strings.put(StringTypes.GATE_DIALED, normalheader + "Gate successfully dialed.");
-		output_strings.put(StringTypes.CONSTRUCT_SUCCESS, normalheader + "Gate successfully constructed.");
-		output_strings.put(StringTypes.CONSTRUCT_NAME_INVALID, errorheader + "Gate name invalid: ");
-		output_strings.put(StringTypes.CONSTRUCT_NAME_TOO_LONG, errorheader + "Gate name too long: ");
-		output_strings.put(StringTypes.CONSTRUCT_NAME_TAKEN, errorheader + "Gate name already taken: ");
-		output_strings.put(StringTypes.REQUEST_INVALID, errorheader + "Invalid Request");
-		output_strings.put(StringTypes.GATE_NOT_SPECIFIED, errorheader + "No gate name specified.");
-	}
+
 	
 	/**
 	 * Sets the config value.
@@ -499,59 +467,88 @@ public class ConfigManager
 	        return false;
 	    }
 	}
+	
 	/**
 	 * The Enum StringTypes.
 	 */
-	public enum StringTypes
+	public static enum MessageStrings
 	{
+	    
+    	/** The error header. */
+    	errorHeader("\u00A73:: \u00A75error \u00A73:: \u00A77"),
+	    
+    	/** The normal header. */
+    	normalHeader("\u00A73:: \u00A77"),
+	    
+    	/** The permission no. */
+    	permissionNo(errorHeader + "You lack the permissions to do this."),
 		
-		/** The PERMISSIO_NO. */
-		PERMISSION_NO,
+		/** The target is self. */
+		targetIsSelf(errorHeader + "Can't dial own gate without solar flare"),
 		
-		/** The TARGET_IS_SELF. */
-		TARGET_IS_SELF,
+		/** The target invalid. */
+		targetInvalid(errorHeader + "Invalid remote gate target."),
 		
-		/** The TARGET_INVALID. */
-		TARGET_INVALID,
+		/** The target is active. */
+		targetIsActive(errorHeader + "Target gate is currently active."),
 		
-		/** The TARGET_IS_ACTIVE. */
-		TARGET_IS_ACTIVE,
+		/** The gate not active. */
+		gateNotActive(errorHeader + "No gate activated to dial."),
 		
-		/** The GATE_NOT_ACTIVE. */
-		GATE_NOT_ACTIVE,
+		/** The gate remove active. */
+		gateRemoveActive(errorHeader + "Gate remotely activated."),
 		
-		/** The GAT e_ remot e_ active. */
-		GATE_REMOTE_ACTIVE,
+		/** The gate shutdown. */
+		gateShutdown(normalHeader + "Gate successfully shutdown."),
 		
-		/** The GAT e_ shutdown. */
-		GATE_SHUTDOWN,
+		/** The gate activated. */
+		gateActivated(normalHeader + "Gate successfully activated."),
 		
-		/** The GAT e_ activated. */
-		GATE_ACTIVATED,
+		/** The gate deactivated. */
+		gateDeactivated(normalHeader + "Gate successfully deactivated."),
 		
-		/** The GAT e_ deactivated. */
-		GATE_DEACTIVATED,
+		/** The gate dialed. */
+		gateDialed(normalHeader + "Gate successfully dialed."),
 		
-		/** The GAT e_ dialed. */
-		GATE_DIALED,
+		/** The construct success. */
+		constructSuccess(normalHeader + "Gate successfully constructed."),
 		
-		/** The CONSTRUC t_ success. */
-		CONSTRUCT_SUCCESS,
+		/** The construct name invalid. */
+		constructNameInvalid(errorHeader + "Gate name invalid: "),
 		
-		/** The CONSTRUC t_ nam e_ invalid. */
-		CONSTRUCT_NAME_INVALID,
+		/** The construct name too long. */
+		constructNameTooLong(errorHeader + "Gate name too long: "),
 		
-		/** The CONSTRUC t_ nam e_ to o_ long. */
-		CONSTRUCT_NAME_TOO_LONG,
+		/** The construct name taken. */
+		constructNameTaken(errorHeader + "Gate name already taken: "),
 		
-		/** The CONSTRUC t_ nam e_ taken. */
-		CONSTRUCT_NAME_TAKEN,
+		/** The request invalid. */
+		requestInvalid(errorHeader + "Invalid Request"),
 		
-		/** The REQUES t_ invalid. */
-		REQUEST_INVALID,
+		/** The gate not specified. */
+		gateNotSpecified(errorHeader + "No gate name specified.");
 		
-		/** The GAT e_ no t_ specified. */
-		GATE_NOT_SPECIFIED
+		/** The m. */
+		private String m;
+		
+		/**
+		 * Instantiates a new string types.
+		 *
+		 * @param message the message
+		 */
+		private MessageStrings(String message)
+		{
+		    m = message;
+		}
+		
+		/* (non-Javadoc)
+		 * @see java.lang.Enum#toString()
+		 */
+		@Override
+		public String toString()
+		{
+		    return m;
+		}
 	}
 
 	/**

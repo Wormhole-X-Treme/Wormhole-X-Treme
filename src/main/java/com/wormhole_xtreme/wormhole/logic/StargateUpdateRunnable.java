@@ -76,22 +76,22 @@ public class StargateUpdateRunnable implements Runnable
 	@Override
 	public void run()
 	{
-	    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Run Action \"" + this.action.toString() + "\" Stargate \"" + this.stargate.Name + "\"");
+	    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Run Action \"" + this.action.toString() + "\" Stargate \"" + this.stargate.name + "\"");
 		if ( this.action == ActionToTake.SHUTDOWN )
 		{    
-			stargate.ShutdownStargate();
+			stargate.shutdownStargate();
 		}
 		else if ( this.action == ActionToTake.ANIMATE_OPENING )
 		{
-			stargate.AnimateOpening();
+			stargate.animateOpening();
 		}
 		else if ( this.action == ActionToTake.DEACTIVATE )
 		{
-			stargate.TimeoutStargate(player);
+			stargate.timeoutStargate(player);
 		}
 		else if ( this.action == ActionToTake.AFTERSHUTDOWN )
 		{
-		    stargate.AfterShutdownStargate();
+		    stargate.afterShutdownStargate();
 		}
 	}
 	

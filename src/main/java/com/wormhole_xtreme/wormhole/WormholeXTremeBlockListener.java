@@ -68,13 +68,13 @@ public class WormholeXTremeBlockListener extends BlockListener
 	    final boolean allowed = WXPermissions.checkWXPermissions(p, s, PermissionType.DAMAGE);
 	    if (allowed)
 	    {
-	        if ( !WorldUtils.isSameBlock(s.ActivationBlock, b) )
+	        if ( !WorldUtils.isSameBlock(s.activationBlock, b) )
 	        {
-	            if ( s.TeleportSignBlock != null && WorldUtils.isSameBlock(s.TeleportSignBlock, b) )
+	            if ( s.teleportSignBlock != null && WorldUtils.isSameBlock(s.teleportSignBlock, b) )
 	            {
 	                p.sendMessage("Destroyed DHD Sign. You will be unable to change dialing target from this gate.");
 	                p.sendMessage("You can rebuild it later.");
-	                s.TeleportSign = null;
+	                s.teleportSign = null;
 	            } 
 	            else if (b.getType().equals(ConfigManager.getIrisMaterial()))
 	            {
@@ -82,25 +82,25 @@ public class WormholeXTremeBlockListener extends BlockListener
 	            } 
 	            else
 	            {
-	                if (s.Active) 
+	                if (s.active) 
 	                {
-	                    s.DeActivateStargate();
-	                    s.FillGateInterior(Material.AIR);
+	                    s.deActivateStargate();
+	                    s.fillGateInterior(Material.AIR);
 	                }
-	                if (s.LitGate) 
+	                if (s.litGate) 
 	                {
-	                    s.UnLightStargate();
-	                    s.StopActivationTimer(p);
-	                    StargateManager.RemoveActivatedStargate(p);
+	                    s.unLightStargate();
+	                    s.stopActivationTimer(p);
+	                    StargateManager.removeActivatedStargate(p);
 	                }
-	                s.ResetTeleportSign();
-	                s.SetupGateSign(false);
-	                if (!s.IrisDeactivationCode.equals(""))
+	                s.resetTeleportSign();
+	                s.setupGateSign(false);
+	                if (!s.irisDeactivationCode.equals(""))
 	                {
-	                    s.SetupIrisLever(false);
+	                    s.setupIrisLever(false);
 	                }
-	                StargateManager.RemoveStargate(stargate);
-	                p.sendMessage("Stargate Destroyed: " + s.Name);
+	                StargateManager.removeStargate(stargate);
+	                p.sendMessage("Stargate Destroyed: " + s.name);
 	            }
 	        }
 	        else
@@ -114,7 +114,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 	    {
 	        if (p != null)
 	        {
-	            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + p.getName() + " denied block destroy on: " + s.Name);
+	            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + p.getName() + " denied block destroy on: " + s.name);
 	        }
 	    }
 	    return true;
@@ -138,7 +138,7 @@ public class WormholeXTremeBlockListener extends BlockListener
 	    }
 	    else
 	    {
-	        WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + p.getName() + " denied damage on: " + s.Name);
+	        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + p.getName() + " denied damage on: " + s.name);
 	        return true;
 	    }
 	}
@@ -173,13 +173,13 @@ public class WormholeXTremeBlockListener extends BlockListener
 	        if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
 	        {
 	            final Location current = event.getBlock().getLocation();
-	            final Stargate closest = Stargate.FindClosestStargate(current);
-	            if ( closest != null && (closest.Active || closest.RecentActive))
+	            final Stargate closest = StargateManager.findClosestStargate(current);
+	            if ( closest != null && (closest.active || closest.recentActive))
 	            {
-	                final double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
-	                if ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 25 ) 
+	                final double blockDistanceSquared = StargateManager.distanceSquaredToClosestGateBlock(current, closest);
+	                if ((blockDistanceSquared <= closest.gateShape.woosh_depth_squared && closest.gateShape.woosh_depth != 0) || blockDistanceSquared <= 25 ) 
 	                {
-	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Proximity Block Burn Distance Squared: \"" + blockDistanceSquared + "\"");
+	                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.name + "\" Proximity Block Burn Distance Squared: \"" + blockDistanceSquared + "\"");
 	                    event.setCancelled(true);
 	                }
 	            }
@@ -236,13 +236,13 @@ public class WormholeXTremeBlockListener extends BlockListener
 	        if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
 	        {
 	            final Location current = event.getBlock().getLocation();
-	            final Stargate closest = Stargate.FindClosestStargate(current);
-	            if ( closest != null && (closest.Active || closest.RecentActive))
+	            final Stargate closest = StargateManager.findClosestStargate(current);
+	            if ( closest != null && (closest.active || closest.recentActive))
 	            {
-	                final double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
-	                if ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 25 ) 
+	                final double blockDistanceSquared = StargateManager.distanceSquaredToClosestGateBlock(current, closest);
+	                if ((blockDistanceSquared <= closest.gateShape.woosh_depth_squared && closest.gateShape.woosh_depth != 0) || blockDistanceSquared <= 25 ) 
 	                {
-	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Block Type: \"" + event.getBlock().getType().toString() + "\" Proximity Block Ignite: \"" + event.getCause().toString() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
+	                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.name + "\" Block Type: \"" + event.getBlock().getType().toString() + "\" Proximity Block Ignite: \"" + event.getCause().toString() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
 	                    event.setCancelled(true);
 	                }
 	            }

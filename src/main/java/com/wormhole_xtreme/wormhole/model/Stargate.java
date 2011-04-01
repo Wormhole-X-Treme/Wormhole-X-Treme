@@ -49,111 +49,111 @@ public class Stargate
 {	
 	// Used to parse
 	/** The Loaded version. */
-	public byte LoadedVersion = -1;
+	public byte loadedVersion = -1;
 	
 	/** The Gate id. */
-	public long GateId = -1;
+	public long gateId = -1;
 	/** 
 	 *  Name of this gate, used to index and target.
 	 */
-	public String Name = "";
+	public String name = "";
 	
 	/** Name of person who made the gate. */
-	public String Owner = null;
+	public String owner = null;
 	/** 
 	 * Network gate is connected to.
 	 */
-	public StargateNetwork Network;
+	public StargateNetwork network;
 	
 	/** Is activated through sign destination?. */
-	public boolean IsSignPowered;
+	public boolean isSignPowered;
 	/**
 	 * The gateshape that this gate uses.
 	 * This affects woosh depth and later materials
 	 */
-	public StargateShape GateShape;
+	public StargateShape gateShape;
 	
 	/** The My world. */
-	public World MyWorld;
+	public World myWorld;
 	// Iris passcode (IDC_
 	/** The Iris deactivation code. */
-	public String IrisDeactivationCode = "";
+	public String irisDeactivationCode = "";
 	// Is Iris active?
 	/** The Iris active. */
-	public boolean IrisActive = false;
+	public boolean irisActive = false;
 	// Default Iris setting
 	/** The Iris default active. */
-	public boolean IrisDefaultActive = false;
+	public boolean irisDefaultActive = false;
 	// Is this stargate already active? Can be active remotely and have no target of its own.
 	/** The Active. */
-	public boolean Active = false;
+	public boolean active = false;
 	
 	/** The Recent active. */
-	public boolean RecentActive = false;
+	public boolean recentActive = false;
 	// Is this stargate already lit up? 
 	/** The Lit gate. */
-	public boolean LitGate = false;
+	public boolean litGate = false;
 	// Stargate that is the target of this gate.
 	/** The Target. */
-	public Stargate Target = null;
+	public Stargate target = null;
 	// temp int id of target starget
 	/** The temp_target_id. */
-	public long temp_target_id = -1;
+	public long tempTargetId = -1;
 	
 	// Location of the Button/Lever that activates this gate.
 	/** The Activation block. */
-	public Block ActivationBlock;
+	public Block activationBlock;
 	// Location of the Button/Lever that activates this gate.
 	/** The Iris activation block. */
-	public Block IrisActivationBlock;
+	public Block irisActivationBlock;
 	// Block to place stargate name
 	/** The Name block holder. */
-	public Block NameBlockHolder;
+	public Block nameBlockHolder;
 	
 	// Block to temp store the sign.
 	/** The Teleport sign block. */
-	public Block TeleportSignBlock;
+	public Block teleportSignBlock;
 	// Sign to choose teleport target from (optional)
 	/** The Teleport sign. */
-	public Sign TeleportSign;
+	public Sign teleportSign;
 	// Block to teleport from;
 	/** The Teleport location. */
-	public Location TeleportLocation;
+	public Location teleportLocation;
 	
 	// Direction that the stargate faces.
 	/** The Facing. */
-	public BlockFace Facing;
+	public BlockFace facing;
 		
 	// The current target on the sign, only used if IsSignPowered is true
 	/** The Sign target. */
-	public Stargate SignTarget;
+	public Stargate signTarget;
 	// Temp target id to store when loading gates.
 	/** The temp_sign_target. */
-	public long temp_sign_target = -1;
+	public long tempSignTarget = -1;
 	// Index in network the sign is pointing at
 	/** The Sign index. */
-	public int SignIndex = 0;
+	public int signIndex = 0;
 
 	
 	// List of all blocks contained in this stargate, including buttons and levers.
 	/** The Blocks. */
-	public ArrayList<Location> Blocks = new ArrayList<Location>();
+	public ArrayList<Location> blocks = new ArrayList<Location>();
 	// List of all blocks that turn to water on activation
 	/** The Water blocks. */
-	public ArrayList<Location> WaterBlocks = new ArrayList<Location>();
+	public ArrayList<Location> waterBlocks = new ArrayList<Location>();
 	// List of all blocks that turn on when gate is active
 	/** The Light blocks. */
-	public ArrayList<Location> LightBlocks = new ArrayList<Location>();
+	public ArrayList<Location> lightBlocks = new ArrayList<Location>();
 	
 	// Used to track active scheduled tasks.
 	/** The Activate task id. */
-	private int ActivateTaskId;
+	private int activateTaskId;
 	
 	/** The Shutdown task id. */
-	private int ShutdownTaskId;
+	private int shutdownTaskId;
 	
 	/** The After shutdown task id. */
-	private int AfterShutdownTaskId;
+	private int afterShutdownTaskId;
 	
 	/**
 	 * Instantiates a new stargate.
@@ -176,131 +176,131 @@ public class Stargate
 	 *
 	 * @param m the m
 	 */
-	public void FillGateInterior(Material m)
+	public void fillGateInterior(Material m)
 	{
-	        for( Location bc : this.WaterBlocks )
+	        for( Location bc : this.waterBlocks )
 	        {
-	            Block b = MyWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
+	            Block b = myWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
 	            b.setType(m);
 	        }
 	}
 	
 	/** The animation_step. */
-	int animation_step = 0;
+	int animationStep = 0;
 	
 	/** The Animated blocks. */
-	ArrayList<Block> AnimatedBlocks = new ArrayList<Block>();
+	ArrayList<Block> animatedBlocks = new ArrayList<Block>();
 	
 	/**
 	 * Animate opening.
 	 */
-	public void AnimateOpening()
+	public void animateOpening()
 	{
 		Material woosh_material = ConfigManager.getPortalMaterial();
 		int woosh_depth;
-		if (this.GateShape != null )
+		if (this.gateShape != null )
 		{
-		     woosh_depth = this.GateShape.woosh_depth;
+		     woosh_depth = this.gateShape.woosh_depth;
 		}
 		else 
 		{
 		    woosh_depth = 0;
 		}
 		
-		if ( animation_step == 0 && woosh_depth > 0)
+		if ( animationStep == 0 && woosh_depth > 0)
 		{
 			
-			for ( Location b : WaterBlocks )
+			for ( Location b : waterBlocks )
 			{
-				Block r = MyWorld.getBlockAt(b.getBlockX(), b.getBlockY(), b.getBlockZ()).getRelative(Facing);
+				Block r = myWorld.getBlockAt(b.getBlockX(), b.getBlockY(), b.getBlockZ()).getRelative(facing);
 //				if ( r.getType() != ConfigManager.getStargateMaterial() )
 //				{
 					r.setType(woosh_material);
-					AnimatedBlocks.add(r);
+					animatedBlocks.add(r);
 					StargateManager.opening_animation_blocks.put(r.getLocation(), r);
 //				}
 			}
 			
-			animation_step++;
-			WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 4);
+			animationStep++;
+			WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 4);
 		}
-		else if ( animation_step < woosh_depth )
+		else if ( animationStep < woosh_depth )
 		{
 			// start = animation_step * WaterBlocks.size();
 			// count = waterblocks.size()
-			int size = AnimatedBlocks.size();
-			int start = WaterBlocks.size();
+			int size = animatedBlocks.size();
+			int start = waterBlocks.size();
 			for ( int i = (size - start); i < size; i++ )
 			{
-				Block b = AnimatedBlocks.get(i);
-				Block r = b.getRelative(Facing);
+				Block b = animatedBlocks.get(i);
+				Block r = b.getRelative(facing);
 //				if ( r.getType() != ConfigManager.getStargateMaterial() )
 //				{
 					r.setType(woosh_material);
-					AnimatedBlocks.add(r);
+					animatedBlocks.add(r);
 					StargateManager.opening_animation_blocks.put(r.getLocation(), r);
 //				}
 			}
 			
-			animation_step++;
+			animationStep++;
 			// Longer wait if we have reached the max depth
-			if ( animation_step == woosh_depth )
-				WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 8);
+			if ( animationStep == woosh_depth )
+				WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 8);
 			else
-				WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 4);
+				WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 4);
 		}
-		else if ( animation_step >= woosh_depth )
+		else if ( animationStep >= woosh_depth )
 		{
-			for ( int i = 0; i < WaterBlocks.size(); i++ )
+			for ( int i = 0; i < waterBlocks.size(); i++ )
 			{
-				int index = AnimatedBlocks.size() - 1;
+				int index = animatedBlocks.size() - 1;
 				if ( index >= 0 )
 				{
-					Block b = AnimatedBlocks.get(index);
+					Block b = animatedBlocks.get(index);
 					b.setType(Material.AIR);
-					AnimatedBlocks.remove(index);
+					animatedBlocks.remove(index);
 					StargateManager.opening_animation_blocks.remove(b.getLocation());
 				}
 			}
-			if ( animation_step < ((woosh_depth * 2) - 1 ) )
+			if ( animationStep < ((woosh_depth * 2) - 1 ) )
 			{
-				animation_step++;
-				WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 3);
+				animationStep++;
+				WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 3);
 			}
 			else
-				animation_step = 0;
+				animationStep = 0;
 		}
 	}
 
 	/**
 	 * Activate stargate.
 	 */
-	public void ActivateStargate() 
+	public void activateStargate() 
 	{
-		this.Active = true;
+		this.active = true;
 	}
 	
 	/**
 	 * After activate stargate.
 	 */
-	public void AfterActivateStargate()
+	public void afterActivateStargate()
 	{
-	    this.RecentActive = true;
+	    this.recentActive = true;
 	}
 	/**
 	 * Light stargate.
 	 */
-	public void LightStargate()
+	public void lightStargate()
 	{
-		this.LitGate = true;
+		this.litGate = true;
 		// Light up blocks
 		//this.ActivationBlock.getFace(WorldUtils.getInverseDirection(this.Facing)).setType(StargateActiveMaterial);
 
-		if ( LightBlocks != null )
+		if ( lightBlocks != null )
 		{
-			for ( Location l : LightBlocks)
+			for ( Location l : lightBlocks)
 			{
-				Block b = MyWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ()); 
+				Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ()); 
 				b.setType(ConfigManager.getActivateMaterial());
 			}
 		}
@@ -311,16 +311,16 @@ public class Stargate
 	 *
 	 * @param p the p
 	 */
-	public void StartActivationTimer(Player p)
+	public void startActivationTimer(Player p)
 	{
-		if ( this.ActivateTaskId > 0)
+		if ( this.activateTaskId > 0)
 		{
-			WormholeXTreme.scheduler.cancelTask(this.ActivateTaskId);
+			WormholeXTreme.getScheduler().cancelTask(this.activateTaskId);
 		}
 		
 		int timeout = ConfigManager.getTimeoutActivate() * 20;
-		this.ActivateTaskId = WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, p, ActionToTake.DEACTIVATE), timeout);
-		WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \""+ this.Name + "\" ActivateTaskID \"" + this.ActivateTaskId + "\" created.");
+		this.activateTaskId = WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, p, ActionToTake.DEACTIVATE), timeout);
+		WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Wormhole \""+ this.name + "\" ActivateTaskID \"" + this.activateTaskId + "\" created.");
 	}
 
 	/**
@@ -328,13 +328,13 @@ public class Stargate
 	 *
 	 * @param p the p
 	 */
-	public void StopActivationTimer(Player p)
+	public void stopActivationTimer(Player p)
 	{
-		if ( this.ActivateTaskId > 0)
+		if ( this.activateTaskId > 0)
 		{
-		    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \""+ this.Name + "\" ActivateTaskID \"" + this.ActivateTaskId + "\" cancelled.");
-			WormholeXTreme.scheduler.cancelTask(this.ActivateTaskId);
-			this.ActivateTaskId = -1;
+		    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Wormhole \""+ this.name + "\" ActivateTaskID \"" + this.activateTaskId + "\" cancelled.");
+			WormholeXTreme.getScheduler().cancelTask(this.activateTaskId);
+			this.activateTaskId = -1;
 		}
 	}
 
@@ -343,17 +343,17 @@ public class Stargate
 	 *
 	 * @param p the p
 	 */
-	public void TimeoutStargate(Player p)
+	public void timeoutStargate(Player p)
 	{
-		if ( this.ActivateTaskId > 0 )
+		if ( this.activateTaskId > 0 )
 		{
-		    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \""+ this.Name + "\" ActivateTaskID \"" + this.ActivateTaskId + "\" timed out.");
-			this.ActivateTaskId = -1;
+		    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Wormhole \""+ this.name + "\" ActivateTaskID \"" + this.activateTaskId + "\" timed out.");
+			this.activateTaskId = -1;
 		}
 		// Deactivate if player still hasn't picked a target.
 		Stargate s = null;
 		if ( p != null)
-			s = StargateManager.RemoveActivatedStargate(p);
+			s = StargateManager.removeActivatedStargate(p);
 		else
 			s = this;
 		
@@ -361,49 +361,49 @@ public class Stargate
 		if ( s != null)
 		{
 			// Make sure to reset iris if it should be on.
-			if ( this.IrisDefaultActive ) 
+			if ( this.irisDefaultActive ) 
 			{
-				ToggleIrisActive(IrisDefaultActive);
+				toggleIrisActive(irisDefaultActive);
 			}
-			if ( this.LitGate )
+			if ( this.litGate )
 			{
-				s.UnLightStargate();
+				s.unLightStargate();
 			}
 			
 			if ( p != null )
-				p.sendMessage("Gate: " + this.Name + " timed out and deactivated.");
+				p.sendMessage("Gate: " + this.name + " timed out and deactivated.");
 		}
 	}
 	
 	/**
 	 * De activate stargate.
 	 */
-	public void DeActivateStargate()
+	public void deActivateStargate()
 	{
-		this.Active = false;
+		this.active = false;
 	}
 	
 	/**
 	 * De recent activate stargate.
 	 */
-	public void DeRecentActivateStargate()
+	public void deRecentActivateStargate()
 	{
-	    this.RecentActive = false;
+	    this.recentActive = false;
 	}
 	
 	/**
 	 * Un light stargate.
 	 */
-	public void UnLightStargate()
+	public void unLightStargate()
 	{
-		this.LitGate = false;
+		this.litGate = false;
 		
 		// Remove Light Up Blocks
-		if ( LightBlocks != null )
+		if ( lightBlocks != null )
 		{
-			for ( Location l : LightBlocks)
+			for ( Location l : lightBlocks)
 			{
-				Block b = MyWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ()); 
+				Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ()); 
 				b.setType(ConfigManager.getStargateMaterial());
 			}
 		}
@@ -417,55 +417,55 @@ public class Stargate
 	 * scheduling the shutdown time and scheduling the WOOSH if enabled.
 	 * Failed task schedules will cause gate to not activate, fill, or animate.  
 	 */
-	public void DialStargate()
+	public void dialStargate()
 	{
-	    if ( this.ShutdownTaskId > 0)
+	    if ( this.shutdownTaskId > 0)
 	    {
-	        WormholeXTreme.scheduler.cancelTask(this.ShutdownTaskId);
+	        WormholeXTreme.getScheduler().cancelTask(this.shutdownTaskId);
 	    }
-	    if (this.AfterShutdownTaskId > 0)
+	    if (this.afterShutdownTaskId > 0)
 	    {
-	        WormholeXTreme.scheduler.cancelTask(this.AfterShutdownTaskId);
+	        WormholeXTreme.getScheduler().cancelTask(this.afterShutdownTaskId);
 	    }
 
 	    int timeout = ConfigManager.getTimeoutShutdown() * 20;
 	    if ( timeout > 0 )
 	    {
-	        this.ShutdownTaskId = WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, ActionToTake.SHUTDOWN), timeout);
-	        WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" ShutdownTaskID \"" + this.ShutdownTaskId + "\" created." );
-	        if (this.ShutdownTaskId == -1 ) 
+	        this.shutdownTaskId = WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.SHUTDOWN), timeout);
+	        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Wormhole \"" + this.name + "\" ShutdownTaskID \"" + this.shutdownTaskId + "\" created." );
+	        if (this.shutdownTaskId == -1 ) 
 	        { 
-	            ShutdownStargate();
-	            WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Failed to schdule wormhole shutdown timeout: " + timeout + " Received task id of -1. Wormhole forced closed NOW.");
+	            shutdownStargate();
+	            WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Failed to schdule wormhole shutdown timeout: " + timeout + " Received task id of -1. Wormhole forced closed NOW.");
 	        }
 	    }
 		
-		if ((this.ShutdownTaskId > 0) || ( timeout == 0 ))
+		if ((this.shutdownTaskId > 0) || ( timeout == 0 ))
 		{
-			if ( !this.Active ) 
+			if ( !this.active ) 
 			{
-				this.ActivateStargate();
-				this.DialButtonLeverState();
-				this.DeRecentActivateStargate();
+				this.activateStargate();
+				this.dialButtonLeverState();
+				this.deRecentActivateStargate();
 			}
-			if ( !this.LitGate)
+			if ( !this.litGate)
 			{
-				LightStargate();
+				lightStargate();
 			}
 			// Show water if you are dialing out OR if the iris isn't active
-			if ( this.Target != null || !this.IrisActive )
+			if ( this.target != null || !this.irisActive )
 			{
-			    this.FillGateInterior(ConfigManager.getPortalMaterial());
+			    this.fillGateInterior(ConfigManager.getPortalMaterial());
 				
 				if (ConfigManager.getPortalWoosh())
 				{
-					WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING));
+					WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING));
 				}
 			}
 		}
 		else 
 		{
-			WormholeXTreme.thisPlugin.prettyLog(Level.WARNING, false, "No wormhole. No visual events.");
+			WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "No wormhole. No visual events.");
 		}
 	}
 	
@@ -473,19 +473,19 @@ public class Stargate
 	 * After shutdown of stargate, spawn off task to set RecentActive = false;
 	 * This way we can depend on RecentActive for gate fire/lava protection.
 	 */
-	public void AfterShutdown()
+	public void afterShutdown()
 	{
-	    if (this.AfterShutdownTaskId > 0)
+	    if (this.afterShutdownTaskId > 0)
 	    {
-	        WormholeXTreme.scheduler.cancelTask(this.AfterShutdownTaskId);
+	        WormholeXTreme.getScheduler().cancelTask(this.afterShutdownTaskId);
 	    }
 	    int timeout = 60;
-	    this.AfterShutdownTaskId = WormholeXTreme.scheduler.scheduleSyncDelayedTask(WormholeXTreme.thisPlugin, new StargateUpdateRunnable(this,ActionToTake.AFTERSHUTDOWN), timeout);
-	    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" AfterShutdownTaskID \"" + this.AfterShutdownTaskId + "\" created." );
-	    if (this.AfterShutdownTaskId == -1)
+	    this.afterShutdownTaskId = WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this,ActionToTake.AFTERSHUTDOWN), timeout);
+	    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Wormhole \"" + this.name + "\" AfterShutdownTaskID \"" + this.afterShutdownTaskId + "\" created." );
+	    if (this.afterShutdownTaskId == -1)
 	    {
-	        WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Failed to schdule wormhole after shutdown, received task id of -1.");
-	        this.DeRecentActivateStargate();
+	        WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Failed to schdule wormhole after shutdown, received task id of -1.");
+	        this.deRecentActivateStargate();
 	    }
 	}
 	/**
@@ -494,32 +494,32 @@ public class Stargate
 	 * @param target the target
 	 * @return True if successful, False if remote target is already Active or if there is a failure scheduling stargate shutdowns.
 	 */
-	public boolean DialStargate(Stargate target)
+	public boolean dialStargate(Stargate target)
 	{
-		if ( this.ActivateTaskId > 0 )
+		if ( this.activateTaskId > 0 )
 		{
-			WormholeXTreme.scheduler.cancelTask(ActivateTaskId);
+			WormholeXTreme.getScheduler().cancelTask(activateTaskId);
 		}
 		
-		if ( !target.LitGate )
+		if ( !target.litGate )
 		{
-			WorldUtils.checkChunkLoad(target.ActivationBlock);
-			this.Target = target;
-			this.DialStargate();
-			target.DialStargate();
-			if ((this.Active) && (this.Target.Active)) 
+			WorldUtils.checkChunkLoad(target.activationBlock);
+			this.target = target;
+			this.dialStargate();
+			target.dialStargate();
+			if ((this.active) && (this.target.active)) 
 			{
 				return true;
 			} 
-			else if ((this.Active) && (!this.Target.Active))
+			else if ((this.active) && (!this.target.active))
 			{
-				this.ShutdownStargate();
-				WormholeXTreme.thisPlugin.prettyLog(Level.WARNING, false, "Far wormhole failed to open. Closing local wormhole for safety sake.");
+				this.shutdownStargate();
+				WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Far wormhole failed to open. Closing local wormhole for safety sake.");
 			} 
-			else if ((!this.Active) && (target.Active))
+			else if ((!this.active) && (target.active))
 			{
-				target.ShutdownStargate();
-				WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false, "Local wormhole failed to open. Closing far end wormhole for safety sake.");
+				target.shutdownStargate();
+				WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING,false, "Local wormhole failed to open. Closing far end wormhole for safety sake.");
 			}
 		}
 		
@@ -532,32 +532,32 @@ public class Stargate
 	 * @param target the target
 	 * @return True if successful, False if remote target is already Active or if there is a failure scheduling stargate shutdowns.
 	 */
-	public boolean ForceDialStargate(Stargate target)
+	public boolean forceDialStargate(Stargate target)
 	{
-		if ( this.ActivateTaskId > 0 )
+		if ( this.activateTaskId > 0 )
 		{
-			WormholeXTreme.scheduler.cancelTask(ActivateTaskId);
+			WormholeXTreme.getScheduler().cancelTask(activateTaskId);
 		}
 		
 		//if ( !target.LitGate )
 		//{
-			WorldUtils.checkChunkLoad(target.ActivationBlock);
-			this.Target = target;
-			this.DialStargate();
-			target.DialStargate();
-			if ((this.Active) && (target.Active)) 
+			WorldUtils.checkChunkLoad(target.activationBlock);
+			this.target = target;
+			this.dialStargate();
+			target.dialStargate();
+			if ((this.active) && (target.active)) 
 			{
 				return true;
 			} 
-			else if ((this.Active) && (!target.Active))
+			else if ((this.active) && (!target.active))
 			{
-				this.ShutdownStargate();
-				WormholeXTreme.thisPlugin.prettyLog(Level.WARNING, false, "Far wormhole failed to open. Closing local wormhole for safety sake.");
+				this.shutdownStargate();
+				WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Far wormhole failed to open. Closing local wormhole for safety sake.");
 			} 
-			else if ((!this.Active) && (target.Active))
+			else if ((!this.active) && (target.active))
 			{
-				target.ShutdownStargate();
-				WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false, "Local wormhole failed to open. Closing far end wormhole for safety sake.");
+				target.shutdownStargate();
+				WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING,false, "Local wormhole failed to open. Closing far end wormhole for safety sake.");
 			}
 		//}
 		
@@ -569,43 +569,43 @@ public class Stargate
 	 *
 	 * @param timer true if we want to spawn after shutdown timer.
 	 */
-	public void ShutdownStargate(boolean timer)
+	public void shutdownStargate(boolean timer)
 	{
-		if ( this.ShutdownTaskId > 0 )
+		if ( this.shutdownTaskId > 0 )
 		{
-		    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" ShutdownTaskID \"" + this.ShutdownTaskId + "\" cancelled.");
-			WormholeXTreme.scheduler.cancelTask(this.ShutdownTaskId);
-			this.ShutdownTaskId = -1;
+		    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Wormhole \"" + this.name + "\" ShutdownTaskID \"" + this.shutdownTaskId + "\" cancelled.");
+			WormholeXTreme.getScheduler().cancelTask(this.shutdownTaskId);
+			this.shutdownTaskId = -1;
 		}
 		
-		if ( this.Target != null )
+		if ( this.target != null )
 		{
-			this.Target.ShutdownStargate();
+			this.target.shutdownStargate();
 		}
 
-		this.Target = null;
+		this.target = null;
 		if (timer)
 		{
-		    this.AfterActivateStargate();
+		    this.afterActivateStargate();
 		}		
-		this.DeActivateStargate();
+		this.deActivateStargate();
 
-		this.UnLightStargate();
-		this.DialButtonLeverState();
+		this.unLightStargate();
+		this.dialButtonLeverState();
 		// Only set back to air if iris isn't on.
 		// If the iris should be on, we will make it that way.
-		if ( this.IrisDefaultActive )
+		if ( this.irisDefaultActive )
 		{
-			ToggleIrisActive(IrisDefaultActive);
+			toggleIrisActive(irisDefaultActive);
 		}
-		else if ( !this.IrisActive )
+		else if ( !this.irisActive )
 		{
-		    this.FillGateInterior(Material.AIR);
+		    this.fillGateInterior(Material.AIR);
 		}
 		
 		if (timer)
 		{
-		    this.AfterShutdown();
+		    this.afterShutdown();
 		}
 	}
 	
@@ -613,23 +613,23 @@ public class Stargate
 	 * Shutdown stargate.
 	 * This is the same as calling ShutdownStargate(false)
 	 */
-	public void ShutdownStargate()
+	public void shutdownStargate()
 	{
-	    this.ShutdownStargate(true);
+	    this.shutdownStargate(true);
 	}
 	
 	/**
 	 * After shutdown stargate.
 	 */
-	public void AfterShutdownStargate()
+	public void afterShutdownStargate()
 	{
-	    if (this.AfterShutdownTaskId > 0)
+	    if (this.afterShutdownTaskId > 0)
 	    {
-	        WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Wormhole \"" + this.Name + "\" AfterShutdownTaskID \"" + this.AfterShutdownTaskId + "\" cancelled.");
-	        WormholeXTreme.scheduler.cancelTask(this.AfterShutdownTaskId);
-	        this.AfterShutdownTaskId = -1;
+	        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Wormhole \"" + this.name + "\" AfterShutdownTaskID \"" + this.afterShutdownTaskId + "\" cancelled.");
+	        WormholeXTreme.getScheduler().cancelTask(this.afterShutdownTaskId);
+	        this.afterShutdownTaskId = -1;
 	    }
-	    this.DeRecentActivateStargate();
+	    this.deRecentActivateStargate();
 	}
 	
 	/**
@@ -638,19 +638,19 @@ public class Stargate
 	 * @param name the name
 	 * @param idc the idc
 	 */
-	public void CompleteGate(String name, String idc)
+	public void completeGate(String name, String idc)
 	{
-		this.Name = name;
+		this.name = name;
 
 		// 1. Setup Name Sign
-		if ( this.NameBlockHolder != null )
+		if ( this.nameBlockHolder != null )
 		{
-		    this.SetupGateSign(true);
+		    this.setupGateSign(true);
 		}
 		// 2. Set up Iris stuff
 		if (!idc.equals(""))
 		{
-		    SetIrisDeactivationCode(idc);
+		    setIrisDeactivationCode(idc);
 		}
 	}
 	
@@ -660,15 +660,15 @@ public class Stargate
 	 *
 	 * @param create true to create, false to destroy
 	 */
-	public void SetupGateSign(boolean create)
+	public void setupGateSign(boolean create)
 	{
-	    if (this.NameBlockHolder != null)
+	    if (this.nameBlockHolder != null)
 	    {
 	        if (create)
 	        {
-	            Block name_sign = this.NameBlockHolder.getFace(Facing);
+	            Block name_sign = this.nameBlockHolder.getFace(facing);
 	            name_sign.setType(Material.WALL_SIGN);		
-	            switch ( Facing )
+	            switch ( facing )
 	            {
 	                case NORTH:
 	                    name_sign.setData((byte)0x04);
@@ -685,23 +685,23 @@ public class Stargate
 	            }
 	            name_sign.getState().setData(new MaterialData(Material.WALL_SIGN));		
 	            Sign sign = (Sign)name_sign.getState();
-	            sign.setLine(0, "-" + this.Name + "-");
+	            sign.setLine(0, "-" + this.name + "-");
 
-	            if ( this.Network != null )
+	            if ( this.network != null )
 	            {
-	                sign.setLine(1, "N:" + this.Network.netName);
+	                sign.setLine(1, "N:" + this.network.netName);
 	            }
 
-	            if ( this.Owner != null )
+	            if ( this.owner != null )
 	            {
-	                sign.setLine(2, "O:" + this.Owner);
+	                sign.setLine(2, "O:" + this.owner);
 	            }
 	            sign.update();
 	        }
 	        else
 	        {
 	            Block name_sign;
-	            if (( name_sign = this.NameBlockHolder.getFace(Facing)) != null)
+	            if (( name_sign = this.nameBlockHolder.getFace(facing)) != null)
 	            {
 	                name_sign.setType(Material.AIR);
 	            }
@@ -715,37 +715,37 @@ public class Stargate
 	 *
 	 * @param create true for create, false for destroy.
 	 */
-	public void SetupIrisLever(boolean create)
+	public void setupIrisLever(boolean create)
 	{
 		if ( create )
 		{
-	    	Block iris_block = this.ActivationBlock.getFace(BlockFace.DOWN);
-	    	this.IrisActivationBlock = iris_block;
-	    	this.Blocks.add(IrisActivationBlock.getLocation());
+	    	Block iris_block = this.activationBlock.getFace(BlockFace.DOWN);
+	    	this.irisActivationBlock = iris_block;
+	    	this.blocks.add(irisActivationBlock.getLocation());
 	    	
-			this.IrisActivationBlock.setType(Material.LEVER);
-			switch (Facing)
+			this.irisActivationBlock.setType(Material.LEVER);
+			switch (facing)
 			{
 			    case SOUTH:
-			        this.IrisActivationBlock.setData((byte)0x01);
+			        this.irisActivationBlock.setData((byte)0x01);
 			        break;
 			    case NORTH:
-			        this.IrisActivationBlock.setData((byte)0x02);
+			        this.irisActivationBlock.setData((byte)0x02);
 			        break;
 			    case WEST:
-			        this.IrisActivationBlock.setData((byte)0x03);
+			        this.irisActivationBlock.setData((byte)0x03);
 			        break;
 			    case EAST:
-			        this.IrisActivationBlock.setData((byte)0x04);
+			        this.irisActivationBlock.setData((byte)0x04);
 			        break;   
 			}
 		}
 		else
 		{
-			if ( this.IrisActivationBlock != null )
+			if ( this.irisActivationBlock != null )
 			{
-				Blocks.remove(this.IrisActivationBlock.getLocation());
-				this.IrisActivationBlock.setType(Material.AIR);			
+				blocks.remove(this.irisActivationBlock.getLocation());
+				this.irisActivationBlock.setType(Material.AIR);			
 			}
 		}
 		
@@ -756,19 +756,19 @@ public class Stargate
 	 *
 	 * @param idc the idc
 	 */
-	public void SetIrisDeactivationCode ( String idc )
+	public void setIrisDeactivationCode ( String idc )
 	{
 		// If empty string make sure to make lever area air instead of lever.
 		if ( idc != null && !idc.equals(""))
 		{
-		    this.IrisDeactivationCode = idc;
-		    this.SetupIrisLever(true);
+		    this.irisDeactivationCode = idc;
+		    this.setupIrisLever(true);
 		}
 		else
 		{
-			this.ToggleIrisActive(false);
-			this.SetupIrisLever(false);
-			this.IrisDeactivationCode = "";
+			this.toggleIrisActive(false);
+			this.setupIrisLever(false);
+			this.irisDeactivationCode = "";
 		}
 	}
 	
@@ -776,18 +776,18 @@ public class Stargate
 	 * This method should only be called when the Iris lever is hit.
 	 * This toggles the current state of the Iris and then sets that state to be the default.
 	 */
-	public void ToggleIrisDefault()
+	public void toggleIrisDefault()
 	{
-		ToggleIrisActive();
-		this.IrisDefaultActive = this.IrisActive;
+		toggleIrisActive();
+		this.irisDefaultActive = this.irisActive;
 	}
 	/**
 	 * Toggle the iris state. 
 	 */
-	public void ToggleIrisActive()
+	public void toggleIrisActive()
 	{
-	    this.IrisActive = !this.IrisActive;
-	    this.ToggleIrisActive(this.IrisActive);
+	    this.irisActive = !this.irisActive;
+	    this.toggleIrisActive(this.irisActive);
 	}
 	/**
 	 * This method sets the iris state and toggles the iris lever.
@@ -796,17 +796,17 @@ public class Stargate
 	 *
 	 * @param irisactive true for iris on, false for off.
 	 */
-	public void ToggleIrisActive(boolean irisactive)
+	public void toggleIrisActive(boolean irisactive)
 	{
-	    this.IrisActive = irisactive;
-	    int leverstate = (int)this.IrisActivationBlock.getData();
-	    if ( this.IrisActive )
+	    this.irisActive = irisactive;
+	    int leverstate = (int)this.irisActivationBlock.getData();
+	    if ( this.irisActive )
 	    {
 	        if (leverstate <= 4 && leverstate != 0)
 	        {
 	            leverstate = leverstate + 8;
 	        }
-	        this.FillGateInterior(ConfigManager.getIrisMaterial());
+	        this.fillGateInterior(ConfigManager.getIrisMaterial());
 	    }
 	    else
 	    {
@@ -814,28 +814,28 @@ public class Stargate
 	        {
 	            leverstate = leverstate - 8;
 	        }
-	        if (this.Active)
+	        if (this.active)
 	        {
-	            this.FillGateInterior(ConfigManager.getPortalMaterial());
+	            this.fillGateInterior(ConfigManager.getPortalMaterial());
 	        }
 	        else
 	        {
-	            this.FillGateInterior(Material.AIR);
+	            this.fillGateInterior(Material.AIR);
 	        }
 	    }
-	    if (this.IrisActivationBlock != null && this.IrisActivationBlock.getType() == Material.LEVER )
+	    if (this.irisActivationBlock != null && this.irisActivationBlock.getType() == Material.LEVER )
 	    {
-	        this.IrisActivationBlock.setData((byte)leverstate);
+	        this.irisActivationBlock.setData((byte)leverstate);
 	    }
 	}
 
 	/**
 	 * Dial button lever state. 
-	 * Same as calling {@link #DialButtonLeverState(boolean)} with boolean true.
+	 * Same as calling {@link #dialButtonLeverState(boolean)} with boolean true.
 	 */
-	public void DialButtonLeverState()
+	public void dialButtonLeverState()
 	{
-	    this.DialButtonLeverState(false);
+	    this.dialButtonLeverState(false);
 	}
 	
 	/**
@@ -843,44 +843,44 @@ public class Stargate
 	 *
 	 * @param regenerate true, to replace missing activation lever.
 	 */
-	public void DialButtonLeverState(boolean regenerate)
+	public void dialButtonLeverState(boolean regenerate)
 	{
-	    if (this.ActivationBlock != null)
+	    if (this.activationBlock != null)
 	    {
-	        Material material = this.ActivationBlock.getType();
+	        Material material = this.activationBlock.getType();
 	        if (regenerate)
 	        {
 	            if (material != Material.LEVER && material != Material.STONE_BUTTON)
 	            {
-	                this.ActivationBlock.setType(Material.LEVER);
-	                switch (Facing)
+	                this.activationBlock.setType(Material.LEVER);
+	                switch (facing)
 	                {
 	                    case SOUTH:
-	                        this.ActivationBlock.setData((byte)0x01);
+	                        this.activationBlock.setData((byte)0x01);
 	                        break;
 	                    case NORTH:
-	                        this.ActivationBlock.setData((byte)0x02);
+	                        this.activationBlock.setData((byte)0x02);
 	                        break;
 	                    case WEST:
-	                        this.ActivationBlock.setData((byte)0x03);
+	                        this.activationBlock.setData((byte)0x03);
 	                        break;
 	                    case EAST:
-	                        this.ActivationBlock.setData((byte)0x04);
+	                        this.activationBlock.setData((byte)0x04);
 	                        break;   
 	                }
 	            }
-	            material = this.ActivationBlock.getType();
+	            material = this.activationBlock.getType();
 	        }
 	        if (material == Material.LEVER || material == Material.STONE_BUTTON)
 	        {
-	            int state = (int)this.ActivationBlock.getData();
+	            int state = (int)this.activationBlock.getData();
 	            if (material == Material.STONE_BUTTON)
 	            {
-	                WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Automaticially replaced Button on gate \"" + this.Name + "\" with Lever.");
-	                this.ActivationBlock.setType(Material.LEVER);
-	                this.ActivationBlock.setData((byte)state);
+	                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Automaticially replaced Button on gate \"" + this.name + "\" with Lever.");
+	                this.activationBlock.setType(Material.LEVER);
+	                this.activationBlock.setData((byte)state);
 	            }
-	            if (this.Active)
+	            if (this.active)
 	            {
 	                if (state <= 4 && state != 0)
 	                {
@@ -895,9 +895,9 @@ public class Stargate
 	                }
 	            }
 
-	            this.ActivationBlock.setData((byte)state);
+	            this.activationBlock.setData((byte)state);
 	            {
-	                WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Dial Button Lever Gate: \"" + this.Name + "\" Material: \"" + material.toString() + "\" State: \"" + state + "\"");
+	                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Dial Button Lever Gate: \"" + this.name + "\" Material: \"" + material.toString() + "\" State: \"" + state + "\"");
 	            }
 	        }
 	    }
@@ -914,20 +914,20 @@ public class Stargate
 	 * @param clicked the clicked
 	 * @return true, if successful
 	 */
-	public boolean TryClickTeleportSign(Block clicked) 
+	public boolean tryClickTeleportSign(Block clicked) 
 	{
-		if ( TeleportSign == null && TeleportSignBlock != null )
+		if ( teleportSign == null && teleportSignBlock != null )
 		{
-			if ( TeleportSignBlock.getType() == Material.WALL_SIGN )
+			if ( teleportSignBlock.getType() == Material.WALL_SIGN )
 			{
-				this.SignIndex = -1;
-				TeleportSign = (Sign)TeleportSignBlock.getState();
-				TeleportSignClicked();
+				this.signIndex = -1;
+				teleportSign = (Sign)teleportSignBlock.getState();
+				teleportSignClicked();
 			}
 		}
-		else if ( WorldUtils.isSameBlock(clicked, TeleportSignBlock) )
+		else if ( WorldUtils.isSameBlock(clicked, teleportSignBlock) )
 		{
-			TeleportSignClicked();
+			teleportSignClicked();
 			return true;
 		}
 		
@@ -940,77 +940,77 @@ public class Stargate
 	/**
 	 * Teleport sign clicked.
 	 */
-	public void TeleportSignClicked()
+	public void teleportSignClicked()
 	{
-		if ( this.SignIndex == -1 )
+		if ( this.signIndex == -1 )
 		{
-			this.TeleportSign.setLine(0, "-" + this.Name + "-");
-			this.SignIndex++;
+			this.teleportSign.setLine(0, "-" + this.name + "-");
+			this.signIndex++;
 		}
 		
-		synchronized ( Network.gateLock )
+		synchronized ( network.gateLock )
 		{
-			if ( this.Network.gate_list.size() == 0 || this.Network.gate_list.size() == 1)
+			if ( this.network.gate_list.size() == 0 || this.network.gate_list.size() == 1)
 			{
-				this.TeleportSign.setLine(1, "");
-				this.TeleportSign.setLine(2, "No Other Gates");
-				this.TeleportSign.setLine(3, "");
-				this.SignTarget = null;
+				this.teleportSign.setLine(1, "");
+				this.teleportSign.setLine(2, "No Other Gates");
+				this.teleportSign.setLine(3, "");
+				this.signTarget = null;
 				return;
 			}
 
-			if ( SignIndex >= this.Network.gate_list.size() )
-				SignIndex = 0;
+			if ( signIndex >= this.network.gate_list.size() )
+				signIndex = 0;
 			
-			if ( this.Network.gate_list.get(SignIndex).Name.equals(this.Name) )
+			if ( this.network.gate_list.get(signIndex).name.equals(this.name) )
 			{
-				SignIndex++;
-				if ( SignIndex == this.Network.gate_list.size() )
-					SignIndex = 0;
+				signIndex++;
+				if ( signIndex == this.network.gate_list.size() )
+					signIndex = 0;
 			}
 			
-			if ( this.Network.gate_list.size() == 2 )
+			if ( this.network.gate_list.size() == 2 )
 			{
 				gate_order.clear();
-				gate_order.put(Integer.valueOf(2), this.Network.gate_list.get(SignIndex));
+				gate_order.put(Integer.valueOf(2), this.network.gate_list.get(signIndex));
 
 					
-				this.TeleportSign.setLine(1, "");
-				this.TeleportSign.setLine(2, ">" + gate_order.get(Integer.valueOf(2)).Name + "<");
-				this.TeleportSign.setLine(3, "");
-				this.SignTarget = this.Network.gate_list.get(SignIndex);
+				this.teleportSign.setLine(1, "");
+				this.teleportSign.setLine(2, ">" + gate_order.get(Integer.valueOf(2)).name + "<");
+				this.teleportSign.setLine(3, "");
+				this.signTarget = this.network.gate_list.get(signIndex);
 			}
-			else if ( this.Network.gate_list.size() == 3 )
+			else if ( this.network.gate_list.size() == 3 )
 			{
 				gate_order.clear();
 				int order_index = 1;
 				//SignIndex++;
 				while ( gate_order.size() < 2)
 				{
-					if ( SignIndex >= this.Network.gate_list.size() )
-						SignIndex = 0;
+					if ( signIndex >= this.network.gate_list.size() )
+						signIndex = 0;
 					
-					if ( this.Network.gate_list.get(SignIndex).Name.equals(this.Name) )
+					if ( this.network.gate_list.get(signIndex).name.equals(this.name) )
 					{
-						SignIndex++;
-						if ( SignIndex == this.Network.gate_list.size() )
-							SignIndex = 0;
+						signIndex++;
+						if ( signIndex == this.network.gate_list.size() )
+							signIndex = 0;
 					}
 					
 
-					gate_order.put(Integer.valueOf(order_index), this.Network.gate_list.get(SignIndex));
+					gate_order.put(Integer.valueOf(order_index), this.network.gate_list.get(signIndex));
 					order_index++;
 					if ( order_index == 4)
 						order_index = 1;
-					SignIndex++;
+					signIndex++;
 				}
 				
-				this.TeleportSign.setLine(1, gate_order.get(Integer.valueOf(1)).Name);
-				this.TeleportSign.setLine(2, ">" + gate_order.get(Integer.valueOf(2)).Name + "<");
-				this.TeleportSign.setLine(3, "");
+				this.teleportSign.setLine(1, gate_order.get(Integer.valueOf(1)).name);
+				this.teleportSign.setLine(2, ">" + gate_order.get(Integer.valueOf(2)).name + "<");
+				this.teleportSign.setLine(3, "");
 				
-				this.SignTarget = gate_order.get(Integer.valueOf(2));
-				this.SignIndex = Network.gate_list.indexOf(gate_order.get(Integer.valueOf(2)));
+				this.signTarget = gate_order.get(Integer.valueOf(2));
+				this.signIndex = network.gate_list.indexOf(gate_order.get(Integer.valueOf(2)));
 			}		
 			else
 			{
@@ -1018,177 +1018,95 @@ public class Stargate
 				int order_index = 1;
 				while ( gate_order.size() < 3)
 				{
-					if ( SignIndex == this.Network.gate_list.size() )
-						SignIndex = 0;
+					if ( signIndex == this.network.gate_list.size() )
+						signIndex = 0;
 					
-					if ( this.Network.gate_list.get(SignIndex).Name.equals(this.Name) )
+					if ( this.network.gate_list.get(signIndex).name.equals(this.name) )
 					{
-						SignIndex++;
-						if ( SignIndex == this.Network.gate_list.size() )
-							SignIndex = 0;
+						signIndex++;
+						if ( signIndex == this.network.gate_list.size() )
+							signIndex = 0;
 					}
 					
-					gate_order.put(Integer.valueOf(order_index), this.Network.gate_list.get(SignIndex));
+					gate_order.put(Integer.valueOf(order_index), this.network.gate_list.get(signIndex));
 					order_index++;
 
-					SignIndex++;
+					signIndex++;
 				}
 				
-				this.TeleportSign.setLine(1, gate_order.get(Integer.valueOf(3)).Name);
-				this.TeleportSign.setLine(2, ">" + gate_order.get(Integer.valueOf(2)).Name + "<");
-				this.TeleportSign.setLine(3, gate_order.get(Integer.valueOf(1)).Name);
+				this.teleportSign.setLine(1, gate_order.get(Integer.valueOf(3)).name);
+				this.teleportSign.setLine(2, ">" + gate_order.get(Integer.valueOf(2)).name + "<");
+				this.teleportSign.setLine(3, gate_order.get(Integer.valueOf(1)).name);
 				
-				this.SignTarget = gate_order.get(Integer.valueOf(2));
-				this.SignIndex = Network.gate_list.indexOf(gate_order.get(Integer.valueOf(2)));
+				this.signTarget = gate_order.get(Integer.valueOf(2));
+				this.signIndex = network.gate_list.indexOf(gate_order.get(Integer.valueOf(2)));
 			}
 		}
 		
-		this.TeleportSign.setData(this.TeleportSign.getData());		
-		this.TeleportSign.update(true);
+		this.teleportSign.setData(this.teleportSign.getData());		
+		this.teleportSign.update(true);
 	}
-	/*
-	 * Delete Stargate Blocks
-	 */
+
 	/**
 	 * Delete gate blocks.
 	 */
-	public void DeleteGateBlocks()
+	public void deleteGateBlocks()
 	{
-		for( Location bc : this.Blocks )
+		for( Location bc : this.blocks )
 		{
-			Block b = MyWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
+			Block b = myWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
 			b.setType(Material.AIR);
 		}
 	}
 
-	/*
-	 * Delete Stargate Portal Blocks
-	 */
 	/**
 	 * Delete portal blocks.
 	 */
-	public void DeletePortalBlocks()
+	public void deletePortalBlocks()
 	{
-		for( Location bc : this.WaterBlocks )
+		for( Location bc : this.waterBlocks )
 		{
-			Block b = MyWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
+			Block b = myWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
 			b.setType(Material.AIR);
 		}
 	}
 	
 
-	
-	/*
-	 * Delete Teleport Sign
-	 */
 	/**
 	 * Delete teleport sign.
 	 */
-	public void DeleteTeleportSign()
+	public void deleteTeleportSign()
 	{
-		if (this.TeleportSignBlock != null && this.TeleportSign != null)
+		if (this.teleportSignBlock != null && this.teleportSign != null)
 		{
-			Block teleport_sign = this.TeleportSignBlock.getFace(Facing);
+			Block teleport_sign = this.teleportSignBlock.getFace(facing);
 			teleport_sign.setType(Material.AIR);
 		}
 	}
-	/*
-	 * Wipe Teleport Sign
-	 */
+
 	/**
 	 * Reset teleport sign.
 	 */
-	public void ResetTeleportSign()
+	public void resetTeleportSign()
 	{
-		if ( this.TeleportSignBlock != null && this.TeleportSign != null)
+		if ( this.teleportSignBlock != null && this.teleportSign != null)
 		{
-			this.TeleportSign.setLine(0, this.Name );
-			if (this.Network != null)
+			this.teleportSign.setLine(0, this.name );
+			if (this.network != null)
 			{
-			    this.TeleportSign.setLine(1, this.Network.netName );
+			    this.teleportSign.setLine(1, this.network.netName );
 			}
 			else 
 			{
-			    this.TeleportSign.setLine(1, "");
+			    this.teleportSign.setLine(1, "");
 			}
-			this.TeleportSign.setLine(2, "");
-			this.TeleportSign.setLine(3, "");
-			this.TeleportSign.setData(this.TeleportSign.getData());
-			this.TeleportSign.update();
+			this.teleportSign.setLine(2, "");
+			this.teleportSign.setLine(3, "");
+			this.teleportSign.setData(this.teleportSign.getData());
+			this.teleportSign.update();
 		}
 		
 	}
 	
-	/**
-	 * Gets the square of the distance between self and target
-	 * which saves the costly call to {@link Math#sqrt(double)}.
-	 *
-	 * @param self Location of the local object.
-	 * @param target Location of the target object.
-	 * @return square of distance to target object from local object.
-	 */
-	public static double getSquaredDistance(Location self, Location target)
-	{
-            double distance = Double.MAX_VALUE;
-            if (self != null && target != null)
-            {
-	           distance = Math.pow(self.getX() - target.getX(), 2) +
-	                      Math.pow(self.getY() - target.getY(), 2) +
-	                      Math.pow(self.getZ() - target.getZ(), 2);            
-            }
-            return distance;   
-	}
-	
-	/**
-	 * Find the closest stargate.
-	 *
-	 * @param self Location of the local object.
-	 * @return The closest stargate to the local object.
-	 */
-	public static Stargate FindClosestStargate(Location self)
-	{
-	    Stargate stargate = null;
-	    if (self != null)
-	    {
-	        ArrayList<Stargate> gates = StargateManager.GetAllGates();
-	        double man = Double.MAX_VALUE;
-            for (Stargate s : gates)
-            {
-                Location t = s.TeleportLocation;
-                double distance = Stargate.getSquaredDistance(self, t);
-                if (distance < man)
-                {
-                    man = distance;
-                    stargate = s;
-                }
-            }
-	    }
-	    return stargate;
-	}
-	
-	/**
-	 * Distance to closest stargate block.
-	 *
-	 * @param self Location of the local object.
-	 * @param stargate Stargate to check blocks for distance.
-	 * @return square of distance to the closest stargate block.
-	 */
-	public static double distanceSquaredToClosestGateBlock(Location self, Stargate stargate)
-	{
-	    double distance = Double.MAX_VALUE;
-	    if (stargate != null && self != null)
-	    {
-	        ArrayList<Location> gateblocks = stargate.Blocks;
-	        double blockdistance = Double.MAX_VALUE;
-	        for (Location l : gateblocks)
-	        {
-	            blockdistance = Stargate.getSquaredDistance(self,l);
-	            if (blockdistance < distance)
-	            {
-	                distance = blockdistance;
-	            }
-	        }
-	    }
-	    return distance;
-	}
+
 }

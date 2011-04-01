@@ -57,13 +57,13 @@ public class WormholeXTremeEntityListener extends EntityListener
 	    if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
 	    {
 	        final Location current = p.getLocation();
-	        final Stargate closest = Stargate.FindClosestStargate(current);
+	        final Stargate closest = StargateManager.findClosestStargate(current);
 	        if(closest != null)
 	        {
-	            final double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
-	            if ((closest.Active || closest.RecentActive) && ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 16 ))
+	            final double blockDistanceSquared = StargateManager.distanceSquaredToClosestGateBlock(current, closest);
+	            if ((closest.active || closest.recentActive) && ((blockDistanceSquared <= closest.gateShape.woosh_depth_squared && closest.gateShape.woosh_depth != 0) || blockDistanceSquared <= 16 ))
 	            {
-	                WormholeXTreme.thisPlugin.prettyLog(Level.FINE,false,"Blocked Gate: \""+ closest.Name + "\" Proximity Event: \"" + event.getCause().toString() +
+	                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE,false,"Blocked Gate: \""+ closest.name + "\" Proximity Event: \"" + event.getCause().toString() +
 	                                                    "\" On: \"" + p.getName() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
 	                p.setFireTicks(0);
 	                return true;
@@ -87,7 +87,7 @@ public class WormholeXTremeEntityListener extends EntityListener
 	        if (StargateManager.isBlockInGate(eb.get(i)))
 	        {
 	            final Stargate s = StargateManager.getGateFromBlock(eb.get(i));
-	            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Creeper Explosion on Stargate: \"" + s.Name + "\"" );
+	            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Blocked Creeper Explosion on Stargate: \"" + s.name + "\"" );
 	            return true;
 	        }
 	    }

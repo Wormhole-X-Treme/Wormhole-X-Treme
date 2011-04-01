@@ -66,7 +66,7 @@ public class DBUpdateUtil
 				try {
 					dest_dir.mkdir();
 				} catch (Exception e) {
-				    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Unable to make directory: " + e.getMessage());
+				    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to make directory: " + e.getMessage());
 				}
 			File[] files = dir.listFiles();
 			for ( File f : files)
@@ -74,14 +74,14 @@ public class DBUpdateUtil
 				try {
 					f.renameTo(new File(dest_dir, f.getName()));
 				} catch (Exception e) {
-				    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Unable to rename files: " + e.getMessage());
+				    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to rename files: " + e.getMessage());
 				}
 			}
 			
 			try {
 				dir.delete();
 			} catch (Exception e) {
-			    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Unable to delete directory: " + e.getMessage() );
+			    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to delete directory: " + e.getMessage() );
 			}
 		}
 		
@@ -124,8 +124,8 @@ public class DBUpdateUtil
 		}
 		catch (SQLException e)
 		{
-		    WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false,"Failed to load WormholeXTremeDB version info, defaulting to 0.");
-		    WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false,"If this is your first time running this plugin, you can ignore this error.");
+		    WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING,false,"Failed to load WormholeXTremeDB version info, defaulting to 0.");
+		    WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING,false,"If this is your first time running this plugin, you can ignore this error.");
 			return 0;
 		}
 		
@@ -155,7 +155,7 @@ public class DBUpdateUtil
 		}
 		catch (IOException e)
 		{
-		    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Unable to open jar file to read SQL Update commands: " + e.getMessage() );
+		    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to open jar file to read SQL Update commands: " + e.getMessage() );
 		}
 
 		return count;
@@ -197,11 +197,11 @@ public class DBUpdateUtil
 			        			int code = sql_e.getErrorCode(); 
 			        			if ( code == -27 || code == -21)
 			        			{
-			        			    WormholeXTreme.thisPlugin.prettyLog(Level.WARNING,false,"(" + code + ")Continuing after Error:" + sql_e);
+			        			    WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING,false,"(" + code + ")Continuing after Error:" + sql_e);
 			        			}
 			        			else
 			        			{
-			        			    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"(" + code + ")Failure On:" + sql_e);
+			        			    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"(" + code + ")Failure On:" + sql_e);
 			        				success = false;
 			        				break;
 			        			}
@@ -217,13 +217,13 @@ public class DBUpdateUtil
 			}
 			catch (Exception e)
 			{
-			    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Failure to update db:" + e);
+			    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Failure to update db:" + e);
 			}
 			
 			if ( success )
-			    WormholeXTreme.thisPlugin.prettyLog(Level.INFO,false,"Successfully updated database.");
+			    WormholeXTreme.getThisPlugin().prettyLog(Level.INFO,false,"Successfully updated database.");
 			else
-			    WormholeXTreme.thisPlugin.prettyLog(Level.SEVERE,false,"Failed to update DB.");
+			    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Failed to update DB.");
 		}
 		else
 		{

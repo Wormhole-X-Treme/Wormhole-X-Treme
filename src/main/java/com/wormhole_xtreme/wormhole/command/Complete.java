@@ -24,7 +24,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
-import com.wormhole_xtreme.wormhole.config.ConfigManager.StringTypes;
 import com.wormhole_xtreme.wormhole.model.Stargate;
 import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
@@ -73,7 +72,7 @@ public class Complete implements CommandExecutor
 
         if ( name.length() < 12)
         {
-            final Stargate dupName = StargateManager.GetStargate( name );
+            final Stargate dupName = StargateManager.getStargate( name );
 
             String idc = "";
             String network = "";
@@ -94,30 +93,30 @@ public class Complete implements CommandExecutor
             {
                 if ( dupName == null )
                 {
-                    final boolean success = StargateManager.CompleteStargate(p, name, idc, network);
+                    final boolean success = StargateManager.completeStargate(p, name, idc, network);
 
                     if ( success )
                     {
-                        p.sendMessage( ConfigManager.output_strings.get(StringTypes.CONSTRUCT_SUCCESS) );
+                        p.sendMessage( ConfigManager.MessageStrings.constructSuccess.toString() );
                     }
                     else
                     {
-                        p.sendMessage(ConfigManager.errorheader + "Construction Failed!?" );
+                        p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Construction Failed!?" );
                     }
                 }
                 else
                 {
-                    p.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_TAKEN) + "\"" + name + "\"");
+                    p.sendMessage(ConfigManager.MessageStrings.constructNameTaken.toString() + "\"" + name + "\"");
                 }
             }
             else 
             {
-                p.sendMessage(ConfigManager.output_strings.get(StringTypes.PERMISSION_NO));
+                p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
             }
         }
         else
         {
-            p.sendMessage( ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_TOO_LONG) + "\"" + name + "\"" );
+            p.sendMessage( ConfigManager.MessageStrings.constructNameTooLong.toString() + "\"" + name + "\"" );
         }
         return true;
     }

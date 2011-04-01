@@ -46,10 +46,6 @@ public class ConfigManager
 		Configuration.loadConfiguration(pdf);
 	}
 	
-
-	
-
-	
 	/**
 	 * Sets the config value.
 	 *

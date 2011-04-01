@@ -46,6 +46,6 @@ PORTAL_MATERIAL=STATIONARY_WATER
 # Iris material is the material the [P] block become when iris is active
 IRIS_MATERIAL=STONE
 # Stargate material is the material the [O] blocks are made of
-STARGATE_MATERIAL=OBISDIAN
+STARGATE_MATERIAL=OBISIDIAN
 # Active material is the material that :L blocks become when gate is active
 ACTIVE_MATERIAL=GLOWSTONE

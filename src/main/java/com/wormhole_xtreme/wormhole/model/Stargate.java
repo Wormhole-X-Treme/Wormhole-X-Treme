@@ -758,16 +758,17 @@ public class Stargate
 	 */
 	public void SetIrisDeactivationCode ( String idc )
 	{
-		this.IrisDeactivationCode = idc;
 		// If empty string make sure to make lever area air instead of lever.
-		if ( !idc.equals("") )
+		if ( idc != null && !idc.equals(""))
 		{
+		    this.IrisDeactivationCode = idc;
 		    this.SetupIrisLever(true);
 		}
 		else
 		{
 			this.ToggleIrisActive(false);
 			this.SetupIrisLever(false);
+			this.IrisDeactivationCode = "";
 		}
 	}
 	

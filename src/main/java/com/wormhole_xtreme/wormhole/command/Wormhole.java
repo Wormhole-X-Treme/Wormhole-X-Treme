@@ -396,27 +396,29 @@ public class Wormhole implements CommandExecutor
     
 	private static boolean doRegenerate(CommandSender sender, String[] args)
 	{
-	    if ( args.length >= 2 )
+	    final CommandSender cs = sender;
+	    final String[] a = args;
+	    if ( a.length >= 2 )
 	    {
-	        Stargate stargate = StargateManager.GetStargate(args[1]);
-	        if (stargate != null)
+	        final Stargate s = StargateManager.GetStargate(args[1]);
+	        if (s != null)
 	        {
-	            stargate.DialButtonLeverState(true);
-	            if (stargate.IrisDeactivationCode != null && stargate.IrisDeactivationCode != "" && stargate.IrisDeactivationCode != " ")
+	            s.DialButtonLeverState(true);
+	            if (!s.IrisDeactivationCode.equals(""))
 	            {
-	                stargate.SetupIrisLever(false);
-	                stargate.SetupIrisLever(true);
+	                s.SetupIrisLever(false);
+	                s.SetupIrisLever(true);
 	            }
-	            sender.sendMessage(ConfigManager.normalheader + "Regenerating Gate: " + stargate.Name );
+	            cs.sendMessage(ConfigManager.normalheader + "Regenerating Gate: " + s.Name );
 	        }
 	        else
 	        {
-	            sender.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_INVALID) + "\"" + args[1] + "\"");
+	            cs.sendMessage(ConfigManager.output_strings.get(StringTypes.CONSTRUCT_NAME_INVALID) + "\"" + a[1] + "\"");
 	        }
 	    }
 	    else
 	    {
-	        sender.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_NOT_SPECIFIED));
+	        cs.sendMessage(ConfigManager.output_strings.get(StringTypes.GATE_NOT_SPECIFIED));
 	        return false;
 	    }
 	    return true;

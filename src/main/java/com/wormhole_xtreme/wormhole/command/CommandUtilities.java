@@ -61,49 +61,49 @@ class CommandUtilities {
 	 */
 	static String[] commandEscaper(String[] args)
 	{
-		StringBuilder temp_string = new StringBuilder();
-		boolean start_quote_found = false;
-		boolean end_quote_found = false;
+		StringBuilder tempString = new StringBuilder();
+		boolean startQuoteFound = false;
+		boolean endQuoteFound = false;
 		
-		ArrayList<String> args_parts_list = new ArrayList<String>();
+		final ArrayList<String> argsPartsList = new ArrayList<String>();
 		
 		for(String part : args)
 		{
 			// First check to see if we have a starting or stopping quote
-			if ( part.contains("\"") && !start_quote_found)
+			if ( part.contains("\"") && !startQuoteFound)
 			{
 				// Two quotes in same string = no spaces in quoted text;
 				if ( !part.replaceFirst("\"", "").contains("\"") )
 				{
-					start_quote_found = true;
+					startQuoteFound = true;
 				}
 			}
-			else if ( part.contains("\"") && start_quote_found)
+			else if ( part.contains("\"") && startQuoteFound)
 			{
-				end_quote_found = true;
+				endQuoteFound = true;
 			}
 
 			// If no quotes yet, we just append to list
-			if ( !start_quote_found )
-				args_parts_list.add(part);
+			if ( !startQuoteFound )
+				argsPartsList.add(part);
 			
 			// If we have quotes we should make sure to append the values
 			// if we found the last quote we should stop adding.
-			if ( start_quote_found)
+			if ( startQuoteFound)
 			{
-				temp_string.append(part.replace("\"", ""));
-				if ( end_quote_found )
+				tempString.append(part.replace("\"", ""));
+				if ( endQuoteFound )
 				{
-					args_parts_list.add(temp_string.toString());
-					start_quote_found = false;
-					end_quote_found = false;
-					temp_string = new StringBuilder();
+					argsPartsList.add(tempString.toString());
+					startQuoteFound = false;
+					endQuoteFound = false;
+					tempString = new StringBuilder();
 				}
 				else
-					temp_string.append(" ");
+					tempString.append(" ");
 			}
 		}
-		return args_parts_list.toArray(new String[] {});
+		return argsPartsList.toArray(new String[argsPartsList.size()]);
 	}
 	
 	/**

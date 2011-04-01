@@ -69,12 +69,12 @@ To Build:
 
  0. Git clone the repo. (Or download the source zip)
  
- 1. Download iConomy version 4.4. Git pull Permissions, use tag 2.5.4. Do a mvn install for Permissions.
+ 1. Download iConomy version 4.63. Git pull Permissions, use tag 2.5.5. Do a mvn install for Permissions.
  
  2. Force iConomy into your local repo. 
  
  2.1 (example commands) 'mvn install:install-file -Dfile=iConomy.jar -DgroupId=com.nijiko.coelho.iConomy \
-     -DartifactId=iConomy -Dversion=4.5 -Dpackaging=jar -DgeneratePom=true'
+     -DartifactId=iConomy -Dversion=4.63 -Dpackaging=jar -DgeneratePom=true'
      
  2.2 iConomy location: http://forums.bukkit.org/threads/40/
  

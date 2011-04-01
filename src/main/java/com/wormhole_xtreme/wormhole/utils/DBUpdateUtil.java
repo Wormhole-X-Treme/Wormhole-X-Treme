@@ -88,11 +88,20 @@ public class DBUpdateUtil
 		try
 		{		
 			Class.forName("org.hsqldb.jdbcDriver" );
+		}
+		catch (ClassNotFoundException e)
+		{
+		    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+		    return false;
+		}
+		try
+		{
 			sql_con = DriverManager.getConnection("jdbc:hsqldb:./plugins/WormholeXTreme/WormholeXTremeDB/WormholeXTremeDB", "sa", "");
 			sql_con.setAutoCommit(true);
 		}
-		catch (Exception e)
+		catch (SQLException e)
 		{
+		    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
 			return false;
 		}
 		
@@ -112,11 +121,12 @@ public class DBUpdateUtil
 	private static int getCurrentVersion()
 	{
 		int ver = 0;
-		
+		Statement stmt = null;
+		ResultSet rs = null;
 		try
 		{
-			Statement stmt = sql_con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT MAX(Version) as ver FROM VersionInfo");
+			stmt = sql_con.createStatement();
+			rs = stmt.executeQuery("SELECT MAX(Version) as ver FROM VersionInfo");
 			if (rs.next()) {
 				ver = rs.getInt("ver");
 			}
@@ -128,7 +138,25 @@ public class DBUpdateUtil
 		    WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING,false,"If this is your first time running this plugin, you can ignore this error.");
 			return 0;
 		}
-		
+		finally
+		{
+		    try 
+		    {
+                stmt.close();
+            }
+            catch (SQLException e) 
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+            }
+		    try 
+		    {
+                rs.close();
+            }
+            catch (SQLException e) 
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+            }
+		}
 		return ver;
 	}
 	
@@ -142,9 +170,10 @@ public class DBUpdateUtil
 		CodeSource src = WormholeXTreme.class.getProtectionDomain().getCodeSource();
 		URL jar = src.getLocation();
 		int count = 0;
+		ZipInputStream zis = null;
 		try
 		{
-			ZipInputStream zis = new ZipInputStream(jar.openStream());
+			zis = new ZipInputStream(jar.openStream());
 			ZipEntry entry;
 			while ( (entry = zis.getNextEntry()) != null )
 			{
@@ -157,7 +186,17 @@ public class DBUpdateUtil
 		{
 		    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to open jar file to read SQL Update commands: " + e.getMessage() );
 		}
-
+		finally
+		{
+		    try 
+		    {
+                zis.close();
+            }
+            catch (IOException e) 
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+            }
+		}
 		return count;
 	}
 
@@ -172,9 +211,10 @@ public class DBUpdateUtil
 		if ( count > version )
 		{
 			boolean success = true;
+			Statement stmt = null;
 			try
 			{
-				Statement stmt = sql_con.createStatement();
+				stmt = sql_con.createStatement();
 				for (int i = (version+1); i <= count; i++)
 				{
 					StringBuilder sb = new StringBuilder();
@@ -219,7 +259,17 @@ public class DBUpdateUtil
 			{
 			    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Failure to update db:" + e);
 			}
-			
+			finally
+			{
+			    try 
+			    {
+                    stmt.close();
+                }
+                catch (SQLException e) 
+                {
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+                }
+			}
 			if ( success )
 			    WormholeXTreme.getThisPlugin().prettyLog(Level.INFO,false,"Successfully updated database.");
 			else

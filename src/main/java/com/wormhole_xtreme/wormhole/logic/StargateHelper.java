@@ -21,8 +21,10 @@ package com.wormhole_xtreme.wormhole.logic;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
@@ -893,12 +895,14 @@ public class StargateHelper
 			{
 				WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to make directory: " + e.getMessage());
 			}
+			BufferedReader br = null;
+			BufferedWriter bw = null;
 			try 
 			{
 				File standard_shape_file = new File("plugins" + File.separator + "WormholeXTreme" + File.separator + "GateShapes" + File.separator + "Standard.shape");
 		    	InputStream is = WormholeXTreme.class.getResourceAsStream("/GateShapes/Standard.shape");
-		    	BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		    	BufferedWriter bw = new BufferedWriter(new FileWriter(standard_shape_file));
+		    	br = new BufferedReader(new InputStreamReader(is));
+		    	bw = new BufferedWriter(new FileWriter(standard_shape_file));
 		    	
 				for (String s = ""; (s = br.readLine()) != null; ) 
 				{
@@ -914,6 +918,25 @@ public class StargateHelper
 			{
 				WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to create files: " + e.getMessage());
 			}
+			finally
+			{
+			    try 
+			    {
+                    br.close();
+                }
+                catch (IOException e) 
+                {
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+                }
+			    try 
+			    {
+                    bw.close();
+                }
+                catch (IOException e) 
+                {
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+                }
+			}
 		}
 		
 		File[] shape_files = directory.listFiles();
@@ -922,22 +945,38 @@ public class StargateHelper
 				if ( fi.getName().contains(".shape") )
 				{
 					WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Loading shape file: \"" + (String)fi.getName() + "\"");
+					BufferedReader bufferedReader = null;
 					try
 					{
-						ArrayList<String> file_lines = new ArrayList<String>();
-						BufferedReader bufferedreader = new BufferedReader(new FileReader(fi));
-						for (String s = ""; (s = bufferedreader.readLine()) != null; ) 
+						ArrayList<String> fileLines = new ArrayList<String>();
+						bufferedReader = new BufferedReader(new FileReader(fi));
+						for (String s = ""; (s = bufferedReader.readLine()) != null; ) 
 						{
-							file_lines.add(s);
+							fileLines.add(s);
 						}
-						bufferedreader.close();
+						bufferedReader.close();
 
-						StargateShape shape = new StargateShape(file_lines.toArray(new String[]{}));
+						StargateShape shape = new StargateShape(fileLines.toArray(new String[]{}));
 						shapes.put(shape.shapeName, shape);
 					}
-					catch (Exception e) 
+					catch (FileNotFoundException e) 
 					{
 						WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to read shape file: " + e.getMessage());
+					}
+					catch (IOException e)
+					{
+					    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to read shape file: " + e.getMessage());
+					}
+					finally
+					{
+					    try 
+					    {
+                            bufferedReader.close();
+                        }
+                        catch (IOException e) 
+                        {
+                            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+                        }
 					}
 					WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Completed loading shape file: \"" + (String)fi.getName() + "\"");
 				}

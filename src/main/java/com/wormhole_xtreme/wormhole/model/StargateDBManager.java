@@ -39,7 +39,7 @@ import com.wormhole_xtreme.wormhole.logic.StargateHelper;
 import com.wormhole_xtreme.wormhole.permissions.PermissionsManager.PermissionLevel;
 
 
-// TODO: Auto-generated Javadoc
+
 /**
  * WormholeXtreme StargateDBManager.
  *
@@ -49,7 +49,17 @@ public class StargateDBManager
 {
 	
 	/** The sql_connection. */
-	private static Connection sql_connection;
+	private static Connection wormholeSQLConnection = null;
+	
+	/**
+	 * Sets the wormhole sql connection.
+	 *
+	 * @param connection the new wormhole sql connection
+	 */
+	private static void setWormholeSQLConnection(Connection connection)
+	{
+	    StargateDBManager.wormholeSQLConnection = connection;
+	}
 	
 	/**
 	 * Load stargates.
@@ -58,43 +68,46 @@ public class StargateDBManager
 	 */
 	public static void loadStargates(Server server)
 	{
-		if ( sql_connection == null )
+		if ( wormholeSQLConnection == null )
+		{
 			connectDB();
-		
+		}
 		List<World> worlds = server.getWorlds();
-		
+		PreparedStatement stmt = null;
+		ResultSet gatesData = null;
 		try
 		{
-			if (  sql_connection.isClosed() )
-				connectDB();
-			
-			PreparedStatement stmt = sql_connection.prepareStatement("SELECT * FROM Stargates;");
-
-			ResultSet gates_data = stmt.executeQuery();
-			while ( gates_data.next() )
+			if (  wormholeSQLConnection.isClosed() )
 			{
-				String network_name = gates_data.getString("Network");
+				connectDB();
+			}
+			stmt = wormholeSQLConnection.prepareStatement("SELECT * FROM Stargates;");
+
+			gatesData = stmt.executeQuery();
+			while ( gatesData.next() )
+			{
+				String networkName = gatesData.getString("Network");
 				StargateNetwork sn = null;
-				if ( network_name != null )
+				if ( networkName != null )
 				{
-					sn = StargateManager.getStargateNetwork(network_name);
-					if ( sn == null && !network_name.equals("") )
-						sn = StargateManager.addStargateNetwork(network_name);
+					sn = StargateManager.getStargateNetwork(networkName);
+					if ( sn == null && !networkName.equals("") )
+						sn = StargateManager.addStargateNetwork(networkName);
 				}
 				// Is this the best way to retrieve a world?
-				long world_id = gates_data.getLong("World");
-				String worldname = gates_data.getString("WorldName");
-				String world_environment = gates_data.getString("WorldEnvironment");
+				long worldId = gatesData.getLong("World");
+				String worldname = gatesData.getString("WorldName");
+				String worldEnvironment = gatesData.getString("WorldEnvironment");
 				
 				
 				World w = null;
 				if ( worldname.equals("") )
 				{
-					for ( World poss_w : worlds )
+					for ( World possW : worlds )
 					{
-						if ( poss_w.getId() == world_id )
+						if ( possW.getId() == worldId )
 						{
-							w = poss_w;
+							w = possW;
 							break;
 						}
 					}
@@ -104,7 +117,7 @@ public class StargateDBManager
 				
 				if ( w == null && !worldname.equals("") )
 				{
-					server.createWorld(worldname, Environment.valueOf(world_environment) );
+					server.createWorld(worldname, Environment.valueOf(worldEnvironment) );
 					w = server.getWorld(worldname);
 				}
 				else if ( w == null )
@@ -113,16 +126,16 @@ public class StargateDBManager
 					w = worlds.get(0);
 				}
 				
-				Stargate s = StargateHelper.parseVersionedData(gates_data.getBytes("GateData"), w, gates_data.getString("Name"), sn);
+				Stargate s = StargateHelper.parseVersionedData(gatesData.getBytes("GateData"), w, gatesData.getString("Name"), sn);
 				if (s != null )
 				{
-					s.gateId = gates_data.getInt("Id");
-					s.owner = gates_data.getString("Owner");
-					String gate_shape_name = gates_data.getString("GateShape");
-					if (gate_shape_name == null )
-						gate_shape_name = "Standard";
+					s.gateId = gatesData.getInt("Id");
+					s.owner = gatesData.getString("Owner");
+					String gateShapeName = gatesData.getString("GateShape");
+					if (gateShapeName == null )
+						gateShapeName = "Standard";
 					
-					s.gateShape = StargateHelper.getShape(gate_shape_name);
+					s.gateShape = StargateHelper.getShape(gateShapeName);
 					if (  sn != null )
 						sn.gate_list.add(s);
 					
@@ -133,11 +146,11 @@ public class StargateDBManager
 					WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, true, "Failed to load Stargate '" + sn + "' from DB.");
 				}
 			}
-			gates_data.close();
+			gatesData.close();
 			stmt.close();
 			
-			ArrayList<Stargate> gate_list = StargateManager.getAllGates();
-			for ( Stargate s : gate_list )
+			ArrayList<Stargate> gateList = StargateManager.getAllGates();
+			for ( Stargate s : gateList )
 			{
 				World w = s.myWorld;
 			
@@ -149,7 +162,7 @@ public class StargateDBManager
 				if ( s.tempTargetId >= 0 )
 				{
 					// I know this is bad, I am just trying to get this feature out asap.
-					for ( Stargate t : gate_list )
+					for ( Stargate t : gateList )
 					{
 						if ( t.gateId == s.tempTargetId)
 						{
@@ -162,7 +175,7 @@ public class StargateDBManager
 				if ( s.tempSignTarget >= 0 )
 				{
 					// I know this is bad, I am just trying to get this feature out asap.
-					for ( Stargate t : gate_list )
+					for ( Stargate t : gateList )
 					{
 						if ( t.gateId == s.tempSignTarget)
 						{
@@ -181,14 +194,32 @@ public class StargateDBManager
 				}
 			}
 			
-			WormholeXTreme.getThisPlugin().prettyLog(Level.INFO,false, gate_list.size() + " Wormholes loaded from WormholeDB.");
+			WormholeXTreme.getThisPlugin().prettyLog(Level.INFO,false, gateList.size() + " Wormholes loaded from WormholeDB.");
 			
 		}
 		catch ( SQLException e) 
 		{
 		    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Error loading stargates from DB: " + e.getMessage()); 
 		}
-		
+		finally
+		{
+		    try 
+		    {
+		        gatesData.close();
+		    }
+		    catch (SQLException e) 
+		    {
+		        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+		    }
+		    try 
+		    {
+		        stmt.close();
+		    }
+		    catch (SQLException e) 
+		    {
+		        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+		    }
+		}
 	}
 	
 	/** The Store statement. */
@@ -210,22 +241,24 @@ public class StargateDBManager
 	 */
 	public static void stargateToSQL(Stargate s)
 	{
-		if ( sql_connection == null  )
+		if ( wormholeSQLConnection == null  )
+		{
 			connectDB();
-		
+		}
+		ResultSet gatesData = null;
 		try
 		{
-			if ( sql_connection.isClosed() )
+			if ( wormholeSQLConnection.isClosed() )
 				connectDB();
 			if ( getGateStatement == null )
-				getGateStatement = sql_connection.prepareStatement("SELECT * FROM Stargates WHERE Name = ?");
+				getGateStatement = wormholeSQLConnection.prepareStatement("SELECT * FROM Stargates WHERE Name = ?");
 			getGateStatement.setString(1, s.name);
 			
-			ResultSet gates_data = getGateStatement.executeQuery();
-			if ( gates_data.next() )
+			gatesData = getGateStatement.executeQuery();
+			if ( gatesData.next() )
 			{
 				if ( updateGateStatement == null )
-					updateGateStatement = sql_connection.prepareStatement("UPDATE Stargates SET GateData = ?, Network = ?, World = ?, WorldName = ?, WorldEnvironment = ?, Owner = ?, GateShape = ? WHERE Id = ?");
+					updateGateStatement = wormholeSQLConnection.prepareStatement("UPDATE Stargates SET GateData = ?, Network = ?, World = ?, WorldName = ?, WorldEnvironment = ?, Owner = ?, GateShape = ? WHERE Id = ?");
 				
 				updateGateStatement.setBytes(1, StargateHelper.stargatetoBinary(s));
 				if ( s.network != null)
@@ -246,10 +279,10 @@ public class StargateDBManager
 			}
 			else
 			{
-				gates_data.close();
+				gatesData.close();
 				
 				if ( storeStatement == null )
-					storeStatement = sql_connection.prepareStatement("INSERT INTO Stargates(Name, GateData, Network, World, WorldName, WorldEnvironment, Owner, GateShape) VALUES ( ? , ? , ? , ? , ? , ?, ?, ? );");
+					storeStatement = wormholeSQLConnection.prepareStatement("INSERT INTO Stargates(Name, GateData, Network, World, WorldName, WorldEnvironment, Owner, GateShape) VALUES ( ? , ? , ? , ? , ? , ?, ?, ? );");
 		
 				storeStatement.setString(1, s.name);
 				byte[] data = StargateHelper.stargatetoBinary(s);
@@ -268,10 +301,10 @@ public class StargateDBManager
 				storeStatement.executeUpdate();
 
 				getGateStatement.setString(1, s.name);
-				gates_data = getGateStatement.executeQuery();
-				if ( gates_data.next() )
+				gatesData = getGateStatement.executeQuery();
+				if ( gatesData.next() )
 				{
-					s.gateId = gates_data.getInt("Id");
+					s.gateId = gatesData.getInt("Id");
 				}
 			}
 		}
@@ -279,6 +312,17 @@ public class StargateDBManager
 		{
 		    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Error storing stargate to DB: " + e.getMessage());
 			e.printStackTrace();
+		}
+		finally
+		{
+		    try 
+		    {
+                gatesData.close();
+            }
+            catch (SQLException e) 
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+            }
 		}
 	}
 
@@ -289,15 +333,15 @@ public class StargateDBManager
 	 */
 	public static void removeStargateFromSQL(Stargate s)
 	{
-		if ( sql_connection == null  )
+		if ( wormholeSQLConnection == null  )
 			connectDB();
 		
 		try
 		{
-			if ( sql_connection.isClosed() )
+			if ( wormholeSQLConnection.isClosed() )
 				connectDB();
 			if ( removeStatement == null )
-				removeStatement = sql_connection.prepareStatement("DELETE FROM Stargates WHERE name = ?;");
+				removeStatement = wormholeSQLConnection.prepareStatement("DELETE FROM Stargates WHERE name = ?;");
 
 			removeStatement.setString(1, s.name);
 			removeStatement.executeUpdate();
@@ -327,10 +371,10 @@ public class StargateDBManager
 
 	    try
 	    {
-	    	if ( sql_connection == null || sql_connection.isClosed() )
+	    	if ( wormholeSQLConnection == null || wormholeSQLConnection.isClosed() )
 	    	{
-		    	sql_connection = DriverManager.getConnection("jdbc:hsqldb:./plugins/WormholeXTreme/WormholeXTremeDB/WormholeXTremeDB", "sa", "");
-		    	sql_connection.setAutoCommit(true);
+		    	setWormholeSQLConnection(DriverManager.getConnection("jdbc:hsqldb:./plugins/WormholeXTreme/WormholeXTremeDB/WormholeXTremeDB", "sa", ""));
+		    	wormholeSQLConnection.setAutoCommit(true);
 	    	}
 	    	else
 	    	{
@@ -352,10 +396,10 @@ public class StargateDBManager
 		{
 			//StoreStatement.close();
 			//RemoveStatement.close();
-			if (!sql_connection.isClosed()) {
-				storeStatement = sql_connection.prepareStatement("SHUTDOWN");
+			if (!wormholeSQLConnection.isClosed()) {
+				storeStatement = wormholeSQLConnection.prepareStatement("SHUTDOWN");
 				storeStatement.execute();
-				sql_connection.close();
+				wormholeSQLConnection.close();
 				WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "WormholeDB shutdown successfull.");
 			}
 		}
@@ -382,23 +426,25 @@ public class StargateDBManager
 	 */
 	public static void storeIndividualPermissionInDB(String player, PermissionLevel pl)
 	{
-		if ( sql_connection == null  )
+		if ( wormholeSQLConnection == null  )
+		{
 			connectDB();
-		
+		}
+		ResultSet perm = null;
 		try
 		{
-			if ( sql_connection.isClosed() )
+			if ( wormholeSQLConnection.isClosed() )
 				connectDB();
 			
 			if ( getIndvPermStatement == null )
-				getIndvPermStatement = sql_connection.prepareStatement("SELECT Permission FROM StargateIndividualPermissions WHERE PlayerName = ?;");
+				getIndvPermStatement = wormholeSQLConnection.prepareStatement("SELECT Permission FROM StargateIndividualPermissions WHERE PlayerName = ?;");
 			
 			getIndvPermStatement.setString(1, player);
-			ResultSet perm = getIndvPermStatement.executeQuery();
+			perm = getIndvPermStatement.executeQuery();
 			if ( !perm.next() )
 			{
 				if ( storeIndvPermStatement == null )
-					storeIndvPermStatement = sql_connection.prepareStatement("INSERT INTO StargateIndividualPermissions ( PlayerName, Permission ) VALUES ( ? , ? );");
+					storeIndvPermStatement = wormholeSQLConnection.prepareStatement("INSERT INTO StargateIndividualPermissions ( PlayerName, Permission ) VALUES ( ? , ? );");
 				
 				storeIndvPermStatement.setString(1, player);
 				storeIndvPermStatement.setString(2, pl.toString());
@@ -407,7 +453,7 @@ public class StargateDBManager
 			else
 			{
 				if ( updateIndvPermStatement == null )
-					updateIndvPermStatement = sql_connection.prepareStatement("UPDATE StargateIndividualPermissions SET Permission = ? WHERE PlayerName = ?;");
+					updateIndvPermStatement = wormholeSQLConnection.prepareStatement("UPDATE StargateIndividualPermissions SET Permission = ? WHERE PlayerName = ?;");
 				
 				updateIndvPermStatement.setString(2, player);
 				updateIndvPermStatement.setString(1, pl.toString());
@@ -421,6 +467,17 @@ public class StargateDBManager
 		{
 		    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Error StoreIndividualPermissionInDB : " + e.getMessage());
 			e.printStackTrace();
+		}
+		finally 
+		{
+		    try 
+		    {
+                perm.close();
+            }
+            catch (SQLException e) 
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+            }
 		}
 	}
 	
@@ -462,18 +519,20 @@ private static volatile PreparedStatement getAllIndvPermStatement = null;
 	public static ConcurrentHashMap<String, PermissionLevel> getAllIndividualPermissions()
 	{
 		ConcurrentHashMap<String, PermissionLevel> perms = new ConcurrentHashMap<String, PermissionLevel>();
-		if ( sql_connection == null  )
+		if ( wormholeSQLConnection == null  )
+		{
 			connectDB();
-		
+		}
+		ResultSet perm = null;
 		try
 		{
-			if ( sql_connection.isClosed() )
+			if ( wormholeSQLConnection.isClosed() )
 				connectDB();
 			
 			if ( getAllIndvPermStatement == null )
-				getAllIndvPermStatement = sql_connection.prepareStatement("SELECT PlayerName, Permission FROM StargateIndividualPermissions;");
+				getAllIndvPermStatement = wormholeSQLConnection.prepareStatement("SELECT PlayerName, Permission FROM StargateIndividualPermissions;");
 			
-			ResultSet perm = getAllIndvPermStatement.executeQuery();
+			perm = getAllIndvPermStatement.executeQuery();
 			while ( perm.next() )
 			{
 				perms.put( perm.getString("PlayerName"), PermissionLevel.valueOf(perm.getString("Permission")) );
@@ -484,7 +543,17 @@ private static volatile PreparedStatement getAllIndvPermStatement = null;
 		    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Error GetAllIndividualPermissions: " + e.getMessage());
 			e.printStackTrace();
 		}
-		
+		finally
+		{
+		    try 
+		    {
+                perm.close();
+            }
+            catch (SQLException e) 
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+            }
+		}
 		return perms;
 	}
 	
@@ -505,24 +574,26 @@ private static volatile PreparedStatement getAllIndvPermStatement = null;
 	 */
 	public static void storeGroupPermissionInDB(String group, PermissionLevel pl)
 	{
-		if ( sql_connection == null  )
+		if ( wormholeSQLConnection == null  )
+		{
 			connectDB();
-		
+		}
+		ResultSet perm = null;
 		try
 		{
-			if ( sql_connection.isClosed() )
+			if ( wormholeSQLConnection.isClosed() )
 				connectDB();
 			
 			if ( getGroupPermStatement == null )
-				getGroupPermStatement = sql_connection.prepareStatement("SELECT Permission FROM StargateGroupPermissions WHERE GroupName = ?;");
+				getGroupPermStatement = wormholeSQLConnection.prepareStatement("SELECT Permission FROM StargateGroupPermissions WHERE GroupName = ?;");
 			
 			getGroupPermStatement.setString(1, group);
-			ResultSet perm = getGroupPermStatement.executeQuery();
+			perm = getGroupPermStatement.executeQuery();
 			
 			if ( !perm.next() )
 			{
 				if ( storeGroupPermStatement == null )
-					storeGroupPermStatement = sql_connection.prepareStatement("INSERT INTO StargateGroupPermissions ( GroupName, Permission ) VALUES ( ? , ? );");
+					storeGroupPermStatement = wormholeSQLConnection.prepareStatement("INSERT INTO StargateGroupPermissions ( GroupName, Permission ) VALUES ( ? , ? );");
 				
 				storeGroupPermStatement.setString(1, group);
 				storeGroupPermStatement.setString(2, pl.toString());
@@ -531,7 +602,7 @@ private static volatile PreparedStatement getAllIndvPermStatement = null;
 			else
 			{
 				if ( updateGroupPermStatement == null )
-					updateGroupPermStatement = sql_connection.prepareStatement("UPDATE StargateGroupPermissions SET Permission = ? WHERE GroupName = ?;");
+					updateGroupPermStatement = wormholeSQLConnection.prepareStatement("UPDATE StargateGroupPermissions SET Permission = ? WHERE GroupName = ?;");
 				
 				updateGroupPermStatement.setString(2, group);
 				updateGroupPermStatement.setString(1, pl.toString());
@@ -542,6 +613,17 @@ private static volatile PreparedStatement getAllIndvPermStatement = null;
 		{
 		    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Error StoreGroupPermissionInDB: " + e.getMessage());
 			e.printStackTrace();
+		}
+		finally
+		{
+		    try 
+		    {
+                perm.close();
+            }
+            catch (SQLException e) 
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+            }
 		}
 	}
 	
@@ -556,18 +638,20 @@ private static volatile PreparedStatement getAllIndvPermStatement = null;
 	public static HashMap<String, PermissionLevel> getAllGroupPermissions()
 	{
 		HashMap<String, PermissionLevel> perms = new HashMap<String, PermissionLevel>();
-		if ( sql_connection == null  )
+		if ( wormholeSQLConnection == null  )
+		{
 			connectDB();
-		
+		}
+		ResultSet perm = null;
 		try
 		{
-			if ( sql_connection.isClosed() )
+			if ( wormholeSQLConnection.isClosed() )
 				connectDB();
 			
 			if ( getAllGroupPermStatement == null )
-				getAllGroupPermStatement = sql_connection.prepareStatement("SELECT GroupName, Permission FROM StargateGroupPermissions;");
+				getAllGroupPermStatement = wormholeSQLConnection.prepareStatement("SELECT GroupName, Permission FROM StargateGroupPermissions;");
 			
-			ResultSet perm = getAllGroupPermStatement.executeQuery();
+			perm = getAllGroupPermStatement.executeQuery();
 			while ( perm.next() )
 			{
 				perms.put( perm.getString("GroupName"), PermissionLevel.valueOf(perm.getString("Permission")) );
@@ -578,7 +662,17 @@ private static volatile PreparedStatement getAllIndvPermStatement = null;
 		    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Error GetAllGroupPermStatement: " + e.getMessage());
 			e.printStackTrace();
 		}
-		
+		finally
+		{
+		    try 
+		    {
+                perm.close();
+            }
+            catch (SQLException e) 
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+            }
+		}
 		return perms;
 	}
 	
@@ -593,16 +687,16 @@ private static volatile PreparedStatement getAllIndvPermStatement = null;
 	 */
 	public static void deleteConfigurations()
 	{
-		if ( sql_connection == null  )
+		if ( wormholeSQLConnection == null  )
 			connectDB();
 		
 		try
 		{
-			if ( sql_connection.isClosed() )
+			if ( wormholeSQLConnection.isClosed() )
 				connectDB();
 			
 			if ( deleteConfigStatement == null )
-				deleteConfigStatement = sql_connection.prepareStatement("DELETE FROM Configurations");
+				deleteConfigStatement = wormholeSQLConnection.prepareStatement("DELETE FROM Configurations");
 			
 			deleteConfigStatement.execute();
 		}
@@ -624,18 +718,20 @@ private static volatile PreparedStatement getAllIndvPermStatement = null;
 	public static HashMap<String, String> getAllConfiguration()
 	{
 		HashMap<String, String> configs = new HashMap<String, String>();
-		if ( sql_connection == null  )
+		if ( wormholeSQLConnection == null  )
+		{
 			connectDB();
-		
+		}
+		ResultSet conf = null;
 		try
 		{
-			if ( sql_connection.isClosed() )
+			if ( wormholeSQLConnection.isClosed() )
 				connectDB();
 			
 			if ( getAllConfigStatement == null )
-				getAllConfigStatement = sql_connection.prepareStatement("SELECT Key, Value FROM Configurations;");
+				getAllConfigStatement = wormholeSQLConnection.prepareStatement("SELECT Key, Value FROM Configurations;");
 			
-			ResultSet conf = getAllConfigStatement.executeQuery();
+			conf = getAllConfigStatement.executeQuery();
 			while ( conf.next() )
 			{
 				configs.put( conf.getString("Key"),  conf.getString("Value"));
@@ -646,7 +742,17 @@ private static volatile PreparedStatement getAllIndvPermStatement = null;
 		    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Error GetAllGroupPermStatement: " + e.getMessage());
 			e.printStackTrace();
 		}
-		
+		finally
+		{
+		    try 
+		    {
+                conf.close();
+            }
+            catch (SQLException e) 
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+            }
+		}
 		return configs;
 	}
 	/*

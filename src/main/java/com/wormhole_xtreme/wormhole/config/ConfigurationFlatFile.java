@@ -21,6 +21,7 @@ package com.wormhole_xtreme.wormhole.config;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -122,36 +123,50 @@ public class ConfigurationFlatFile
 	 */
 	public static String getValueFromSetting(File input, ConfigKeys name, String defaultVal)  throws IOException
 	{
-		BufferedReader bufferedreader = new BufferedReader(new FileReader(input));
-		for (String s = ""; (s = bufferedreader.readLine()) != null; )
-		{
-			try
-			{
-				s = s.trim();
-				if ( s.contains("Setting:") )
-				{
-					String key[] = s.split(":");
-					key[1] = key[1].trim();
-					ConfigKeys key_value = ConfigKeys.valueOf(key[1]);
-					if ( key_value == name )
-					{
-						//Next line
-						if ((s = bufferedreader.readLine()) != null ) 
-						{
-							String val[] = s.split(":");
-							bufferedreader.close();
-							return val[1].trim();
-						}
-					}
-				}
-			}
-			catch ( Exception e)
-			{
-				WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Error parsing setting enum:" + e.toString());
-			}
-		}
-		bufferedreader.close();
-		return defaultVal.trim();
+
+	    BufferedReader bufferedReader = null;
+	    try 
+	    {
+	        bufferedReader = new BufferedReader(new FileReader(input));
+	        for (String s = ""; (s = bufferedReader.readLine()) != null; )
+	        {
+	            try
+	            {
+	                s = s.trim();
+	                if ( s.contains("Setting:") )
+	                {
+	                    String key[] = s.split(":");
+	                    key[1] = key[1].trim();
+	                    ConfigKeys key_value = ConfigKeys.valueOf(key[1]);
+	                    if ( key_value == name )
+	                    {
+	                        //Next line
+	                        if ((s = bufferedReader.readLine()) != null ) 
+	                        {
+	                            String val[] = s.split(":");
+	                            bufferedReader.close();
+	                            return val[1].trim();
+	                        }
+	                    }
+	                }
+	            }
+	            catch ( Exception e)
+	            {
+	                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Error parsing setting enum:" + e.toString());
+	            }
+	        }
+	        bufferedReader.close();
+
+	    }
+	    catch (FileNotFoundException e)
+	    {
+	        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+	    }
+	    finally
+	    {
+	        bufferedReader.close();
+	    }
+	    return defaultVal.trim();
 	}
 
 	/*public static void updateSetting(File input, ConfigKeys setting, String desc, String value)  throws IOException

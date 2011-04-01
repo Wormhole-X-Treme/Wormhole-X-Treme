@@ -207,7 +207,7 @@ public class WormholeXTreme extends JavaPlugin
 		try
 		{
 			Configuration.writeFile(this.getDescription());
-			ArrayList<Stargate> gates = StargateManager.GetAllGates();
+			final ArrayList<Stargate> gates = StargateManager.GetAllGates();
 			// Store all our gates
 			for ( Stargate gate : gates )
 			{

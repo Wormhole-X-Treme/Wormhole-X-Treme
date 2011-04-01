@@ -52,121 +52,14 @@ import com.wormhole_xtreme.wormhole.utils.WorldUtils;
  */ 
 public class WormholeXTremeBlockListener extends BlockListener
 {
-	/* (non-Javadoc)
-	 * @see org.bukkit.event.block.BlockListener#onBlockIgnite(org.bukkit.event.block.BlockIgniteEvent)
+	/**
+	 * Handle block break.
+	 *
+	 * @param player the player
+	 * @param stargate the stargate
+	 * @param block the block
+	 * @return true, if successful
 	 */
-	@Override
-	public void onBlockIgnite(BlockIgniteEvent event)
-	{
-	    if (!event.isCancelled())
-	    {
-	        if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
-	        {
-	            final Location current = event.getBlock().getLocation();
-	            final Stargate closest = Stargate.FindClosestStargate(current);
-	            if ( closest != null && (closest.Active || closest.RecentActive))
-	            {
-	                final double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
-	                if ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 25 ) 
-	                {
-	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Block Type: \"" + event.getBlock().getType().toString() + "\" Proximity Block Ignite: \"" + event.getCause().toString() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
-	                    event.setCancelled(true);
-	                }
-	            }
-	        }
-	    }
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.bukkit.event.block.BlockListener#onBlockBurn(org.bukkit.event.block.BlockBurnEvent)
-	 */
-	@Override
-	public void onBlockBurn(BlockBurnEvent event)
-	{
-	    if (!event.isCancelled())
-	    {
-	        if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
-	        {
-	            final Location current = event.getBlock().getLocation();
-	            final Stargate closest = Stargate.FindClosestStargate(current);
-	            if ( closest != null && (closest.Active || closest.RecentActive))
-	            {
-	                final double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
-	                if ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 25 ) 
-	                {
-	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Proximity Block Burn Distance Squared: \"" + blockDistanceSquared + "\"");
-	                    event.setCancelled(true);
-	                }
-	            }
-	        }
-	    }
-	}
-
-	/* (non-Javadoc)
-	 * @see org.bukkit.event.block.BlockListener#onBlockFlow(org.bukkit.event.block.BlockFromToEvent)
-	 */
-	@Override
-    public void onBlockFromTo(BlockFromToEvent event)
-	{
-	    if (!event.isCancelled())
-	    {
-	        final Stargate stargate = StargateManager.getGateFromBlock(event.getToBlock());
-	        if (stargate != null || StargateManager.isBlockInGate(event.getBlock()))
-	        {
-	            event.setCancelled(true);
-	        }
-	    }
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.bukkit.event.block.BlockListener#onBlockDamage(org.bukkit.event.block.BlockDamageEvent)
-	 */
-	@Override
-	public void onBlockDamage(BlockDamageEvent event)
-	{
-	    if (!event.isCancelled())
-	    {
-	        final Stargate stargate = StargateManager.getGateFromBlock(event.getBlock());
-	        if (stargate != null)
-	        {
-	            boolean allowed = false;
-	            Player player = null;
-	            if (event.getPlayer() != null)
-	            {
-	                player = event.getPlayer();
-	                allowed = WXPermissions.checkWXPermissions(player, stargate, PermissionType.DAMAGE );
-	            }
-	            if (!allowed)
-	            {
-	                if (player != null)
-	                {
-	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied damage on: " + stargate.Name);
-	                }
-	                event.setCancelled(true);
-	            }
-	        }
-	    }
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.bukkit.event.block.BlockListener#onBlockBreak(org.bukkit.event.block.BlockBreakEvent)
-	 */
-	@Override
-	public void onBlockBreak(BlockBreakEvent event)
-	{
-	    if (!event.isCancelled())
-	    {
-	        final Stargate stargate = StargateManager.getGateFromBlock(event.getBlock());
-	        final Player player = event.getPlayer();
-	        final Block block = event.getBlock();
-	        if (stargate != null && handleBlockBreak(player,stargate,block))
-	        {
-	            event.setCancelled(true);
-	        }
-	    }
-	}
-
 	private static boolean handleBlockBreak(Player player, Stargate stargate, Block block)
 	{
 	    final Stargate s = stargate;
@@ -226,6 +119,136 @@ public class WormholeXTremeBlockListener extends BlockListener
 	    }
 	    return true;
 	}
+	
+	/**
+	 * Handle block damage.
+	 *
+	 * @param player the player
+	 * @param stargate the stargate
+	 * @return true, if successful
+	 */
+	public static boolean handleBlockDamage(Player player, Stargate stargate)
+	{
+	    final Stargate s = stargate;
+	    final Player p = player;
+	    final boolean allowed = WXPermissions.checkWXPermissions(p, s, PermissionType.DAMAGE );
+	    if (allowed)
+	    {
+	        return false;
+	    }
+	    else
+	    {
+	        WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Player: " + p.getName() + " denied damage on: " + s.Name);
+	        return true;
+	    }
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bukkit.event.block.BlockListener#onBlockBreak(org.bukkit.event.block.BlockBreakEvent)
+	 */
+	@Override
+	public void onBlockBreak(BlockBreakEvent event)
+	{
+	    if (!event.isCancelled())
+	    {
+	        final Block block = event.getBlock();
+	        final Stargate stargate = StargateManager.getGateFromBlock(block);
+	        final Player player = event.getPlayer();
+	        if (stargate != null && handleBlockBreak(player,stargate,block))
+	        {
+	            event.setCancelled(true);
+	        }
+	    }
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.bukkit.event.block.BlockListener#onBlockBurn(org.bukkit.event.block.BlockBurnEvent)
+	 */
+	@Override
+	public void onBlockBurn(BlockBurnEvent event)
+	{
+	    if (!event.isCancelled())
+	    {
+	        if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
+	        {
+	            final Location current = event.getBlock().getLocation();
+	            final Stargate closest = Stargate.FindClosestStargate(current);
+	            if ( closest != null && (closest.Active || closest.RecentActive))
+	            {
+	                final double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
+	                if ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 25 ) 
+	                {
+	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Proximity Block Burn Distance Squared: \"" + blockDistanceSquared + "\"");
+	                    event.setCancelled(true);
+	                }
+	            }
+	        }
+	    }
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.bukkit.event.block.BlockListener#onBlockDamage(org.bukkit.event.block.BlockDamageEvent)
+	 */
+	@Override
+	public void onBlockDamage(BlockDamageEvent event)
+	{
+	    if (!event.isCancelled())
+	    {
+	        final Block block = event.getBlock();
+	        final Stargate stargate = StargateManager.getGateFromBlock(block);
+	        final Player player = event.getPlayer();
+	        
+	        if (stargate != null && handleBlockDamage(player,stargate))
+	        {
+	            event.setCancelled(true);
+	        }
+	    }
+	}
+
+
+	
+	/* (non-Javadoc)
+	 * @see org.bukkit.event.block.BlockListener#onBlockFlow(org.bukkit.event.block.BlockFromToEvent)
+	 */
+	@Override
+    public void onBlockFromTo(BlockFromToEvent event)
+	{
+	    if (!event.isCancelled())
+	    {
+	        final Stargate stargate = StargateManager.getGateFromBlock(event.getToBlock());
+	        if (stargate != null || StargateManager.isBlockInGate(event.getBlock()))
+	        {
+	            event.setCancelled(true);
+	        }
+	    }
+	}
+
+	/* (non-Javadoc)
+	 * @see org.bukkit.event.block.BlockListener#onBlockIgnite(org.bukkit.event.block.BlockIgniteEvent)
+	 */
+	@Override
+	public void onBlockIgnite(BlockIgniteEvent event)
+	{
+	    if (!event.isCancelled())
+	    {
+	        if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
+	        {
+	            final Location current = event.getBlock().getLocation();
+	            final Stargate closest = Stargate.FindClosestStargate(current);
+	            if ( closest != null && (closest.Active || closest.RecentActive))
+	            {
+	                final double blockDistanceSquared = Stargate.distanceSquaredToClosestGateBlock(current, closest);
+	                if ((blockDistanceSquared <= closest.GateShape.woosh_depth_squared && closest.GateShape.woosh_depth != 0) || blockDistanceSquared <= 25 ) 
+	                {
+	                    WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.Name + "\" Block Type: \"" + event.getBlock().getType().toString() + "\" Proximity Block Ignite: \"" + event.getCause().toString() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
+	                    event.setCancelled(true);
+	                }
+	            }
+	        }
+	    }
+	}
 
 
 
@@ -238,7 +261,8 @@ public class WormholeXTremeBlockListener extends BlockListener
 	{
 	    if (!event.isCancelled())
 	    {
-	        if ( StargateManager.isBlockInGate(event.getBlock())) 
+	        final Block block = event.getBlock();
+	        if ( StargateManager.isBlockInGate(block)) 
 	        {
 				event.setCancelled(true);
 	        }

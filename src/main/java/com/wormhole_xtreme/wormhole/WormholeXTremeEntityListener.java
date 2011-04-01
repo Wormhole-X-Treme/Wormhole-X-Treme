@@ -21,7 +21,6 @@ package com.wormhole_xtreme.wormhole;
 import java.util.List;
 import java.util.logging.Level;
 
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -46,24 +45,6 @@ import com.wormhole_xtreme.wormhole.model.StargateManager;
  */ 
 public class WormholeXTremeEntityListener extends EntityListener 
 { 
-	/* (non-Javadoc)
-	 * @see org.bukkit.event.entity.EntityListener#onEntityDamage(org.bukkit.event.entity.EntityDamageEvent)
-	 */
-	@Override
-	public void onEntityDamage(EntityDamageEvent event)
-	{
-		if (!event.isCancelled() && (event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK) || event.getCause().equals(DamageCause.LAVA)))
-		{
-			if ( event.getEntity() instanceof Player )
-			{
-			    if (handleEntityDamageEvent(event))
-			    {
-			        event.setCancelled(true);
-			    }
-			}
-		}
-	}
-	
 	/**
 	 * Handle entity damage event.
 	 *
@@ -91,8 +72,47 @@ public class WormholeXTremeEntityListener extends EntityListener
 	    }
 	    return false;
 	}
+	
+	/**
+	 * Handle entity explode event.
+	 *
+	 * @param event the event
+	 * @return true, if successful
+	 */
+	private static boolean handleEntityExplodeEvent(List<Block> explodeBlocks)
+	{
+	    final List<Block> eb = explodeBlocks;
+	    for ( int i = 0; i < eb.size(); i++)
+	    {
+	        if (StargateManager.isBlockInGate(eb.get(i)))
+	        {
+	            final Stargate s = StargateManager.getGateFromBlock(eb.get(i));
+	            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Creeper Explosion on Stargate: \"" + s.Name + "\"" );
+	            return true;
+	        }
+	    }
+	    return false;
+	}
 
 	
+	/* (non-Javadoc)
+	 * @see org.bukkit.event.entity.EntityListener#onEntityDamage(org.bukkit.event.entity.EntityDamageEvent)
+	 */
+	@Override
+	public void onEntityDamage(EntityDamageEvent event)
+	{
+		if (!event.isCancelled() && (event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK) || event.getCause().equals(DamageCause.LAVA)))
+		{
+			if ( event.getEntity() instanceof Player )
+			{
+			    if (handleEntityDamageEvent(event))
+			    {
+			        event.setCancelled(true);
+			    }
+			}
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see org.bukkit.event.entity.EntityListener#onEntityExplode(org.bukkit.event.entity.EntityExplodeEvent)
 	 */
@@ -101,31 +121,11 @@ public class WormholeXTremeEntityListener extends EntityListener
 	{
 	    if (!event.isCancelled())
 	    {
-	        if (handleEntityExplodeEvent(event))
+	        final List<Block> explodeBlocks = event.blockList();
+	        if (handleEntityExplodeEvent(explodeBlocks))
 	        {
 	            event.setCancelled(true);
 	        }
 	    }
-	}
-
-	/**
-	 * Handle entity explode event.
-	 *
-	 * @param event the event
-	 * @return true, if successful
-	 */
-	private static boolean handleEntityExplodeEvent(EntityExplodeEvent event)
-	{
-	    final List<Block> explodeblocks = event.blockList();
-	    for ( int i = 0; i < explodeblocks.size(); i++)
-	    {
-	        if (StargateManager.isBlockInGate(explodeblocks.get(i)))
-	        {
-	            final Stargate explodegate = StargateManager.getGateFromBlock(explodeblocks.get(i));
-	            WormholeXTreme.thisPlugin.prettyLog(Level.FINE, false, "Blocked Creeper Explosion on Stargate: \"" + explodegate.Name + "\"" );
-	            return true;
-	        }
-	    }
-	    return false;
 	}
 } 

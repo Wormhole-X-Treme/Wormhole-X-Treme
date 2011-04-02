@@ -1,4 +1,4 @@
-Changes 0.822
+Changes 0.830:
 
 - Water now will not flow over Stargate anythings. No more broken levers and magic 
   blocks of water floating in their place.

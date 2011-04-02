@@ -51,7 +51,7 @@ public class IConomySupport {
                     WormholeXTreme.setIconomy(((iConomy)test));
                     WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Attached to iConomy version " + v);
                 }
-                catch ( Exception e)
+                catch ( ClassCastException e)
                 {
                     WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failed to get cast to iConomy.");
                 }

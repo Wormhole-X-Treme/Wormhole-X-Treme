@@ -933,7 +933,7 @@ public class Stargate
 	}
 	
 	/** The gate_order. */
-	private HashMap<Integer, Stargate> gateOrder = new HashMap<Integer,Stargate>();
+	final private HashMap<Integer, Stargate> gateOrder = new HashMap<Integer,Stargate>();
 	
 	/**
 	 * Teleport sign clicked.

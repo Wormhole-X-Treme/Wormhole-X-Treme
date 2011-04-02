@@ -84,7 +84,8 @@ public class StargateHelper
 		catch ( Exception e)
 		{
 			WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to store gate in DB, byte encoding failed: " + e.getMessage());
-			return null;
+			byte[] b = null;
+			return b;
 		}
 
 		int numBlocks = 4;

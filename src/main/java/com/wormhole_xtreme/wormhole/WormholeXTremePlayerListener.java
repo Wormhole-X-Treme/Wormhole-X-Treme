@@ -323,6 +323,8 @@ public class WormholeXTremePlayerListener extends PlayerListener
                 case 4:
                     direction = BlockFace.EAST;
                     break;
+                default:
+                    break;
                 }
                 
                 if ( direction == null)

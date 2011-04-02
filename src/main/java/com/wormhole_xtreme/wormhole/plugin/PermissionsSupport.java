@@ -59,7 +59,7 @@ public class PermissionsSupport {
                         WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Complex Permissions Enabled");
                     }
                 }
-                catch ( Exception e)
+                catch ( ClassCastException e)
                 {
                     WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failed to get Permissions Handler. Defaulting to built-in permissions.");
                 }

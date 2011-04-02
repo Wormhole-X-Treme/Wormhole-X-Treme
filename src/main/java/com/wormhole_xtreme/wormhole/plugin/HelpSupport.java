@@ -52,7 +52,7 @@ public class HelpSupport {
                     WormholeXTreme.setHelp(((Help)helptest));
                     WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Attached to Help version " + version);
                 }
-                catch (Exception e)
+                catch (ClassCastException e)
                 {
                     WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failed to get cast to Help: " + e.getMessage() );
                 }

@@ -196,16 +196,8 @@ public class Stargate
 	 */
 	public void animateOpening()
 	{
-		Material wooshMaterial = this.gateShape.portalMaterial;
-		int wooshDepth;
-		if (this.gateShape != null )
-		{
-		     wooshDepth = this.gateShape.wooshDepth;
-		}
-		else 
-		{
-		    wooshDepth = 0;
-		}
+		final Material wooshMaterial = this.gateShape.portalMaterial;
+		final int wooshDepth = this.gateShape.wooshDepth;
 		
 		if ( animationStep == 0 && wooshDepth > 0)
 		{
@@ -682,6 +674,8 @@ public class Stargate
 	                case WEST:
 	                    nameSign.setData((byte)0x03);
 	                    break;
+	                default:
+	                    break;
 	            }
 	            nameSign.getState().setData(new MaterialData(Material.WALL_SIGN));		
 	            Sign sign = (Sign)nameSign.getState();
@@ -717,29 +711,31 @@ public class Stargate
 	 */
 	public void setupIrisLever(boolean create)
 	{
-		if ( create )
-		{
-	    	Block iris_block = this.activationBlock.getFace(BlockFace.DOWN);
-	    	this.irisActivationBlock = iris_block;
-	    	this.blocks.add(irisActivationBlock.getLocation());
-	    	
-			this.irisActivationBlock.setType(Material.LEVER);
-			switch (facing)
-			{
-			    case SOUTH:
-			        this.irisActivationBlock.setData((byte)0x01);
-			        break;
-			    case NORTH:
-			        this.irisActivationBlock.setData((byte)0x02);
-			        break;
-			    case WEST:
-			        this.irisActivationBlock.setData((byte)0x03);
-			        break;
-			    case EAST:
-			        this.irisActivationBlock.setData((byte)0x04);
-			        break;   
-			}
-		}
+	    if ( create )
+	    {
+	        Block iris_block = this.activationBlock.getFace(BlockFace.DOWN);
+	        this.irisActivationBlock = iris_block;
+	        this.blocks.add(irisActivationBlock.getLocation());
+
+	        this.irisActivationBlock.setType(Material.LEVER);
+	        switch (facing)
+	        {
+	            case SOUTH:
+	                this.irisActivationBlock.setData((byte)0x01);
+	                break;
+	            case NORTH:
+	                this.irisActivationBlock.setData((byte)0x02);
+	                break;
+	            case WEST:
+	                this.irisActivationBlock.setData((byte)0x03);
+	                break;
+	            case EAST:
+	                this.irisActivationBlock.setData((byte)0x04);
+	                break;
+	            default:
+	                break;
+	        }
+	    }
 		else
 		{
 			if ( this.irisActivationBlock != null )
@@ -867,6 +863,8 @@ public class Stargate
 	                    case EAST:
 	                        this.activationBlock.setData((byte)0x04);
 	                        break;   
+	                    default:
+	                        break;
 	                }
 	            }
 	            material = this.activationBlock.getType();

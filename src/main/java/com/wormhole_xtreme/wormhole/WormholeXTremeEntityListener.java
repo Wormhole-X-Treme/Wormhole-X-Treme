@@ -58,10 +58,10 @@ public class WormholeXTremeEntityListener extends EntityListener
 	    // TODO : This is bad for performance!!
 	        final Location current = p.getLocation();
 	        final Stargate closest = StargateManager.findClosestStargate(current);
-	        if(closest != null && closest.gateShape.portal_material == Material.STATIONARY_LAVA)
+	        if(closest != null && closest.gateShape.portalMaterial == Material.STATIONARY_LAVA)
 	        {
 	            final double blockDistanceSquared = StargateManager.distanceSquaredToClosestGateBlock(current, closest);
-	            if ((closest.active || closest.recentActive) && ((blockDistanceSquared <= closest.gateShape.woosh_depth_squared && closest.gateShape.woosh_depth != 0) || blockDistanceSquared <= 16 ))
+	            if ((closest.active || closest.recentActive) && ((blockDistanceSquared <= closest.gateShape.wooshDepthSquared && closest.gateShape.wooshDepth != 0) || blockDistanceSquared <= 16 ))
 	            {
 	                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE,false,"Blocked Gate: \""+ closest.name + "\" Proximity Event: \"" + event.getCause().toString() +
 	                                                    "\" On: \"" + p.getName() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");

@@ -38,14 +38,14 @@ public class StargateNetwork
 	public String netName;
 	
 	/** The gate_list. */
-	public ArrayList<Stargate> gate_list = new ArrayList<Stargate>();
+	public ArrayList<Stargate> gateList = new ArrayList<Stargate>();
 	
 	/** The gate lock. */
 	public Object gateLock = new Object();
 	
 	/** The individual_permissions. */
-	public HashMap<String, PermissionsManager.PermissionLevel> individual_permissions = new HashMap<String, PermissionsManager.PermissionLevel>();
+	public HashMap<String, PermissionsManager.PermissionLevel> individualPermissions = new HashMap<String, PermissionsManager.PermissionLevel>();
 	
 	/** The group_permissions. */
-	public HashMap<String, PermissionsManager.PermissionLevel> group_permissions = new HashMap<String, PermissionsManager.PermissionLevel>();
+	public HashMap<String, PermissionsManager.PermissionLevel> groupPermissions = new HashMap<String, PermissionsManager.PermissionLevel>();
 }

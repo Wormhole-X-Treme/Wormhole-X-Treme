@@ -137,7 +137,7 @@ public class StargateDBManager
 					
 					s.gateShape = StargateHelper.getShape(gateShapeName);
 					if (  sn != null )
-						sn.gate_list.add(s);
+						sn.gateList.add(s);
 					
 					StargateManager.addStargate(s);
 				}

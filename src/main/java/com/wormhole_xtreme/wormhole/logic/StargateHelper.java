@@ -226,187 +226,187 @@ public class StargateHelper
 	/**
 	 * Check stargate.
 	 *
-	 * @param button_block the button_block
+	 * @param buttonBlock the button_block
 	 * @param facing the facing
 	 * @param shape the shape
 	 * @param create the create
 	 * @return the stargate
 	 */
-	public static Stargate checkStargate(Block button_block, BlockFace facing, StargateShape shape, boolean create )
+	public static Stargate checkStargate(Block buttonBlock, BlockFace facing, StargateShape shape, boolean create )
 	{
 		BlockFace opposite = WorldUtils.getInverseDirection(facing);
-		Block holding_block = button_block.getFace(opposite);
+		Block holdingBlock = buttonBlock.getFace(opposite);
 		
-		if ( isStargateMaterial(holding_block, shape) )
+		if ( isStargateMaterial(holdingBlock, shape) )
 		{
 			//System.out.println("");
 			// Probably a stargate, lets start checking!
-			Stargate temp_gate = new Stargate();
-			temp_gate.myWorld = button_block.getWorld();
-			temp_gate.name = "";
-			temp_gate.activationBlock = button_block;
-			temp_gate.facing = facing;
-			temp_gate.blocks.add( button_block.getLocation() );
-			temp_gate.gateShape = shape;
-			if ( !isStargateMaterial( holding_block.getRelative(BlockFace.DOWN), temp_gate.gateShape ) )
+			Stargate tempGate = new Stargate();
+			tempGate.myWorld = buttonBlock.getWorld();
+			tempGate.name = "";
+			tempGate.activationBlock = buttonBlock;
+			tempGate.facing = facing;
+			tempGate.blocks.add( buttonBlock.getLocation() );
+			tempGate.gateShape = shape;
+			if ( !isStargateMaterial( holdingBlock.getRelative(BlockFace.DOWN), tempGate.gateShape ) )
 			{
 				return null;
 			}
 
-			Block possible_sign_holder = holding_block.getRelative( WorldUtils.getPerpendicularRightDirection(opposite) ); 
-			if ( isStargateMaterial( possible_sign_holder, temp_gate.gateShape) )
+			Block possibleSignHolder = holdingBlock.getRelative( WorldUtils.getPerpendicularRightDirection(opposite) ); 
+			if ( isStargateMaterial( possibleSignHolder, tempGate.gateShape) )
 			{
 				// This might be a public gate with activation method of sign instead of name.
-				Block sign_block = possible_sign_holder.getRelative(temp_gate.facing);
-				if ( sign_block.getType() == Material.WALL_SIGN )
+				Block signBlock = possibleSignHolder.getRelative(tempGate.facing);
+				if ( signBlock.getType() == Material.WALL_SIGN )
 				{
-					temp_gate.isSignPowered = true;
-					temp_gate.teleportSignBlock = sign_block;
-					temp_gate.teleportSign = (Sign) sign_block.getState();
-					temp_gate.blocks.add( sign_block.getLocation() );
+					tempGate.isSignPowered = true;
+					tempGate.teleportSignBlock = signBlock;
+					tempGate.teleportSign = (Sign) signBlock.getState();
+					tempGate.blocks.add( signBlock.getLocation() );
 					
-					String name = temp_gate.teleportSign.getLine(0);
-					Stargate pos_dupe = StargateManager.getStargate(name);
-					if ( pos_dupe != null )
+					String name = tempGate.teleportSign.getLine(0);
+					Stargate posDupe = StargateManager.getStargate(name);
+					if ( posDupe != null )
 					{
-						temp_gate.name = "";
-						return temp_gate;
+						tempGate.name = "";
+						return tempGate;
 					}
 					
 					if ( name.length() > 2 )
 					{
-						temp_gate.name = name;
+						tempGate.name = name;
 					}
 				}
 			}
 			
 			
-			int[] facing_vector = { 0,0,0 };
+			int[] facingVector = { 0,0,0 };
 			
-			World w = button_block.getWorld();
+			World w = buttonBlock.getWorld();
 			// Now we start calculaing the values for the blocks that need to be the stargate material.
 			
 			if ( facing == BlockFace.NORTH )
-				facing_vector[0] = 1;
+				facingVector[0] = 1;
 			else if ( facing == BlockFace.SOUTH )
-				facing_vector[0] = -1;
+				facingVector[0] = -1;
 			else if ( facing == BlockFace.EAST )
-				facing_vector[2] = 1;
+				facingVector[2] = 1;
 			else if ( facing == BlockFace.WEST )
-				facing_vector[2] = -1;
+				facingVector[2] = -1;
 			else if ( facing == BlockFace.UP )
-				facing_vector[1] = -1;
+				facingVector[1] = -1;
 			else if ( facing == BlockFace.DOWN )
-				facing_vector[1] = 1;
+				facingVector[1] = 1;
 
-			int[] direction_vector = { 0,0,0 };
-			int[] starting_position = { 0,0,0 };
+			int[] directionVector = { 0,0,0 };
+			int[] startingPosition = { 0,0,0 };
 			
 			// Calculate the cross product
-			direction_vector[0] = facing_vector[1]*shape.reference_vector[2] - facing_vector[2]*shape.reference_vector[1];
-			direction_vector[1] = facing_vector[2]*shape.reference_vector[0] - facing_vector[0]*shape.reference_vector[2];
-			direction_vector[2] = facing_vector[0]*shape.reference_vector[1] - facing_vector[1]*shape.reference_vector[0];
+			directionVector[0] = facingVector[1]*shape.referenceVector[2] - facingVector[2]*shape.referenceVector[1];
+			directionVector[1] = facingVector[2]*shape.referenceVector[0] - facingVector[0]*shape.referenceVector[2];
+			directionVector[2] = facingVector[0]*shape.referenceVector[1] - facingVector[1]*shape.referenceVector[0];
 
 			// This is the 0,0,0 the block at the ground against the far side of the stargate
-			starting_position[0] = button_block.getX() + facing_vector[0] * shape.to_gate_corner[2] + direction_vector[0] * shape.to_gate_corner[0];
-			starting_position[1] = button_block.getY() + shape.to_gate_corner[1]; 
-			starting_position[2] = button_block.getZ() + facing_vector[2] * shape.to_gate_corner[2] + direction_vector[2] * shape.to_gate_corner[0];
+			startingPosition[0] = buttonBlock.getX() + facingVector[0] * shape.toGateCorner[2] + directionVector[0] * shape.toGateCorner[0];
+			startingPosition[1] = buttonBlock.getY() + shape.toGateCorner[1]; 
+			startingPosition[2] = buttonBlock.getZ() + facingVector[2] * shape.toGateCorner[2] + directionVector[2] * shape.toGateCorner[0];
 			
-			for ( int i = 0; i < shape.stargate_positions.length; i++)
+			for ( int i = 0; i < shape.stargatePositions.length; i++)
 			{
-				int[] b_vect = shape.stargate_positions[i];
+				int[] bVect = shape.stargatePositions[i];
 				
-				int[] block_location = {b_vect[2] * direction_vector[0] * -1, b_vect[1], b_vect[2] * direction_vector[2] * -1};
+				int[] blockLocation = {bVect[2] * directionVector[0] * -1, bVect[1], bVect[2] * directionVector[2] * -1};
 				
-				Block maybe_block = w.getBlockAt(block_location[0] + starting_position[0], block_location[1] + starting_position[1], block_location[2] + starting_position[2]);
+				Block maybeBlock = w.getBlockAt(blockLocation[0] + startingPosition[0], blockLocation[1] + startingPosition[1], blockLocation[2] + startingPosition[2]);
 				if ( create )
-					maybe_block.setType( temp_gate.gateShape.stargate_material );
+					maybeBlock.setType( tempGate.gateShape.stargateMaterial );
 					
-				if ( isStargateMaterial(maybe_block, temp_gate.gateShape) )
+				if ( isStargateMaterial(maybeBlock, tempGate.gateShape) )
 				{
-					temp_gate.blocks.add( maybe_block.getLocation() );
-					for ( int j = 0; j < shape.light_positions.length; j++ )
+					tempGate.blocks.add( maybeBlock.getLocation() );
+					for ( int j = 0; j < shape.lightPositions.length; j++ )
 					{
-						if ( shape.light_positions[j] == i)
+						if ( shape.lightPositions[j] == i)
 						{
-							temp_gate.lightBlocks.add(maybe_block.getLocation());
+							tempGate.lightBlocks.add(maybeBlock.getLocation());
 						}
 					}
 				}
 				else
 				{
-					if ( temp_gate.network != null )
-						temp_gate.network.gate_list.remove(temp_gate);
+					if ( tempGate.network != null )
+						tempGate.network.gateList.remove(tempGate);
 					
 					return null;
 				}
 			}
 
 			// Set the name sign location.
-			if ( shape.sign_position != null )
+			if ( shape.signPosition != null )
 			{
-				int[] sign_location_array = {shape.sign_position[2] * direction_vector[0] * -1, shape.sign_position[1], shape.sign_position[2] * direction_vector[2] * -1};
-				Block name_block = w.getBlockAt(sign_location_array[0] + starting_position[0], sign_location_array[1] + starting_position[1], sign_location_array[2] + starting_position[2]);
-				temp_gate.nameBlockHolder = name_block;
+				int[] signLocationArray = {shape.signPosition[2] * directionVector[0] * -1, shape.signPosition[1], shape.signPosition[2] * directionVector[2] * -1};
+				Block nameBlock = w.getBlockAt(signLocationArray[0] + startingPosition[0], signLocationArray[1] + startingPosition[1], signLocationArray[2] + startingPosition[2]);
+				tempGate.nameBlockHolder = nameBlock;
 			}
 			// Now set teleport in location
-			int[] teleport_loc_array = {shape.enter_position[2] * direction_vector[0] * -1, shape.enter_position[1], shape.enter_position[2] * direction_vector[2] * -1};
-			Block tele_block = w.getBlockAt(teleport_loc_array[0] + starting_position[0], teleport_loc_array[1] + starting_position[1], teleport_loc_array[2] + starting_position[2]);
+			int[] teleportLocArray = {shape.enterPosition[2] * directionVector[0] * -1, shape.enterPosition[1], shape.enterPosition[2] * directionVector[2] * -1};
+			Block teleBlock = w.getBlockAt(teleportLocArray[0] + startingPosition[0], teleportLocArray[1] + startingPosition[1], teleportLocArray[2] + startingPosition[2]);
 			// First go forward one
-			Block b_loc = tele_block.getRelative(facing);
+			Block bLoc = teleBlock.getRelative(facing);
 			// Now go up until we hit air or water.
-			while ( b_loc.getType() != Material.AIR && b_loc.getType() != Material.WATER)
+			while ( bLoc.getType() != Material.AIR && bLoc.getType() != Material.WATER)
 			{
-				b_loc = b_loc.getRelative(BlockFace.UP);
+				bLoc = bLoc.getRelative(BlockFace.UP);
 			}
-			Location tele_loc = b_loc.getLocation();
+			Location teleLoc = bLoc.getLocation();
 			// Make sure the guy faces the right way out of the portal.
-			tele_loc.setYaw( WorldUtils.getDegreesFromBlockFace(facing));
-			tele_loc.setPitch(0);
+			teleLoc.setYaw( WorldUtils.getDegreesFromBlockFace(facing));
+			teleLoc.setPitch(0);
 			// Put him in the middle of the block instead of a corner.
 			// Players are 1.65 blocks tall, so we go up .66 more up :-p
-			tele_loc.setX(tele_loc.getX() + 0.5);
-			tele_loc.setY(tele_loc.getY() + 0.66);
-			tele_loc.setZ(tele_loc.getZ() + 0.5);
-			temp_gate.teleportLocation = tele_loc;
+			teleLoc.setX(teleLoc.getX() + 0.5);
+			teleLoc.setY(teleLoc.getY() + 0.66);
+			teleLoc.setZ(teleLoc.getZ() + 0.5);
+			tempGate.teleportLocation = teleLoc;
 			
-			for ( int[] b_vect : shape.water_positions)
+			for ( int[] bVect : shape.waterPositions)
 			{
-				int[] block_location = {b_vect[2] * direction_vector[0] * -1, b_vect[1], b_vect[2] * direction_vector[2] * -1};
+				int[] blockLocation = {bVect[2] * directionVector[0] * -1, bVect[1], bVect[2] * directionVector[2] * -1};
 				
-				Block maybe_block = w.getBlockAt(block_location[0] + starting_position[0], block_location[1] + starting_position[1], block_location[2] + starting_position[2]);
-				if ( maybe_block.getType() == Material.AIR )
-					temp_gate.waterBlocks.add( maybe_block.getLocation() );
+				Block maybeBlock = w.getBlockAt(blockLocation[0] + startingPosition[0], blockLocation[1] + startingPosition[1], blockLocation[2] + startingPosition[2]);
+				if ( maybeBlock.getType() == Material.AIR )
+					tempGate.waterBlocks.add( maybeBlock.getLocation() );
 				else
 				{
-					if ( temp_gate.network != null )
-						temp_gate.network.gate_list.remove(temp_gate);
+					if ( tempGate.network != null )
+						tempGate.network.gateList.remove(tempGate);
 					
 					return null;
 				}
 			}
 			
 			// Moved this here so that it only creates the sign if the gate is correctly built.
-			if ( temp_gate.name != null && temp_gate.name.length() > 0 )
+			if ( tempGate.name != null && tempGate.name.length() > 0 )
 			{
 				String network_name = "Public";
 				
-				if ( temp_gate.teleportSign != null && !temp_gate.teleportSign.getLine(1).equals("") )
+				if ( tempGate.teleportSign != null && !tempGate.teleportSign.getLine(1).equals("") )
 				{
 					// We have a specific network
-					network_name = temp_gate.teleportSign.getLine(1);
+					network_name = tempGate.teleportSign.getLine(1);
 				}
 				StargateNetwork	net = StargateManager.getStargateNetwork(network_name);
 				if ( net == null )
 					net = StargateManager.addStargateNetwork(network_name);
-				StargateManager.addGateToNetwork(temp_gate, network_name);
+				StargateManager.addGateToNetwork(tempGate, network_name);
 
-				temp_gate.network = net;
-				temp_gate.signIndex = -1;
-				temp_gate.teleportSignClicked();
+				tempGate.network = net;
+				tempGate.signIndex = -1;
+				tempGate.teleportSignClicked();
 			}
 			
-			return temp_gate; 
+			return tempGate; 
 		}
 
 		return null;
@@ -421,7 +421,7 @@ public class StargateHelper
 	 */
 	private static boolean isStargateMaterial(Block b, StargateShape s)
 	{
-		return b.getType() == s.stargate_material;
+		return b.getType() == s.stargateMaterial;
 	}	
 
 	/**

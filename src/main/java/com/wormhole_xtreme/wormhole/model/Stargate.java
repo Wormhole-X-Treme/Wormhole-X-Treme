@@ -196,18 +196,18 @@ public class Stargate
 	 */
 	public void animateOpening()
 	{
-		Material woosh_material = this.gateShape.portal_material;
-		int woosh_depth;
+		Material wooshMaterial = this.gateShape.portalMaterial;
+		int wooshDepth;
 		if (this.gateShape != null )
 		{
-		     woosh_depth = this.gateShape.woosh_depth;
+		     wooshDepth = this.gateShape.wooshDepth;
 		}
 		else 
 		{
-		    woosh_depth = 0;
+		    wooshDepth = 0;
 		}
 		
-		if ( animationStep == 0 && woosh_depth > 0)
+		if ( animationStep == 0 && wooshDepth > 0)
 		{
 			
 			for ( Location b : waterBlocks )
@@ -215,16 +215,16 @@ public class Stargate
 				Block r = myWorld.getBlockAt(b.getBlockX(), b.getBlockY(), b.getBlockZ()).getRelative(facing);
 //				if ( r.getType() != ConfigManager.getStargateMaterial() )
 //				{
-					r.setType(woosh_material);
+					r.setType(wooshMaterial);
 					animatedBlocks.add(r);
-					StargateManager.opening_animation_blocks.put(r.getLocation(), r);
+					StargateManager.openingAnimationBlocks.put(r.getLocation(), r);
 //				}
 			}
 			
 			animationStep++;
 			WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 4);
 		}
-		else if ( animationStep < woosh_depth )
+		else if ( animationStep < wooshDepth )
 		{
 			// start = animation_step * WaterBlocks.size();
 			// count = waterblocks.size()
@@ -236,20 +236,20 @@ public class Stargate
 				Block r = b.getRelative(facing);
 //				if ( r.getType() != ConfigManager.getStargateMaterial() )
 //				{
-					r.setType(woosh_material);
+					r.setType(wooshMaterial);
 					animatedBlocks.add(r);
-					StargateManager.opening_animation_blocks.put(r.getLocation(), r);
+					StargateManager.openingAnimationBlocks.put(r.getLocation(), r);
 //				}
 			}
 			
 			animationStep++;
 			// Longer wait if we have reached the max depth
-			if ( animationStep == woosh_depth )
+			if ( animationStep == wooshDepth )
 				WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 8);
 			else
 				WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 4);
 		}
-		else if ( animationStep >= woosh_depth )
+		else if ( animationStep >= wooshDepth )
 		{
 			for ( int i = 0; i < waterBlocks.size(); i++ )
 			{
@@ -259,10 +259,10 @@ public class Stargate
 					Block b = animatedBlocks.get(index);
 					b.setType(Material.AIR);
 					animatedBlocks.remove(index);
-					StargateManager.opening_animation_blocks.remove(b.getLocation());
+					StargateManager.openingAnimationBlocks.remove(b.getLocation());
 				}
 			}
-			if ( animationStep < ((woosh_depth * 2) - 1 ) )
+			if ( animationStep < ((wooshDepth * 2) - 1 ) )
 			{
 				animationStep++;
 				WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 3);
@@ -301,7 +301,7 @@ public class Stargate
 			for ( Location l : lightBlocks)
 			{
 				Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ()); 
-				b.setType(this.gateShape.active_material);
+				b.setType(this.gateShape.activeMaterial);
 			}
 		}
 	}
@@ -404,7 +404,7 @@ public class Stargate
 			for ( Location l : lightBlocks)
 			{
 				Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ()); 
-				b.setType(this.gateShape.stargate_material);
+				b.setType(this.gateShape.stargateMaterial);
 			}
 		}
 		
@@ -455,9 +455,9 @@ public class Stargate
 			// Show water if you are dialing out OR if the iris isn't active
 			if ( this.target != null || !this.irisActive )
 			{
-			    this.fillGateInterior(this.gateShape.portal_material);
+			    this.fillGateInterior(this.gateShape.portalMaterial);
 				
-				if ( this.gateShape.woosh_depth > 0 )
+				if ( this.gateShape.wooshDepth > 0 )
 				{
 					WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING));
 				}
@@ -666,25 +666,25 @@ public class Stargate
 	    {
 	        if (create)
 	        {
-	            Block name_sign = this.nameBlockHolder.getFace(facing);
-	            name_sign.setType(Material.WALL_SIGN);		
+	            Block nameSign = this.nameBlockHolder.getFace(facing);
+	            nameSign.setType(Material.WALL_SIGN);		
 	            switch ( facing )
 	            {
 	                case NORTH:
-	                    name_sign.setData((byte)0x04);
+	                    nameSign.setData((byte)0x04);
 	                    break;
 	                case SOUTH:
-	                    name_sign.setData((byte)0x05);
+	                    nameSign.setData((byte)0x05);
 	                    break;
 	                case EAST:
-	                    name_sign.setData((byte)0x02);
+	                    nameSign.setData((byte)0x02);
 	                    break;
 	                case WEST:
-	                    name_sign.setData((byte)0x03);
+	                    nameSign.setData((byte)0x03);
 	                    break;
 	            }
-	            name_sign.getState().setData(new MaterialData(Material.WALL_SIGN));		
-	            Sign sign = (Sign)name_sign.getState();
+	            nameSign.getState().setData(new MaterialData(Material.WALL_SIGN));		
+	            Sign sign = (Sign)nameSign.getState();
 	            sign.setLine(0, "-" + this.name + "-");
 
 	            if ( this.network != null )
@@ -700,10 +700,10 @@ public class Stargate
 	        }
 	        else
 	        {
-	            Block name_sign;
-	            if (( name_sign = this.nameBlockHolder.getFace(facing)) != null)
+	            Block nameSign;
+	            if (( nameSign = this.nameBlockHolder.getFace(facing)) != null)
 	            {
-	                name_sign.setType(Material.AIR);
+	                nameSign.setType(Material.AIR);
 	            }
 	        }
 	    }
@@ -806,7 +806,7 @@ public class Stargate
 	        {
 	            leverstate = leverstate + 8;
 	        }
-	        this.fillGateInterior(this.gateShape.iris_material);
+	        this.fillGateInterior(this.gateShape.irisMaterial);
 	    }
 	    else
 	    {
@@ -816,7 +816,7 @@ public class Stargate
 	        }
 	        if (this.active)
 	        {
-	            this.fillGateInterior(this.gateShape.portal_material);
+	            this.fillGateInterior(this.gateShape.portalMaterial);
 	        }
 	        else
 	        {
@@ -935,7 +935,7 @@ public class Stargate
 	}
 	
 	/** The gate_order. */
-	private HashMap<Integer, Stargate> gate_order = new HashMap<Integer,Stargate>();
+	private HashMap<Integer, Stargate> gateOrder = new HashMap<Integer,Stargate>();
 	
 	/**
 	 * Teleport sign clicked.
@@ -950,7 +950,7 @@ public class Stargate
 		
 		synchronized ( network.gateLock )
 		{
-			if ( this.network.gate_list.size() == 0 || this.network.gate_list.size() == 1)
+			if ( this.network.gateList.size() == 0 || this.network.gateList.size() == 1)
 			{
 				this.teleportSign.setLine(1, "");
 				this.teleportSign.setLine(2, "No Other Gates");
@@ -959,87 +959,87 @@ public class Stargate
 				return;
 			}
 
-			if ( signIndex >= this.network.gate_list.size() )
+			if ( signIndex >= this.network.gateList.size() )
 				signIndex = 0;
 			
-			if ( this.network.gate_list.get(signIndex).name.equals(this.name) )
+			if ( this.network.gateList.get(signIndex).name.equals(this.name) )
 			{
 				signIndex++;
-				if ( signIndex == this.network.gate_list.size() )
+				if ( signIndex == this.network.gateList.size() )
 					signIndex = 0;
 			}
 			
-			if ( this.network.gate_list.size() == 2 )
+			if ( this.network.gateList.size() == 2 )
 			{
-				gate_order.clear();
-				gate_order.put(Integer.valueOf(2), this.network.gate_list.get(signIndex));
+				gateOrder.clear();
+				gateOrder.put(Integer.valueOf(2), this.network.gateList.get(signIndex));
 
 					
 				this.teleportSign.setLine(1, "");
-				this.teleportSign.setLine(2, ">" + gate_order.get(Integer.valueOf(2)).name + "<");
+				this.teleportSign.setLine(2, ">" + gateOrder.get(Integer.valueOf(2)).name + "<");
 				this.teleportSign.setLine(3, "");
-				this.signTarget = this.network.gate_list.get(signIndex);
+				this.signTarget = this.network.gateList.get(signIndex);
 			}
-			else if ( this.network.gate_list.size() == 3 )
+			else if ( this.network.gateList.size() == 3 )
 			{
-				gate_order.clear();
-				int order_index = 1;
+				gateOrder.clear();
+				int orderIndex = 1;
 				//SignIndex++;
-				while ( gate_order.size() < 2)
+				while ( gateOrder.size() < 2)
 				{
-					if ( signIndex >= this.network.gate_list.size() )
+					if ( signIndex >= this.network.gateList.size() )
 						signIndex = 0;
 					
-					if ( this.network.gate_list.get(signIndex).name.equals(this.name) )
+					if ( this.network.gateList.get(signIndex).name.equals(this.name) )
 					{
 						signIndex++;
-						if ( signIndex == this.network.gate_list.size() )
+						if ( signIndex == this.network.gateList.size() )
 							signIndex = 0;
 					}
 					
 
-					gate_order.put(Integer.valueOf(order_index), this.network.gate_list.get(signIndex));
-					order_index++;
-					if ( order_index == 4)
-						order_index = 1;
+					gateOrder.put(Integer.valueOf(orderIndex), this.network.gateList.get(signIndex));
+					orderIndex++;
+					if ( orderIndex == 4)
+						orderIndex = 1;
 					signIndex++;
 				}
 				
-				this.teleportSign.setLine(1, gate_order.get(Integer.valueOf(1)).name);
-				this.teleportSign.setLine(2, ">" + gate_order.get(Integer.valueOf(2)).name + "<");
+				this.teleportSign.setLine(1, gateOrder.get(Integer.valueOf(1)).name);
+				this.teleportSign.setLine(2, ">" + gateOrder.get(Integer.valueOf(2)).name + "<");
 				this.teleportSign.setLine(3, "");
 				
-				this.signTarget = gate_order.get(Integer.valueOf(2));
-				this.signIndex = network.gate_list.indexOf(gate_order.get(Integer.valueOf(2)));
+				this.signTarget = gateOrder.get(Integer.valueOf(2));
+				this.signIndex = network.gateList.indexOf(gateOrder.get(Integer.valueOf(2)));
 			}		
 			else
 			{
-				gate_order.clear();
-				int order_index = 1;
-				while ( gate_order.size() < 3)
+				gateOrder.clear();
+				int orderIndex = 1;
+				while ( gateOrder.size() < 3)
 				{
-					if ( signIndex == this.network.gate_list.size() )
+					if ( signIndex == this.network.gateList.size() )
 						signIndex = 0;
 					
-					if ( this.network.gate_list.get(signIndex).name.equals(this.name) )
+					if ( this.network.gateList.get(signIndex).name.equals(this.name) )
 					{
 						signIndex++;
-						if ( signIndex == this.network.gate_list.size() )
+						if ( signIndex == this.network.gateList.size() )
 							signIndex = 0;
 					}
 					
-					gate_order.put(Integer.valueOf(order_index), this.network.gate_list.get(signIndex));
-					order_index++;
+					gateOrder.put(Integer.valueOf(orderIndex), this.network.gateList.get(signIndex));
+					orderIndex++;
 
 					signIndex++;
 				}
 				
-				this.teleportSign.setLine(1, gate_order.get(Integer.valueOf(3)).name);
-				this.teleportSign.setLine(2, ">" + gate_order.get(Integer.valueOf(2)).name + "<");
-				this.teleportSign.setLine(3, gate_order.get(Integer.valueOf(1)).name);
+				this.teleportSign.setLine(1, gateOrder.get(Integer.valueOf(3)).name);
+				this.teleportSign.setLine(2, ">" + gateOrder.get(Integer.valueOf(2)).name + "<");
+				this.teleportSign.setLine(3, gateOrder.get(Integer.valueOf(1)).name);
 				
-				this.signTarget = gate_order.get(Integer.valueOf(2));
-				this.signIndex = network.gate_list.indexOf(gate_order.get(Integer.valueOf(2)));
+				this.signTarget = gateOrder.get(Integer.valueOf(2));
+				this.signIndex = network.gateList.indexOf(gateOrder.get(Integer.valueOf(2)));
 			}
 		}
 		
@@ -1054,7 +1054,7 @@ public class Stargate
 	{
 		for( Location bc : this.blocks )
 		{
-			Block b = myWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
+			final Block b = myWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
 			b.setType(Material.AIR);
 		}
 	}
@@ -1066,7 +1066,7 @@ public class Stargate
 	{
 		for( Location bc : this.waterBlocks )
 		{
-			Block b = myWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
+			final Block b = myWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
 			b.setType(Material.AIR);
 		}
 	}
@@ -1079,8 +1079,8 @@ public class Stargate
 	{
 		if (this.teleportSignBlock != null && this.teleportSign != null)
 		{
-			Block teleport_sign = this.teleportSignBlock.getFace(facing);
-			teleport_sign.setType(Material.AIR);
+			final Block teleportSign = this.teleportSignBlock.getFace(facing);
+			teleportSign.setType(Material.AIR);
 		}
 	}
 

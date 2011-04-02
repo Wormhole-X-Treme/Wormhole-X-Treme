@@ -44,26 +44,26 @@ public class StargateManager
 	// A list of all blocks contained by all stargates. Makes for easy indexing when a player is trying
 	// to enter a gate or if water is trying to flow out, also will contain the stone buttons used to activate.
 	/** The all_gate_blocks. */
-	private static ConcurrentHashMap<Location, Stargate> all_gate_blocks = new ConcurrentHashMap<Location, Stargate>();
+	private static ConcurrentHashMap<Location, Stargate> allGateBlocks = new ConcurrentHashMap<Location, Stargate>();
 	// List of All stargates indexed by name. Useful for dialing and such
 	/** The stargate_list. */
-	private static ConcurrentHashMap<String, Stargate> stargate_list = new ConcurrentHashMap<String, Stargate>();
+	private static ConcurrentHashMap<String, Stargate> stargateList = new ConcurrentHashMap<String, Stargate>();
 	// List of stargates built but not named. Indexed by the player that built it.
 	/** The incomplete_stargates. */
-	private static ConcurrentHashMap<Player, Stargate> incomplete_stargates = new ConcurrentHashMap<Player, Stargate>();
+	private static ConcurrentHashMap<Player, Stargate> incompleteStargates = new ConcurrentHashMap<Player, Stargate>();
 	// List of stargates that have been activated but not yet dialed. Only used for gates without public use sign.
 	/** The activated_stargates. */
-	private static ConcurrentHashMap<Player, Stargate> activated_stargates = new ConcurrentHashMap<Player, Stargate>();
+	private static ConcurrentHashMap<Player, Stargate> activatedStargates = new ConcurrentHashMap<Player, Stargate>();
 	// List of networks indexed by their name
 	/** The stargate_networks. */
-	private static ConcurrentHashMap<String, StargateNetwork> stargate_networks = new ConcurrentHashMap<String, StargateNetwork>();
+	private static ConcurrentHashMap<String, StargateNetwork> stargateNetworks = new ConcurrentHashMap<String, StargateNetwork>();
 	// List of players ready to build a stargate, with the shape they are trying to build.
 	/** The player_builders. */
-	private static ConcurrentHashMap<Player, StargateShape> player_builders = new ConcurrentHashMap<Player, StargateShape>();
+	private static ConcurrentHashMap<Player, StargateShape> playerBuilders = new ConcurrentHashMap<Player, StargateShape>();
 	
 	// List of blocks that are part of an active animation. Only use this to make sure water doesn't flow everywhere.
 	/** The Constant opening_animation_blocks. */
-	public static final ConcurrentHashMap<Location, Block> opening_animation_blocks = new ConcurrentHashMap<Location, Block>();
+	public static final ConcurrentHashMap<Location, Block> openingAnimationBlocks = new ConcurrentHashMap<Location, Block>();
 
 	/**
 	 * Adds the given stargate to the list of stargates. Also adds all its blocks to big block index.
@@ -71,14 +71,14 @@ public class StargateManager
 	 */
 	public static void addStargate(Stargate s)
 	{
-		stargate_list.put(s.name, s);
+		stargateList.put(s.name, s);
 		for ( Location b : s.blocks)
 		{
-			all_gate_blocks.put(b, s);
+			allGateBlocks.put(b, s);
 		}
 		for ( Location b : s.waterBlocks)
 		{
-			all_gate_blocks.put(b, s);
+			allGateBlocks.put(b, s);
 		}
 	}
 	
@@ -93,7 +93,7 @@ public class StargateManager
 	public static void addBlockIndex(Block b, Stargate s)
 	{
 		if ( b != null && s != null)
-			all_gate_blocks.put(b.getLocation(), s);
+			allGateBlocks.put(b.getLocation(), s);
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class StargateManager
 	public static void removeBlockIndex(Block b)
 	{
 		if ( b != null)
-			all_gate_blocks.remove(b.getLocation());
+			allGateBlocks.remove(b.getLocation());
 	}
 	
 	/**
@@ -116,8 +116,8 @@ public class StargateManager
 	 */
 	public static Stargate getStargate(String name)
 	{
-		if ( stargate_list.containsKey(name) )
-			return stargate_list.get(name);
+		if ( stargateList.containsKey(name) )
+			return stargateList.get(name);
 		else
 			return null;
 	}
@@ -132,7 +132,7 @@ public class StargateManager
 	{
 		ArrayList<Stargate> gates = new ArrayList<Stargate>();
 		
-		Enumeration<Stargate> keys = stargate_list.elements();
+		Enumeration<Stargate> keys = stargateList.elements();
 		
 		while ( keys.hasMoreElements() )
 			gates.add(keys.nextElement());
@@ -147,20 +147,20 @@ public class StargateManager
 	 */
 	public static void removeStargate(Stargate s)
 	{
-		stargate_list.remove(s.name);
+		stargateList.remove(s.name);
 		StargateDBManager.removeStargateFromSQL(s);
 		if ( s.network != null )
 		{
 			synchronized (s.network.gateLock)
 			{
-				s.network.gate_list.remove(s);
+				s.network.gateList.remove(s);
 				
-				for ( Stargate s2 : s.network.gate_list)
+				for ( Stargate s2 : s.network.gateList)
 				{
 					if ( s2.signTarget != null && s2.signTarget.gateId == s.gateId && s2.isSignPowered)
 					{
 						s2.signTarget = null;
-						if ( s.network.gate_list.size() > 1 )
+						if ( s.network.gateList.size() > 1 )
 						{
 							s2.signIndex = 0;
 							s2.teleportSignClicked();
@@ -172,12 +172,12 @@ public class StargateManager
 
 		for ( Location b : s.blocks )
 		{
-			all_gate_blocks.remove(b);
+			allGateBlocks.remove(b);
 		}
 
 		for ( Location b : s.waterBlocks )
 		{
-			all_gate_blocks.remove(b);
+			allGateBlocks.remove(b);
 		}
 	}
 	
@@ -189,7 +189,7 @@ public class StargateManager
 	public static void addActivatedStargate(Player p, Stargate s)
 	{
 		// s.ActivateStargate();
-		activated_stargates.put(p, s);
+		activatedStargates.put(p, s);
 	}
 	
 	/**
@@ -200,7 +200,7 @@ public class StargateManager
 	 */
 	public static Stargate removeActivatedStargate(Player p)
 	{
-		Stargate s = activated_stargates.remove(p);
+		Stargate s = activatedStargates.remove(p);
 	//	if ( s != null )
 	//		s.DeActivateStargate();
 		return s;
@@ -214,7 +214,7 @@ public class StargateManager
 	 */
 	public static void addIncompleteStargate(Player p, Stargate s)
 	{
-		incomplete_stargates.put(p, s);
+		incompleteStargates.put(p, s);
 	}
 	
 	/**
@@ -223,7 +223,7 @@ public class StargateManager
 	 */
 	public static void removeIncompleteStargate(Player p)
 	{
-		incomplete_stargates.remove(p);
+		incompleteStargates.remove(p);
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class StargateManager
 	 */
 	public static boolean completeStargate(Player p, String name, String idc, String network)
 	{
-		Stargate complete = incomplete_stargates.remove(p);
+		Stargate complete = incompleteStargates.remove(p);
 		
 		if ( complete != null )
 		{
@@ -246,12 +246,12 @@ public class StargateManager
 				boolean exempt = ConfigManager.getIconomyOpsExcempt();
 				if ( !exempt || !p.isOp() )
 				{
-					Account player_account = iConomy.getBank().getAccount(p.getName());
-					double balance = player_account.getBalance();
+					Account playerAccount = iConomy.getBank().getAccount(p.getName());
+					double balance = playerAccount.getBalance();
 					double cost = ConfigManager.getIconomyWormholeBuildCost();
 					if ( balance >= cost)
 					{
-						player_account.subtract(cost);
+						playerAccount.subtract(cost);
 //						player_account.save();
 						p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to build a wormhole." );
 					}
@@ -292,20 +292,20 @@ public class StargateManager
 	 */
 	public static boolean completeStargate(Player p, Stargate s)
 	{
-		Stargate pos_dupe = StargateManager.getStargate(s.name);
-		if ( pos_dupe == null )
+		Stargate posDupe = StargateManager.getStargate(s.name);
+		if ( posDupe == null )
 		{
 			if ( WormholeXTreme.getIconomy() != null )
 			{
 				boolean exempt = ConfigManager.getIconomyOpsExcempt();
 				if ( !exempt || !p.isOp() )
 				{
-					Account player_account = iConomy.getBank().getAccount(p.getName());
-					double balance = player_account.getBalance();
+					Account playerAccount = iConomy.getBank().getAccount(p.getName());
+					double balance = playerAccount.getBalance();
 					double cost = ConfigManager.getIconomyWormholeBuildCost();
 					if ( balance >= cost)
 					{
-						player_account.subtract(cost);
+						playerAccount.subtract(cost);
 //						player_account.save();
 						p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to build a wormhole." );
 					}
@@ -339,9 +339,9 @@ public class StargateManager
 		if ( b == null )
 			return null;
 		
-		if ( all_gate_blocks.containsKey(b.getLocation()))
+		if ( allGateBlocks.containsKey(b.getLocation()))
 		{
-			return all_gate_blocks.get(b.getLocation());
+			return allGateBlocks.get(b.getLocation());
 		}
 	
 		return null;
@@ -361,7 +361,7 @@ public class StargateManager
 		if ( b == null )
 			return false;
 
-		return all_gate_blocks.containsKey(b.getLocation()) || opening_animation_blocks.containsKey(b.getLocation());
+		return allGateBlocks.containsKey(b.getLocation()) || openingAnimationBlocks.containsKey(b.getLocation());
 	}
 	
 	// Network functions
@@ -373,15 +373,15 @@ public class StargateManager
 	 */
 	public static StargateNetwork addStargateNetwork(String name)
 	{
-		if ( !stargate_networks.containsKey(name))
+		if ( !stargateNetworks.containsKey(name))
 		{
 			StargateNetwork sn = new StargateNetwork();
 			sn.netName = name;
-			stargate_networks.put(name, sn);
+			stargateNetworks.put(name, sn);
 			return sn;
 		}
 		else
-			return stargate_networks.get(name);
+			return stargateNetworks.get(name);
 	}
 
 	/**
@@ -392,9 +392,9 @@ public class StargateManager
 	 */
 	public static StargateNetwork getStargateNetwork(String name)
 	{
-		if ( stargate_networks.containsKey(name))
+		if ( stargateNetworks.containsKey(name))
 		{
-			return stargate_networks.get(name);
+			return stargateNetworks.get(name);
 		}
 		else
 			return null;		
@@ -408,17 +408,17 @@ public class StargateManager
 	 */
 	public static void addGateToNetwork(Stargate gate, String network)
 	{
-		if ( !stargate_networks.containsKey(network))
+		if ( !stargateNetworks.containsKey(network))
 		{
 			addStargateNetwork(network);
 		}
 		
 		StargateNetwork net;
-		if ((net = stargate_networks.get(network)) != null)
+		if ((net = stargateNetworks.get(network)) != null)
 		{
 			synchronized (net.gateLock)
 			{
-				net.gate_list.add(gate);
+				net.gateList.add(gate);
 			}
 		}
 	}
@@ -431,7 +431,7 @@ public class StargateManager
 	 */
 	public static void addPlayerBuilderShape(Player p, StargateShape shape)
 	{
-		player_builders.put(p, shape);
+		playerBuilders.put(p, shape);
 	}
 	
 	/**
@@ -442,8 +442,8 @@ public class StargateManager
 	 */
 	public static StargateShape getPlayerBuilderShape(Player p)
 	{
-		if ( player_builders.containsKey(p) )
-			return player_builders.remove(p);
+		if ( playerBuilders.containsKey(p) )
+			return playerBuilders.remove(p);
 		else 
 			return null;
 	}

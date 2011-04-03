@@ -20,6 +20,9 @@ Changes 0.830:
 - Removed version 1 DB conversion because new design doesn't allow for it anymore. 
     - For users this means if you are upgrading from version 0.3 or less to this
       version you will need to remake your gates.
+      
+- Fixed NPE in onPlayerInteract caused by event not reporting the block the interact
+  event was associated with. 
 
 Changes 0.821 (3/30/11 @ 17:42 PST):
 

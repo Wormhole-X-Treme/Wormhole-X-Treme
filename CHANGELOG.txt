@@ -23,6 +23,8 @@ Changes 0.830:
       
 - Fixed NPE in onPlayerInteract caused by event not reporting the block the interact
   event was associated with. 
+  
+- Logic tweak in the find safe teleport code. Should be *safererer*
 
 Changes 0.821 (3/30/11 @ 17:42 PST):
 

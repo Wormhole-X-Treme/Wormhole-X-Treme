@@ -57,16 +57,19 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	/* (non-Javadoc)
 	 * @see org.bukkit.event.player.PlayerListener#onPlayerInteract(org.bukkit.event.player.PlayerInteractEvent)
 	 */
-	@Override
-	public void onPlayerInteract(PlayerInteractEvent event)
-	{
-	    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false,"Caught Player: \"" + event.getPlayer().getName() + "\" Event type: \"" + event.getType() + "\" Action Type: \"" + event.getAction() + "\"");
-	    if (handlePlayerInteractEvent(event))
-	    {
-	        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false,"Cancelled Player: \"" + event.getPlayer().getName() + "\" Event type: \"" + event.getType() + "\" Action Type: \"" + event.getAction() + "\"");
-	        event.setCancelled(true);
-	    }
-	}
+    @Override
+    public void onPlayerInteract(PlayerInteractEvent event)
+    {
+        if (event.getClickedBlock() != null)
+        {
+            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false,"Caught Player: \"" + event.getPlayer().getName() + "\" Event type: \"" + event.getType().toString() + "\" Action Type: \"" + event.getAction().toString() + "\" Event Block Type: \"" + event.getClickedBlock().getType().toString() + "\" Event World: \"" + event.getClickedBlock().getWorld().toString() + "\" Event Block: " + event.getClickedBlock().toString() + "\"");
+            if (handlePlayerInteractEvent(event))
+            {
+                event.setCancelled(true);
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false,"Cancelled Player: \"" + event.getPlayer().getName() + "\" Event type: \"" + event.getType().toString() + "\" Action Type: \"" + event.getAction().toString() + "\" Event Block Type: \"" + event.getClickedBlock().getType().toString() + "\" Event World: \"" + event.getClickedBlock().getWorld().toString() + "\" Event Block: " + event.getClickedBlock().toString() +  "\"");
+            }
+        }
+    }
 	
 	/* (non-Javadoc)
 	 * @see org.bukkit.event.player.PlayerListener#onPlayerBucketFill(org.bukkit.event.player.PlayerBucketFillEvent)

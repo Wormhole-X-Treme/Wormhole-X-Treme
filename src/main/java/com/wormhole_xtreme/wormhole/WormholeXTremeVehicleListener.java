@@ -185,7 +185,6 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 	            if (target != st.teleportLocation)
 	            {
 	                target = TeleportUtils.findSafeTeleportFromStargate(st.target);
-	                st.target.teleportLocation = target;
 	            }
 	            if (e != null)
 	            {

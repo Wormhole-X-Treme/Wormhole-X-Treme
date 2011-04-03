@@ -254,15 +254,15 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	        if (target != st.teleportLocation)
 	        {
 	            target = TeleportUtils.findSafeTeleportFromStargate(st.target);
-	            st.target.teleportLocation = target;
 	        }
 	        event.setFrom(target);
 	        event.setTo(target);
 	        p.setNoDamageTicks(2);
 	        p.teleport(target);
-	        if ( target == st.target.teleportLocation )
+	        if ( target != st.teleportLocation )
+	        {
 	            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO,false, p.getDisplayName() + " used wormhole: " + st.name + " to go to: " + st.target.name);
-
+	        }
 	        if ( ConfigManager.getTimeoutShutdown() == 0 )
 	        {
 	            st.shutdownStargate();

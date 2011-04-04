@@ -271,8 +271,8 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	        }
 	        if (target != stargateFinal.teleportLocation)
 	        {
-	            WorldUtils.checkChunkLoad(target.getBlock());
 	            target = TeleportUtils.findSafeTeleportFromStargate(stargateFinal.target);
+	            WorldUtils.checkChunkLoad(target.getBlock());
 	        }
 	        playerFinal.setNoDamageTicks(5);
 	        final Location targetFinal = target;

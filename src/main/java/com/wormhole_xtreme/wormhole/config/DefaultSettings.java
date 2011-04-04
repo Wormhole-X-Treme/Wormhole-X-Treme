@@ -91,6 +91,12 @@ public class DefaultSettings
                     "WormholeXTreme"
         ),
         new Setting(
+                    ConfigKeys.ICONOMY_OWNER_EXEMPT,
+                    true,
+                    "Stargate owners will not be charged to use their own gates.",
+                    "WormholeXTreme"
+        ),
+        new Setting(
                     ConfigKeys.ICONOMY_WORMHOLE_BUILD_COST, 
                     0.0, 
                     "Cost for users to build a wormhole.",

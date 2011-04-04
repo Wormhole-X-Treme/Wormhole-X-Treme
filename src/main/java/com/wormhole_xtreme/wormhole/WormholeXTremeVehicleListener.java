@@ -121,7 +121,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 	                {
 	                    double cost = ConfigManager.getIconomyWormholeUseCost();
 	                    boolean charge = true;
-	                    if ((ConfigManager.getIconomyOpsExcempt() && p.isOp()) || (st.owner != null && st.owner.equals(p.getName())))
+	                    if ((ConfigManager.getIconomyOpsExcempt() && p.isOp()) || (ConfigManager.getIconomyOwnerExempt() && st.owner != null && st.owner.equals(p.getName())))
 	                    {
 	                        charge = false;
 	                    }

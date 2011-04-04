@@ -225,7 +225,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	                    eventFinal.setTo(stargateFinal.teleportLocation);
 	                    playerFinal.teleport(stargateFinal.teleportLocation);
 	                }
-	            },2);
+	            });
 	            return true;
 	        }
 
@@ -234,7 +234,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	        {
 	            double cost = ConfigManager.getIconomyWormholeUseCost();
 	            boolean charge = true;
-	            if ((ConfigManager.getIconomyOpsExcempt() && playerFinal.isOp()) || (stargateFinal.owner != null && stargateFinal.owner.equals(playerFinal.getName())))
+	            if ((ConfigManager.getIconomyOpsExcempt() && playerFinal.isOp()) || (ConfigManager.getIconomyOwnerExempt() && stargateFinal.owner != null && stargateFinal.owner.equals(playerFinal.getName())))
 	            {
 	                charge = false;
 	            }
@@ -283,7 +283,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	                eventFinal.setTo(targetFinal);
 	                playerFinal.teleport(targetFinal);
 	            }
-	        }, 2);
+	        });
 	        if ( target != stargateFinal.teleportLocation )
 	        {
 	            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO,false, playerFinal.getName() + " used wormhole: " + stargateFinal.name + " to go to: " + stargateFinal.target.name);

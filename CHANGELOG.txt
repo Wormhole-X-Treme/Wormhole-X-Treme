@@ -1,4 +1,4 @@
-Changes 0.830 (4/4/11 @ 00:03 PST):
+Changes 0.830 (4/4/11 @ 01:12 PST):
 
 - Water now will not flow over Stargate anythings. No more broken levers and magic 
   blocks of water floating in their place.
@@ -36,6 +36,9 @@ Changes 0.830 (4/4/11 @ 00:03 PST):
   Its one or the other.
   
 - Fixed /wxcomplete permission deny issue with stargates on public networks.
+
+- Added ICONOMY_OWNER_EXEMPT option to Settings.txt with a default value of true. When
+  true this option disables the charging of gate owners for using their own gates.
 
 Changes 0.821 (3/30/11 @ 17:42 PST):
 

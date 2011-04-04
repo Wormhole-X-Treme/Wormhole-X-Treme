@@ -39,26 +39,29 @@ public class IConomySupport {
      */
     public static void enableIconomy() 
     {
-        if(WormholeXTreme.getIconomy() == null && !ConfigManager.getIconomySupportDisable()) 
+        if (!ConfigManager.getIconomySupportDisable())
         {
-            final Plugin test = WormholeXTreme.getThisPlugin().getServer().getPluginManager().getPlugin("iConomy");
-            if(test != null) 
+            if(WormholeXTreme.getIconomy() == null) 
             {
-                final String v = test.getDescription().getVersion();
-                checkIconomyVersion(v);
-                try
+                final Plugin test = WormholeXTreme.getThisPlugin().getServer().getPluginManager().getPlugin("iConomy");
+                if(test != null) 
                 {
-                    WormholeXTreme.setIconomy(((iConomy)test));
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Attached to iConomy version " + v);
-                }
-                catch ( ClassCastException e)
+                    final String v = test.getDescription().getVersion();
+                    checkIconomyVersion(v);
+                    try
+                    {
+                        WormholeXTreme.setIconomy(((iConomy)test));
+                        WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Attached to iConomy version " + v);
+                    }
+                    catch ( ClassCastException e)
+                    {
+                        WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failed to get cast to iConomy.");
+                    }
+                } 
+                else 
                 {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failed to get cast to iConomy.");
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "iConomy Plugin not yet available - there will be no iConomy integration until loaded.");
                 }
-            } 
-            else 
-            {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "iConomy Plugin not yet available - there will be no iConomy integration until loaded.");
             }
         }
         else

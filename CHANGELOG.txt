@@ -1,3 +1,9 @@
+Changes 0.831:
+
+- Fixed erroneous messages sent when a plugin is attached to already and WXT receives 
+  a plugin event for it. Cosmetic bug, fixed.
+  
+  
 Changes 0.830 (4/4/11 @ 01:12 PST):
 
 - Water now will not flow over Stargate anythings. No more broken levers and magic 

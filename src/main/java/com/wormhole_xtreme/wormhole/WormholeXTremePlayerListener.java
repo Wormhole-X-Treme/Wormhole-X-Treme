@@ -147,11 +147,15 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	                       public void run()
 	                       {
 	                           String target = "";
-	                           if (scheduleStargate != null)
+	                           if (scheduleStargate != null && scheduleStargate.signTarget != null)
 	                           {
 	                               target = scheduleStargate.signTarget.name;
+	                               schedulePlayer.sendMessage("Dialer set to: " + target);
 	                           }
-	                           schedulePlayer.sendMessage("Dialer set to: " + target);
+	                           else
+	                           {
+	                               schedulePlayer.sendMessage("No available target to set dialer to.");
+	                           }
 	                       }
 	                    },2);
 	                    // player.sendMessage("Dialer set to: " + target);
@@ -420,6 +424,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
                     if ( newGate.isSignPowered )
                     {
                         newGate.network.gateList.remove(newGate);
+                        newGate.network.signGateList.remove(newGate);
                         newGate.teleportSign.setLine(0, newGate.name);
                         if (newGate.network != null)
                         {

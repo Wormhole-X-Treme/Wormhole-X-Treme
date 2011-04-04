@@ -137,8 +137,13 @@ public class StargateDBManager
 					
 					s.gateShape = StargateHelper.getShape(gateShapeName);
 					if (  sn != null )
+					{
 						sn.gateList.add(s);
-					
+						if (s.isSignPowered)
+						{
+						    sn.signGateList.add(s);
+						}
+					}
 					StargateManager.addStargate(s);
 				}
 				else

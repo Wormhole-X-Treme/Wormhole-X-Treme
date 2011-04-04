@@ -343,8 +343,13 @@ public class StargateHelper
 				else
 				{
 					if ( tempGate.network != null )
+					{
 						tempGate.network.gateList.remove(tempGate);
-					
+						if (tempGate.isSignPowered)
+						{
+						    tempGate.network.signGateList.remove(tempGate);
+						}
+					}
 					return null;
 				}
 			}

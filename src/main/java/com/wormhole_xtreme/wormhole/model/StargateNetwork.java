@@ -40,6 +40,8 @@ public class StargateNetwork
 	/** The gate_list. */
 	public ArrayList<Stargate> gateList = new ArrayList<Stargate>();
 	
+	public ArrayList<Stargate> signGateList = new ArrayList<Stargate>();
+	
 	/** The gate lock. */
 	public Object gateLock = new Object();
 	

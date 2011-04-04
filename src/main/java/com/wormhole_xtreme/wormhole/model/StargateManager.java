@@ -156,13 +156,17 @@ public class StargateManager
 			synchronized (s.network.gateLock)
 			{
 				s.network.gateList.remove(s);
+				if (s.isSignPowered)
+				{
+				    s.network.signGateList.remove(s);
+				}
 				
-				for ( Stargate s2 : s.network.gateList)
+				for ( Stargate s2 : s.network.signGateList)
 				{
 					if ( s2.signTarget != null && s2.signTarget.gateId == s.gateId && s2.isSignPowered)
 					{
 						s2.signTarget = null;
-						if ( s.network.gateList.size() > 1 )
+						if ( s.network.signGateList.size() > 1 )
 						{
 							s2.signIndex = 0;
 							WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(s2,ActionToTake.SIGNCLICK));
@@ -422,6 +426,10 @@ public class StargateManager
 			synchronized (net.gateLock)
 			{
 				net.gateList.add(gate);
+				if (gate.isSignPowered)
+				{
+				    net.signGateList.add(gate);
+				}
 			}
 		}
 	}

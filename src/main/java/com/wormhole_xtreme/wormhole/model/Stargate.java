@@ -935,22 +935,21 @@ public class Stargate
 	}
 	
 	/** The gate_order. */
-	final private HashMap<Integer, Stargate> gateOrder = new HashMap<Integer,Stargate>();
+	final private HashMap<Integer, Stargate> signGateOrder = new HashMap<Integer,Stargate>();
 	
 	/**
 	 * Teleport sign clicked.
 	 */
 	public void teleportSignClicked()
 	{
-		if ( this.signIndex == -1 )
-		{
-			this.teleportSign.setLine(0, "-" + this.name + "-");
-			this.signIndex++;
-		}
-		
 		synchronized ( network.gateLock )
 		{
-			if ( this.network.gateList.size() == 0 || this.network.gateList.size() == 1)
+		    if ( this.signIndex == -1 )
+		    {
+		        this.teleportSign.setLine(0, "-" + this.name + "-");
+		        this.signIndex++;
+		    }
+			if ( this.network.signGateList.size() == 0 || this.network.signGateList.size() == 1)
 			{
 				this.teleportSign.setLine(1, "");
 				this.teleportSign.setLine(2, "No Other Gates");
@@ -959,87 +958,87 @@ public class Stargate
 				return;
 			}
 
-			if ( signIndex >= this.network.gateList.size() )
+			if ( signIndex >= this.network.signGateList.size() )
 				signIndex = 0;
 			
-			if ( this.network.gateList.get(signIndex).name.equals(this.name) )
+			if ( this.network.signGateList.get(signIndex).name.equals(this.name) )
 			{
 				signIndex++;
-				if ( signIndex == this.network.gateList.size() )
+				if ( signIndex == this.network.signGateList.size() )
 					signIndex = 0;
 			}
 			
-			if ( this.network.gateList.size() == 2 )
+			if ( this.network.signGateList.size() == 2 )
 			{
-				gateOrder.clear();
-				gateOrder.put(Integer.valueOf(2), this.network.gateList.get(signIndex));
+				signGateOrder.clear();
+				signGateOrder.put(Integer.valueOf(2), this.network.signGateList.get(signIndex));
 
 					
 				this.teleportSign.setLine(1, "");
-				this.teleportSign.setLine(2, ">" + gateOrder.get(Integer.valueOf(2)).name + "<");
+				this.teleportSign.setLine(2, ">" + signGateOrder.get(Integer.valueOf(2)).name + "<");
 				this.teleportSign.setLine(3, "");
-				this.signTarget = this.network.gateList.get(signIndex);
+				this.signTarget = this.network.signGateList.get(signIndex);
 			}
-			else if ( this.network.gateList.size() == 3 )
+			else if ( this.network.signGateList.size() == 3 )
 			{
-				gateOrder.clear();
+				signGateOrder.clear();
 				int orderIndex = 1;
 				//SignIndex++;
-				while ( gateOrder.size() < 2)
+				while ( signGateOrder.size() < 2)
 				{
-					if ( signIndex >= this.network.gateList.size() )
+					if ( signIndex >= this.network.signGateList.size() )
 						signIndex = 0;
 					
-					if ( this.network.gateList.get(signIndex).name.equals(this.name) )
+					if ( this.network.signGateList.get(signIndex).name.equals(this.name) )
 					{
 						signIndex++;
-						if ( signIndex == this.network.gateList.size() )
+						if ( signIndex == this.network.signGateList.size() )
 							signIndex = 0;
 					}
 					
 
-					gateOrder.put(Integer.valueOf(orderIndex), this.network.gateList.get(signIndex));
+					signGateOrder.put(Integer.valueOf(orderIndex), this.network.signGateList.get(signIndex));
 					orderIndex++;
 					if ( orderIndex == 4)
 						orderIndex = 1;
 					signIndex++;
 				}
 				
-				this.teleportSign.setLine(1, gateOrder.get(Integer.valueOf(1)).name);
-				this.teleportSign.setLine(2, ">" + gateOrder.get(Integer.valueOf(2)).name + "<");
+				this.teleportSign.setLine(1, signGateOrder.get(Integer.valueOf(1)).name);
+				this.teleportSign.setLine(2, ">" + signGateOrder.get(Integer.valueOf(2)).name + "<");
 				this.teleportSign.setLine(3, "");
 				
-				this.signTarget = gateOrder.get(Integer.valueOf(2));
-				this.signIndex = network.gateList.indexOf(gateOrder.get(Integer.valueOf(2)));
+				this.signTarget = signGateOrder.get(Integer.valueOf(2));
+				this.signIndex = network.signGateList.indexOf(signGateOrder.get(Integer.valueOf(2)));
 			}		
 			else
 			{
-				gateOrder.clear();
+				signGateOrder.clear();
 				int orderIndex = 1;
-				while ( gateOrder.size() < 3)
+				while ( signGateOrder.size() < 3)
 				{
-					if ( signIndex == this.network.gateList.size() )
+					if ( signIndex == this.network.signGateList.size() )
 						signIndex = 0;
 					
-					if ( this.network.gateList.get(signIndex).name.equals(this.name) )
+					if ( this.network.signGateList.get(signIndex).name.equals(this.name) )
 					{
 						signIndex++;
-						if ( signIndex == this.network.gateList.size() )
+						if ( signIndex == this.network.signGateList.size() )
 							signIndex = 0;
 					}
 					
-					gateOrder.put(Integer.valueOf(orderIndex), this.network.gateList.get(signIndex));
+					signGateOrder.put(Integer.valueOf(orderIndex), this.network.signGateList.get(signIndex));
 					orderIndex++;
 
 					signIndex++;
 				}
 				
-				this.teleportSign.setLine(1, gateOrder.get(Integer.valueOf(3)).name);
-				this.teleportSign.setLine(2, ">" + gateOrder.get(Integer.valueOf(2)).name + "<");
-				this.teleportSign.setLine(3, gateOrder.get(Integer.valueOf(1)).name);
+				this.teleportSign.setLine(1, signGateOrder.get(Integer.valueOf(3)).name);
+				this.teleportSign.setLine(2, ">" + signGateOrder.get(Integer.valueOf(2)).name + "<");
+				this.teleportSign.setLine(3, signGateOrder.get(Integer.valueOf(1)).name);
 				
-				this.signTarget = gateOrder.get(Integer.valueOf(2));
-				this.signIndex = network.gateList.indexOf(gateOrder.get(Integer.valueOf(2)));
+				this.signTarget = signGateOrder.get(Integer.valueOf(2));
+				this.signIndex = network.signGateList.indexOf(signGateOrder.get(Integer.valueOf(2)));
 			}
 		}
 		

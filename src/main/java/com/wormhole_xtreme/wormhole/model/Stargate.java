@@ -920,12 +920,14 @@ public class Stargate
 			{
 				this.signIndex = -1;
 				teleportSign = (Sign)teleportSignBlock.getState();
-				teleportSignClicked();
+				WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this,ActionToTake.SIGNCLICK));
+				// teleportSignClicked();
 			}
 		}
 		else if ( WorldUtils.isSameBlock(clicked, teleportSignBlock) )
 		{
-			teleportSignClicked();
+		    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this,ActionToTake.SIGNCLICK));
+			//teleportSignClicked();
 			return true;
 		}
 		

@@ -18,10 +18,14 @@
  */
 package com.wormhole_xtreme.wormhole.utils;
 
+import java.util.logging.Level;
+
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+
+import com.wormhole_xtreme.wormhole.WormholeXTreme;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -193,7 +197,10 @@ public class WorldUtils
 		World w = b.getWorld();
 		Chunk c = b.getChunk();
 		
-		if ( w.isChunkLoaded(c) )
+		if ( !w.isChunkLoaded(c) )
+		{
+		    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Loading chunk: " + c.toString() + " on: " + w.toString());
 			w.loadChunk(c);
+		}
 	}
 }

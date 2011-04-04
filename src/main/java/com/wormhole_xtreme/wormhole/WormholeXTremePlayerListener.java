@@ -60,18 +60,19 @@ public class WormholeXTremePlayerListener extends PlayerListener
     @Override
     public void onPlayerInteract(PlayerInteractEvent event)
     {
-        if (event.getClickedBlock() != null)
+        final PlayerInteractEvent eventFinal = event;
+        if (eventFinal.getClickedBlock() != null)
         {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false,"Caught Player: \"" + event.getPlayer().getName() + "\" Event type: \"" + event.getType().toString() + "\" Action Type: \"" + event.getAction().toString() + "\" Event Block Type: \"" + event.getClickedBlock().getType().toString() + "\" Event World: \"" + event.getClickedBlock().getWorld().toString() + "\" Event Block: " + event.getClickedBlock().toString() + "\"");
-            if (handlePlayerInteractEvent(event))
+            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false,"Caught Player: \"" + eventFinal.getPlayer().getName() + "\" Event type: \"" + eventFinal.getType().toString() + "\" Action Type: \"" + eventFinal.getAction().toString() + "\" Event Block Type: \"" + eventFinal.getClickedBlock().getType().toString() + "\" Event World: \"" + eventFinal.getClickedBlock().getWorld().toString() + "\" Event Block: " + eventFinal.getClickedBlock().toString() + "\"");
+            if (handlePlayerInteractEvent(eventFinal))
             {
-                event.setCancelled(true);
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false,"Cancelled Player: \"" + event.getPlayer().getName() + "\" Event type: \"" + event.getType().toString() + "\" Action Type: \"" + event.getAction().toString() + "\" Event Block Type: \"" + event.getClickedBlock().getType().toString() + "\" Event World: \"" + event.getClickedBlock().getWorld().toString() + "\" Event Block: " + event.getClickedBlock().toString() +  "\"");
+                eventFinal.setCancelled(true);
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false,"Cancelled Player: \"" + eventFinal.getPlayer().getName() + "\" Event type: \"" + eventFinal.getType().toString() + "\" Action Type: \"" + eventFinal.getAction().toString() + "\" Event Block Type: \"" + eventFinal.getClickedBlock().getType().toString() + "\" Event World: \"" + eventFinal.getClickedBlock().getWorld().toString() + "\" Event Block: " + eventFinal.getClickedBlock().toString() +  "\"");
             }
         }
         else 
         {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught and ignored Player: \"" + event.getPlayer().getName() + "\" Event type: \"" + event.getType().toString() + "\"");
+            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught and ignored Player: \"" + eventFinal.getPlayer().getName() + "\" Event type: \"" + eventFinal.getType().toString() + "\"");
         }
     }
 	
@@ -115,37 +116,51 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	 */
 	private static boolean handlePlayerInteractEvent(PlayerInteractEvent event)
 	{
-	    Block clicked = event.getClickedBlock();
-	    Player player = event.getPlayer();
+	    final PlayerInteractEvent eventFinal = event;
+	    final Block blockClickedFinal = eventFinal.getClickedBlock();
+	    final Player playerFinal = eventFinal.getPlayer();
 
-	    if (clicked != null && (clicked.getType() == Material.STONE_BUTTON || clicked.getType() == Material.LEVER ))
+	    if (blockClickedFinal != null && (blockClickedFinal.getType() == Material.STONE_BUTTON || blockClickedFinal.getType() == Material.LEVER ))
 	    {
-	        if ( buttonLeverHit(player, clicked, null) )
+	        if ( buttonLeverHit(playerFinal, blockClickedFinal, null) )
 	        {  
 	            return true;
 	        }
 	    }
-	    else if ( clicked != null && clicked.getType() == Material.WALL_SIGN )
+	    else if ( blockClickedFinal != null && blockClickedFinal.getType() == Material.WALL_SIGN )
 	    {
-	        Stargate stargate = StargateManager.getGateFromBlock(clicked);
+	        final Stargate stargate = StargateManager.getGateFromBlock(blockClickedFinal);
 	        if ( stargate != null )
 	        {
-	            if (WXPermissions.checkWXPermissions(player, stargate, PermissionType.SIGN)) 
+	            if (WXPermissions.checkWXPermissions(playerFinal, stargate, PermissionType.SIGN)) 
 	            {
-	                if ( stargate.tryClickTeleportSign(clicked) )
+	                if ( stargate.tryClickTeleportSign(blockClickedFinal) )
 	                {
-	                    String target = "";
-	                    if ( stargate.signTarget != null )
-	                    {
-	                        target = stargate.signTarget.name;
-	                    }
-	                    player.sendMessage("Dialer set to: " + target);
+//	                    String target = "";
+//	                    if ( stargate.signTarget != null )
+//	                    {
+//	                        target = stargate.signTarget.name;
+//	                    }
+	                    final Player schedulePlayer = playerFinal;
+	                    final Stargate scheduleStargate = stargate;
+	                    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new Runnable() {
+	                       public void run()
+	                       {
+	                           String target = "";
+	                           if (scheduleStargate != null)
+	                           {
+	                               target = scheduleStargate.signTarget.name;
+	                           }
+	                           schedulePlayer.sendMessage("Dialer set to: " + target);
+	                       }
+	                    },2);
+	                    // player.sendMessage("Dialer set to: " + target);
 	                    return true;
 	                }
 	            }
 	            else 
 	            {
-	                player.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+	                playerFinal.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
 	                return true;
 	            }
 	        }
@@ -159,9 +174,10 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	@Override
 	public void onPlayerMove(PlayerMoveEvent event)
 	{
-	    if (handlePlayerMoveEvent(event))
+	    final PlayerMoveEvent eventFinal = event;
+	    if (handlePlayerMoveEvent(eventFinal))
 	    {
-	        event.setCancelled(true);
+	        eventFinal.setCancelled(true);
 	    }
 	}
 	
@@ -173,71 +189,73 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	 */
 	private static boolean handlePlayerMoveEvent(PlayerMoveEvent event)
 	{
-	    Player p = event.getPlayer();
-	    Location l = event.getTo();
-	    Block ch = l.getWorld().getBlockAt( l.getBlockX(), l.getBlockY(), l.getBlockZ());
-	    Stargate st = StargateManager.getGateFromBlock( ch );
+	    final PlayerMoveEvent eventFinal = event;
+	    final Player playerFinal = eventFinal.getPlayer();
+	    final Location toLocFinal = eventFinal.getTo();
+	    final Block gateBlockFinal = toLocFinal.getWorld().getBlockAt( toLocFinal.getBlockX(), toLocFinal.getBlockY(), toLocFinal.getBlockZ());
+	    final Stargate stargateFinal = StargateManager.getGateFromBlock( gateBlockFinal );
 
-	    if ( st != null && st.active && st.target != null )
+	    if ( stargateFinal != null && stargateFinal.active && stargateFinal.target != null )
 	    {
 	        String gatenetwork;
-	        if (st.network != null )
+	        if (stargateFinal.network != null )
 	        {
-	            gatenetwork = st.network.netName;
+	            gatenetwork = stargateFinal.network.netName;
 	        }
 	        else
 	        {
 	            gatenetwork = "Public";
 	        }
-	        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player in gate:" + st.name + " gate Active: " + st.active + " Target Gate: " + st.target.name + " Network: " + gatenetwork );
+	        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player in gate:" + stargateFinal.name + " gate Active: " + stargateFinal.active + " Target Gate: " + stargateFinal.target.name + " Network: " + gatenetwork );
 
-	        if (ConfigManager.getWormholeUseIsTeleport() && ((st.isSignPowered && !WXPermissions.checkWXPermissions(p, st, PermissionType.SIGN)) ||
-	            (!st.isSignPowered && !WXPermissions.checkWXPermissions(p, st, PermissionType.DIALER))))
+	        if (ConfigManager.getWormholeUseIsTeleport() && ((stargateFinal.isSignPowered && !WXPermissions.checkWXPermissions(playerFinal, stargateFinal, PermissionType.SIGN)) ||
+	            (!stargateFinal.isSignPowered && !WXPermissions.checkWXPermissions(playerFinal, stargateFinal, PermissionType.DIALER))))
 	        {
-	            p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+	            playerFinal.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
 	            return false;
 	        }
-	        if ( st.target.irisActive )
+	        if ( stargateFinal.target.irisActive )
 	        {
-	            p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Remote Iris is locked!");
-	            p.setNoDamageTicks(2);
-	            event.setFrom(st.teleportLocation);
-	            event.setTo(st.teleportLocation);
-	            p.teleport(st.teleportLocation);
-	            if (p.getFireTicks() > 0 )
-	            {
-	                p.setFireTicks(0);
-	            }
+	            playerFinal.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Remote Iris is locked!");
+	            playerFinal.setNoDamageTicks(5);
+	            WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new Runnable() {
+	                public void run()
+	                {
+	                    eventFinal.setFrom(stargateFinal.teleportLocation);
+	                    eventFinal.setTo(stargateFinal.teleportLocation);
+	                    playerFinal.teleport(stargateFinal.teleportLocation);
+	                }
+	            },2);
 	            return true;
 	        }
 
-	        Location target = st.target.teleportLocation;
+	        Location target = stargateFinal.target.teleportLocation;
 	        if ( WormholeXTreme.getIconomy() != null )
 	        {
 	            double cost = ConfigManager.getIconomyWormholeUseCost();
 	            boolean charge = true;
-	            if ((ConfigManager.getIconomyOpsExcempt() && p.isOp()) || (st.owner != null && st.owner.equals(p.getName())))
+	            if ((ConfigManager.getIconomyOpsExcempt() && playerFinal.isOp()) || (stargateFinal.owner != null && stargateFinal.owner.equals(playerFinal.getName())))
 	            {
 	                charge = false;
 	            }
 	            if (charge && cost > 0.0)
 	            {
-	                Account playerAccount = iConomy.getBank().getAccount(p.getName());
+	                Account playerAccount = iConomy.getBank().getAccount(playerFinal.getName());
 	                double balance = playerAccount.getBalance();
 	                String currency = iConomy.getBank().getCurrency();
 	                if ( balance >= cost )
 	                {
 	                    playerAccount.subtract(cost);
 	                    // player_account.save();
-	                    p.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole Use \u00A7F- \u00A72" + cost + " \u00A77" + currency );
+	                    playerFinal.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole Use \u00A7F- \u00A72" + cost + " \u00A77" + currency );
 	                    //p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
 	                    final double ownerPercent = ConfigManager.getIconomyWormholeOwnerPercent();
 
-	                    if ( ownerPercent != 0.0 && st.owner != null )
+	                    if ( ownerPercent != 0.0 && stargateFinal.owner != null )
 	                    {
-	                        if ( iConomy.getBank().hasAccount(st.owner))
+	                        if ( iConomy.getBank().hasAccount(stargateFinal.owner))
 	                        {
-	                            final Account ownAcc = iConomy.getBank().getAccount(st.owner);
+	                            final Account ownAcc = iConomy.getBank().getAccount(stargateFinal.owner);
 	                            ownAcc.add(cost * ownerPercent);
 	                            // own_acc.save();
 	                        }
@@ -245,31 +263,38 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	                }
 	                else
 	                {
-	                    p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Not enough " + currency  + "! - Requires: \u00A72" + cost + " \u00A77- Available: \u00A74" + playerAccount.getBalance() + " \u00A77" + currency);
+	                    playerFinal.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Not enough " + currency  + "! - Requires: \u00A72" + cost + " \u00A77- Available: \u00A74" + playerAccount.getBalance() + " \u00A77" + currency);
 	                    //p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
-	                    target = st.teleportLocation;
+	                    target = stargateFinal.teleportLocation;
 	                }
 	            }
 	        }
-	        if (target != st.teleportLocation)
+	        if (target != stargateFinal.teleportLocation)
 	        {
-	            target = TeleportUtils.findSafeTeleportFromStargate(st.target);
+	            WorldUtils.checkChunkLoad(target.getBlock());
+	            target = TeleportUtils.findSafeTeleportFromStargate(stargateFinal.target);
 	        }
-	        event.setFrom(target);
-	        event.setTo(target);
-	        p.setNoDamageTicks(2);
-	        p.teleport(target);
-	        if ( target != st.teleportLocation )
+	        playerFinal.setNoDamageTicks(5);
+	        final Location targetFinal = target;
+	        WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new Runnable() {
+	            public void run()
+	            {
+	                eventFinal.setFrom(targetFinal);
+	                eventFinal.setTo(targetFinal);
+	                playerFinal.teleport(targetFinal);
+	            }
+	        }, 2);
+	        if ( target != stargateFinal.teleportLocation )
 	        {
-	            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO,false, p.getDisplayName() + " used wormhole: " + st.name + " to go to: " + st.target.name);
+	            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO,false, playerFinal.getName() + " used wormhole: " + stargateFinal.name + " to go to: " + stargateFinal.target.name);
 	        }
 	        if ( ConfigManager.getTimeoutShutdown() == 0 )
 	        {
-	            st.shutdownStargate();
+	            stargateFinal.shutdownStargate();
 	        }
 	        return true;
 	    }
-	    else if ( st != null )
+	    else if ( stargateFinal != null )
 	    {
 	        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player entered gate but wasn't active or didn't have a target.");
 	    }
@@ -280,23 +305,23 @@ public class WormholeXTremePlayerListener extends PlayerListener
      * Button lever hit.
      *
      * @param p the p
-     * @param clicked the clicked
+     * @param blockClicked the clicked
      * @param direction the direction
      * @return true, if successful
      */
-    private static boolean buttonLeverHit(Player p, Block clicked, BlockFace direction)
+    private static boolean buttonLeverHit(Player p, Block blockClicked, BlockFace direction)
     {
-        Stargate s = StargateManager.getGateFromBlock(clicked);
+        final Stargate s = StargateManager.getGateFromBlock(blockClicked);
         
         if ( s != null  )
         {
             if ( WXPermissions.checkWXPermissions(p, s, PermissionType.USE) )
             {
-                if ( WorldUtils.isSameBlock(s.activationBlock, clicked) )
+                if ( WorldUtils.isSameBlock(s.activationBlock, blockClicked) )
                 {
                     handleGateActivationSwitch(s, p);
                 }
-                else if ( WorldUtils.isSameBlock(s.irisActivationBlock, clicked) )
+                else if ( WorldUtils.isSameBlock(s.irisActivationBlock, blockClicked) )
                 {
                     s.toggleIrisDefault();
                     if ((s.active) && (!s.irisActive)) 
@@ -316,7 +341,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
         {
             if ( direction == null )
             {
-                switch ( clicked.getData() )
+                switch ( blockClicked.getData() )
                 {
                 case 1:
                     direction = BlockFace.SOUTH;
@@ -345,11 +370,11 @@ public class WormholeXTremePlayerListener extends PlayerListener
             Stargate newGate = null;
             if ( shape != null )
             {
-                newGate = StargateHelper.checkStargate(clicked, direction, shape);
+                newGate = StargateHelper.checkStargate(blockClicked, direction, shape);
             }
             else
             {
-                newGate = StargateHelper.checkStargate(clicked, direction);
+                newGate = StargateHelper.checkStargate(blockClicked, direction);
             }
             
             if ( newGate != null )

@@ -32,6 +32,8 @@ import com.nijiko.coelho.iConomy.system.Account;
 
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
+import com.wormhole_xtreme.wormhole.logic.StargateUpdateRunnable;
+import com.wormhole_xtreme.wormhole.logic.StargateUpdateRunnable.ActionToTake;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -163,7 +165,8 @@ public class StargateManager
 						if ( s.network.gateList.size() > 1 )
 						{
 							s2.signIndex = 0;
-							s2.teleportSignClicked();
+							WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(s2,ActionToTake.SIGNCLICK));
+							// s2.teleportSignClicked();
 						}
 					}
 				}

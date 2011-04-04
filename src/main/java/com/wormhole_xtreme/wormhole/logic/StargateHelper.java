@@ -42,6 +42,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
+import com.wormhole_xtreme.wormhole.logic.StargateUpdateRunnable.ActionToTake;
 import com.wormhole_xtreme.wormhole.model.Stargate;
 import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.model.StargateNetwork;
@@ -409,7 +410,8 @@ public class StargateHelper
 
 				tempGate.network = net;
 				tempGate.signIndex = -1;
-				tempGate.teleportSignClicked();
+				WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(tempGate,ActionToTake.SIGNCLICK));
+				// tempGate.teleportSignClicked();
 			}
 			
 			return tempGate; 

@@ -136,11 +136,6 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	            {
 	                if ( stargate.tryClickTeleportSign(blockClickedFinal) )
 	                {
-//	                    String target = "";
-//	                    if ( stargate.signTarget != null )
-//	                    {
-//	                        target = stargate.signTarget.name;
-//	                    }
 	                    final Player schedulePlayer = playerFinal;
 	                    final Stargate scheduleStargate = stargate;
 	                    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new Runnable() {
@@ -199,7 +194,8 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	    final Block gateBlockFinal = toLocFinal.getWorld().getBlockAt( toLocFinal.getBlockX(), toLocFinal.getBlockY(), toLocFinal.getBlockZ());
 	    final Stargate stargateFinal = StargateManager.getGateFromBlock( gateBlockFinal );
 
-	    if ( stargateFinal != null && stargateFinal.active && stargateFinal.target != null )
+	    if ( stargateFinal != null && stargateFinal.active && stargateFinal.target != null && stargateFinal.gateShape != null && 
+	        gateBlockFinal.getType() == stargateFinal.gateShape.portalMaterial )
 	    {
 	        String gatenetwork;
 	        if (stargateFinal.network != null )

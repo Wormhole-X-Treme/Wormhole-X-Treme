@@ -77,12 +77,8 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 	{
 	    final Location l = event.getTo();
 	    final Block ch = l.getWorld().getBlockAt( l.getBlockX(), l.getBlockY(), l.getBlockZ());
-	    //if ( ch.getType() == ConfigManager.getPortalMaterial() )
-	    //{
-	    // This means that the cart is in a stargate that is active.
 	    final Stargate st = StargateManager.getGateFromBlock( ch );
-
-	    if ( st != null &&  st.active && st.target != null )
+	    if ( st != null &&  st.active && st.target != null && st.gateShape != null && ch.getType() == st.gateShape.portalMaterial )
 	    {
 	        String gatenetwork;
 	        if (st.network != null)
@@ -201,6 +197,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 	                    {
 	                        newveh.setPassenger(e);
 	                        newveh.setVelocity(newnew_speed);
+	                        newveh.setFireTicks(0);
 	                    }
 	                }, 5);
 	            }
@@ -217,7 +214,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 	        }
 	        return true;
 	    }
-	    //}
+
 	    return false;
 	}
 }

@@ -1,4 +1,4 @@
-Changes 0.830:
+Changes 0.830 (4/3/11 @ 23:22 PST):
 
 - Water now will not flow over Stargate anythings. No more broken levers and magic 
   blocks of water floating in their place.
@@ -25,6 +25,15 @@ Changes 0.830:
   event was associated with. 
   
 - Logic tweak in the find safe teleport code. Should be *safererer*
+
+- Sign powered stargates now can only target other sign powered stargates. 
+
+- Fixed so that when coming from a lava portal stargate to a non-lava portal stargate
+  fire damage is canceled still. No more nasty fire after a teleport.
+  
+- Added the logic back in to stop people from randomly teleporting when next to the lever
+  of an active gate. The side effect is, when block.getType() fails, gates don't work.
+  Its one or the other.
 
 Changes 0.821 (3/30/11 @ 17:42 PST):
 

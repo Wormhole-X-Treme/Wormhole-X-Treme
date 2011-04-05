@@ -42,10 +42,17 @@ WOOSH_DEPTH=3
 
 # None of the follow materials are required, they will default if not set.
 # Portal material the material the [P] blocks will be when gate is active.
+# Suggested values are as follows: STATIONARY_WATER, STATIONARY_LAVA, PORTAL, and AIR
 PORTAL_MATERIAL=STATIONARY_WATER
+
 # Iris material is the material the [P] block become when iris is active
+# Suggested values are as follows: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, OBSIDIAN, GLOWSTONE and LAPIS_BLOCK
 IRIS_MATERIAL=STONE
+
 # Stargate material is the material the [O] blocks are made of
+# Reasonable values are as follows: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, OBSIDIAN, GLOWSTONE and LAPIS_BLOCK
 STARGATE_MATERIAL=OBSIDIAN
+
 # Active material is the material that :L blocks become when gate is active
+# Suggested Values are as follows: GLOWSTONE and GLOWING_REDSTONE_ORE
 ACTIVE_MATERIAL=GLOWSTONE

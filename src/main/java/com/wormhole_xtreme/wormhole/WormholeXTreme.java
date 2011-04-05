@@ -26,7 +26,6 @@ import java.util.logging.Level;
 import org.bukkit.entity.Player; 
 import org.bukkit.event.Event; 
 import org.bukkit.event.Event.Priority; 
-import org.bukkit.plugin.PluginDescriptionFile; 
 import org.bukkit.plugin.PluginManager; 
 import org.bukkit.plugin.java.JavaPlugin; 
 import org.bukkit.scheduler.BukkitScheduler;
@@ -60,15 +59,15 @@ public class WormholeXTreme extends JavaPlugin
 {
 
 	/** The player listener. */
-	private final WormholeXTremePlayerListener playerListener = new WormholeXTremePlayerListener();
+	private static final WormholeXTremePlayerListener playerListener = new WormholeXTremePlayerListener();
 	/** The block listener. */
-	private final WormholeXTremeBlockListener blockListener = new WormholeXTremeBlockListener();
+	private static final WormholeXTremeBlockListener blockListener = new WormholeXTremeBlockListener();
 	/** The vehicle listener. */
-	private final WormholeXTremeVehicleListener vehicleListener = new WormholeXTremeVehicleListener();
+	private static final WormholeXTremeVehicleListener vehicleListener = new WormholeXTremeVehicleListener();
 	/** The entity listener. */
-	private final WormholeXTremeEntityListener entityListener = new WormholeXTremeEntityListener();
+	private static final WormholeXTremeEntityListener entityListener = new WormholeXTremeEntityListener();
 	/** The server listener. */
-	private final WormholeXTremeServerListener serverListener = new WormholeXTremeServerListener();
+	private static final WormholeXTremeServerListener serverListener = new WormholeXTremeServerListener();
 	
 	/** The debugees. */
 	private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
@@ -90,7 +89,6 @@ public class WormholeXTreme extends JavaPlugin
 	private static WormholeXTreme thisPlugin = null;
 	 
 	/** The log. */
-//	private static Logger log;
 	private static Logger log = null;
 	
 	/* (non-Javadoc)
@@ -99,20 +97,19 @@ public class WormholeXTreme extends JavaPlugin
 	@Override
 	public void onLoad()
 	{
-	   setLog(getServer().getLogger());
-	   setThisPlugin(this); 
-	   setScheduler(getServer().getScheduler());
-	   PluginDescriptionFile pdfFile = this.getDescription();
-	   
-	   prettyLog(Level.INFO,true, pdfFile.getAuthors() + "Load Beginning." );
+	   setThisPlugin(this);
+	   setLog(getThisPlugin().getServer().getLogger()); 
+	   setScheduler(getThisPlugin().getServer().getScheduler());
+
+	   prettyLog(Level.INFO,true,getThisPlugin().getDescription().getAuthors().toString() + "Load Beginning." );
 	   // Load our config files and set logging level right away.
-	   ConfigManager.setupConfigs(pdfFile);
-	   this.setPrettyLogLevel(ConfigManager.getLogLevel());
+	   ConfigManager.setupConfigs(getThisPlugin().getDescription());
+	   WormholeXTreme.setPrettyLogLevel(ConfigManager.getLogLevel());
 	   // Make sure DB is up to date with latest SCHEMA
 	   DBUpdateUtil.updateDB();
 	   // Load our shapes, stargates, and internal permissions.
 	   StargateHelper.loadShapes();	 
-	   StargateDBManager.loadStargates(getServer());
+	   StargateDBManager.loadStargates(getThisPlugin().getServer());
 	   PermissionsManager.loadPermissions();
 	   prettyLog(Level.INFO,true, "Load Completed.");
 	}
@@ -145,56 +142,54 @@ public class WormholeXTreme extends JavaPlugin
 	/**
 	 * Register commands.
 	 */
-	private void registerCommands()
+	private static void registerCommands()
 	{
-	    getCommand("wxforce").setExecutor(new Force());
-		getCommand("wxidc").setExecutor(new WXIDC());
-		getCommand("wxcompass").setExecutor(new Compass());
-		getCommand("wxcomplete").setExecutor(new Complete());
-		getCommand("wxremove").setExecutor(new WXRemove());
-		getCommand("wxlist").setExecutor(new WXList());
-		getCommand("wxgo").setExecutor(new Go());
-		getCommand("dial").setExecutor(new Dial());
-		getCommand("wxbuild").setExecutor(new Build());
-		getCommand("wormhole").setExecutor(new Wormhole(this));
+	    final WormholeXTreme tp = getThisPlugin();
+	    tp.getCommand("wxforce").setExecutor(new Force());
+		tp.getCommand("wxidc").setExecutor(new WXIDC());
+		tp.getCommand("wxcompass").setExecutor(new Compass());
+		tp.getCommand("wxcomplete").setExecutor(new Complete());
+		tp.getCommand("wxremove").setExecutor(new WXRemove());
+		tp.getCommand("wxlist").setExecutor(new WXList());
+		tp.getCommand("wxgo").setExecutor(new Go());
+		tp.getCommand("dial").setExecutor(new Dial());
+		tp.getCommand("wxbuild").setExecutor(new Build());
+		tp.getCommand("wormhole").setExecutor(new Wormhole());
 	}
 
     /**
      * Register events.
      */
-    private void registerEvents() 
+    private static void registerEvents() 
     {
-		final PluginManager pm = getServer().getPluginManager(); 
-		
+        final WormholeXTreme tp = getThisPlugin();
+		final PluginManager pm = tp.getServer().getPluginManager();
 		//Listen for Interact, Physics, Break, Flow, and RightClick events. Pass to blockListener
-		
-		pm.registerEvent(Event.Type.BLOCK_PHYSICS, blockListener, Priority.Highest, this);
-		pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.High, this);
-		pm.registerEvent(Event.Type.BLOCK_FROMTO, blockListener, Priority.Highest, this);
-		pm.registerEvent(Event.Type.BLOCK_IGNITE, blockListener, Priority.High, this);
-		pm.registerEvent(Event.Type.BLOCK_BURN, blockListener, Priority.High, this);
-		pm.registerEvent(Event.Type.BLOCK_DAMAGE, blockListener, Priority.High, this);
+		pm.registerEvent(Event.Type.BLOCK_PHYSICS, blockListener, Priority.Highest, tp);
+		pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.High, tp);
+		pm.registerEvent(Event.Type.BLOCK_FROMTO, blockListener, Priority.Highest, tp);
+		pm.registerEvent(Event.Type.BLOCK_IGNITE, blockListener, Priority.High, tp);
+		pm.registerEvent(Event.Type.BLOCK_BURN, blockListener, Priority.High, tp);
+		pm.registerEvent(Event.Type.BLOCK_DAMAGE, blockListener, Priority.High, tp);
 		
 		// To handle teleporting when walking into a gate.
-		pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.High, this);
-		pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.High, this);
-		pm.registerEvent(Event.Type.PLAYER_BUCKET_FILL, playerListener, Priority.High, this);
-		pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, playerListener, Priority.High, this);
+		pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.High, tp);
+		pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.High, tp);
+		pm.registerEvent(Event.Type.PLAYER_BUCKET_FILL, playerListener, Priority.High, tp);
+		pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, playerListener, Priority.High, tp);
 		// Handle removing player data
 		// pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Normal, this);
-
 		// Handle minecarts going through portal
-		pm.registerEvent(Event.Type.VEHICLE_MOVE, vehicleListener, Priority.High, this);
-		pm.registerEvent(Event.Type.VEHICLE_DAMAGE, vehicleListener, Priority.High, this);
+		pm.registerEvent(Event.Type.VEHICLE_MOVE, vehicleListener, Priority.High, tp);
+		pm.registerEvent(Event.Type.VEHICLE_DAMAGE, vehicleListener, Priority.High, tp);
 		// Handle player walking through the lava.
-		pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Priority.High, this);
+		pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Priority.High, tp);
 		// Handle Creeper explosions damaging Gate components.
-		pm.registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.High, this);
-		
+		pm.registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.High, tp);
         // Listen for enable events.
-		pm.registerEvent(Event.Type.PLUGIN_ENABLE, serverListener, Priority.Monitor, this);
+		pm.registerEvent(Event.Type.PLUGIN_ENABLE, serverListener, Priority.Monitor, tp);
 		// Listen for disable events.
-		pm.registerEvent(Event.Type.PLUGIN_DISABLE, serverListener, Priority.Monitor, this);
+		pm.registerEvent(Event.Type.PLUGIN_DISABLE, serverListener, Priority.Monitor, tp);
 	}
 
     
@@ -259,17 +254,17 @@ public class WormholeXTreme extends JavaPlugin
 	 */
 	public void prettyLog(Level severity, boolean version, String message) 
 	{
-		final String prettyName = (String)("[" + this.getDescription().getName() + "]");
-		final String prettyVersion = (String)("[v" + this.getDescription().getVersion() + "]");
+		final String prettyName = (String)("[" + getThisPlugin().getDescription().getName() + "]");
+		final String prettyVersion = (String)("[v" + getThisPlugin().getDescription().getVersion() + "]");
 		String prettyLogLine = prettyName;
 		if (version)
 		{
 			prettyLogLine += prettyVersion;
-			log.log(severity,prettyLogLine + message);
+			getLogger().log(severity,prettyLogLine + message);
 		} 
 		else
 		{
-			log.log(severity,prettyLogLine + message);
+			getLogger().log(severity,prettyLogLine + message);
 		}
 	}
 	
@@ -278,10 +273,10 @@ public class WormholeXTreme extends JavaPlugin
 	 *
 	 * @param level the new pretty log level
 	 */
-	public void setPrettyLogLevel(Level level)
+	public static void setPrettyLogLevel(Level level)
 	{
-		log.setLevel(level);
-		this.prettyLog(Level.CONFIG, false, "Logging set to: " + level );
+		getLogger().setLevel(level);
+		getThisPlugin().prettyLog(Level.CONFIG, false, "Logging set to: " + level );
 	}
 
     /**
@@ -334,6 +329,16 @@ public class WormholeXTreme extends JavaPlugin
         WormholeXTreme.log = log;
     }
 
+    /**
+     * Gets the logger.
+     *
+     * @return the logger
+     */
+    private static Logger getLogger()
+    {
+        return log;
+    }
+    
     /**
      * Sets the iconomy.
      *

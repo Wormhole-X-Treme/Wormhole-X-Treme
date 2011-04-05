@@ -41,6 +41,7 @@ import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 import com.wormhole_xtreme.wormhole.utils.TeleportUtils;
+import com.wormhole_xtreme.wormhole.utils.WorldUtils;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -77,12 +78,8 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 	{
 	    final Location l = event.getTo();
 	    final Block ch = l.getWorld().getBlockAt( l.getBlockX(), l.getBlockY(), l.getBlockZ());
-	    //if ( ch.getType() == ConfigManager.getPortalMaterial() )
-	    //{
-	    // This means that the cart is in a stargate that is active.
 	    final Stargate st = StargateManager.getGateFromBlock( ch );
-
-	    if ( st != null &&  st.active && st.target != null )
+	    if ( st != null &&  st.active && st.target != null && st.gateShape != null && ch.getType() == st.gateShape.portalMaterial )
 	    {
 	        String gatenetwork;
 	        if (st.network != null)
@@ -124,7 +121,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 	                {
 	                    double cost = ConfigManager.getIconomyWormholeUseCost();
 	                    boolean charge = true;
-	                    if ((ConfigManager.getIconomyOpsExcempt() && p.isOp()) || (st.owner != null && st.owner.equals(p.getName())))
+	                    if ((ConfigManager.getIconomyOpsExcempt() && p.isOp()) || (ConfigManager.getIconomyOwnerExempt() && st.owner != null && st.owner.equals(p.getName())))
 	                    {
 	                        charge = false;
 	                    }
@@ -185,7 +182,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 	            if (target != st.teleportLocation)
 	            {
 	                target = TeleportUtils.findSafeTeleportFromStargate(st.target);
-	                st.target.teleportLocation = target;
+	                WorldUtils.checkChunkLoad(target.getBlock());
 	            }
 	            if (e != null)
 	            {
@@ -202,6 +199,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 	                    {
 	                        newveh.setPassenger(e);
 	                        newveh.setVelocity(newnew_speed);
+	                        newveh.setFireTicks(0);
 	                    }
 	                }, 5);
 	            }
@@ -218,7 +216,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 	        }
 	        return true;
 	    }
-	    //}
+
 	    return false;
 	}
 }

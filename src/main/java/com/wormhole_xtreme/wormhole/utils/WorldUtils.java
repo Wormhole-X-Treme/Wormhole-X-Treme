@@ -18,10 +18,14 @@
  */
 package com.wormhole_xtreme.wormhole.utils;
 
+import java.util.logging.Level;
+
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+
+import com.wormhole_xtreme.wormhole.WormholeXTreme;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -137,51 +141,51 @@ public class WorldUtils
 		return b1.getX() == b2.getX() && b1.getY() == b2.getY() &&	b1.getZ() == b2.getZ();
 	}
 
-	/**
-	 * Sign facing data from block face.
-	 *
-	 * @param bf the bf
-	 * @return the byte
-	 */
-	public static byte signFacingDataFromBlockFace(BlockFace bf)
-	{
-		switch ( bf )
-		{
-		case NORTH:
-			return (byte)4;
-		case SOUTH:
-			return (byte)5;
-		case EAST:
-			return (byte)2;
-		case WEST:
-			return (byte)3;
-		}
-		
-		return (byte)0;
-	}
-	
-	/**
-	 * Lever facing data from block face.
-	 *
-	 * @param bf the bf
-	 * @return the byte
-	 */
-	public static byte leverFacingDataFromBlockFace(BlockFace bf)
-	{
-		switch ( bf )
-		{
-		case NORTH:
-			return (byte)3;
-		case SOUTH:
-			return (byte)1;
-		case EAST:
-			return (byte)0;
-		case WEST:
-			return (byte)2;
-		}
-		
-		return (byte)0;
-	}
+//	/**
+//	 * Sign facing data from block face.
+//	 *
+//	 * @param bf the bf
+//	 * @return the byte
+//	 */
+//	public static byte signFacingDataFromBlockFace(BlockFace bf)
+//	{
+//		switch ( bf )
+//		{
+//		case NORTH:
+//			return (byte)4;
+//		case SOUTH:
+//			return (byte)5;
+//		case EAST:
+//			return (byte)2;
+//		case WEST:
+//			return (byte)3;
+//		}
+//		
+//		return (byte)0;
+//	}
+//	
+//	/**
+//	 * Lever facing data from block face.
+//	 *
+//	 * @param bf the bf
+//	 * @return the byte
+//	 */
+//	public static byte leverFacingDataFromBlockFace(BlockFace bf)
+//	{
+//		switch ( bf )
+//		{
+//		case NORTH:
+//			return (byte)3;
+//		case SOUTH:
+//			return (byte)1;
+//		case EAST:
+//			return (byte)0;
+//		case WEST:
+//			return (byte)2;
+//		}
+//		
+//		return (byte)0;
+//	}
 
 	/**
 	 * Check chunk load.
@@ -193,7 +197,10 @@ public class WorldUtils
 		World w = b.getWorld();
 		Chunk c = b.getChunk();
 		
-		if ( w.isChunkLoaded(c) )
+		if ( !w.isChunkLoaded(c) )
+		{
+		    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Loading chunk: " + c.toString() + " on: " + w.toString());
 			w.loadChunk(c);
+		}
 	}
 }

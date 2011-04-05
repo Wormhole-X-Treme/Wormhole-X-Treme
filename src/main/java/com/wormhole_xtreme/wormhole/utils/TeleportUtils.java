@@ -94,51 +94,54 @@ public class TeleportUtils {
      */
     private static Location findSafe(Location location, int max, int iteration, Stargate stargate)
     {
-        Block initialblock = location.getBlock();
-        Material initialmaterial = initialblock.getType();
+        Block initialBlock = location.getBlock();
+        Material initialMaterial = initialBlock.getType();
         boolean retry = true;
-        Location finallocation = null;
+        Location finalLocation = null;
+        Block tempBlockOne = null;
+        Material tempMaterialOne = null;
+        Block tempBlockTwo = null;
+        Material tempMaterialTwo = null;
         int i = 0;
         while (retry)
         {
             i++;
             WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "iteration=" + iteration + " i=" + i);
-            Block tempblock = null;
-            Material tempmaterial = null;
-            int secondstagedistance = 0;
-            int firststagedistance = 0;
+
+            int secondStageDistance = 0;
+            int firstStageDistance = 0;
             boolean up = false;
             boolean safe = false;
             boolean down = false;
 
-            int secondstagedownstate = 0;
+            int secondStageDownState = 0;
 
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "initial material=" + initialmaterial);
-            if (initialmaterial == Material.AIR || initialmaterial == Material.WATER || initialmaterial == Material.RAILS)
+            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "initial material=" + initialMaterial);
+            if (initialMaterial == Material.AIR || initialMaterial == Material.WATER || initialMaterial == Material.RAILS)
             {
                 // Start block is a safe block. Iterate downwards until a non-safe block is found (or max is hit)
                 // if non-safe block is found immediately below safe block, iterate up once from safe block
                 // to check if there is headroom. Set return value to bottom-most safe block.
-                while (firststagedistance <= max && !up)
+                while (firstStageDistance <= max * 3 && !up)
                 {
-                    if (firststagedistance == 0)
+                    if (firstStageDistance == 0)
                     {
-                        tempblock = initialblock;
-                        tempmaterial = initialmaterial;
+                        tempBlockOne = initialBlock;
+                        tempMaterialOne = initialMaterial;
                     }
                     else 
                     {
-                        tempblock = initialblock.getFace(BlockFace.DOWN,firststagedistance);
-                        tempmaterial = tempblock.getType();
+                        tempBlockOne = initialBlock.getFace(BlockFace.DOWN,firstStageDistance);
+                        tempMaterialOne = tempBlockOne.getType();
                     }
-                    if (tempmaterial == Material.AIR || tempmaterial == Material.WATER || tempmaterial == Material.RAILS)
+                    if (tempMaterialOne == Material.AIR || tempMaterialOne == Material.WATER || tempMaterialOne == Material.RAILS)
                     {
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "1st down="+ firststagedistance + " material=" + tempmaterial);
-                        firststagedistance++;
+                        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "1st down="+ firstStageDistance + " material=" + tempMaterialOne);
+                        firstStageDistance++;
                     }
                     else
                     {
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "1st break=" + firststagedistance );
+                        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "1st break=" + firstStageDistance );
                         up = true;
                     }
                 }
@@ -148,57 +151,57 @@ public class TeleportUtils {
             // found, iterate once more to make sure it has head room. Return bottom-most safe block.
             // If no safe block is found, start iterating downwards from initial block location. If safe block is found
             // start iterating downards until non-safe block is found.
-            while (secondstagedistance <= max && !safe)
+            while (secondStageDistance <= max && !safe)
             {
                 if (up)
                 {
-                    tempblock = initialblock.getFace(BlockFace.DOWN,firststagedistance);
-                    tempmaterial = tempblock.getType();
+                    tempBlockOne = initialBlock.getFace(BlockFace.DOWN,firstStageDistance);
+                    tempMaterialOne = tempBlockOne.getType();
                     up = false;
                     down = true;
                 }
-                else if (secondstagedistance == 0)
+                else if (secondStageDistance == 0)
                 {
-                    tempblock = initialblock;
-                    tempmaterial = initialmaterial;
+                    tempBlockOne = initialBlock;
+                    tempMaterialOne = initialMaterial;
                 }
                 else 
                 {
                     if (down)
                     {
-                        if (firststagedistance - secondstagedistance > 0)
+                        if (firstStageDistance - secondStageDistance > 0)
                         {
-                            tempblock = initialblock.getFace(BlockFace.DOWN,firststagedistance - secondstagedistance);
-                            tempmaterial = tempblock.getType();
-                            secondstagedownstate = 1;
+                            tempBlockOne = initialBlock.getFace(BlockFace.DOWN,firstStageDistance - secondStageDistance);
+                            tempMaterialOne = tempBlockOne.getType();
+                            secondStageDownState = 1;
                         } 
-                        else if (firststagedistance - secondstagedistance == 0)
+                        else if (firstStageDistance - secondStageDistance == 0)
                         {
-                            tempblock = initialblock;
-                            tempmaterial = initialmaterial;
-                            secondstagedownstate = 2;
+                            tempBlockOne = initialBlock;
+                            tempMaterialOne = initialMaterial;
+                            secondStageDownState = 2;
                         }
                         else
                         {
-                            tempblock = initialblock.getFace(BlockFace.UP,secondstagedistance - firststagedistance);
-                            tempmaterial = tempblock.getType();
-                            secondstagedownstate = 3;
+                            tempBlockOne = initialBlock.getFace(BlockFace.UP,secondStageDistance - firstStageDistance);
+                            tempMaterialOne = tempBlockOne.getType();
+                            secondStageDownState = 3;
                         }
                     }
                     else
                     {
-                        tempblock = initialblock.getFace(BlockFace.UP,secondstagedistance);
-                        tempmaterial = tempblock.getType();
+                        tempBlockOne = initialBlock.getFace(BlockFace.UP,secondStageDistance);
+                        tempMaterialOne = tempBlockOne.getType();
                     }
                 }
-                if (tempmaterial != Material.WATER && tempmaterial != Material.RAILS && tempmaterial != Material.AIR)
+                if (tempMaterialOne != Material.WATER && tempMaterialOne != Material.RAILS && tempMaterialOne != Material.AIR)
                 {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "2nd up="+ secondstagedistance + " material=" + tempmaterial);
-                    secondstagedistance++;
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "2nd up="+ secondStageDistance + " material=" + tempMaterialOne);
+                    secondStageDistance++;
                 }
                 else
                 {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "2nd break=" + secondstagedistance );
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "2nd break=" + secondStageDistance );
                     safe = true;
                 } 
             }
@@ -206,86 +209,94 @@ public class TeleportUtils {
             {
                 if (down)
                 {
-                    if (secondstagedownstate == 1)
+                    if (secondStageDownState == 1)
                     {
-                        tempblock = initialblock.getFace(BlockFace.DOWN,(firststagedistance - secondstagedistance) - 1);
-                        tempmaterial = tempblock.getType();
-                        if (tempmaterial == Material.AIR || tempmaterial == Material.WATER)
+                        tempBlockOne = initialBlock.getFace(BlockFace.DOWN,(firstStageDistance - secondStageDistance) - 1);
+                        tempMaterialOne = tempBlockOne.getType();
+                        tempBlockTwo = tempBlockOne.getFace(BlockFace.DOWN, 2);
+                        tempMaterialTwo = tempBlockTwo.getType();
+                        if ((tempMaterialOne == Material.AIR || tempMaterialOne == Material.WATER) && (tempMaterialTwo != Material.AIR && tempMaterialTwo != Material.WATER))
                         {
-                            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Returning down based safe location, downstate: " + secondstagedownstate);
-                            finallocation = initialblock.getFace(BlockFace.DOWN,firststagedistance - secondstagedistance).getLocation();
+                            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Returning down based safe location, downstate: " + secondStageDownState);
+                            finalLocation = initialBlock.getFace(BlockFace.DOWN,firstStageDistance - secondStageDistance).getLocation();
                             retry = false;
                         }
                         else
                         {
-                            initialblock = tempblock;
-                            initialmaterial = tempmaterial;
+                            initialBlock = tempBlockOne;
+                            initialMaterial = tempMaterialOne;
                         }
                     }
-                    else if (secondstagedownstate == 2)
+                    else if (secondStageDownState == 2)
                     {
-                        tempblock = initialblock.getFace(BlockFace.UP,1);
-                        tempmaterial = tempblock.getType();
-                        if (tempmaterial == Material.AIR || tempmaterial == Material.WATER)
+                        tempBlockOne = initialBlock.getFace(BlockFace.UP,1);
+                        tempMaterialOne = tempBlockOne.getType();
+                        tempBlockTwo = tempBlockOne.getFace(BlockFace.DOWN, 2);
+                        tempMaterialTwo = tempBlockTwo.getType();
+                        if ((tempMaterialOne == Material.AIR || tempMaterialOne == Material.WATER) && (tempMaterialTwo != Material.AIR && tempMaterialTwo != Material.WATER))
                         {
-                            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Returning down based safe location, downstate: " + secondstagedownstate);
-                            finallocation = initialblock.getLocation();
+                            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Returning down based safe location, downstate: " + secondStageDownState);
+                            finalLocation = initialBlock.getLocation();
                             retry = false;
                         }
                         else
                         {
-                            initialblock = tempblock;
-                            initialmaterial = tempmaterial;
+                            initialBlock = tempBlockOne;
+                            initialMaterial = tempMaterialOne;
                         }
                     }
-                    else if (secondstagedownstate == 3)
+                    else if (secondStageDownState == 3)
                     {
-                        tempblock = initialblock.getFace(BlockFace.UP, (secondstagedistance - firststagedistance) + 1);
-                        tempmaterial = tempblock.getType();
-                        if (tempmaterial == Material.AIR || tempmaterial == Material.WATER)
+                        tempBlockOne = initialBlock.getFace(BlockFace.UP, (secondStageDistance - firstStageDistance) + 1);
+                        tempMaterialOne = tempBlockOne.getType();
+                        tempBlockTwo = tempBlockOne.getFace(BlockFace.DOWN, 2);
+                        tempMaterialTwo = tempBlockTwo.getType();
+                        if ((tempMaterialOne == Material.AIR || tempMaterialOne == Material.WATER) && (tempMaterialTwo != Material.AIR && tempMaterialTwo != Material.WATER))
                         {
-                            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Returning down based safe location, downstate: " + secondstagedownstate);
-                            finallocation = initialblock.getFace(BlockFace.UP, secondstagedistance - firststagedistance).getLocation();
+                            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Returning down based safe location, downstate: " + secondStageDownState);
+                            finalLocation = initialBlock.getFace(BlockFace.UP, secondStageDistance - firstStageDistance).getLocation();
                             retry = false;
                         }
                         else
                         {
-                            initialblock = tempblock;
-                            initialmaterial = tempmaterial;
+                            initialBlock = tempBlockOne;
+                            initialMaterial = tempMaterialOne;
                         }
                     }
                 }
                 else
                 {
-                    tempblock = initialblock.getFace(BlockFace.UP, secondstagedistance + 1);
-                    tempmaterial = tempblock.getType();
-                    if (tempmaterial == Material.AIR || tempmaterial == Material.WATER)
+                    tempBlockOne = initialBlock.getFace(BlockFace.UP, secondStageDistance + 1);
+                    tempMaterialOne = tempBlockOne.getType();
+                    tempBlockTwo = tempBlockOne.getFace(BlockFace.DOWN, 2);
+                    tempMaterialTwo = tempBlockTwo.getType();
+                    if ((tempMaterialOne == Material.AIR || tempMaterialOne == Material.WATER) && (tempMaterialTwo != Material.AIR && tempMaterialTwo != Material.WATER))
                     {
                         WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Returning up based safe location." );
-                        finallocation = initialblock.getFace(BlockFace.UP,secondstagedistance).getLocation();
+                        finalLocation = initialBlock.getFace(BlockFace.UP,secondStageDistance).getLocation();
                         retry = false;
                     }
                     else
                     {
-                        initialblock = tempblock;
-                        initialmaterial = tempmaterial;
+                        initialBlock = tempBlockOne;
+                        initialMaterial = tempMaterialOne;
                     }
                 }
             }
             else
             {
-                initialblock = tempblock;
-                initialmaterial = tempmaterial;
+                initialBlock = tempBlockOne;
+                initialMaterial = tempMaterialOne;
             }
             if (i == iteration || iteration == 0)
             {
                 retry = false;
             }
         }
-        if (finallocation != null)
+        if (finalLocation != null)
         {
             WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Safe location returned.");
-            return finallocation;
+            return finalLocation;
         }
         else
         {

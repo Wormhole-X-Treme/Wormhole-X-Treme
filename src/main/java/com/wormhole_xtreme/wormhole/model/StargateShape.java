@@ -41,7 +41,7 @@ public class StargateShape
 	public String shapeName = "Standard";
 	
 	/** The stargate_positions. */
-	public int[][] stargate_positions = { {0,2,0}, {0,3,0}, {0,4,0}, 
+	public int[][] stargatePositions = { {0,2,0}, {0,3,0}, {0,4,0}, 
 		{0,1,1}, {0,5,1}, 
 		{0,0,2}, {0,6,2}, 
 		{0,6,3}, {0,0,3}, 
@@ -50,44 +50,44 @@ public class StargateShape
 		{0,2,6}, {0,3,6}, {0,4,6} };
 	
 	/** The sign_position. */
-	public int[] sign_position = {0,3,6};
+	public int[] signPosition = {0,3,6};
 	
 	/** The enter_position. */
-	public int[] enter_position = {0,0,3};
+	public int[] enterPosition = {0,0,3};
 	
 	/** The light_positions. */
-	public int[] light_positions = {3,4,11,12};
+	public int[] lightPositions = {3,4,11,12};
 	
 	/** The water_positions. */
-	public int[][] water_positions = { {0,2,1}, {0,3,1}, {0,4,1}, 
+	public int[][] waterPositions = { {0,2,1}, {0,3,1}, {0,4,1}, 
 			{0,1,2}, {0,2,2}, {0,3,2}, {0,4,2}, {0,5,2}, 
 			{0,1,3}, {0,2,3}, {0,3,3}, {0,4,3}, {0,5,3}, 
 			{0,1,4}, {0,2,4}, {0,3,4}, {0,4,4}, {0,5,4}, 
 			{0,2,5}, {0,3,5}, {0,4,5} };
 	
 	/** The reference_vector. */
-	public int[] reference_vector = {0,1,0};
+	public int[] referenceVector = {0,1,0};
 	
 	/** [0] = Left - / Right + [1] = Up + / Down - [2] = Forward + / Backward -. */
-	public int[] to_gate_corner = {1,-1, 4};
+	public int[] toGateCorner = {1,-1, 4};
 	
 	/** The woosh_depth. */
-	public final int woosh_depth;
+	public int wooshDepth = 0;
 	/** The square of the woosh_depth, used in comparisions with squared distance */
-	public final int woosh_depth_squared;
+	public final int wooshDepthSquared;
 	
-	public Material portal_material = Material.STATIONARY_WATER;
-	public Material iris_material = Material.STONE;
-	public Material stargate_material = Material.OBSIDIAN;
-	public Material active_material = Material.GLOWSTONE;
+	public Material portalMaterial = Material.STATIONARY_WATER;
+	public Material irisMaterial = Material.STONE;
+	public Material stargateMaterial = Material.OBSIDIAN;
+	public Material activeMaterial = Material.GLOWSTONE;
 	
 	/**
 	 * Instantiates a new stargate shape.
 	 */
 	public StargateShape()
 	{
-		woosh_depth = 3;
-		woosh_depth_squared = 9;
+		wooshDepth = 3;
+		wooshDepthSquared = 9;
 	}
 	
 	/**
@@ -97,15 +97,15 @@ public class StargateShape
 	 */
 	public StargateShape(String[] file_data)
 	{
-		sign_position = null;
-		enter_position = null;
+		signPosition = null;
+		enterPosition = null;
 		
-		ArrayList<Integer[]> block_positions = new ArrayList<Integer[]>();
-		ArrayList<Integer[]> portal_positions = new ArrayList<Integer[]>();
-		ArrayList<Integer> light_positions = new ArrayList<Integer>();
+		ArrayList<Integer[]> blockPositions = new ArrayList<Integer[]>();
+		ArrayList<Integer[]> portalPositions = new ArrayList<Integer[]>();
+		ArrayList<Integer> lightPositions = new ArrayList<Integer>();
 		
-		int num_blocks = 0;
-		int cur_woosh_depth = 3;
+		int numBlocks = 0;
+		int curWooshDepth = 3;
 		
 		// 1. scan all lines for lines beginning with [  - that is the height of the gate
 		int height = 0;
@@ -160,34 +160,34 @@ public class StargateShape
 						Integer[] point = { 0, (height - 1 - (index-i-1)), (width - 1 - j) };
 						if ( block.contains("O") )
 						{
-							num_blocks++;
-							block_positions.add(point);
+							numBlocks++;
+							blockPositions.add(point);
 						}
 						else if ( block.contains("P") )
 						{
-							portal_positions.add(point);
+							portalPositions.add(point);
 						}
 						
 							
 						if ( block.contains("S") || block.contains("E") )
 						{
-							int[] point_i = new int[3];
+							int[] pointI = new int[3];
 							for (int k = 0; k < 3; k++ )
-								point_i[k] = point[k];
+								pointI[k] = point[k];
 							
 							if ( block.contains("S") )
 							{
-								sign_position = point_i;
+								signPosition = pointI;
 							}
 							if ( block.contains("E") )
 							{
-								enter_position = point_i;
+								enterPosition = pointI;
 							}
 						}
 							
 						if ( block.contains("L") && block.contains("O") )
 						{
-							light_positions.add( num_blocks - 1);
+							lightPositions.add( numBlocks - 1);
 						}
 							
 						j++;
@@ -197,69 +197,69 @@ public class StargateShape
 			}
 			else if ( line.contains("BUTTON_UP") )
 			{
-				to_gate_corner[1] = Integer.parseInt(line.split("=")[1]);
+				toGateCorner[1] = Integer.parseInt(line.split("=")[1]);
 			}
 			else if ( line.contains("BUTTON_RIGHT") )
 			{
-				to_gate_corner[0] = Integer.parseInt(line.split("=")[1]);
+				toGateCorner[0] = Integer.parseInt(line.split("=")[1]);
 			}
 			else if ( line.contains("BUTTON_AWAY") )
 			{
-				to_gate_corner[2] = Integer.parseInt(line.split("=")[1]);
+				toGateCorner[2] = Integer.parseInt(line.split("=")[1]);
 			}
 			else if ( line.contains("WOOSH_DEPTH") )
 			{
-				cur_woosh_depth = Integer.parseInt(line.split("=")[1]);
+				curWooshDepth = Integer.parseInt(line.split("=")[1]);
 			}
 			else if ( line.contains("PORTAL_MATERIAL") )
 			{
-				portal_material = Material.valueOf(line.split("=")[1]);
+				portalMaterial = Material.valueOf(line.split("=")[1]);
 			}
 			else if ( line.contains("IRIS_MATERIAL") )
 			{
-				iris_material = Material.valueOf(line.split("=")[1]);
+				irisMaterial = Material.valueOf(line.split("=")[1]);
 			}
 			else if ( line.contains("STARGATE_MATERIAL") )
 			{
-				stargate_material = Material.valueOf(line.split("=")[1]);
+				stargateMaterial = Material.valueOf(line.split("=")[1]);
 			}
 			else if ( line.contains("ACTIVE_MATERIAL") )
 			{
-				active_material = Material.valueOf(line.split("=")[1]);
+				activeMaterial = Material.valueOf(line.split("=")[1]);
 			}
 		}
-		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Sign Position: \"" + Arrays.toString(sign_position) + "\"");
-		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Enter Position: \"" + Arrays.toString(enter_position) + "\"");
-		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Button Position [Left/Right,Up/Down,Forward/Back]: \"" + Arrays.toString((int[])to_gate_corner) + "\"");
-		this.water_positions = new int[portal_positions.size()][3];
-		for ( int i = 0; i < portal_positions.size(); i++)
+		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Sign Position: \"" + Arrays.toString(signPosition) + "\"");
+		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Enter Position: \"" + Arrays.toString(enterPosition) + "\"");
+		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Button Position [Left/Right,Up/Down,Forward/Back]: \"" + Arrays.toString((int[])toGateCorner) + "\"");
+		this.waterPositions = new int[portalPositions.size()][3];
+		for ( int i = 0; i < portalPositions.size(); i++)
 		{
 			int[] point = new int[3];
 			for (int j = 0; j < 3; j++ )
-				point[j] = portal_positions.get(i)[j];
-			this.water_positions[i] = point;
+				point[j] = portalPositions.get(i)[j];
+			this.waterPositions[i] = point;
 		}
-		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Portal Positions: \"" + Arrays.deepToString((int[][])this.water_positions) + "\"");
+		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Portal Positions: \"" + Arrays.deepToString((int[][])this.waterPositions) + "\"");
 		
-		this.light_positions = new int[light_positions.size()];
-		for ( int i = 0; i < light_positions.size(); i++)
+		this.lightPositions = new int[lightPositions.size()];
+		for ( int i = 0; i < lightPositions.size(); i++)
 		{
-			this.light_positions[i] = light_positions.get(i);
+			this.lightPositions[i] = lightPositions.get(i);
 		}
-		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Light Material Positions: \"" + light_positions + "\"");
+		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Light Material Positions: \"" + lightPositions + "\"");
 			
-		this.stargate_positions = new int[block_positions.size()][3];
-		for ( int i = 0; i < block_positions.size(); i++)
+		this.stargatePositions = new int[blockPositions.size()][3];
+		for ( int i = 0; i < blockPositions.size(); i++)
 		{
 			int[] point = new int[3];
 			for (int j = 0; j < 3; j++ )
-				point[j] = block_positions.get(i)[j];
-			this.stargate_positions[i] = point;
+				point[j] = blockPositions.get(i)[j];
+			this.stargatePositions[i] = point;
 		}
-		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Material Positions: \"" + Arrays.deepToString((int[][])this.stargate_positions) + "\"");
+		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Material Positions: \"" + Arrays.deepToString((int[][])this.stargatePositions) + "\"");
 		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Finished parsing shape: \"" + (String)this.shapeName + "\"");
 
-		woosh_depth = cur_woosh_depth;
-		woosh_depth_squared = cur_woosh_depth * cur_woosh_depth;
+		wooshDepth = curWooshDepth;
+		wooshDepthSquared = curWooshDepth * curWooshDepth;
 	}
 }

@@ -40,26 +40,29 @@ public class HelpSupport {
      */
     public static void enableHelp()
     {
-        if (WormholeXTreme.getHelp() == null && !ConfigManager.getHelpSupportDisable())
+        if (!ConfigManager.getHelpSupportDisable()) 
         {
-            final Plugin helptest = WormholeXTreme.getThisPlugin().getServer().getPluginManager().getPlugin("Help");
-            if (helptest != null)
+            if (WormholeXTreme.getHelp() == null)
             {
-                final String version = helptest.getDescription().getVersion();
-                checkHelpVersion(version);
-                try 
+                final Plugin helptest = WormholeXTreme.getThisPlugin().getServer().getPluginManager().getPlugin("Help");
+                if (helptest != null)
                 {
-                    WormholeXTreme.setHelp(((Help)helptest));
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Attached to Help version " + version);
+                    final String version = helptest.getDescription().getVersion();
+                    checkHelpVersion(version);
+                    try 
+                    {
+                        WormholeXTreme.setHelp(((Help)helptest));
+                        WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Attached to Help version " + version);
+                    }
+                    catch (ClassCastException e)
+                    {
+                        WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failed to get cast to Help: " + e.getMessage() );
+                    }
                 }
-                catch (Exception e)
+                else
                 {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failed to get cast to Help: " + e.getMessage() );
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Help Plugin not yet available - there will be no Help integration until loaded.");
                 }
-            }
-            else
-            {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Help Plugin not yet available - there will be no Help integration until loaded.");
             }
         }
         else

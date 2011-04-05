@@ -75,7 +75,7 @@ public class Complete implements CommandExecutor
             final Stargate dupName = StargateManager.getStargate( name );
 
             String idc = "";
-            String network = "";
+            String network = "Public";
 
             for ( int i = 1; i < a.length; i++ )
             {

@@ -93,6 +93,10 @@ public class StargateUpdateRunnable implements Runnable
 		{
 		    stargate.afterShutdownStargate();
 		}
+		else if (this.action == ActionToTake.SIGNCLICK)
+		{
+		    stargate.teleportSignClicked();
+		}
 	}
 	
 	/**
@@ -112,6 +116,8 @@ public class StargateUpdateRunnable implements Runnable
 		
 		/** The AFTERSHUTDOWN task. */
 		AFTERSHUTDOWN,
+		
+		SIGNCLICK
 	}
 	
 }

@@ -72,7 +72,7 @@ public class StargateDBManager
 		{
 			connectDB();
 		}
-		List<World> worlds = server.getWorlds();
+		final List<World> worlds = server.getWorlds();
 		PreparedStatement stmt = null;
 		ResultSet gatesData = null;
 		try
@@ -137,8 +137,13 @@ public class StargateDBManager
 					
 					s.gateShape = StargateHelper.getShape(gateShapeName);
 					if (  sn != null )
-						sn.gate_list.add(s);
-					
+					{
+						sn.gateList.add(s);
+						if (s.isSignPowered)
+						{
+						    sn.signGateList.add(s);
+						}
+					}
 					StargateManager.addStargate(s);
 				}
 				else
@@ -185,7 +190,7 @@ public class StargateDBManager
 					}					
 				}
 				
-				if ( s.isSignPowered )
+				if ( s.isSignPowered && s.signTarget == null )
 				{
 					if ( w.isChunkLoaded(s.teleportSignBlock.getChunk() ))
 					{

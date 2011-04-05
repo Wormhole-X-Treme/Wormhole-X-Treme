@@ -42,15 +42,6 @@ import com.wormhole_xtreme.wormhole.plugin.HelpSupport;
  */
 public class Wormhole implements CommandExecutor 
 {
-    /**
-     * Instantiates a new wormhole.
-     *
-     * @param wormholeXTreme the wormhole x treme
-     */
-    public Wormhole(WormholeXTreme wormholeXTreme) 
-    {
-        // TODO Auto-generated constructor stub
-    }
 
     /* (non-Javadoc)
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])

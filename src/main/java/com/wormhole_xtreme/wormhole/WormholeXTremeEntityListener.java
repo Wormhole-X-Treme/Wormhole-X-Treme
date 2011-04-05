@@ -35,7 +35,6 @@ import com.wormhole_xtreme.wormhole.model.StargateManager;
 
 
 
-// TODO: Auto-generated Javadoc
 /**
  * WormholeXtreme Entity Listener.
  *
@@ -44,88 +43,86 @@ import com.wormhole_xtreme.wormhole.model.StargateManager;
  */ 
 public class WormholeXTremeEntityListener extends EntityListener 
 { 
-	/**
-	 * Handle entity damage event.
-	 *
-	 * @param event the event
-	 * @return true, if successful
-	 */
-	private static boolean handleEntityDamageEvent(EntityDamageEvent event)
-	{
-	    final Player p = (Player) event.getEntity();
-	    //if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
-	    //{
-	    // TODO : This is bad for performance!!
-	        final Location current = p.getLocation();
-	        final Stargate closest = StargateManager.findClosestStargate(current);
-	        if(closest != null && closest.gateShape.portal_material == Material.STATIONARY_LAVA)
-	        {
-	            final double blockDistanceSquared = StargateManager.distanceSquaredToClosestGateBlock(current, closest);
-	            if ((closest.active || closest.recentActive) && ((blockDistanceSquared <= closest.gateShape.woosh_depth_squared && closest.gateShape.woosh_depth != 0) || blockDistanceSquared <= 16 ))
-	            {
-	                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE,false,"Blocked Gate: \""+ closest.name + "\" Proximity Event: \"" + event.getCause().toString() +
-	                                                    "\" On: \"" + p.getName() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
-	                p.setFireTicks(0);
-	                return true;
-	            }
-	        }
-	    //}
-	    return false;
-	}
-	
-	/**
-	 * Handle entity explode event.
-	 *
-	 * @param event the event
-	 * @return true, if successful
-	 */
-	private static boolean handleEntityExplodeEvent(List<Block> explodeBlocks)
-	{
-	    final List<Block> eb = explodeBlocks;
-	    for ( int i = 0; i < eb.size(); i++)
-	    {
-	        if (StargateManager.isBlockInGate(eb.get(i)))
-	        {
-	            final Stargate s = StargateManager.getGateFromBlock(eb.get(i));
-	            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Blocked Creeper Explosion on Stargate: \"" + s.name + "\"" );
-	            return true;
-	        }
-	    }
-	    return false;
-	}
+    
+    /**
+     * Handle entity explode event.
+     *
+     * @param explodeBlocks the explode blocks
+     * @return true, if successful
+     */
+    private static boolean handleEntityExplodeEvent(List<Block> explodeBlocks)
+    {
+        final List<Block> eb = explodeBlocks;
+        for ( int i = 0; i < eb.size(); i++)
+        {
+            if (StargateManager.isBlockInGate(eb.get(i)))
+            {
+                final Stargate s = StargateManager.getGateFromBlock(eb.get(i));
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Blocked Creeper Explosion on Stargate: \"" + s.name + "\"" );
+                return true;
+            }
+        }
+        return false;
+    }
 
-	
-	/* (non-Javadoc)
-	 * @see org.bukkit.event.entity.EntityListener#onEntityDamage(org.bukkit.event.entity.EntityDamageEvent)
-	 */
-	@Override
-	public void onEntityDamage(EntityDamageEvent event)
-	{
-		if (!event.isCancelled() && (event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK) || event.getCause().equals(DamageCause.LAVA)))
-		{
-			if ( event.getEntity() instanceof Player )
-			{
-			    if (handleEntityDamageEvent(event))
-			    {
-			        event.setCancelled(true);
-			    }
-			}
-		}
-	}
+    
+    /**
+     * Handle Player damage event.
+     *
+     * @param event the event
+     * @return true, if successful
+     */
+    private static boolean handlePlayerDamageEvent(EntityDamageEvent event)
+    {
+        final Player p = (Player) event.getEntity();
+        final Location current = p.getLocation();
+        final Stargate closest = StargateManager.findClosestStargate(current);
+        if(closest != null && (closest.gateShape.portalMaterial == Material.STATIONARY_LAVA || (closest.target != null && closest.target.gateShape.portalMaterial == Material.STATIONARY_LAVA)))
+        {
+            final double blockDistanceSquared = StargateManager.distanceSquaredToClosestGateBlock(current, closest);
+            if ((closest.active || closest.recentActive) && ((blockDistanceSquared <= closest.gateShape.wooshDepthSquared && closest.gateShape.wooshDepth != 0) || blockDistanceSquared <= 16 ))
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE,false,"Blocked Gate: \""+ closest.name + "\" Proximity Event: \"" + event.getCause().toString() +
+                                                         "\" On: \"" + p.getName() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
+                p.setFireTicks(0);
+                return true;
+            }
+        }
+        return false;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.bukkit.event.entity.EntityListener#onEntityExplode(org.bukkit.event.entity.EntityExplodeEvent)
-	 */
-	@Override
-	public void onEntityExplode(EntityExplodeEvent event)
-	{
-	    if (!event.isCancelled())
-	    {
-	        final List<Block> explodeBlocks = event.blockList();
-	        if (handleEntityExplodeEvent(explodeBlocks))
-	        {
-	            event.setCancelled(true);
-	        }
-	    }
-	}
+
+    /* (non-Javadoc)
+     * @see org.bukkit.event.entity.EntityListener#onEntityDamage(org.bukkit.event.entity.EntityDamageEvent)
+     */
+    @Override
+    public void onEntityDamage(EntityDamageEvent event)
+    {
+        if (!event.isCancelled() && (event.getCause().equals(DamageCause.FIRE) || event.getCause().equals(DamageCause.FIRE_TICK) || event.getCause().equals(DamageCause.LAVA)))
+        {
+            if ( event.getEntity() instanceof Player )
+            {
+                if (handlePlayerDamageEvent(event))
+                {
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.bukkit.event.entity.EntityListener#onEntityExplode(org.bukkit.event.entity.EntityExplodeEvent)
+     */
+    @Override
+    public void onEntityExplode(EntityExplodeEvent event)
+    {
+        if (!event.isCancelled())
+        {
+            final List<Block> explodeBlocks = event.blockList();
+            if (handleEntityExplodeEvent(explodeBlocks))
+            {
+                event.setCancelled(true);
+            }
+        }
+    }
 } 

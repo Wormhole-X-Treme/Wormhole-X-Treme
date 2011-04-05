@@ -52,3 +52,6 @@ STARGATE_MATERIAL=OBSIDIAN
 # Active material is the material that :L blocks become when gate is active
 # Suggested Values are as follows: GLOWSTONE and GLOWING_REDSTONE_ORE
 ACTIVE_MATERIAL=GLOWSTONE
+
+# Redstone activated is the parameter to allow redstone to the DHD lever to activate the gate.
+REDSTONE_ACTIVATED=FALSE

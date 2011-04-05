@@ -81,6 +81,7 @@ public class StargateShape
 	public Material stargateMaterial = Material.OBSIDIAN;
 	public Material activeMaterial = Material.GLOWSTONE;
 	
+	public boolean redstoneActivated = false;
 	/**
 	 * Instantiates a new stargate shape.
 	 */
@@ -227,7 +228,13 @@ public class StargateShape
 			{
 				activeMaterial = Material.valueOf(line.split("=")[1]);
 			}
+			else if ( line.contains("REDSTONE_ACTIVATED") )
+			{
+				redstoneActivated = Boolean.parseBoolean(line.split("=")[1].toLowerCase());
+			}
 		}
+		//TODO: debug printout for the materials the gate uses.
+		//TODO: debug printout for the redstone_activated
 		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Sign Position: \"" + Arrays.toString(signPosition) + "\"");
 		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Enter Position: \"" + Arrays.toString(enterPosition) + "\"");
 		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Button Position [Left/Right,Up/Down,Forward/Back]: \"" + Arrays.toString((int[])toGateCorner) + "\"");

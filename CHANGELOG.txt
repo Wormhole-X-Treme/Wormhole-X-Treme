@@ -1,4 +1,4 @@
-Changes 0.831:
+Changes 0.831 (4/4/11 @ 23:13):
 
 - Fixed erroneous messages sent when a plugin is attached to already and WXT receives 
   a plugin event for it. Cosmetic bug, fixed.

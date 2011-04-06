@@ -76,16 +76,10 @@ Layer#4=
 [I][I][I][I][I][S:A][S:D]
 [I][I][I][I][I][S:IA][S]
 
-
-# These values are the relative positions of the button to the lower right corner of the design.
-# In the standard gate the corner is 1 down (-1 up) from the button, 1 to the right of the button, and 4 away. 
-# Note that the DHD counts as a block, so in the standard gate there is the DHD block + 3 = total of 4 away.
-BUTTON_UP=-1
-BUTTON_RIGHT=1
-BUTTON_AWAY=4
-
-#Woosh depth is how many blocks of portal material shoot out when gate is activated
-WOOSH_DEPTH=3
+# Number of ticks to wait before activating each # of the woosh. 1 tick = ~50ms
+WOOSH_TICKS = 3;
+# Number of ticks to wait before activating each # of the lights. 1 tick = ~50ms
+LIGHT_TICKS = 2;
 
 # None of the follow materials are required, they will default if not set.
 # Portal material the material the [P] blocks will be when gate is active.

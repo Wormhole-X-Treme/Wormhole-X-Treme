@@ -28,6 +28,9 @@ public class Stargate3DShape extends StargateShape
 		{
 			String line = fileLines[i];
 			
+			if ( line.startsWith("#") )
+				continue;
+			
 			if ( line.contains("Name=") )
 			{
 				this.shapeName = line.split("=")[1];
@@ -65,31 +68,46 @@ public class Stargate3DShape extends StargateShape
 				{
 				    WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG,false,"Shape: \"" + (String)this.shapeName + "\"" + " Height: \"" + Integer.toString((int)height) + "\"" + " Width: \"" + Integer.toString((int)width) + "\"" );
 				}
-					
-				index = i + 1;
-				// Now parse each layer
-				if ( fileLines[index].startsWith("Layer") )
-				{
-					// 1. get layer #
-					
-					// 2. add each line that starts with [ to a new string[]
-					// 3. call constructor
-					index++;
-				}
 			}
-			else if ( line.contains("PORTAL_MATERIAL") )
+			else if ( line.startsWith("Layer") )
+			{
+				// 1. get layer #
+				int layer = Integer.valueOf(line.split("#")[1]);
+				
+				// 2. add each line that starts with [ to a new string[]
+				i++;
+				String[] layerLines = new String[height];
+				int line_index = 0;
+				while ( fileLines[i].startsWith("[") || fileLines[i].startsWith("#"));
+				{
+					layerLines[line_index] = fileLines[i];
+					i++;
+					
+					if ( fileLines[i].startsWith("#") )
+					{
+						continue;
+					}
+
+					line_index++;
+				}
+				
+				// 3. call constructor
+				StargateShapeLayer ssl = new StargateShapeLayer(layerLines, height, width);
+				layers.set(layer, ssl);
+			}
+			else if ( line.contains("PORTAL_MATERIAL=") )
 			{
 				portalMaterial = Material.valueOf(line.split("=")[1]);
 			}
-			else if ( line.contains("IRIS_MATERIAL") )
+			else if ( line.contains("IRIS_MATERIAL=") )
 			{
 				irisMaterial = Material.valueOf(line.split("=")[1]);
 			}
-			else if ( line.contains("STARGATE_MATERIAL") )
+			else if ( line.contains("STARGATE_MATERIAL=") )
 			{
 				stargateMaterial = Material.valueOf(line.split("=")[1]);
 			}
-			else if ( line.contains("ACTIVE_MATERIAL") )
+			else if ( line.contains("ACTIVE_MATERIAL=") )
 			{
 				activeMaterial = Material.valueOf(line.split("=")[1]);
 			}

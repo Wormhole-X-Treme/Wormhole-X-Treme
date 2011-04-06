@@ -142,20 +142,27 @@ public class DBUpdateUtil
 		{
 		    try 
 		    {
-                stmt.close();
-            }
-            catch (SQLException e) 
-            {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
-            }
+		        if (rs != null)
+		        {
+		            rs.close();
+		        }
+		    }
+		    catch (SQLException e) 
+		    {
+		        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+		    }
 		    try 
 		    {
-                rs.close();
-            }
-            catch (SQLException e) 
-            {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
-            }
+		        if (stmt != null)
+		        {
+		            stmt.close();
+		        }
+		    }
+		    catch (SQLException e) 
+		    {
+		        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+		    }
+
 		}
 		return ver;
 	}

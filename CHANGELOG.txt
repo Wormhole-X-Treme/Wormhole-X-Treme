@@ -1,4 +1,8 @@
-Changes 0.831 (4/4/11 @ 23:13):
+Changes 0.832 (4/5/11 @ 15:04 PST):
+
+- Fixed NPE during database creation. Whoops, missing null-checks. 
+
+Changes 0.831 (4/4/11 @ 23:13 PST):
 
 - Fixed erroneous messages sent when a plugin is attached to already and WXT receives 
   a plugin event for it. Cosmetic bug, fixed.

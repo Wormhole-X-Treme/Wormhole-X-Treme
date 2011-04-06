@@ -65,7 +65,7 @@ public class StargateShape
 			{0,1,4}, {0,2,4}, {0,3,4}, {0,4,4}, {0,5,4}, 
 			{0,2,5}, {0,3,5}, {0,4,5} };
 	
-	/** The reference_vector. */
+	/** The reference_vector, this vector always points up for calculating cross product. */
 	public int[] referenceVector = {0,1,0};
 	
 	/** [0] = Left - / Right + [1] = Up + / Down - [2] = Forward + / Backward -. */
@@ -80,8 +80,7 @@ public class StargateShape
 	public Material irisMaterial = Material.STONE;
 	public Material stargateMaterial = Material.OBSIDIAN;
 	public Material activeMaterial = Material.GLOWSTONE;
-	
-	public boolean redstoneActivated = false;
+
 	/**
 	 * Instantiates a new stargate shape.
 	 */
@@ -227,10 +226,6 @@ public class StargateShape
 			else if ( line.contains("ACTIVE_MATERIAL") )
 			{
 				activeMaterial = Material.valueOf(line.split("=")[1]);
-			}
-			else if ( line.contains("REDSTONE_ACTIVATED") )
-			{
-				redstoneActivated = Boolean.parseBoolean(line.split("=")[1].toLowerCase());
 			}
 		}
 		//TODO: debug printout for the materials the gate uses.

@@ -68,6 +68,8 @@ public class WormholeXTreme extends JavaPlugin
 	private static final WormholeXTremeEntityListener entityListener = new WormholeXTremeEntityListener();
 	/** The server listener. */
 	private static final WormholeXTremeServerListener serverListener = new WormholeXTremeServerListener();
+	/** The server listener. */
+	private static final WormholeXTremeRedstoneListener redstoneListener = new WormholeXTremeRedstoneListener();
 	
 	/** The debugees. */
 	private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
@@ -177,6 +179,8 @@ public class WormholeXTreme extends JavaPlugin
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.High, tp);
 		pm.registerEvent(Event.Type.PLAYER_BUCKET_FILL, playerListener, Priority.High, tp);
 		pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, playerListener, Priority.High, tp);
+		
+		pm.registerEvent(Event.Type.REDSTONE_CHANGE, redstoneListener, Priority.Normal, tp);
 		// Handle removing player data
 		// pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Normal, this);
 		// Handle minecarts going through portal

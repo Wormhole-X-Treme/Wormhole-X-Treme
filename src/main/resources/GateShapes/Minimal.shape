@@ -1,40 +1,61 @@
 # The name for this shape
 Name=Minimal
+# Version 2 of shape files allows for many new things.
+# 3D gates, new format for blocks, woosh and light order etc
+Version=2
 
-# GateShape= needs a newline after it before starting the shape
+# GateShape now needs "Layer" lines
+# Each Layer requires a #number= and then a newline.
+# Blocks can only be placed into layers.
+# a 2D gate would have only 1 layer.
 # Acceptable blocks are:
-#    [A] = Air
-#    [O] = Obsidian
+#    [I] = Ignored
+#    [S] = Stargate Material
 #    [P] = Air blocks that will turn into the portal material when activated.
 #    Extra parameters:
-#    [L] = Block that will light when gate is activated
-#    [S] = Block where the name sign will be created. This is optional.
-#    [E] = Block from where the the teleport-in location starts from.
-#			The program goes one block in the direction the gate faces and then up until it hits air.
-#			This means your exit will be 1 block forward from where it is on the diagram. (and up until it hits air).
-#	 The bare minimum for a gate that goes in and out would probably be something like this:
-#    [P]
-#    [P]
-#    [O:E]
-#
-#    You could have a gate like this for only incoming wormholes (as there is no material to go out of).
-#    You would need to create a DHD to make the gate and then remove it afterwards.
-#	 [O:E]
+#    :L = Block that will light when gate is activated
+#		Optionally you may add a #number after L to indicate the order it lights.
+#		Defaults to 1 if there is no #
+#    :N = Block where the name sign will be created. This is optional.
+#    :E = Block where you teleport in at. The players feet will be on this block.
+#    :A = Block where the activation switch is attached to. 
+#			The only restriction is that the block that faces it must be "I" (so nothing is in the way)
+#			The switch will face in the positive layer direction.
+#			In this example the switch will face towards where layer 3 would be (if there was a 3rd layer) 
+#    :W = Block that will woosh when gate is activated
+#		Optionally you may add a #number after W to indicate the order it wooshes in.
+#		Defaults to 1 if there is no # and there is ~150ms between each number
+#		After all #s are active it removes them but if a block is P:W 
+#		the block will stay as portal material until gate is shutdown.
+#    :D = Block the sign dialer hangs from. Only 1 per gate!
+#			The only restriction is that the block that faces it must be "I" (so nothing is in the way)
+#			Gates with this block require it and only work when it is present.
+#    :RA = Redstone activation block. A redstone charge next to this block will activate the gate.
+#			This block requires a :D block for targetting.
+#    :RD = Redstone sign dialer cycle block. 
+#			A redstone charge next to this block will cycle sign targets.
+#			This block requires a :D block for targetting.
+#	 :IA = Iris Activation Switch - Not required unless you want to be able to place an Iris on the gate.
+#		IA, D, N, and A cannot be the same block, and none of those can contain W
 
 GateShape=
-[P]
-[P]
-[O:E:L]
 
-# These values are the relative positions of the button to the lower right corner of the design.
-# In the standard gate the corner is 1 down (-1 up) from the button, 1 to the right of the button, and 4 away. 
-# Note that the DHD counts as a block, so in the standard gate there is the DHD block + 3 = total of 4 away.
-BUTTON_UP=-2
-BUTTON_RIGHT=-1
-BUTTON_AWAY=2
+Layer#1=
+[I:W#3][I]
+[P:W#2][I]
+[P:W#1][I]
+[S:L#1][A]
 
-#Woosh depth is how many blocks of portal material shoot out when gate is activated
-WOOSH_DEPTH=0
+Layer#2=
+[I][I]
+[I][S:A]
+[I][S:IA]
+[I:E][I]
+
+# Number of ticks to wait before activating each # of the woosh. 1 tick = ~50ms
+WOOSH_TICKS = 3;
+# Number of ticks to wait before activating each # of the lights. 1 tick = ~50ms
+LIGHT_TICKS = 1;
 
 # None of the follow materials are required, they will default if not set.
 # Portal material the material the [P] blocks will be when gate is active.
@@ -45,13 +66,10 @@ PORTAL_MATERIAL=STATIONARY_WATER
 # Suggested values are as follows: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, OBSIDIAN, GLOWSTONE and LAPIS_BLOCK
 IRIS_MATERIAL=STONE
 
-# Stargate material is the material the [O] blocks are made of
+# Stargate material is the material the [S] blocks are made of
 # Reasonable values are as follows: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, OBSIDIAN, GLOWSTONE and LAPIS_BLOCK
 STARGATE_MATERIAL=OBSIDIAN
 
 # Active material is the material that :L blocks become when gate is active
 # Suggested Values are as follows: GLOWSTONE and GLOWING_REDSTONE_ORE
 ACTIVE_MATERIAL=GLOWSTONE
-
-# Redstone activated is the parameter to allow redstone to the DHD lever to activate the gate.
-REDSTONE_ACTIVATED=FALSE

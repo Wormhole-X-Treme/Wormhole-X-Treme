@@ -13,6 +13,7 @@ Version=2
 #    [S] = Stargate Material
 #    [P] = Air blocks that will turn into the portal material when activated.
 #    Extra parameters:
+#
 #	--- These parameters are 1 of each per gate ---
 #    :N = Block where the name sign will be created. This is optional.
 #    :E = Block where you teleport in at. The players feet will be on this block.
@@ -22,18 +23,22 @@ Version=2
 #			In this example the switch will face towards where layer 5 would be (if there was a 5th layer) 
 #    :D = Block the sign dialer hangs from. Only 1 per gate!
 #			The only restriction is that the block that faces it must be "I" (so nothing is in the way)
-#			Gates with this block require it and only work when it is present.
+#			Gates with this block have to be sign dialer gates. Without it they are only /dial
 #    :RA = Redstone activation block. A redstone charge next to this block will activate the gate.
 #			This block requires a :D block for targetting.
+#			Not recommended to be on the :A or :IA blocks (due to redstone being activated )
 #    :RD = Redstone sign dialer cycle block. 
 #			A redstone charge next to this block will cycle sign targets.
 #			This block requires a :D block for targetting.
-#	 :IA = Iris Activation Switch - Not required unless you want to be able to place an Iris on the gate.
+#			Not recommended to be on the :A or :IA blocks (due to redstone being activated )
+#    :IA = Iris Activation Switch - Not required unless you want to be able to place an Iris on the gate.
 #		IA, D, N, and A cannot be the same block, and none of those can contain W
+#
 #	--- There can be many of these per gate -- (Currently no restriction)
 #    :L = Blocks that will light when gate is activated
 #		Optionally you may add a #number after L to indicate the order it lights.
 #		Defaults to 1 if there is no #
+#		This modifier can only be attached to [S] blocks currently.
 #    :W = Blocks that will woosh when gate is activated
 #		Optionally you may add a #number after W to indicate the order it wooshes in.
 #		Defaults to 1 if there is no # and the wait between numbers is configurable below. 

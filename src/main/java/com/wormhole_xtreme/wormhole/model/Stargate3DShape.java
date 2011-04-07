@@ -14,8 +14,9 @@ public class Stargate3DShape extends StargateShape
 	/**
 	 * Layers of the 3D shape. Layers go from 1 - 10
 	 */
-	ArrayList<StargateShapeLayer> layers = new ArrayList<StargateShapeLayer>();
-
+	public ArrayList<StargateShapeLayer> layers = new ArrayList<StargateShapeLayer>();
+	public int activation_layer = -1;
+	
 	public Stargate3DShape(String[] fileLines)
 	{
 		signPosition = null;
@@ -94,6 +95,8 @@ public class Stargate3DShape extends StargateShape
 				// 3. call constructor
 				StargateShapeLayer ssl = new StargateShapeLayer(layerLines, height, width);
 				layers.set(layer, ssl);
+				if ( ssl.activationPosition != null )
+					this.activation_layer = layer;
 			}
 			else if ( line.contains("PORTAL_MATERIAL=") )
 			{

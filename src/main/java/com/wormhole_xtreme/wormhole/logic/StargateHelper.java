@@ -44,9 +44,11 @@ import org.bukkit.block.Sign;
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.logic.StargateUpdateRunnable.ActionToTake;
 import com.wormhole_xtreme.wormhole.model.Stargate;
+import com.wormhole_xtreme.wormhole.model.Stargate3DShape;
 import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.model.StargateNetwork;
 import com.wormhole_xtreme.wormhole.model.StargateShape;
+import com.wormhole_xtreme.wormhole.model.StargateShapeLayer;
 import com.wormhole_xtreme.wormhole.utils.DataUtils;
 import com.wormhole_xtreme.wormhole.utils.WorldUtils;
 
@@ -425,7 +427,146 @@ public class StargateHelper
 		return null;
 	}
 	
+	public static Stargate checkStargate3D(Block buttonBlock, BlockFace facing, Stargate3DShape shape, boolean create)
+	{
+		Stargate s = new Stargate();
+		s.myWorld = buttonBlock.getWorld();
+		BlockFace opposite = WorldUtils.getInverseDirection(facing);
+		Block activationBlock = buttonBlock.getFace(opposite);
+		StargateShapeLayer act_layer = shape.layers.get(shape.activation_layer);
+		
+		int[] facingVector = { 0,0,0 };
+
+		// Now we start calculaing the values for the blocks that need to be the stargate material.
+		
+		if ( facing == BlockFace.NORTH )
+			facingVector[0] = -1;
+		else if ( facing == BlockFace.SOUTH )
+			facingVector[0] = 1;
+		else if ( facing == BlockFace.EAST )
+			facingVector[2] = -1;
+		else if ( facing == BlockFace.WEST )
+			facingVector[2] = 1;
+		else if ( facing == BlockFace.UP )
+			facingVector[1] = 1;
+		else if ( facing == BlockFace.DOWN )
+			facingVector[1] = -1;
+
+		int[] directionVector = { 0,0,0 };
+		int[] startingPosition = { 0,0,0 };
+		
+		// Calculate the cross product
+		directionVector[0] = facingVector[1]*shape.referenceVector[2] - facingVector[2]*shape.referenceVector[1];
+		directionVector[1] = facingVector[2]*shape.referenceVector[0] - facingVector[0]*shape.referenceVector[2];
+		directionVector[2] = facingVector[0]*shape.referenceVector[1] - facingVector[1]*shape.referenceVector[0];
+
+		// This is the 0,0,0 the block at the ground on the activation layer
+		startingPosition[0] = buttonBlock.getX() - directionVector[0] * act_layer.activationPosition[2];
+		startingPosition[1] = buttonBlock.getY() + act_layer.activationPosition[1]; 
+		startingPosition[2] = buttonBlock.getZ() - directionVector[2] * act_layer.activationPosition[2];
+
+		// 2. Add/remove from the direction component to yield each layers 0,0,0
+		for ( int i = 0; i <= 10; i++)
+		{
+			if ( shape.layers.get(i) != null )
+			{
+				int layerOffset = shape.activation_layer - i;
+				int[] layerStarter = { startingPosition[0] + facingVector[0] * layerOffset, 
+										startingPosition[1],
+										startingPosition[2] + facingVector[2] * layerOffset };
+				if ( !checkStargateLayer( shape.layers.get(i), layerStarter, directionVector, s, create ) )
+				{
+					if ( s.network != null )
+					{
+						s.network.gateList.remove(s);
+						if (s.isSignPowered)
+						{
+						    s.network.signGateList.remove(s);
+						}
+					}
+					return null;
+				}
+			}
+		}
+		return s;
+	}
 	
+	public static boolean checkStargateLayer(StargateShapeLayer layer, int[] lowerCorner, int[] directionVector, Stargate tempGate, boolean create)
+	{
+		World w = tempGate.myWorld;
+		// First check all the block positions!
+		for ( int i = 0; i < layer.blockPositions.size() ; i++)
+		{
+			Block maybeBlock = getBlockFromVector(layer.blockPositions.get(i), directionVector, lowerCorner, w);
+
+			if ( create )
+				maybeBlock.setType( tempGate.gateShape.stargateMaterial );
+				
+			if ( isStargateMaterial(maybeBlock, tempGate.gateShape) )
+			{
+				tempGate.blocks.add( maybeBlock.getLocation() );
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		// Set the name sign location.
+		/*if ( shape.signPosition != null )
+		{
+			int[] signLocationArray = {shape.signPosition[2] * directionVector[0] * -1, shape.signPosition[1], shape.signPosition[2] * directionVector[2] * -1};
+			Block nameBlock = w.getBlockAt(signLocationArray[0] + startingPosition[0], signLocationArray[1] + startingPosition[1], signLocationArray[2] + startingPosition[2]);
+			tempGate.nameBlockHolder = nameBlock;
+		}
+		// Now set teleport in location
+		int[] teleportLocArray = {shape.enterPosition[2] * directionVector[0] * -1, shape.enterPosition[1], shape.enterPosition[2] * directionVector[2] * -1};
+		Block teleBlock = w.getBlockAt(teleportLocArray[0] + startingPosition[0], teleportLocArray[1] + startingPosition[1], teleportLocArray[2] + startingPosition[2]);
+		// First go forward one
+		Block bLoc = teleBlock.getRelative(facing);
+		// Now go up until we hit air or water.
+		while ( bLoc.getType() != Material.AIR && bLoc.getType() != Material.WATER)
+		{
+			bLoc = bLoc.getRelative(BlockFace.UP);
+		}
+		Location teleLoc = bLoc.getLocation();
+		// Make sure the guy faces the right way out of the portal.
+		teleLoc.setYaw( WorldUtils.getDegreesFromBlockFace(facing));
+		teleLoc.setPitch(0);
+		// Put him in the middle of the block instead of a corner.
+		// Players are 1.65 blocks tall, so we go up .66 more up :-p
+		teleLoc.setX(teleLoc.getX() + 0.5);
+		teleLoc.setY(teleLoc.getY() + 0.66);
+		teleLoc.setZ(teleLoc.getZ() + 0.5);
+		tempGate.teleportLocation = teleLoc;
+		
+		for ( int[] bVect : shape.waterPositions)
+		{
+			int[] blockLocation = {bVect[2] * directionVector[0] * -1, bVect[1], bVect[2] * directionVector[2] * -1};
+			
+			Block maybeBlock = w.getBlockAt(blockLocation[0] + startingPosition[0], blockLocation[1] + startingPosition[1], blockLocation[2] + startingPosition[2]);
+			if ( maybeBlock.getType() == Material.AIR )
+				tempGate.waterBlocks.add( maybeBlock.getLocation() );
+			else
+			{
+				if ( tempGate.network != null )
+					tempGate.network.gateList.remove(tempGate);
+				
+				return null;
+			}
+		}*/
+		return false;
+	}
+
+	private static Block getBlockFromVector(Integer[] bVect,
+			int[] directionVector, int[] lowerCorner, World w) 
+	{
+		
+		int[] blockLocation = {bVect[2] * directionVector[0], bVect[1], bVect[2] * directionVector[2]};
+		
+		return w.getBlockAt(blockLocation[0] + lowerCorner[0], blockLocation[1] + lowerCorner[1], blockLocation[2] + lowerCorner[2]);
+	}
+
 	/**
 	 * Checks if is stargate material.
 	 *

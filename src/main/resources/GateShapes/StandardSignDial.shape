@@ -13,20 +13,13 @@ Version=2
 #    [S] = Stargate Material
 #    [P] = Air blocks that will turn into the portal material when activated.
 #    Extra parameters:
-#    :L = Block that will light when gate is activated
-#		Optionally you may add a #number after L to indicate the order it lights.
-#		Defaults to 1 if there is no #
+#	--- These parameters are 1 of each per gate ---
 #    :N = Block where the name sign will be created. This is optional.
 #    :E = Block where you teleport in at. The players feet will be on this block.
-#    :A = Block where the activation switch is attached to. 
+#    :A = Block where the activation switch is attached to. 1 per gate!
 #			The only restriction is that the block that faces it must be "I" (so nothing is in the way)
 #			The switch will face in the positive layer direction.
-#			In this example the switch will face towards where layer 3 would be (if there was a 3rd layer) 
-#    :W = Block that will woosh when gate is activated
-#		Optionally you may add a #number after W to indicate the order it wooshes in.
-#		Defaults to 1 if there is no # and there is ~150ms between each number
-#		After all #s are active it removes them but if a block is P:W 
-#		the block will stay as portal material until gate is shutdown.
+#			In this example the switch will face towards where layer 5 would be (if there was a 5th layer) 
 #    :D = Block the sign dialer hangs from. Only 1 per gate!
 #			The only restriction is that the block that faces it must be "I" (so nothing is in the way)
 #			Gates with this block require it and only work when it is present.
@@ -36,7 +29,16 @@ Version=2
 #			A redstone charge next to this block will cycle sign targets.
 #			This block requires a :D block for targetting.
 #	 :IA = Iris Activation Switch - Not required unless you want to be able to place an Iris on the gate.
-#		IA, D, N, and A cannot be the same block, and none of those can contain W 
+#		IA, D, N, and A cannot be the same block, and none of those can contain W
+#	--- There can be many of these per gate -- (Currently no restriction)
+#    :L = Blocks that will light when gate is activated
+#		Optionally you may add a #number after L to indicate the order it lights.
+#		Defaults to 1 if there is no #
+#    :W = Blocks that will woosh when gate is activated
+#		Optionally you may add a #number after W to indicate the order it wooshes in.
+#		Defaults to 1 if there is no # and the wait between numbers is configurable below. 
+#		After all #s are active it removes them in reverse order but 
+#		if a block is [P:W]	the block will stay as portal material until gate is shutdown. 
 
 GateShape=
 

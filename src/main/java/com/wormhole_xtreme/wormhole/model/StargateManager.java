@@ -74,11 +74,11 @@ public class StargateManager
 	public static void addStargate(Stargate s)
 	{
 		stargateList.put(s.name, s);
-		for ( Location b : s.blocks)
+		for ( Location b : s.stargateBlocks)
 		{
 			allGateBlocks.put(b, s);
 		}
-		for ( Location b : s.waterBlocks)
+		for ( Location b : s.portalBlocks)
 		{
 			allGateBlocks.put(b, s);
 		}
@@ -177,12 +177,12 @@ public class StargateManager
 			}
 		}
 
-		for ( Location b : s.blocks )
+		for ( Location b : s.stargateBlocks )
 		{
 			allGateBlocks.remove(b);
 		}
 
-		for ( Location b : s.waterBlocks )
+		for ( Location b : s.portalBlocks )
 		{
 			allGateBlocks.remove(b);
 		}
@@ -518,7 +518,7 @@ public class StargateManager
         double distance = Double.MAX_VALUE;
         if (stargate != null && self != null)
         {
-            ArrayList<Location> gateblocks = stargate.blocks;
+            ArrayList<Location> gateblocks = stargate.stargateBlocks;
             for (Location l : gateblocks)
             {
                 final double blockdistance = getSquaredDistance(self,l);

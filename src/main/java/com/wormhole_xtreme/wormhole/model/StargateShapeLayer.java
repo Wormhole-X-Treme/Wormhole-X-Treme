@@ -105,6 +105,8 @@ public class StargateShapeLayer
 						if ( this.lightPositions.get(light_iteration) == null )
 						{
 							ArrayList<Integer[]> new_it = new ArrayList<Integer[]>();
+							while( this.lightPositions.size() < light_iteration)
+								this.lightPositions.add(null);
 							this.lightPositions.set(light_iteration, new_it);
 						}
 						
@@ -117,6 +119,9 @@ public class StargateShapeLayer
 						if ( this.wooshPositions.get(w_iteration) == null )
 						{
 							ArrayList<Integer[]> new_it = new ArrayList<Integer[]>();
+							while( this.wooshPositions.size() < w_iteration)
+								this.wooshPositions.add(null);
+							
 							this.wooshPositions.set(w_iteration, new_it);
 						}
 						

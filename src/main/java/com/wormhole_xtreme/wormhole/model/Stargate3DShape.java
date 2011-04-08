@@ -16,6 +16,7 @@ public class Stargate3DShape extends StargateShape
 	 */
 	public ArrayList<StargateShapeLayer> layers = new ArrayList<StargateShapeLayer>();
 	public int activation_layer = -1;
+	public int sign_layer = -1;
 	
 	public Stargate3DShape(String[] fileLines)
 	{
@@ -72,6 +73,7 @@ public class Stargate3DShape extends StargateShape
 			}
 			else if ( line.startsWith("Layer") )
 			{
+				// TODO : Add some debug output for each layer!
 				// 1. get layer #
 				int layer = Integer.valueOf(line.split("#")[1]);
 				
@@ -94,9 +96,14 @@ public class Stargate3DShape extends StargateShape
 				
 				// 3. call constructor
 				StargateShapeLayer ssl = new StargateShapeLayer(layerLines, height, width);
+				// bad hack to make sure list is big enough :(
+				while ( layers.size() < layer )
+					layers.add(null);
 				layers.set(layer, ssl);
 				if ( ssl.activationPosition != null )
 					this.activation_layer = layer;
+				if ( ssl.dialerPosition != null )
+					this.sign_layer = layer;
 			}
 			else if ( line.contains("PORTAL_MATERIAL=") )
 			{

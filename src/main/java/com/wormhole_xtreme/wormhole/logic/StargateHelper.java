@@ -64,7 +64,7 @@ public class StargateHelper
 	private static final ConcurrentHashMap<String, StargateShape> shapes = new ConcurrentHashMap<String, StargateShape>();
 	
 	/** The Constant StargateSaveVersion. */
-	public static final byte StargateSaveVersion = 5;
+	public static final byte StargateSaveVersion = 6;
 	
 	/** The Empty block. */
 	private static byte[] emptyBlock = { 0,0,0,0,0,0,0,0,0,0,0,0 };
@@ -104,7 +104,19 @@ public class StargateHelper
 		// Size of all the basic sizes we know
 		int size = numBytesWithVersion + (numInts * 4) + (numLongs * 8) + (numBlocks * blockSize) + (numLocations * locationSize);
 		// Size of the gate blocks
-		size += (s.blocks.size() * blockSize ) + (s.waterBlocks.size() * blockSize ) + s.lightBlocks.size() * blockSize;
+		size += (s.stargateBlocks.size() * blockSize ) + (s.portalBlocks.size() * blockSize );
+		// Add all the blocks of the lights
+		for ( int i = 0; i < s.lightBlocks.size(); i++ )
+		{
+			if ( s.lightBlocks.get(i) != null )
+				size += s.lightBlocks.get(i).size() * blockSize;
+		}
+		// Add all the blocks of the woosh
+		for ( int i = 0; i < s.wooshBlocks.size(); i++ )
+		{
+			if ( s.wooshBlocks.get(i) != null )
+				size += s.wooshBlocks.get(i).size() * blockSize;
+		}
 		// Size of the strings.
 		size += utfFaceBytes.length + utfIdcBytes.length;
 		
@@ -175,17 +187,43 @@ public class StargateHelper
 		else
 			dataArr.put((byte)0);
 		
-		dataArr.putInt(s.blocks.size());
-		for ( int i = 0; i < s.blocks.size(); i++ )
-			dataArr.put(DataUtils.blockLocationToBytes(s.blocks.get(i)));
+		dataArr.putInt(s.stargateBlocks.size());
+		for ( int i = 0; i < s.stargateBlocks.size(); i++ )
+			dataArr.put(DataUtils.blockLocationToBytes(s.stargateBlocks.get(i)));
 		
-		dataArr.putInt(s.waterBlocks.size());
-		for ( int i = 0; i < s.waterBlocks.size(); i++ )
-			dataArr.put(DataUtils.blockLocationToBytes(s.waterBlocks.get(i)));
+		dataArr.putInt(s.portalBlocks.size());
+		for ( int i = 0; i < s.portalBlocks.size(); i++ )
+			dataArr.put(DataUtils.blockLocationToBytes(s.portalBlocks.get(i)));
 
 		dataArr.putInt(s.lightBlocks.size());
 		for ( int i = 0; i < s.lightBlocks.size(); i++ )
-			dataArr.put(DataUtils.blockLocationToBytes(s.lightBlocks.get(i)));
+		{
+			if ( s.lightBlocks.get(i) != null )
+			{
+				dataArr.putInt(s.lightBlocks.get(i).size());
+				for ( int j = 0; j < s.lightBlocks.get(i).size(); j++ )
+					dataArr.put(DataUtils.blockLocationToBytes(s.lightBlocks.get(i).get(j)));
+			}
+			else
+			{
+				dataArr.putInt(0);
+			}
+		}
+		
+		dataArr.putInt(s.wooshBlocks.size());
+		for ( int i = 0; i < s.wooshBlocks.size(); i++ )
+		{
+			if ( s.wooshBlocks.get(i) != null )
+			{
+				dataArr.putInt(s.wooshBlocks.get(i).size());
+				for ( int j = 0; j < s.wooshBlocks.get(i).size(); j++ )
+					dataArr.put(DataUtils.blockLocationToBytes(s.wooshBlocks.get(i).get(j)));
+			}
+			else
+			{
+				dataArr.putInt(0);	
+			}
+		}
 		
 		return dataArr.array();
 	} 
@@ -208,7 +246,10 @@ public class StargateHelper
 		    final StargateShape shape = shapes.get(key);
 		    if (shape != null)
 		    {
-		        s = checkStargate(buttonBlock, facing, shape, false);
+				if ( shape instanceof Stargate3DShape )
+					s = checkStargate3D(buttonBlock, facing, (Stargate3DShape) shape, false);
+				else
+					s = checkStargate(buttonBlock, facing, shape, false);
 		    }
 			if ( s != null )
 			{
@@ -229,7 +270,10 @@ public class StargateHelper
 	 */
 	public static Stargate checkStargate(Block buttonBlock, BlockFace facing, StargateShape shape )
 	{
-		return checkStargate(buttonBlock, facing, shape, true);
+		if ( shape instanceof Stargate3DShape )
+			return checkStargate3D(buttonBlock, facing, (Stargate3DShape) shape, true);
+		else
+			return checkStargate(buttonBlock, facing, shape, true);
 	}
 	
 	/**
@@ -255,7 +299,7 @@ public class StargateHelper
 			tempGate.name = "";
 			tempGate.activationBlock = buttonBlock;
 			tempGate.facing = facing;
-			tempGate.blocks.add( buttonBlock.getLocation() );
+			tempGate.stargateBlocks.add( buttonBlock.getLocation() );
 			tempGate.gateShape = shape;
 			if ( !isStargateMaterial( holdingBlock.getRelative(BlockFace.DOWN), tempGate.gateShape ) )
 			{
@@ -272,7 +316,7 @@ public class StargateHelper
 					tempGate.isSignPowered = true;
 					tempGate.teleportSignBlock = signBlock;
 					tempGate.teleportSign = (Sign) signBlock.getState();
-					tempGate.blocks.add( signBlock.getLocation() );
+					tempGate.stargateBlocks.add( signBlock.getLocation() );
 					
 					String name = tempGate.teleportSign.getLine(0);
 					Stargate posDupe = StargateManager.getStargate(name);
@@ -333,12 +377,17 @@ public class StargateHelper
 					
 				if ( isStargateMaterial(maybeBlock, tempGate.gateShape) )
 				{
-					tempGate.blocks.add( maybeBlock.getLocation() );
+					tempGate.stargateBlocks.add( maybeBlock.getLocation() );
 					for ( int j = 0; j < shape.lightPositions.length; j++ )
 					{
 						if ( shape.lightPositions[j] == i)
 						{
-							tempGate.lightBlocks.add(maybeBlock.getLocation());
+							while ( tempGate.lightBlocks.size() < 2)
+							{
+								tempGate.lightBlocks.add(null);
+							}
+							// In 2d gate all lights go in first iteration!
+							tempGate.lightBlocks.get(1).add(maybeBlock.getLocation());
 						}
 					}
 				}
@@ -390,7 +439,7 @@ public class StargateHelper
 				
 				Block maybeBlock = w.getBlockAt(blockLocation[0] + startingPosition[0], blockLocation[1] + startingPosition[1], blockLocation[2] + startingPosition[2]);
 				if ( maybeBlock.getType() == Material.AIR )
-					tempGate.waterBlocks.add( maybeBlock.getLocation() );
+					tempGate.portalBlocks.add( maybeBlock.getLocation() );
 				else
 				{
 					if ( tempGate.network != null )
@@ -461,9 +510,9 @@ public class StargateHelper
 		directionVector[2] = facingVector[0]*shape.referenceVector[1] - facingVector[1]*shape.referenceVector[0];
 
 		// This is the 0,0,0 the block at the ground on the activation layer
-		startingPosition[0] = buttonBlock.getX() - directionVector[0] * act_layer.activationPosition[2];
-		startingPosition[1] = buttonBlock.getY() + act_layer.activationPosition[1]; 
-		startingPosition[2] = buttonBlock.getZ() - directionVector[2] * act_layer.activationPosition[2];
+		startingPosition[0] = activationBlock.getX() - directionVector[0] * act_layer.activationPosition[2];
+		startingPosition[1] = activationBlock.getY() + act_layer.activationPosition[1]; 
+		startingPosition[2] = activationBlock.getZ() - directionVector[2] * act_layer.activationPosition[2];
 
 		// 2. Add/remove from the direction component to yield each layers 0,0,0
 		for ( int i = 0; i <= 10; i++)
@@ -504,7 +553,7 @@ public class StargateHelper
 				
 			if ( isStargateMaterial(maybeBlock, tempGate.gateShape) )
 			{
-				tempGate.blocks.add( maybeBlock.getLocation() );
+				tempGate.stargateBlocks.add( maybeBlock.getLocation() );
 			}
 			else
 			{
@@ -512,6 +561,23 @@ public class StargateHelper
 			}
 		}
 
+		for ( int i = 0; i < layer.portalPositions.size() ; i++)
+		{
+			Block maybeBlock = getBlockFromVector(layer.blockPositions.get(i), directionVector, lowerCorner, w);
+
+			if ( create )
+				maybeBlock.setType( Material.AIR );
+				
+			if ( maybeBlock.getType() == Material.AIR )
+			{
+				tempGate.portalBlocks.add( maybeBlock.getLocation() );
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
 		// Set the name sign location.
 		/*if ( shape.signPosition != null )
 		{
@@ -660,7 +726,7 @@ public class StargateHelper
 			{
 				byteBuff.get(blocArray);
 				Block bl = DataUtils.blockFromBytes(blocArray, w);
-				s.blocks.add( bl.getLocation() );
+				s.stargateBlocks.add( bl.getLocation() );
 			}
 			
 			numBlocks = byteBuff.getInt(); //DataUtils.byteArrayToInt(gate_data, index); index += 4;
@@ -668,7 +734,7 @@ public class StargateHelper
 			{
 				byteBuff.get(blocArray);
 				Block bl = DataUtils.blockFromBytes(blocArray, w);
-				s.waterBlocks.add( bl.getLocation() );
+				s.portalBlocks.add( bl.getLocation() );
 			}
 			
 			return s;
@@ -741,7 +807,7 @@ public class StargateHelper
 			{
 				byteBuff.get(blocArray);
 				Block bl = DataUtils.blockFromBytes(blocArray, w);
-				s.blocks.add( bl.getLocation() );
+				s.stargateBlocks.add( bl.getLocation() );
 			}
 			
 			numBlocks = byteBuff.getInt(); //DataUtils.byteArrayToInt(gate_data, index); index += 4;
@@ -749,7 +815,7 @@ public class StargateHelper
 			{
 				byteBuff.get(blocArray);
 				Block bl = DataUtils.blockFromBytes(blocArray, w);
-				s.waterBlocks.add( bl.getLocation() );
+				s.portalBlocks.add( bl.getLocation() );
 			}
 			
 			return s;
@@ -822,7 +888,7 @@ public class StargateHelper
 			{
 				byteBuff.get(blocArray);
 				Block bl = DataUtils.blockFromBytes(blocArray, w);
-				s.blocks.add( bl.getLocation() );
+				s.stargateBlocks.add( bl.getLocation() );
 			}
 			
 			numBlocks = byteBuff.getInt(); //DataUtils.byteArrayToInt(gate_data, index); index += 4;
@@ -830,7 +896,7 @@ public class StargateHelper
 			{
 				byteBuff.get(blocArray);
 				Block bl = DataUtils.blockFromBytes(blocArray, w);
-				s.waterBlocks.add( bl.getLocation() );
+				s.portalBlocks.add( bl.getLocation() );
 			}
 			
 			return s;
@@ -905,7 +971,7 @@ public class StargateHelper
 			{
 				byteBuff.get(blocArray);
 				Block bl = DataUtils.blockFromBytes(blocArray, w);
-				s.blocks.add( bl.getLocation() );
+				s.stargateBlocks.add( bl.getLocation() );
 			}
 			
 			numBlocks = byteBuff.getInt();
@@ -913,15 +979,21 @@ public class StargateHelper
 			{
 				byteBuff.get(blocArray);
 				Block bl = DataUtils.blockFromBytes(blocArray, w);
-				s.waterBlocks.add( bl.getLocation() );
+				s.portalBlocks.add( bl.getLocation() );
 			}
+			
+			while ( s.lightBlocks.size() < 2 )
+				s.lightBlocks.add(null);
+			
+			s.lightBlocks.set(1, new ArrayList<Location>() );
+
 			
 			numBlocks = byteBuff.getInt();
 			for ( int i = 0; i < numBlocks; i++ )
 			{
 				byteBuff.get(blocArray);
 				Block bl = DataUtils.blockFromBytes(blocArray, w);
-				s.lightBlocks.add( bl.getLocation() );
+				s.lightBlocks.get(1).add( bl.getLocation() );
 			}
 			
 			return s;

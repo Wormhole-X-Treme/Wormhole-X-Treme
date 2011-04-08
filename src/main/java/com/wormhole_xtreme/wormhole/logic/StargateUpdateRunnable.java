@@ -97,6 +97,10 @@ public class StargateUpdateRunnable implements Runnable
 		{
 		    stargate.teleportSignClicked();
 		}
+		else if ( this.action == ActionToTake.LIGHTUP )
+		{
+			stargate.lightStargate();
+		}
 	}
 	
 	/**
@@ -117,7 +121,10 @@ public class StargateUpdateRunnable implements Runnable
 		/** The AFTERSHUTDOWN task. */
 		AFTERSHUTDOWN,
 		
-		SIGNCLICK
+		SIGNCLICK,
+		
+		/** Action to iterate over lighting up blocks during activation */
+		LIGHTUP
 	}
 	
 }

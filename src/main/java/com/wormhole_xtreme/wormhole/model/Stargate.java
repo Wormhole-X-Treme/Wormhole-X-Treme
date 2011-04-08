@@ -101,17 +101,22 @@ public class Stargate
     /** The temp_target_id. */
     public long tempTargetId = -1;
 
-    // Location of the Button/Lever that activates this gate.
-    /** The Activation block. */
+    /** Location of the Button/Lever that activates this gate. */
     public Block activationBlock;
-    // Location of the Button/Lever that activates this gate.
-    /** The Iris activation block. */
+    /** Location of the Button/Lever that activates the iris. */
     public Block irisActivationBlock;
     // Block to place stargate name
     /** The Name block holder. */
     public Block nameBlockHolder;
+    /** Block that toggle the activation state of the gate
+     * if nearby redstone is activated. 
+	 */
+    public Block redstoneActivationBlock;
+    /** Block that will toggle sign target when redstone nearby 
+     * is activated.
+     */
+    public Block redstoneDialChangeBlock;
 
-    // Block to temp store the sign.
     /** The Teleport sign block. */
     public Block teleportSignBlock;
     // Sign to choose teleport target from (optional)
@@ -136,16 +141,15 @@ public class Stargate
     public int signIndex = 0;
 
 
-    // List of all blocks contained in this stargate, including buttons and levers.
-    /** The Blocks. */
-    public ArrayList<Location> blocks = new ArrayList<Location>();
-    // List of all blocks that turn to water on activation
-    /** The Water blocks. */
-    public ArrayList<Location> waterBlocks = new ArrayList<Location>();
-    // List of all blocks that turn on when gate is active
-    /** The Light blocks. */
-    public ArrayList<Location> lightBlocks = new ArrayList<Location>();
-
+    /** List of all blocks contained in this stargate, including buttons and levers. */
+    public ArrayList<Location> stargateBlocks = new ArrayList<Location>();
+    /** List of all blocks that that are part of the "portal". */
+    public ArrayList<Location> portalBlocks = new ArrayList<Location>();
+    /** List of all blocks that turn on when gate is active. */
+    public ArrayList<ArrayList<Location>> lightBlocks = new ArrayList<ArrayList<Location>>();
+    /** List of all blocks that woosh in order when gate is active. */
+    public ArrayList<ArrayList<Location>> wooshBlocks = new ArrayList<ArrayList<Location>>();    
+    
     // Used to track active scheduled tasks.
     /** The Activate task id. */
     private int activateTaskId;
@@ -179,7 +183,7 @@ public class Stargate
      */
     public void fillGateInterior(Material m)
     {
-        for( Location bc : this.waterBlocks )
+        for( Location bc : this.portalBlocks )
         {
             Block b = myWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
             b.setType(m);
@@ -203,7 +207,7 @@ public class Stargate
         if ( animationStep == 0 && wooshDepth > 0)
         {
 
-            for ( Location b : waterBlocks )
+            for ( Location b : portalBlocks )
             {
                 Block r = myWorld.getBlockAt(b.getBlockX(), b.getBlockY(), b.getBlockZ()).getRelative(facing);
 //				if ( r.getType() != ConfigManager.getStargateMaterial() )
@@ -222,7 +226,7 @@ public class Stargate
             // start = animation_step * WaterBlocks.size();
             // count = waterblocks.size()
             int size = animatedBlocks.size();
-            int start = waterBlocks.size();
+            int start = portalBlocks.size();
             for ( int i = (size - start); i < size; i++ )
             {
                 Block b = animatedBlocks.get(i);
@@ -244,7 +248,7 @@ public class Stargate
         }
         else if ( animationStep >= wooshDepth )
         {
-            for ( int i = 0; i < waterBlocks.size(); i++ )
+            for ( int i = 0; i < portalBlocks.size(); i++ )
             {
                 int index = animatedBlocks.size() - 1;
                 if ( index >= 0 )
@@ -280,6 +284,8 @@ public class Stargate
     {
         this.recentActive = true;
     }
+    
+    int current_lighting_iteration = 1;
     /**
      * Light stargate.
      */
@@ -289,14 +295,30 @@ public class Stargate
         // Light up blocks
         //this.ActivationBlock.getFace(WorldUtils.getInverseDirection(this.Facing)).setType(StargateActiveMaterial);
 
-        if ( lightBlocks != null )
+        if ( this.lightBlocks != null  )
         {
-            for ( Location l : lightBlocks)
+        	if ( this.lightBlocks.get(this.current_lighting_iteration) != null )
+        	{
+	            for ( Location l : this.lightBlocks.get(this.current_lighting_iteration) )
+	            {
+	                Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ()); 
+	                b.setType(this.gateShape.activeMaterial);
+	            }
+        	}
+            
+            if ( current_lighting_iteration >= lightBlocks.size() - 1 )
             {
-                Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ()); 
-                b.setType(this.gateShape.activeMaterial);
+            	// Start up animation for woosh now!
+            	this.current_lighting_iteration = 1;
+            }
+            else
+            {
+            	this.current_lighting_iteration++;
+            	//TODO:  Start up next iteration!
+                // Probably use the same timer that the woosh does, just use it for lights first.
             }
         }
+
     }
 
     /**
@@ -394,11 +416,17 @@ public class Stargate
         // Remove Light Up Blocks
         if ( lightBlocks != null )
         {
-            for ( Location l : lightBlocks)
-            {
-                Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ()); 
-                b.setType(this.gateShape.stargateMaterial);
-            }
+        	for ( int i = 0; i < lightBlocks.size(); i++ )
+        	{
+        		if ( lightBlocks.get(i) != null )
+        		{
+		            for (  Location l : lightBlocks.get(i))
+		            {
+		                Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ()); 
+		                b.setType(this.gateShape.stargateMaterial);
+		            }
+        		}
+        	}
         }
 
         //this.ActivationBlock.getFace(WorldUtils.getInverseDirection(this.Facing)).setType(StargateMaterial);
@@ -716,7 +744,7 @@ public class Stargate
         {
             Block iris_block = this.activationBlock.getFace(BlockFace.DOWN);
             this.irisActivationBlock = iris_block;
-            this.blocks.add(irisActivationBlock.getLocation());
+            this.stargateBlocks.add(irisActivationBlock.getLocation());
 
             this.irisActivationBlock.setType(Material.LEVER);
             switch (facing)
@@ -741,7 +769,7 @@ public class Stargate
         {
             if ( this.irisActivationBlock != null )
             {
-                blocks.remove(this.irisActivationBlock.getLocation());
+                stargateBlocks.remove(this.irisActivationBlock.getLocation());
                 this.irisActivationBlock.setType(Material.AIR);			
             }
         }
@@ -1052,7 +1080,7 @@ public class Stargate
      */
     public void deleteGateBlocks()
     {
-        for( Location bc : this.blocks )
+        for( Location bc : this.stargateBlocks )
         {
             final Block b = myWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
             b.setType(Material.AIR);
@@ -1064,7 +1092,7 @@ public class Stargate
      */
     public void deletePortalBlocks()
     {
-        for( Location bc : this.waterBlocks )
+        for( Location bc : this.portalBlocks )
         {
             final Block b = myWorld.getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
             b.setType(Material.AIR);

@@ -152,7 +152,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	                               schedulePlayer.sendMessage("No available target to set dialer to.");
 	                           }
 	                       }
-	                    },10);
+	                    },2);
 	                    // player.sendMessage("Dialer set to: " + target);
 	                    return true;
 	                }

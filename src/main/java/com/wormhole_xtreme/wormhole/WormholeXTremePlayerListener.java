@@ -134,26 +134,8 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	        {
 	            if (WXPermissions.checkWXPermissions(playerFinal, stargate, PermissionType.SIGN)) 
 	            {
-	                if ( stargate.tryClickTeleportSign(blockClickedFinal) )
+	                if ( stargate.tryClickTeleportSign(blockClickedFinal, playerFinal) )
 	                {
-	                    final Player schedulePlayer = playerFinal;
-	                    final Stargate scheduleStargate = stargate;
-	                    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new Runnable() {
-	                       public void run()
-	                       {
-	                           String target = "";
-	                           if (scheduleStargate != null && scheduleStargate.signTarget != null)
-	                           {
-	                               target = scheduleStargate.signTarget.name;
-	                               schedulePlayer.sendMessage("Dialer set to: " + target);
-	                           }
-	                           else
-	                           {
-	                               schedulePlayer.sendMessage("No available target to set dialer to.");
-	                           }
-	                       }
-	                    },2);
-	                    // player.sendMessage("Dialer set to: " + target);
 	                    return true;
 	                }
 	            }

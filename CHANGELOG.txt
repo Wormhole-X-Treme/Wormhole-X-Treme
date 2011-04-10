@@ -1,10 +1,13 @@
-Changes 0.833 (4/9/11 @ 20:36 PST):
+Changes 0.833 (4/9/11 @ 23:36 PST):
 
 - Fixed iConomy double(or many many more) charging issue. Tried to do something awesome,
   turned out to be a bad idea. We'll revisit these kind of changes when 3d shapes are in
   and I can do some major refactoring and method merges/splits.
   
 - Bumped supported version of permissions to include the 2.6 tree.
+
+- Merged some of the sign click schedule related methods. Should make sign click messages
+  more reliable.
 
 Changes 0.832 (4/5/11 @ 15:04 PST):
 

@@ -152,7 +152,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	                               schedulePlayer.sendMessage("No available target to set dialer to.");
 	                           }
 	                       }
-	                    },2);
+	                    },10);
 	                    // player.sendMessage("Dialer set to: " + target);
 	                    return true;
 	                }
@@ -218,21 +218,16 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	        {
 	            playerFinal.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Remote Iris is locked!");
 	            playerFinal.setNoDamageTicks(5);
-	            WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new Runnable() {
-	                public void run()
-	                {
-	                    eventFinal.setFrom(stargateFinal.teleportLocation);
-	                    eventFinal.setTo(stargateFinal.teleportLocation);
-	                    playerFinal.teleport(stargateFinal.teleportLocation);
-	                }
-	            });
+	            eventFinal.setFrom(stargateFinal.teleportLocation);
+	            eventFinal.setTo(stargateFinal.teleportLocation);
+	            playerFinal.teleport(stargateFinal.teleportLocation);
 	            return true;
 	        }
 
 	        Location target = stargateFinal.target.teleportLocation;
 	        if ( WormholeXTreme.getIconomy() != null )
 	        {
-	            double cost = ConfigManager.getIconomyWormholeUseCost();
+	            final double cost = ConfigManager.getIconomyWormholeUseCost();
 	            boolean charge = true;
 	            if ((ConfigManager.getIconomyOpsExcempt() && playerFinal.isOp()) || (ConfigManager.getIconomyOwnerExempt() && stargateFinal.owner != null && stargateFinal.owner.equals(playerFinal.getName())))
 	            {
@@ -240,9 +235,9 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	            }
 	            if (charge && cost > 0.0)
 	            {
-	                Account playerAccount = iConomy.getBank().getAccount(playerFinal.getName());
-	                double balance = playerAccount.getBalance();
-	                String currency = iConomy.getBank().getCurrency();
+	                final Account playerAccount = iConomy.getBank().getAccount(playerFinal.getName());
+	                final double balance = playerAccount.getBalance();
+	                final String currency = iConomy.getBank().getCurrency();
 	                if ( balance >= cost )
 	                {
 	                    playerAccount.subtract(cost);
@@ -275,15 +270,9 @@ public class WormholeXTremePlayerListener extends PlayerListener
 	            WorldUtils.checkChunkLoad(target.getBlock());
 	        }
 	        playerFinal.setNoDamageTicks(5);
-	        final Location targetFinal = target;
-	        WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new Runnable() {
-	            public void run()
-	            {
-	                eventFinal.setFrom(targetFinal);
-	                eventFinal.setTo(targetFinal);
-	                playerFinal.teleport(targetFinal);
-	            }
-	        });
+	        eventFinal.setFrom(target);
+	        eventFinal.setTo(target);
+	        playerFinal.teleport(target);
 	        if ( target != stargateFinal.teleportLocation )
 	        {
 	            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO,false, playerFinal.getName() + " used wormhole: " + stargateFinal.name + " to go to: " + stargateFinal.target.name);

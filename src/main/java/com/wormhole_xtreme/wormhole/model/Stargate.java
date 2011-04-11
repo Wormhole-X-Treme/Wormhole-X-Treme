@@ -887,6 +887,16 @@ public class Stargate
     //  facing_len|facing_string|idc_len|idc|IrisActive|num_blocks|Blocks|num_water_blocks|WaterBlocks
 
 
+    /**
+     * Try click teleport sign. This is the same as {@link Stargate#tryClickTeleportSign(Block, Player)} with Player set to null.
+     *
+     * @param clicked the clicked
+     * @return true, if successful
+     */
+    public boolean tryClickTeleportSign(Block clicked)
+    {
+        return tryClickTeleportSign(clicked, null);
+    }
 
     /**
      * Try click teleport sign.
@@ -894,7 +904,7 @@ public class Stargate
      * @param clicked the clicked
      * @return true, if successful
      */
-    public boolean tryClickTeleportSign(Block clicked) 
+    public boolean tryClickTeleportSign(Block clicked, Player player) 
     {
         if ( teleportSign == null && teleportSignBlock != null )
         {
@@ -902,14 +912,12 @@ public class Stargate
             {
                 this.signIndex = -1;
                 teleportSign = (Sign)teleportSignBlock.getState();
-                WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this,ActionToTake.SIGNCLICK));
-                // teleportSignClicked();
+                WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, player, ActionToTake.SIGNCLICK));
             }
         }
         else if ( WorldUtils.isSameBlock(clicked, teleportSignBlock) )
         {
-            WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this,ActionToTake.SIGNCLICK));
-            //teleportSignClicked();
+            WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, player, ActionToTake.SIGNCLICK));
             return true;
         }
 

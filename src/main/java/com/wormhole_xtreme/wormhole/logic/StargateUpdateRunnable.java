@@ -96,6 +96,18 @@ public class StargateUpdateRunnable implements Runnable
 		else if (this.action == ActionToTake.SIGNCLICK)
 		{
 		    stargate.teleportSignClicked();
+		    if (player != null)
+		    {
+                if ( stargate.signTarget != null)
+                {
+                    final String target = stargate.signTarget.name;
+                    player.sendMessage("Dialer set to: " + target);
+                }
+                else
+                {
+                    player.sendMessage("No available target to set dialer to.");
+                }
+		    }
 		}
 		else if ( this.action == ActionToTake.LIGHTUP )
 		{

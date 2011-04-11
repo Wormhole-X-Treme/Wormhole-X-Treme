@@ -502,6 +502,7 @@ public class StargateHelper
 		// No need to find it, we already have it!
 		s.activationBlock = buttonBlock;
 		s.gateShape = shape;
+		
 		BlockFace opposite = WorldUtils.getInverseDirection(facing);
 		Block activationBlock = buttonBlock.getFace(opposite);
 		StargateShapeLayer act_layer = shape.layers.get(shape.activation_layer);

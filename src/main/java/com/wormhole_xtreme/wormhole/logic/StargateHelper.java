@@ -91,13 +91,17 @@ public class StargateHelper
 			return b;
 		}
 
-		int numBlocks = 4;
+		// IrisActivation, Dialer, NameSign, Activation, redstoneAct, redstoneDial,
+		int numBlocks = 6;
+		// Enter location
 		int numLocations = 1;
 		int locationSize = 32;
 		int blockSize = 12;
 		// Version, isSignPowered, Active, IrisActive, LitGate
-		int numBytesWithVersion = 5;
+		// RedstoneActivation & RedstoneDialChange
+		int numBytesWithVersion = 7;
 		// string size ints 2 + block count ints 2 + sign index int + num light blocks = 6 ints
+		// Extra ints are added while calculating size of light and woosh block structures
 		int numInts = 6;
 		int numLongs = 2;
 		
@@ -109,13 +113,21 @@ public class StargateHelper
 		for ( int i = 0; i < s.lightBlocks.size(); i++ )
 		{
 			if ( s.lightBlocks.get(i) != null )
+			{
 				size += s.lightBlocks.get(i).size() * blockSize;
+			}
+			// increment number of total ints
+			numInts++;
 		}
 		// Add all the blocks of the woosh
 		for ( int i = 0; i < s.wooshBlocks.size(); i++ )
 		{
 			if ( s.wooshBlocks.get(i) != null )
+			{
 				size += s.wooshBlocks.get(i).size() * blockSize;
+			}
+			// increment number of total ints
+			numInts++;
 		}
 		// Size of the strings.
 		size += utfFaceBytes.length + utfIdcBytes.length;
@@ -186,6 +198,28 @@ public class StargateHelper
 			dataArr.put((byte)1);
 		else
 			dataArr.put((byte)0);
+		
+		if ( s.redstoneActivationBlock != null )
+		{
+			dataArr.put((byte)1);
+			dataArr.put(DataUtils.blockToBytes(s.redstoneActivationBlock));
+		}
+		else
+		{
+			dataArr.put((byte)0);
+			dataArr.put(emptyBlock);
+		}
+		
+		if ( s.redstoneDialChangeBlock != null )
+		{
+			dataArr.put((byte)1);
+			dataArr.put(DataUtils.blockToBytes(s.redstoneDialChangeBlock));
+		}
+		else
+		{
+			dataArr.put((byte)0);
+			dataArr.put(emptyBlock);
+		}
 		
 		dataArr.putInt(s.stargateBlocks.size());
 		for ( int i = 0; i < s.stargateBlocks.size(); i++ )
@@ -311,25 +345,10 @@ public class StargateHelper
 			{
 				// This might be a public gate with activation method of sign instead of name.
 				Block signBlock = possibleSignHolder.getRelative(tempGate.facing);
-				if ( signBlock.getType() == Material.WALL_SIGN )
+				// If the sign block is messed up just return the gate.
+				if (  !TryCreateGateSign(signBlock, tempGate) && tempGate.isSignPowered)
 				{
-					tempGate.isSignPowered = true;
-					tempGate.teleportSignBlock = signBlock;
-					tempGate.teleportSign = (Sign) signBlock.getState();
-					tempGate.stargateBlocks.add( signBlock.getLocation() );
-					
-					String name = tempGate.teleportSign.getLine(0);
-					Stargate posDupe = StargateManager.getStargate(name);
-					if ( posDupe != null )
-					{
-						tempGate.name = "";
-						return tempGate;
-					}
-					
-					if ( name.length() > 2 )
-					{
-						tempGate.name = name;
-					}
+					return tempGate;
 				}
 			}
 			
@@ -480,6 +499,9 @@ public class StargateHelper
 	{
 		Stargate s = new Stargate();
 		s.myWorld = buttonBlock.getWorld();
+		// No need to find it, we already have it!
+		s.activationBlock = buttonBlock;
+		s.gateShape = shape;
 		BlockFace opposite = WorldUtils.getInverseDirection(facing);
 		Block activationBlock = buttonBlock.getFace(opposite);
 		StargateShapeLayer act_layer = shape.layers.get(shape.activation_layer);
@@ -523,7 +545,7 @@ public class StargateHelper
 				int[] layerStarter = { startingPosition[0] + facingVector[0] * layerOffset, 
 										startingPosition[1],
 										startingPosition[2] + facingVector[2] * layerOffset };
-				if ( !checkStargateLayer( shape.layers.get(i), layerStarter, directionVector, s, create ) )
+				if ( !checkStargateLayer( shape.layers.get(i), facing, layerStarter, directionVector, s, create ) )
 				{
 					if ( s.network != null )
 					{
@@ -540,7 +562,7 @@ public class StargateHelper
 		return s;
 	}
 	
-	public static boolean checkStargateLayer(StargateShapeLayer layer, int[] lowerCorner, int[] directionVector, Stargate tempGate, boolean create)
+	public static boolean checkStargateLayer(StargateShapeLayer layer, BlockFace facing, int[] lowerCorner, int[] directionVector, Stargate tempGate, boolean create)
 	{
 		World w = tempGate.myWorld;
 		// First check all the block positions!
@@ -561,6 +583,7 @@ public class StargateHelper
 			}
 		}
 
+		// Next check for air in the portal positions
 		for ( int i = 0; i < layer.portalPositions.size() ; i++)
 		{
 			Block maybeBlock = getBlockFromVector(layer.blockPositions.get(i), directionVector, lowerCorner, w);
@@ -578,49 +601,122 @@ public class StargateHelper
 			}
 		}
 		
-		// Set the name sign location.
-		/*if ( shape.signPosition != null )
-		{
-			int[] signLocationArray = {shape.signPosition[2] * directionVector[0] * -1, shape.signPosition[1], shape.signPosition[2] * directionVector[2] * -1};
-			Block nameBlock = w.getBlockAt(signLocationArray[0] + startingPosition[0], signLocationArray[1] + startingPosition[1], signLocationArray[2] + startingPosition[2]);
-			tempGate.nameBlockHolder = nameBlock;
-		}
 		// Now set teleport in location
-		int[] teleportLocArray = {shape.enterPosition[2] * directionVector[0] * -1, shape.enterPosition[1], shape.enterPosition[2] * directionVector[2] * -1};
-		Block teleBlock = w.getBlockAt(teleportLocArray[0] + startingPosition[0], teleportLocArray[1] + startingPosition[1], teleportLocArray[2] + startingPosition[2]);
-		// First go forward one
-		Block bLoc = teleBlock.getRelative(facing);
-		// Now go up until we hit air or water.
-		while ( bLoc.getType() != Material.AIR && bLoc.getType() != Material.WATER)
+		if ( layer.enterPosition != null )
 		{
-			bLoc = bLoc.getRelative(BlockFace.UP);
-		}
-		Location teleLoc = bLoc.getLocation();
-		// Make sure the guy faces the right way out of the portal.
-		teleLoc.setYaw( WorldUtils.getDegreesFromBlockFace(facing));
-		teleLoc.setPitch(0);
-		// Put him in the middle of the block instead of a corner.
-		// Players are 1.65 blocks tall, so we go up .66 more up :-p
-		teleLoc.setX(teleLoc.getX() + 0.5);
-		teleLoc.setY(teleLoc.getY() + 0.66);
-		teleLoc.setZ(teleLoc.getZ() + 0.5);
-		tempGate.teleportLocation = teleLoc;
-		
-		for ( int[] bVect : shape.waterPositions)
-		{
-			int[] blockLocation = {bVect[2] * directionVector[0] * -1, bVect[1], bVect[2] * directionVector[2] * -1};
-			
-			Block maybeBlock = w.getBlockAt(blockLocation[0] + startingPosition[0], blockLocation[1] + startingPosition[1], blockLocation[2] + startingPosition[2]);
-			if ( maybeBlock.getType() == Material.AIR )
-				tempGate.waterBlocks.add( maybeBlock.getLocation() );
-			else
+			int[] teleportLocArray = {layer.enterPosition[2] * directionVector[0], layer.enterPosition[1], layer.enterPosition[2] * directionVector[2]};
+			Block teleBlock = w.getBlockAt(teleportLocArray[0] + lowerCorner[0], teleportLocArray[1] + lowerCorner[1], teleportLocArray[2] + lowerCorner[2]);
+			// First go forward one
+			Block bLoc = teleBlock.getRelative(facing);
+			// Now go up until we hit air or water.
+			while ( bLoc.getType() != Material.AIR && bLoc.getType() != Material.WATER)
 			{
-				if ( tempGate.network != null )
-					tempGate.network.gateList.remove(tempGate);
-				
-				return null;
+				bLoc = bLoc.getRelative(BlockFace.UP);
 			}
-		}*/
+			Location teleLoc = bLoc.getLocation();
+			// Make sure the guy faces the right way out of the portal.
+			teleLoc.setYaw( WorldUtils.getDegreesFromBlockFace(facing));
+			teleLoc.setPitch(0);
+			// Put him in the middle of the block instead of a corner.
+			// Players are 1.65 blocks tall, so we go up .66 more up :-p
+			teleLoc.setX(teleLoc.getX() + 0.5);
+			teleLoc.setY(teleLoc.getY() + 0.66);
+			teleLoc.setZ(teleLoc.getZ() + 0.5);
+			tempGate.teleportLocation = teleLoc;
+		}
+
+		for ( int i = 0; i < layer.wooshPositions.size(); i++ )
+		{
+			tempGate.wooshBlocks.add(new ArrayList<Location>());
+			for ( Integer[] position : layer.wooshPositions.get(i) )
+			{
+				int[] wooshLocationArray = {position[2] * directionVector[0], position[1], position[2] * directionVector[2]};
+				Block wooshBlock = w.getBlockAt(wooshLocationArray[0] + lowerCorner[0], wooshLocationArray[1] + lowerCorner[1], wooshLocationArray[2] + lowerCorner[2]);
+				tempGate.wooshBlocks.get(i).add(wooshBlock.getLocation());
+			}
+		}
+		
+
+		for ( int i = 0; i < layer.lightPositions.size(); i++ )
+		{
+			tempGate.lightBlocks.add(new ArrayList<Location>());
+			for ( Integer[] position : layer.lightPositions.get(i) )
+			{
+				int[] lightLocationArray = {position[2] * directionVector[0], position[1], position[2] * directionVector[2]};
+				Block lightBlock = w.getBlockAt(lightLocationArray[0] + lowerCorner[0], lightLocationArray[1] + lowerCorner[1], lightLocationArray[2] + lowerCorner[2]);
+				tempGate.lightBlocks.get(i).add(lightBlock.getLocation());
+			}
+		}
+
+		// Set the dialer sign up all proper like
+		if ( layer.dialerPosition != null )
+		{
+			int[] signLocationArray = {layer.dialerPosition[2] * directionVector[0], layer.dialerPosition[1], layer.dialerPosition[2] * directionVector[2]};
+			Block signBlockHolder = w.getBlockAt(signLocationArray[0] + lowerCorner[0], signLocationArray[1] + lowerCorner[1], signLocationArray[2] + lowerCorner[2]);
+			Block signBlock = signBlockHolder.getFace(facing);
+
+			// If somethign went wrong but the gate is sign powered, we need to error out.
+			if ( !TryCreateGateSign(signBlock, tempGate) && tempGate.isSignPowered )
+			{
+				return false;
+			}
+			// else it either isn't sign powered or everythign is ok.
+		}
+		
+		// TODO : Finish checking these blocks
+		if ( layer.redstoneActivationPosition != null )
+		{
+			int[] redLocationArray = {layer.redstoneActivationPosition[2] * directionVector[0], layer.redstoneActivationPosition[1], layer.redstoneActivationPosition[2] * directionVector[2]};
+			Block redBlockHolder = w.getBlockAt(redLocationArray[0] + lowerCorner[0], redLocationArray[1] + lowerCorner[1], redLocationArray[2] + lowerCorner[2]);
+			
+			tempGate.redstoneActivationBlock = redBlockHolder;
+		}
+		
+		if ( layer.redstoneDialerActivationPosition != null )
+		{
+			int[] redLocationArray = {layer.redstoneDialerActivationPosition[2] * directionVector[0], layer.redstoneDialerActivationPosition[1], layer.redstoneDialerActivationPosition[2] * directionVector[2]};
+			Block redBlockHolder = w.getBlockAt(redLocationArray[0] + lowerCorner[0], redLocationArray[1] + lowerCorner[1], redLocationArray[2] + lowerCorner[2]);
+			
+			tempGate.redstoneDialChangeBlock = redBlockHolder;
+		}
+
+		if ( layer.irisActivationPosition != null )
+		{
+			int[] irisLocationArray = {layer.irisActivationPosition[2] * directionVector[0], layer.irisActivationPosition[1], layer.irisActivationPosition[2] * directionVector[2]};
+			Block irisBlock = w.getBlockAt(irisLocationArray[0] + lowerCorner[0], irisLocationArray[1] + lowerCorner[1], irisLocationArray[2] + lowerCorner[2]);
+			
+			tempGate.irisActivationBlock = irisBlock;
+		}		
+		
+		return true;
+	}
+
+	private static boolean TryCreateGateSign(Block signBlock, Stargate tempGate) 
+	{
+		
+		if ( signBlock.getType() == Material.WALL_SIGN )
+		{
+			tempGate.isSignPowered = true;
+			tempGate.teleportSignBlock = signBlock;
+			tempGate.teleportSign = (Sign) signBlock.getState();
+			tempGate.stargateBlocks.add( signBlock.getLocation() );
+			
+			String name = tempGate.teleportSign.getLine(0);
+			Stargate posDupe = StargateManager.getStargate(name);
+			if ( posDupe != null )
+			{
+				tempGate.name = "";
+				return false;
+			}
+			
+			if ( name.length() > 2 )
+			{
+				tempGate.name = name;
+			}
+			
+			return true;
+		}
+		
 		return false;
 	}
 
@@ -994,6 +1090,131 @@ public class StargateHelper
 				byteBuff.get(blocArray);
 				Block bl = DataUtils.blockFromBytes(blocArray, w);
 				s.lightBlocks.get(1).add( bl.getLocation() );
+			}
+			
+			return s;
+		}
+		else if ( s.loadedVersion == 6 )
+		{
+			byte[] locArray = new byte[32];
+			byte[] blocArray = new byte[12];
+			// version_byte|ActivationBlock|IrisActivationBlock|NameBlockHolder|TeleportLocation|IsSignPowered|TeleportSign|
+			//  facing_len|facing_string|idc_len|idc|IrisActive|num_blocks|Blocks|num_water_blocks|WaterBlocks
+
+			byteBuff.get(blocArray);
+			s.activationBlock = DataUtils.blockFromBytes(blocArray, w);
+			WorldUtils.checkChunkLoad(s.activationBlock);
+			
+			byteBuff.get(blocArray); 
+			s.irisActivationBlock = DataUtils.blockFromBytes(blocArray, w);
+			
+			byteBuff.get(blocArray); 
+			s.nameBlockHolder = DataUtils.blockFromBytes(blocArray, w);
+			
+			byteBuff.get(locArray);
+			s.teleportLocation = DataUtils.locationFromBytes(locArray, w);
+			
+			s.isSignPowered = DataUtils.byteToBoolean(byteBuff.get());
+			
+			byteBuff.get(blocArray);
+			s.signIndex = byteBuff.getInt();
+			s.tempSignTarget = byteBuff.getLong();
+			if ( s.isSignPowered  )
+			{
+				s.teleportSignBlock = DataUtils.blockFromBytes(blocArray, w);
+				
+				if ( w.isChunkLoaded(s.teleportSignBlock.getChunk()))
+				{
+					try
+					{
+						s.teleportSign = (Sign)s.teleportSignBlock.getState();
+						s.tryClickTeleportSign(s.teleportSignBlock);
+					}
+					catch (Exception e)
+					{
+						WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING,false,"Unable to get sign for stargate: " + s.name + " and will be unable to change dial target.");
+					}
+				}
+			}
+
+			
+			s.active = DataUtils.byteToBoolean(byteBuff.get());
+			s.tempTargetId = byteBuff.getLong();
+			
+			int facingSize = byteBuff.getInt();
+			byte[] strBytes = new byte[facingSize];
+			byteBuff.get(strBytes);
+			String faceStr = new String(strBytes);
+			s.facing = BlockFace.valueOf(faceStr);
+			
+			int idcLen = byteBuff.getInt();
+			byte[] idcBytes = new byte[idcLen];
+			byteBuff.get(idcBytes);
+			s.irisDeactivationCode = new String(idcBytes);
+			
+			s.irisActive = DataUtils.byteToBoolean(byteBuff.get());
+			s.irisDefaultActive = s.irisActive;
+			s.litGate = DataUtils.byteToBoolean(byteBuff.get());
+			
+			boolean isRedstone = DataUtils.byteToBoolean(byteBuff.get());
+			if ( isRedstone )
+			{
+				byteBuff.get(blocArray);
+				s.redstoneActivationBlock = DataUtils.blockFromBytes(blocArray, w);
+			}
+			
+			isRedstone = DataUtils.byteToBoolean(byteBuff.get());
+			if ( isRedstone )
+			{
+				byteBuff.get(blocArray);
+				s.redstoneDialChangeBlock = DataUtils.blockFromBytes(blocArray, w);
+			}
+
+			
+			int numBlocks = byteBuff.getInt();
+			for ( int i = 0; i < numBlocks; i++ )
+			{
+				byteBuff.get(blocArray);
+				Block bl = DataUtils.blockFromBytes(blocArray, w);
+				s.stargateBlocks.add( bl.getLocation() );
+			}
+			
+			numBlocks = byteBuff.getInt();
+			for ( int i = 0; i < numBlocks; i++ )
+			{
+				byteBuff.get(blocArray);
+				Block bl = DataUtils.blockFromBytes(blocArray, w);
+				s.portalBlocks.add( bl.getLocation() );
+			}
+			
+			int numLayers = byteBuff.getInt();
+			
+			while ( s.lightBlocks.size() < numLayers )
+				s.lightBlocks.add( new ArrayList<Location>() );
+			for ( int i = 0; i < numLayers; i++)
+			{
+				numBlocks = byteBuff.getInt();
+				for ( int j = 0; j < numBlocks; j++ )
+				{
+					byteBuff.get(blocArray);
+					Block bl = DataUtils.blockFromBytes(blocArray, w);
+					s.lightBlocks.get(i).add( bl.getLocation() );
+				}
+			}
+			
+			numLayers = byteBuff.getInt();
+			
+			while ( s.wooshBlocks.size() < numLayers )
+				s.wooshBlocks.add( new ArrayList<Location>() );
+			for ( int i = 0; i < numLayers; i++)
+			{
+				numBlocks = byteBuff.getInt();
+				for ( int j = 0; j < numBlocks; j++ )
+				{
+					byteBuff.get(blocArray);
+					Block bl = DataUtils.blockFromBytes(blocArray, w);
+					s.wooshBlocks.get(i).add( bl.getLocation() );
+				}
 			}
 			
 			return s;

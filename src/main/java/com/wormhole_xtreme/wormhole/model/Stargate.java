@@ -201,72 +201,21 @@ public class Stargate
      */
     public void animateOpening()
     {
-        final Material wooshMaterial = this.gateShape.portalMaterial;
-        final int wooshDepth = this.gateShape.wooshDepth;
+        //final Material wooshMaterial = this.gateShape.portalMaterial;
 
-        if ( animationStep == 0 && wooshDepth > 0)
+        if ( this.wooshBlocks.size() < this.animationStep )
         {
-
-            for ( Location b : portalBlocks )
-            {
-                Block r = myWorld.getBlockAt(b.getBlockX(), b.getBlockY(), b.getBlockZ()).getRelative(facing);
-//				if ( r.getType() != ConfigManager.getStargateMaterial() )
-//				{
-                r.setType(wooshMaterial);
-                animatedBlocks.add(r);
-                StargateManager.openingAnimationBlocks.put(r.getLocation(), r);
-//				}
-            }
-
-            animationStep++;
-            WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 4);
+	        if ( this.wooshBlocks.get(animationStep) != null )
+	        {
+	        	
+	        }
         }
-        else if ( animationStep < wooshDepth )
+        else
         {
-            // start = animation_step * WaterBlocks.size();
-            // count = waterblocks.size()
-            int size = animatedBlocks.size();
-            int start = portalBlocks.size();
-            for ( int i = (size - start); i < size; i++ )
-            {
-                Block b = animatedBlocks.get(i);
-                Block r = b.getRelative(facing);
-//				if ( r.getType() != ConfigManager.getStargateMaterial() )
-//				{
-                r.setType(wooshMaterial);
-                animatedBlocks.add(r);
-                StargateManager.openingAnimationBlocks.put(r.getLocation(), r);
-//				}
-            }
-
-            animationStep++;
-            // Longer wait if we have reached the max depth
-            if ( animationStep == wooshDepth )
-                WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 8);
-            else
-                WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 4);
+        	// remove in reverse order, if block is not a portal block!
         }
-        else if ( animationStep >= wooshDepth )
-        {
-            for ( int i = 0; i < portalBlocks.size(); i++ )
-            {
-                int index = animatedBlocks.size() - 1;
-                if ( index >= 0 )
-                {
-                    Block b = animatedBlocks.get(index);
-                    b.setType(Material.AIR);
-                    animatedBlocks.remove(index);
-                    StargateManager.openingAnimationBlocks.remove(b.getLocation());
-                }
-            }
-            if ( animationStep < ((wooshDepth * 2) - 1 ) )
-            {
-                animationStep++;
-                WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 3);
-            }
-            else
-                animationStep = 0;
-        }
+        
+        //WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 3);
     }
 
     /**
@@ -742,10 +691,14 @@ public class Stargate
     {
         if ( create )
         {
-            Block iris_block = this.activationBlock.getFace(BlockFace.DOWN);
-            this.irisActivationBlock = iris_block;
-            this.stargateBlocks.add(irisActivationBlock.getLocation());
-
+        	Block iris_block = this.irisActivationBlock;
+        	if ( iris_block == null )
+        	{
+        		iris_block = this.activationBlock.getFace(BlockFace.DOWN);
+        	    this.irisActivationBlock = iris_block;
+        	}
+    	    this.stargateBlocks.add(irisActivationBlock.getLocation());
+    	    
             this.irisActivationBlock.setType(Material.LEVER);
             switch (facing)
             {

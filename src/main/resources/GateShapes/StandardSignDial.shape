@@ -23,7 +23,8 @@ Version=2
 #			In this example the switch will face towards where layer 5 would be (if there was a 5th layer) 
 #    :D = Block the sign dialer hangs from. Only 1 per gate!
 #			The only restriction is that the block that faces it must be "I" (so nothing is in the way)
-#			Gates with this block have to be sign dialer gates. Without it they are only /dial
+#			This block is not required, so shapes with this block can be either type. (sign or dial)
+#			Without this block a gateshape can only be /dial gate.
 #    :RA = Redstone activation block. A redstone charge next to this block will activate the gate.
 #			This block requires a :D block for targetting.
 #			Not recommended to be on the :A or :IA blocks (due to redstone being activated )

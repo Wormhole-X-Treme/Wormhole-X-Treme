@@ -605,8 +605,8 @@ public class StargateHelper
 		// Now set teleport in location
 		if ( layer.enterPosition != null )
 		{
-			int[] teleportLocArray = {layer.enterPosition[2] * directionVector[0], layer.enterPosition[1], layer.enterPosition[2] * directionVector[2]};
-			Block teleBlock = w.getBlockAt(teleportLocArray[0] + lowerCorner[0], teleportLocArray[1] + lowerCorner[1], teleportLocArray[2] + lowerCorner[2]);
+			Block teleBlock = StargateHelper.getBlockFromVector(layer.enterPosition, directionVector, lowerCorner, w);
+
 			// First go forward one
 			Block bLoc = teleBlock.getRelative(facing);
 			// Now go up until we hit air or water.
@@ -631,8 +631,7 @@ public class StargateHelper
 			tempGate.wooshBlocks.add(new ArrayList<Location>());
 			for ( Integer[] position : layer.wooshPositions.get(i) )
 			{
-				int[] wooshLocationArray = {position[2] * directionVector[0], position[1], position[2] * directionVector[2]};
-				Block wooshBlock = w.getBlockAt(wooshLocationArray[0] + lowerCorner[0], wooshLocationArray[1] + lowerCorner[1], wooshLocationArray[2] + lowerCorner[2]);
+				Block wooshBlock = StargateHelper.getBlockFromVector(position, directionVector, lowerCorner, w);
 				tempGate.wooshBlocks.get(i).add(wooshBlock.getLocation());
 			}
 		}
@@ -643,8 +642,7 @@ public class StargateHelper
 			tempGate.lightBlocks.add(new ArrayList<Location>());
 			for ( Integer[] position : layer.lightPositions.get(i) )
 			{
-				int[] lightLocationArray = {position[2] * directionVector[0], position[1], position[2] * directionVector[2]};
-				Block lightBlock = w.getBlockAt(lightLocationArray[0] + lowerCorner[0], lightLocationArray[1] + lowerCorner[1], lightLocationArray[2] + lowerCorner[2]);
+				Block lightBlock = StargateHelper.getBlockFromVector(position, directionVector, lowerCorner, w);
 				tempGate.lightBlocks.get(i).add(lightBlock.getLocation());
 			}
 		}
@@ -652,8 +650,7 @@ public class StargateHelper
 		// Set the dialer sign up all proper like
 		if ( layer.dialerPosition != null )
 		{
-			int[] signLocationArray = {layer.dialerPosition[2] * directionVector[0], layer.dialerPosition[1], layer.dialerPosition[2] * directionVector[2]};
-			Block signBlockHolder = w.getBlockAt(signLocationArray[0] + lowerCorner[0], signLocationArray[1] + lowerCorner[1], signLocationArray[2] + lowerCorner[2]);
+			Block signBlockHolder = StargateHelper.getBlockFromVector(layer.dialerPosition, directionVector, lowerCorner, w);
 			Block signBlock = signBlockHolder.getFace(facing);
 
 			// If somethign went wrong but the gate is sign powered, we need to error out.
@@ -664,29 +661,19 @@ public class StargateHelper
 			// else it either isn't sign powered or everythign is ok.
 		}
 		
-		// TODO : Finish checking these blocks
 		if ( layer.redstoneActivationPosition != null )
 		{
-			int[] redLocationArray = {layer.redstoneActivationPosition[2] * directionVector[0], layer.redstoneActivationPosition[1], layer.redstoneActivationPosition[2] * directionVector[2]};
-			Block redBlockHolder = w.getBlockAt(redLocationArray[0] + lowerCorner[0], redLocationArray[1] + lowerCorner[1], redLocationArray[2] + lowerCorner[2]);
-			
-			tempGate.redstoneActivationBlock = redBlockHolder;
+			tempGate.redstoneActivationBlock = StargateHelper.getBlockFromVector(layer.redstoneActivationPosition, directionVector, lowerCorner, w);;
 		}
 		
 		if ( layer.redstoneDialerActivationPosition != null )
 		{
-			int[] redLocationArray = {layer.redstoneDialerActivationPosition[2] * directionVector[0], layer.redstoneDialerActivationPosition[1], layer.redstoneDialerActivationPosition[2] * directionVector[2]};
-			Block redBlockHolder = w.getBlockAt(redLocationArray[0] + lowerCorner[0], redLocationArray[1] + lowerCorner[1], redLocationArray[2] + lowerCorner[2]);
-			
-			tempGate.redstoneDialChangeBlock = redBlockHolder;
+			tempGate.redstoneDialChangeBlock = StargateHelper.getBlockFromVector(layer.redstoneDialerActivationPosition, directionVector, lowerCorner, w);
 		}
 
 		if ( layer.irisActivationPosition != null )
 		{
-			int[] irisLocationArray = {layer.irisActivationPosition[2] * directionVector[0], layer.irisActivationPosition[1], layer.irisActivationPosition[2] * directionVector[2]};
-			Block irisBlock = w.getBlockAt(irisLocationArray[0] + lowerCorner[0], irisLocationArray[1] + lowerCorner[1], irisLocationArray[2] + lowerCorner[2]);
-			
-			tempGate.irisActivationBlock = irisBlock;
+			tempGate.irisActivationBlock = StargateHelper.getBlockFromVector(layer.irisActivationPosition, directionVector, lowerCorner, w);
 		}		
 		
 		return true;
@@ -722,6 +709,15 @@ public class StargateHelper
 	}
 
 	private static Block getBlockFromVector(Integer[] bVect,
+			int[] directionVector, int[] lowerCorner, World w) 
+	{
+		
+		int[] blockLocation = {bVect[2] * directionVector[0], bVect[1], bVect[2] * directionVector[2]};
+		
+		return w.getBlockAt(blockLocation[0] + lowerCorner[0], blockLocation[1] + lowerCorner[1], blockLocation[2] + lowerCorner[2]);
+	}
+	
+	private static Block getBlockFromVector(int[] bVect,
 			int[] directionVector, int[] lowerCorner, World w) 
 	{
 		

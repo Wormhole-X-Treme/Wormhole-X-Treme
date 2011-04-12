@@ -272,7 +272,7 @@ public class StargateManager
 			
 			if ( !network.equals("") )
 			{
-				StargateNetwork	net = StargateManager.getStargateNetwork(network);
+				StargateNetwork net = StargateManager.getStargateNetwork(network);
 				if ( net == null )
 					net = StargateManager.addStargateNetwork(network);
 				StargateManager.addGateToNetwork(complete, network);
@@ -281,7 +281,7 @@ public class StargateManager
 			
 			complete.owner = p.getName();
 			complete.completeGate(name, idc);
-			WormholeXTreme.getThisPlugin().prettyLog(Level.INFO,false,"Player: " + p.getDisplayName() + " completed a wormhole: " + complete.name);
+			WormholeXTreme.getThisPlugin().prettyLog(Level.INFO,false,"Player: " + p.getName() + " completed a wormhole: " + complete.name);
 			addStargate(complete);
 			StargateDBManager.stargateToSQL(complete);
 			return true;
@@ -326,7 +326,7 @@ public class StargateManager
 			
 			s.owner = p.getName();			
 			s.completeGate(s.name, "");
-			WormholeXTreme.getThisPlugin().prettyLog(Level.INFO,false,"Player: " + p.getDisplayName() + " completed a wormhole: " + s.name);
+			WormholeXTreme.getThisPlugin().prettyLog(Level.INFO,false,"Player: " + p.getName() + " completed a wormhole: " + s.name);
 			addStargate(s);
 			StargateDBManager.stargateToSQL(s);
 			return true;

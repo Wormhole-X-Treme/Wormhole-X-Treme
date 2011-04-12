@@ -139,7 +139,8 @@ public class StargateShapeLayer
 		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Sign Position: \"" + Arrays.toString(signPosition) + "\"");
 		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Enter Position: \"" + Arrays.toString(enterPosition) + "\"");
 		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Activation Position: \"" + Arrays.toString(activationPosition) + "\"");
-		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Activation Position: \"" + Arrays.toString(irisActivationPosition) + "\"");
+		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Iris Activation Position: \"" + Arrays.toString(irisActivationPosition) + "\"");
+		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Dialer Position: \"" + Arrays.toString(dialerPosition) + "\"");
 		//WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Portal Positions: \"" + Arrays.deepToString((int[][])this.waterPositions) + "\"");
 		
 		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Light Material Positions: \"" + lightPositions.toString() + "\"");

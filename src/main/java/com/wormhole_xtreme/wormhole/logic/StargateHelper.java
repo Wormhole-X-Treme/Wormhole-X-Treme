@@ -478,31 +478,36 @@ public class StargateHelper
 				}
 			}
 			
-			// Moved this here so that it only creates the sign if the gate is correctly built.
-			if ( tempGate.name != null && tempGate.name.length() > 0 )
-			{
-				String network_name = "Public";
-				
-				if ( tempGate.teleportSign != null && !tempGate.teleportSign.getLine(1).equals("") )
-				{
-					// We have a specific network
-					network_name = tempGate.teleportSign.getLine(1);
-				}
-				StargateNetwork	net = StargateManager.getStargateNetwork(network_name);
-				if ( net == null )
-					net = StargateManager.addStargateNetwork(network_name);
-				StargateManager.addGateToNetwork(tempGate, network_name);
-
-				tempGate.network = net;
-				tempGate.signIndex = -1;
-				WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(tempGate,ActionToTake.SIGNCLICK));
-				// tempGate.teleportSignClicked();
-			}
-			
+			setupSignGateNetwork(tempGate);
 			return tempGate; 
 		}
 
 		return null;
+	}
+	
+	public static void setupSignGateNetwork(Stargate stargate)
+	{
+	    // Moved this here so that it only creates the sign if the gate is correctly built.
+	    if ( stargate.name != null && stargate.name.length() > 0 )
+	    {
+	        String networkName = "Public";
+
+	        if ( stargate.teleportSign != null && !stargate.teleportSign.getLine(1).equals("") )
+	        {
+	            // We have a specific network
+	            networkName = stargate.teleportSign.getLine(1);
+	        }
+	        StargateNetwork net = StargateManager.getStargateNetwork(networkName);
+	        if ( net == null )
+	        {
+	            net = StargateManager.addStargateNetwork(networkName);
+	        }
+	        StargateManager.addGateToNetwork(stargate, networkName);
+
+	        stargate.network = net;
+	        stargate.signIndex = -1;
+	        WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(stargate,ActionToTake.SIGNCLICK));
+	    }
 	}
 	
 	public static Stargate checkStargate3D(Block buttonBlock, BlockFace facing, Stargate3DShape shape, boolean create)
@@ -572,6 +577,14 @@ public class StargateHelper
 				}
 			}
 		}
+        // Set the name sign location.
+        if ( shape.signPosition != null )
+        {
+            int[] signLocationArray = {shape.signPosition[2] * directionVector[0] * -1, shape.signPosition[1], shape.signPosition[2] * directionVector[2] * -1};
+            Block nameBlock = s.myWorld.getBlockAt(signLocationArray[0] + startingPosition[0], signLocationArray[1] + startingPosition[1], signLocationArray[2] + startingPosition[2]);
+            s.nameBlockHolder = nameBlock;
+        }
+        setupSignGateNetwork(s);
 		return s;
 	}
 	
@@ -683,10 +696,13 @@ public class StargateHelper
 			}
 			// else it isn't sign powered
 		}
-		
+		if (layer.signPosition != null)
+		{
+		    tempGate.nameBlockHolder = StargateHelper.getBlockFromVector(layer.signPosition, directionVector, lowerCorner, w);
+		}
 		if ( layer.redstoneActivationPosition != null )
 		{
-			tempGate.redstoneActivationBlock = StargateHelper.getBlockFromVector(layer.redstoneActivationPosition, directionVector, lowerCorner, w);;
+			tempGate.redstoneActivationBlock = StargateHelper.getBlockFromVector(layer.redstoneActivationPosition, directionVector, lowerCorner, w);
 		}
 		
 		if ( layer.redstoneDialerActivationPosition != null )

@@ -10,9 +10,9 @@ public class StargateShapeFactory
 	{
 		for ( String line : fileLines )
 		{
-			if ( line.contains("Version") )
+			if ( line.startsWith("Version=2") )
 			{
-				if ( line.split("=")[1].equals("2") )
+			//	if ( line.split("=")[1].equals("2") )
 					return create3DShape(fileLines);
 			}
 		}

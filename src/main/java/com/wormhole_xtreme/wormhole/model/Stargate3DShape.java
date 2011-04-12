@@ -75,17 +75,18 @@ public class Stargate3DShape extends StargateShape
 			{
 				// TODO : Add some debug output for each layer!
 				// 1. get layer #
-				int layer = Integer.valueOf(line.split("#")[1]);
+				int layer = Integer.valueOf(line.trim().split("[#=]")[1]);
 				
 				// 2. add each line that starts with [ to a new string[]
 				i++;
 				String[] layerLines = new String[height];
 				int line_index = 0;
-				while ( fileLines[i].startsWith("[") || fileLines[i].startsWith("#"));
+				while ( fileLines[i].startsWith("[") || fileLines[i].startsWith("#"))
 				{
+				    WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG,false,"Layer=" + layer + " i=" + i + " line_index=" + line_index + " Line=" + fileLines[i] );
 					layerLines[line_index] = fileLines[i];
 					i++;
-					
+
 					if ( fileLines[i].startsWith("#") )
 					{
 						continue;
@@ -97,9 +98,19 @@ public class Stargate3DShape extends StargateShape
 				// 3. call constructor
 				StargateShapeLayer ssl = new StargateShapeLayer(layerLines, height, width);
 				// bad hack to make sure list is big enough :(
-				while ( layers.size() < layer )
-					layers.add(null);
-				layers.set(layer, ssl);
+//				while ( layers.size() < layer )
+//				{
+//					layers.add(null);
+//				}
+//				layers.set(layer, ssl);
+				
+				// bad hack to make sure layers start at 1 instead of 0. 
+				if (layer == 1)
+				{
+				    layers.add(null);
+				}
+				layers.add(ssl);
+
 				if ( ssl.activationPosition != null )
 					this.activation_layer = layer;
 				if ( ssl.dialerPosition != null )

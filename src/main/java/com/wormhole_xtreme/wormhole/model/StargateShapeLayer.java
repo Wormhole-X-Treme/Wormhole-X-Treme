@@ -54,6 +54,7 @@ public class StargateShapeLayer
 				String[] modifiers = block.split(":");
 				for ( String mod : modifiers )
 				{
+				    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "START: " + mod );
 					if ( mod.equals("S") )
 					{
 						numBlocks++;
@@ -135,9 +136,11 @@ public class StargateShapeLayer
 		//TODO: debug printout for the redstone_activated
 		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Sign Position: \"" + Arrays.toString(signPosition) + "\"");
 		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Enter Position: \"" + Arrays.toString(enterPosition) + "\"");
+		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Activation Position: \"" + Arrays.toString(activationPosition) + "\"");
+		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Activation Position: \"" + Arrays.toString(irisActivationPosition) + "\"");
 		//WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Portal Positions: \"" + Arrays.deepToString((int[][])this.waterPositions) + "\"");
 		
-		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Light Material Positions: \"" + lightPositions + "\"");
+		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Light Material Positions: \"" + lightPositions.toString() + "\"");
 		//WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Material Positions: \"" + Arrays.deepToString((int[][])this.stargatePositions) + "\"");
 	}
 }

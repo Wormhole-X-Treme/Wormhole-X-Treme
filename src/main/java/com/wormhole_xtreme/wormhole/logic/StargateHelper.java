@@ -346,7 +346,7 @@ public class StargateHelper
 				// This might be a public gate with activation method of sign instead of name.
 				Block signBlock = possibleSignHolder.getRelative(tempGate.facing);
 				// If the sign block is messed up just return the gate.
-				if (  !TryCreateGateSign(signBlock, tempGate) && tempGate.isSignPowered)
+				if (  !tryCreateGateSign(signBlock, tempGate) && tempGate.isSignPowered)
 				{
 					return tempGate;
 				}
@@ -654,7 +654,7 @@ public class StargateHelper
 			Block signBlock = signBlockHolder.getFace(facing);
 
 			// If somethign went wrong but the gate is sign powered, we need to error out.
-			if ( !TryCreateGateSign(signBlock, tempGate) && tempGate.isSignPowered )
+			if ( !tryCreateGateSign(signBlock, tempGate) && tempGate.isSignPowered )
 			{
 				return false;
 			}
@@ -679,7 +679,7 @@ public class StargateHelper
 		return true;
 	}
 
-	private static boolean TryCreateGateSign(Block signBlock, Stargate tempGate) 
+	private static boolean tryCreateGateSign(Block signBlock, Stargate tempGate) 
 	{
 		
 		if ( signBlock.getType() == Material.WALL_SIGN )

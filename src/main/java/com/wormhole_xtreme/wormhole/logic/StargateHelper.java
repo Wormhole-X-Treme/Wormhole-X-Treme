@@ -542,7 +542,7 @@ public class StargateHelper
 		// 2. Add/remove from the direction component to yield each layers 0,0,0
 		for ( int i = 0; i <= 10; i++)
 		{
-			if ( shape.layers.get(i) != null )
+			if ( shape.layers.size() > i && shape.layers.get(i) != null )
 			{
 				int layerOffset = shape.activation_layer - i;
 				int[] layerStarter = { startingPosition[0] + facingVector[0] * layerOffset, 
@@ -631,10 +631,13 @@ public class StargateHelper
 		for ( int i = 0; i < layer.wooshPositions.size(); i++ )
 		{
 			tempGate.wooshBlocks.add(new ArrayList<Location>());
-			for ( Integer[] position : layer.wooshPositions.get(i) )
+			if ( layer.wooshPositions.get(i) != null )
 			{
-				Block wooshBlock = StargateHelper.getBlockFromVector(position, directionVector, lowerCorner, w);
-				tempGate.wooshBlocks.get(i).add(wooshBlock.getLocation());
+				for ( Integer[] position : layer.wooshPositions.get(i) )
+				{
+					Block wooshBlock = StargateHelper.getBlockFromVector(position, directionVector, lowerCorner, w);
+					tempGate.wooshBlocks.get(i).add(wooshBlock.getLocation());
+				}
 			}
 		}
 		
@@ -642,10 +645,13 @@ public class StargateHelper
 		for ( int i = 0; i < layer.lightPositions.size(); i++ )
 		{
 			tempGate.lightBlocks.add(new ArrayList<Location>());
-			for ( Integer[] position : layer.lightPositions.get(i) )
+			if ( layer.lightPositions.get(i) != null )
 			{
-				Block lightBlock = StargateHelper.getBlockFromVector(position, directionVector, lowerCorner, w);
-				tempGate.lightBlocks.get(i).add(lightBlock.getLocation());
+				for ( Integer[] position : layer.lightPositions.get(i) )
+				{
+					Block lightBlock = StargateHelper.getBlockFromVector(position, directionVector, lowerCorner, w);
+					tempGate.lightBlocks.get(i).add(lightBlock.getLocation());
+				}
 			}
 		}
 

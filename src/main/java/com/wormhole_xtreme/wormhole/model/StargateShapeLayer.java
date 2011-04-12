@@ -43,18 +43,17 @@ public class StargateShapeLayer
 		// 1. scan all lines for lines beginning with [  - that is the height of the gate
 		for ( int i = 0; i < layerLines.length; i++ )
 		{
-			Pattern p = Pattern.compile("(\\[.*?\\])");
+			Pattern p = Pattern.compile("\\[(.+?)\\]");
 			Matcher m = p.matcher(layerLines[i]);
 			int j = 0;
 			while ( m.find() )
 			{
-				String block = m.group(0);
+				String block = m.group(1);
 				Integer[] point = { 0, (height - 1 - i), (width - 1 - j) };
 				
 				String[] modifiers = block.split(":");
 				for ( String mod : modifiers )
 				{
-				    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "START: " + mod );
 					if ( mod.equals("S") )
 					{
 						numBlocks++;

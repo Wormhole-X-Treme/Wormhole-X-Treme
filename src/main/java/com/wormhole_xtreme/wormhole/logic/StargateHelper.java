@@ -589,7 +589,7 @@ public class StargateHelper
 		// Next check for air in the portal positions
 		for ( int i = 0; i < layer.portalPositions.size() ; i++)
 		{
-			Block maybeBlock = getBlockFromVector(layer.blockPositions.get(i), directionVector, lowerCorner, w);
+			Block maybeBlock = getBlockFromVector(layer.portalPositions.get(i), directionVector, lowerCorner, w);
 
 			if ( create )
 				maybeBlock.setType( Material.AIR );

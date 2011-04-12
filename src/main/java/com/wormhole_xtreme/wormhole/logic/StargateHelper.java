@@ -109,6 +109,7 @@ public class StargateHelper
 		int size = numBytesWithVersion + (numInts * 4) + (numLongs * 8) + (numBlocks * blockSize) + (numLocations * locationSize);
 		// Size of the gate blocks
 		size += (s.stargateBlocks.size() * blockSize ) + (s.portalBlocks.size() * blockSize );
+		int other_ints = 0;
 		// Add all the blocks of the lights
 		for ( int i = 0; i < s.lightBlocks.size(); i++ )
 		{
@@ -117,7 +118,7 @@ public class StargateHelper
 				size += s.lightBlocks.get(i).size() * blockSize;
 			}
 			// increment number of total ints
-			numInts++;
+			other_ints++;
 		}
 		// Add all the blocks of the woosh
 		for ( int i = 0; i < s.wooshBlocks.size(); i++ )
@@ -127,10 +128,11 @@ public class StargateHelper
 				size += s.wooshBlocks.get(i).size() * blockSize;
 			}
 			// increment number of total ints
-			numInts++;
+			other_ints++;
 		}
 		// Size of the strings.
 		size += utfFaceBytes.length + utfIdcBytes.length;
+		size += other_ints * 4;
 		
 		ByteBuffer dataArr = ByteBuffer.allocate(size);
 		

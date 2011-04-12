@@ -98,19 +98,12 @@ public class Stargate3DShape extends StargateShape
 				// 3. call constructor
 				StargateShapeLayer ssl = new StargateShapeLayer(layerLines, height, width);
 				// bad hack to make sure list is big enough :(
-//				while ( layers.size() < layer )
-//				{
-//					layers.add(null);
-//				}
-//				layers.set(layer, ssl);
-				
-				// bad hack to make sure layers start at 1 instead of 0. 
-				if (layer == 1)
+				while ( layers.size() <= layer )
 				{
-				    layers.add(null);
+					layers.add(null);
 				}
-				layers.add(ssl);
-
+				layers.set(layer, ssl);
+				
 				if ( ssl.activationPosition != null )
 					this.activation_layer = layer;
 				if ( ssl.dialerPosition != null )

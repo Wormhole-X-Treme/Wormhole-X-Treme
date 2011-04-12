@@ -98,30 +98,33 @@ public class StargateShapeLayer
 							this.redstoneDialerActivationPosition = pointI;
 						}
 					}
-					else if ( mod.equals("L") )
+					else if ( mod.contains("L") )
 					{
 						String[] light_parts = mod.split("#");
 						int light_iteration = Integer.parseInt(light_parts[1]);
+						
+						while( this.lightPositions.size() <= light_iteration)
+							this.lightPositions.add(null);
+						
 						if ( this.lightPositions.get(light_iteration) == null )
 						{
 							ArrayList<Integer[]> new_it = new ArrayList<Integer[]>();
-							while( this.lightPositions.size() < light_iteration)
-								this.lightPositions.add(null);
 							this.lightPositions.set(light_iteration, new_it);
 						}
 						
 						this.lightPositions.get(light_iteration).add(point);
 					}
-					else if ( mod.equals("W") )
+					else if ( mod.contains("W") )
 					{
 						String[] w_parts = mod.split("#");
 						int w_iteration = Integer.parseInt(w_parts[1]);
+
+						while( this.wooshPositions.size() <= w_iteration)
+							this.wooshPositions.add(null);
+						
 						if ( this.wooshPositions.get(w_iteration) == null )
 						{
 							ArrayList<Integer[]> new_it = new ArrayList<Integer[]>();
-							while( this.wooshPositions.size() < w_iteration)
-								this.wooshPositions.add(null);
-							
 							this.wooshPositions.set(w_iteration, new_it);
 						}
 						

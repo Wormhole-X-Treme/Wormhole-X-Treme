@@ -618,10 +618,7 @@ public class Stargate
             this.setupGateSign(true);
         }
         // 2. Set up Iris stuff
-        if (!idc.equals(""))
-        {
-            setIrisDeactivationCode(idc);
-        }
+        setIrisDeactivationCode(idc);
     }
 
 

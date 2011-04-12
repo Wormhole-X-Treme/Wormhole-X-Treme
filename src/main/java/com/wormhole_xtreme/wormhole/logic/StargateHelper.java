@@ -87,6 +87,7 @@ public class StargateHelper
 		catch ( Exception e)
 		{
 			WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to store gate in DB, byte encoding failed: " + e.getMessage());
+			e.printStackTrace();
 			byte[] b = null;
 			return b;
 		}
@@ -109,7 +110,8 @@ public class StargateHelper
 		int size = numBytesWithVersion + (numInts * 4) + (numLongs * 8) + (numBlocks * blockSize) + (numLocations * locationSize);
 		// Size of the gate blocks
 		size += (s.stargateBlocks.size() * blockSize ) + (s.portalBlocks.size() * blockSize );
-		int other_ints = 0;
+		// Start with numbers for lightBlocks and wooshBlocks
+		int other_ints = 2;
 		// Add all the blocks of the lights
 		for ( int i = 0; i < s.lightBlocks.size(); i++ )
 		{
@@ -135,7 +137,7 @@ public class StargateHelper
 		size += other_ints * 4;
 		
 		ByteBuffer dataArr = ByteBuffer.allocate(size);
-		
+
 		dataArr.put(StargateSaveVersion);
 		dataArr.put(DataUtils.blockToBytes(s.activationBlock));
 		
@@ -503,7 +505,9 @@ public class StargateHelper
 		s.myWorld = buttonBlock.getWorld();
 		// No need to find it, we already have it!
 		s.activationBlock = buttonBlock;
+		s.stargateBlocks.add(s.activationBlock.getLocation());
 		s.gateShape = shape;
+		s.facing = facing;
 		
 		BlockFace opposite = WorldUtils.getInverseDirection(facing);
 		Block activationBlock = buttonBlock.getFace(opposite);
@@ -536,7 +540,7 @@ public class StargateHelper
 
 		// This is the 0,0,0 the block at the ground on the activation layer
 		startingPosition[0] = activationBlock.getX() - directionVector[0] * act_layer.activationPosition[2];
-		startingPosition[1] = activationBlock.getY() + act_layer.activationPosition[1]; 
+		startingPosition[1] = activationBlock.getY() - act_layer.activationPosition[1]; 
 		startingPosition[2] = activationBlock.getZ() - directionVector[2] * act_layer.activationPosition[2];
 
 		// 2. Add/remove from the direction component to yield each layers 0,0,0
@@ -545,10 +549,10 @@ public class StargateHelper
 			if ( shape.layers.size() > i && shape.layers.get(i) != null )
 			{
 				int layerOffset = shape.activation_layer - i;
-				int[] layerStarter = { startingPosition[0] + facingVector[0] * layerOffset, 
+				int[] layerStarter = { startingPosition[0] - facingVector[0] * layerOffset, 
 										startingPosition[1],
-										startingPosition[2] + facingVector[2] * layerOffset };
-				if ( !checkStargateLayer( shape.layers.get(i), facing, layerStarter, directionVector, s, create ) )
+										startingPosition[2] - facingVector[2] * layerOffset };
+				if ( !checkStargateLayer( shape.layers.get(i), layerStarter, directionVector, s, create ) )
 				{
 					if ( s.network != null )
 					{
@@ -565,7 +569,7 @@ public class StargateHelper
 		return s;
 	}
 	
-	public static boolean checkStargateLayer(StargateShapeLayer layer, BlockFace facing, int[] lowerCorner, int[] directionVector, Stargate tempGate, boolean create)
+	public static boolean checkStargateLayer(StargateShapeLayer layer, int[] lowerCorner, int[] directionVector, Stargate tempGate, boolean create)
 	{
 		World w = tempGate.myWorld;
 		// First check all the block positions!
@@ -610,7 +614,7 @@ public class StargateHelper
 			Block teleBlock = StargateHelper.getBlockFromVector(layer.enterPosition, directionVector, lowerCorner, w);
 
 			// First go forward one
-			Block bLoc = teleBlock.getRelative(facing);
+			Block bLoc = teleBlock.getRelative(tempGate.facing);
 			// Now go up until we hit air or water.
 			while ( bLoc.getType() != Material.AIR && bLoc.getType() != Material.WATER)
 			{
@@ -618,7 +622,7 @@ public class StargateHelper
 			}
 			Location teleLoc = bLoc.getLocation();
 			// Make sure the guy faces the right way out of the portal.
-			teleLoc.setYaw( WorldUtils.getDegreesFromBlockFace(facing));
+			teleLoc.setYaw( WorldUtils.getDegreesFromBlockFace(tempGate.facing));
 			teleLoc.setPitch(0);
 			// Put him in the middle of the block instead of a corner.
 			// Players are 1.65 blocks tall, so we go up .66 more up :-p
@@ -659,14 +663,19 @@ public class StargateHelper
 		if ( layer.dialerPosition != null )
 		{
 			Block signBlockHolder = StargateHelper.getBlockFromVector(layer.dialerPosition, directionVector, lowerCorner, w);
-			Block signBlock = signBlockHolder.getFace(facing);
+			Block signBlock = signBlockHolder.getFace(tempGate.facing);
 
 			// If somethign went wrong but the gate is sign powered, we need to error out.
 			if ( !tryCreateGateSign(signBlock, tempGate) && tempGate.isSignPowered )
 			{
 				return false;
 			}
-			// else it either isn't sign powered or everythign is ok.
+			else if ( tempGate.isSignPowered )
+			{
+				// is sign powered and we are good.
+				tempGate.stargateBlocks.add(signBlock.getLocation());
+			}
+			// else it isn't sign powered
 		}
 		
 		if ( layer.redstoneActivationPosition != null )
@@ -681,9 +690,10 @@ public class StargateHelper
 
 		if ( layer.irisActivationPosition != null )
 		{
-			tempGate.irisActivationBlock = StargateHelper.getBlockFromVector(layer.irisActivationPosition, directionVector, lowerCorner, w);
-		}		
-		
+			tempGate.irisActivationBlock = StargateHelper.getBlockFromVector(layer.irisActivationPosition, directionVector, lowerCorner, w).getFace(tempGate.facing);
+			tempGate.stargateBlocks.add(tempGate.irisActivationBlock.getLocation());
+		}
+
 		return true;
 	}
 

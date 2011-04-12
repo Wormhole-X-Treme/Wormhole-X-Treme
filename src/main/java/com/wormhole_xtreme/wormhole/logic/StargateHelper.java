@@ -101,9 +101,10 @@ public class StargateHelper
 		// Version, isSignPowered, Active, IrisActive, LitGate
 		// RedstoneActivation & RedstoneDialChange
 		int numBytesWithVersion = 7;
-		// string size ints 2 + block count ints 2 + sign index int + num light blocks = 6 ints
+		// string size ints 2 + block count ints 2 + sign index int = 5 ints
 		// Extra ints are added while calculating size of light and woosh block structures
-		int numInts = 6;
+		int numInts = 5;
+		// Target IDs (sign & target)
 		int numLongs = 2;
 		
 		// Size of all the basic sizes we know
@@ -261,6 +262,11 @@ public class StargateHelper
 			{
 				dataArr.putInt(0);	
 			}
+		}
+		
+		if ( dataArr.remaining() > 0 )
+		{
+			WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Gate data not filling whole byte array. This could be bad:" + dataArr.remaining());
 		}
 		
 		return dataArr.array();
@@ -1172,16 +1178,16 @@ public class StargateHelper
 			s.litGate = DataUtils.byteToBoolean(byteBuff.get());
 			
 			boolean isRedstone = DataUtils.byteToBoolean(byteBuff.get());
+			byteBuff.get(blocArray);
 			if ( isRedstone )
 			{
-				byteBuff.get(blocArray);
 				s.redstoneActivationBlock = DataUtils.blockFromBytes(blocArray, w);
 			}
 			
 			isRedstone = DataUtils.byteToBoolean(byteBuff.get());
+			byteBuff.get(blocArray);
 			if ( isRedstone )
 			{
-				byteBuff.get(blocArray);
 				s.redstoneDialChangeBlock = DataUtils.blockFromBytes(blocArray, w);
 			}
 
@@ -1232,6 +1238,11 @@ public class StargateHelper
 				}
 			}
 			
+			if ( byteBuff.remaining() > 0 )
+			{
+				WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "While loading gate, not all byte data was read. This could be bad: " + byteBuff.remaining() );
+			}
+				
 			return s;
 		}
 		return null;

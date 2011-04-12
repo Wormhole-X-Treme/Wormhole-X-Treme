@@ -33,7 +33,6 @@ import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Force.
  *
@@ -119,7 +118,7 @@ public class Force implements CommandExecutor {
                         sender.sendMessage(deactivated.toString());
                     }
                 }
-                
+
                 if (drop && !droplist.isEmpty())
                 {
                     StringBuilder dropped = new StringBuilder();

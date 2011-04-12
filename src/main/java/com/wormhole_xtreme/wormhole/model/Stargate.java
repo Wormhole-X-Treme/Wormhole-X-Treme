@@ -46,8 +46,8 @@ import com.wormhole_xtreme.wormhole.utils.WorldUtils;
  * @author Dean Bailey (alron)
  * 
  */ 
-public class Stargate 
-{	
+public class Stargate
+{
     // Used to parse
     /** The Loaded version. */
     public byte loadedVersion = -1;
@@ -110,7 +110,7 @@ public class Stargate
     public Block nameBlockHolder;
     /** Block that toggle the activation state of the gate
      * if nearby redstone is activated. 
-	 */
+     */
     public Block redstoneActivationBlock;
     /** Block that will toggle sign target when redstone nearby 
      * is activated.
@@ -148,8 +148,8 @@ public class Stargate
     /** List of all blocks that turn on when gate is active. */
     public ArrayList<ArrayList<Location>> lightBlocks = new ArrayList<ArrayList<Location>>();
     /** List of all blocks that woosh in order when gate is active. */
-    public ArrayList<ArrayList<Location>> wooshBlocks = new ArrayList<ArrayList<Location>>();    
-    
+    public ArrayList<ArrayList<Location>> wooshBlocks = new ArrayList<ArrayList<Location>>();
+
     // Used to track active scheduled tasks.
     /** The Activate task id. */
     private int activateTaskId;
@@ -205,16 +205,16 @@ public class Stargate
 
         if ( this.wooshBlocks.size() < this.animationStep )
         {
-	        if ( this.wooshBlocks.get(animationStep) != null )
-	        {
-	        	
-	        }
+            if ( this.wooshBlocks.get(animationStep) != null )
+            {
+
+            }
         }
         else
         {
-        	// remove in reverse order, if block is not a portal block!
+            // remove in reverse order, if block is not a portal block!
         }
-        
+
         //WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_OPENING), 3);
     }
 
@@ -233,7 +233,8 @@ public class Stargate
     {
         this.recentActive = true;
     }
-    
+
+    /** The current_lighting_iteration. */
     int current_lighting_iteration = 1;
     /**
      * Light stargate.
@@ -246,24 +247,24 @@ public class Stargate
 
         if ( this.lightBlocks != null  )
         {
-        	if ( this.lightBlocks.get(this.current_lighting_iteration) != null )
-        	{
-	            for ( Location l : this.lightBlocks.get(this.current_lighting_iteration) )
-	            {
-	                Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ()); 
-	                b.setType(this.gateShape.activeMaterial);
-	            }
-        	}
-            
+            if ( this.lightBlocks.get(this.current_lighting_iteration) != null )
+            {
+                for ( Location l : this.lightBlocks.get(this.current_lighting_iteration) )
+                {
+                    Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ()); 
+                    b.setType(this.gateShape.activeMaterial);
+                }
+            }
+
             if ( current_lighting_iteration >= lightBlocks.size() - 1 )
             {
-            	// Start up animation for woosh now!
-            	this.current_lighting_iteration = 1;
+                // Start up animation for woosh now!
+                this.current_lighting_iteration = 1;
             }
             else
             {
-            	this.current_lighting_iteration++;
-            	//TODO:  Start up next iteration!
+                this.current_lighting_iteration++;
+                //TODO:  Start up next iteration!
                 // Probably use the same timer that the woosh does, just use it for lights first.
             }
         }
@@ -365,17 +366,17 @@ public class Stargate
         // Remove Light Up Blocks
         if ( lightBlocks != null )
         {
-        	for ( int i = 0; i < lightBlocks.size(); i++ )
-        	{
-        		if ( lightBlocks.get(i) != null )
-        		{
-		            for (  Location l : lightBlocks.get(i))
-		            {
-		                Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ()); 
-		                b.setType(this.gateShape.stargateMaterial);
-		            }
-        		}
-        	}
+            for ( int i = 0; i < lightBlocks.size(); i++ )
+            {
+                if ( lightBlocks.get(i) != null )
+                {
+                    for (  Location l : lightBlocks.get(i))
+                    {
+                        Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ()); 
+                        b.setType(this.gateShape.stargateMaterial);
+                    }
+                }
+            }
         }
 
         //this.ActivationBlock.getFace(WorldUtils.getInverseDirection(this.Facing)).setType(StargateMaterial);
@@ -634,7 +635,7 @@ public class Stargate
             if (create)
             {
                 Block nameSign = this.nameBlockHolder.getFace(facing);
-                nameSign.setType(Material.WALL_SIGN);		
+                nameSign.setType(Material.WALL_SIGN);
                 switch ( facing )
                 {
                     case NORTH:
@@ -652,7 +653,7 @@ public class Stargate
                     default:
                         break;
                 }
-                nameSign.getState().setData(new MaterialData(Material.WALL_SIGN));		
+                nameSign.getState().setData(new MaterialData(Material.WALL_SIGN));
                 Sign sign = (Sign)nameSign.getState();
                 sign.setLine(0, "-" + this.name + "-");
 
@@ -688,14 +689,14 @@ public class Stargate
     {
         if ( create )
         {
-        	Block iris_block = this.irisActivationBlock;
-        	if ( iris_block == null )
-        	{
-        		iris_block = this.activationBlock.getFace(BlockFace.DOWN);
-        	    this.irisActivationBlock = iris_block;
-        	}
-    	    this.stargateBlocks.add(irisActivationBlock.getLocation());
-    	    
+            Block iris_block = this.irisActivationBlock;
+            if ( iris_block == null )
+            {
+                iris_block = this.activationBlock.getFace(BlockFace.DOWN);
+                this.irisActivationBlock = iris_block;
+            }
+            this.stargateBlocks.add(irisActivationBlock.getLocation());
+
             this.irisActivationBlock.setType(Material.LEVER);
             switch (facing)
             {
@@ -720,7 +721,7 @@ public class Stargate
             if ( this.irisActivationBlock != null )
             {
                 stargateBlocks.remove(this.irisActivationBlock.getLocation());
-                this.irisActivationBlock.setType(Material.AIR);			
+                this.irisActivationBlock.setType(Material.AIR);
             }
         }
 
@@ -899,6 +900,7 @@ public class Stargate
      * Try click teleport sign.
      *
      * @param clicked the clicked
+     * @param player the player
      * @return true, if successful
      */
     public boolean tryClickTeleportSign(Block clicked, Player player) 

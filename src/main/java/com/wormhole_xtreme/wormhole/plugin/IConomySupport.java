@@ -26,14 +26,13 @@ import com.nijiko.coelho.iConomy.iConomy;
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class IConomySupport.
  *
  * @author alron
  */
 public class IConomySupport {
-    
+
     /**
      * Setup iconomy.
      */
@@ -69,19 +68,19 @@ public class IConomySupport {
             WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "iConomy Plugin support disabled via settings.txt.");
         }
     }
-    
+
     /**
      * Disable iconomy.
      */
     public static void disableIconomy()
     {
-            if (WormholeXTreme.getIconomy() != null)
-            {
-                WormholeXTreme.setIconomy(null);
-                WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Detached from iConomy plugin.");
-            }
+        if (WormholeXTreme.getIconomy() != null)
+        {
+            WormholeXTreme.setIconomy(null);
+            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Detached from iConomy plugin.");
+        }
     }
-    
+
     /**
      * Check iconomy version.
      *
@@ -94,6 +93,6 @@ public class IConomySupport {
         {
             WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Not a supported version of iConomy. Recommended is 4.5" );
         }
-       
+
     }
 }

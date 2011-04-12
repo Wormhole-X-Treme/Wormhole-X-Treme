@@ -44,7 +44,7 @@ public class WXList implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player player = null;
-        
+
         if (CommandUtilities.playerCheck(sender)) {
             player = (Player) sender;
         }
@@ -71,7 +71,7 @@ public class WXList implements CommandExecutor {
             {
                 sender.sendMessage(sb.toString());
             }
-            
+
         }
         else
         {

@@ -26,14 +26,13 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PermissionsSupport.
  *
  * @author alron
  */
 public class PermissionsSupport {
-    
+
     /**
      * Setup permissions.
      */
@@ -77,7 +76,7 @@ public class PermissionsSupport {
             WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Permission Plugin support disabled via settings.txt.");
         }
     }
-    
+
     /**
      * Disable permissions.
      */
@@ -101,6 +100,6 @@ public class PermissionsSupport {
         {
             WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Not a supported version of Permissions. Recommended is 2.6.x" );
         }
-       
+
     }
 }

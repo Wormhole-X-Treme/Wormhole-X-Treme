@@ -44,12 +44,12 @@ public class Compass implements CommandExecutor {
     {
         if (CommandUtilities.playerCheck(sender))
         {
-                final Player player = (Player)sender;
-                return doCompass(player);
+            final Player player = (Player)sender;
+            return doCompass(player);
         }
         return true;
     }
-    
+
     /**
      * Do compass.
      *

@@ -28,51 +28,50 @@ import com.wormhole_xtreme.wormhole.model.Stargate;
 import com.wormhole_xtreme.wormhole.permissions.PermissionsManager.PermissionLevel;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class WXPermissions.
  *
  * @author alron
  */
 public class WXPermissions {
-    
+
     /**
      * The Enum PermissionType.
      */
     public static enum PermissionType
     {
-        
+
         /** The DAMAGE permission. */
         DAMAGE,
-        
+
         /** The SIGN permission. */
         SIGN,
-        
+
         /** The DIALER permission. */
         DIALER,
-        
+
         /** The BUILD permission. */
         BUILD,
-        
+
         /** The REMOVE permission. */
         REMOVE,
-        
+
         /** The USE permission. */
         USE,
-        
+
         /** The LIST permission. */
         LIST,
-        
+
         /** The CONFIG permission. */
         CONFIG,
-        
+
         /** The GO permission. */
         GO,
-        
+
         /** The COMPASS permission. */
         COMPASS
     }
-    
+
     /**
      * Check build permission.
      *
@@ -134,7 +133,7 @@ public class WXPermissions {
         }
         return false;
     }
-    
+
     /**
      * Check compass permission.
      *
@@ -154,7 +153,7 @@ public class WXPermissions {
             return false;
         }
     }
-    
+
     /**
      * Check config permission.
      *
@@ -174,7 +173,7 @@ public class WXPermissions {
             return false;
         }
     }
-    
+
     /**
      * Check dialer permission.
      *
@@ -247,7 +246,7 @@ public class WXPermissions {
             return false;
         }
     }
-    
+
     /**
      * Check remove permission.
      *
@@ -271,7 +270,7 @@ public class WXPermissions {
         }
         return false;
     }
-    
+
     /**
      * Check sign permission.
      *
@@ -304,7 +303,7 @@ public class WXPermissions {
         }
         return false;
     }
-    
+
     /**
      * Check wx permissions.
      *
@@ -316,7 +315,7 @@ public class WXPermissions {
     {
         return checkWXPermissions(player,null,null,permissiontype);
     }
-    
+
     /**
      * Check wx permisssions.
      *
@@ -329,7 +328,7 @@ public class WXPermissions {
     {
         return checkWXPermissions(player,stargate,null,permissionstype);
     }
-    
+
     /**
      * Check wx permissions.
      *
@@ -421,7 +420,7 @@ public class WXPermissions {
         }
         return false;
     }
-    
+
     /**
      * Check wx permissions.
      *
@@ -434,7 +433,7 @@ public class WXPermissions {
     {
         return checkWXPermissions(player,null,network,permissiontype);
     }
-    
+
     /**
      * Check any permission built in.
      *
@@ -454,7 +453,7 @@ public class WXPermissions {
         }
         return false;
     }
-    
+
     /**
      * Check build permission built in.
      *
@@ -474,7 +473,7 @@ public class WXPermissions {
         }
         return false;
     }
-    
+
     /**
      * Check full permission built in.
      *
@@ -493,7 +492,7 @@ public class WXPermissions {
         }
         return false;
     }
-    
+
     /**
      * Perm complex build.
      *
@@ -511,7 +510,7 @@ public class WXPermissions {
             return false;
         }
     }
-    
+
     /**
      * Perm complex compass.
      *
@@ -529,7 +528,7 @@ public class WXPermissions {
             return false;
         }
     }
-    
+
     /**
      * Perm complex config.
      *
@@ -547,7 +546,7 @@ public class WXPermissions {
             return false;
         }
     }
-    
+
     /**
      * Perm complex go.
      *
@@ -565,7 +564,7 @@ public class WXPermissions {
             return false;
         }
     }    
-    
+
     /**
      * Perm complex list.
      *
@@ -583,7 +582,7 @@ public class WXPermissions {
             return false;
         }
     }
-    
+
     /**
      * Perm complex network build.
      *
@@ -602,7 +601,7 @@ public class WXPermissions {
             return false;
         }
     }
-    
+
     /**
      * Perm complex network use.
      *
@@ -621,7 +620,7 @@ public class WXPermissions {
             return false;
         }
     }
-    
+
     /**
      * Perm complex remove all.
      *
@@ -639,7 +638,7 @@ public class WXPermissions {
             return false;
         }
     }
-    
+
     /**
      * Perm complex remove own.
      *
@@ -657,7 +656,7 @@ public class WXPermissions {
             return false;
         }
     }
-    
+
     /**
      * Perm complex use dialer.
      *
@@ -675,7 +674,7 @@ public class WXPermissions {
             return false;
         }
     }
-    
+
     /**
      * Perm complex use sign.
      *
@@ -693,7 +692,7 @@ public class WXPermissions {
             return false;
         }
     }
-    
+
     /**
      * Perm simple build.
      *
@@ -711,7 +710,7 @@ public class WXPermissions {
             return false;
         }
     }
-    
+
     /**
      * Perm simple config.
      *
@@ -729,7 +728,7 @@ public class WXPermissions {
             return false;
         }
     }
-    
+
     /**
      * Perm simple remove.
      *
@@ -747,7 +746,7 @@ public class WXPermissions {
             return false;
         }
     }   
-    
+
     /**
      * Perm simple use.
      *

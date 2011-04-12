@@ -32,7 +32,6 @@ import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Dial.
  *
@@ -58,7 +57,7 @@ public class Dial implements CommandExecutor {
         }
         return true;
     }
-    
+
     /**
      * Do dial.
      *

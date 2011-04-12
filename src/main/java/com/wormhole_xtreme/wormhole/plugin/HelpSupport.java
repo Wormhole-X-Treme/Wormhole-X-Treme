@@ -27,14 +27,13 @@ import com.wormhole_xtreme.wormhole.config.ConfigManager;
 
 import me.taylorkelly.help.Help;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class HelpPlugin.
  *
  * @author alron
  */
 public class HelpSupport {
-    
+
     /**
      * Setup help.
      */
@@ -70,7 +69,7 @@ public class HelpSupport {
             WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Help Plugin support disabled via settings.txt.");
         }
     }
-    
+
     /**
      * Disable help.
      */
@@ -94,7 +93,7 @@ public class HelpSupport {
             WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Not a supported version of Help. Recommended is 0.2" );
         }
     }
-    
+
     /**
      * Register help commands.
      */
@@ -103,21 +102,21 @@ public class HelpSupport {
         if (WormholeXTreme.getHelp() != null && !ConfigManager.getHelpSupportDisable())
         {
             final String[] cp = new String[] { "wormhole.use.sign",
-                                                         "wormhole.use.dialer",
-                                                         "wormhole.use.compass",
-                                                         "wormhole.remove.own",
-                                                         "wormhole.remove.all",
-                                                         "wormhole.build",
-                                                         "wormhole.config",
-                                                         "wormhole.list",
-                                                         "wormhole.go"};
-            
+                "wormhole.use.dialer",
+                "wormhole.use.compass",
+                "wormhole.remove.own",
+                "wormhole.remove.all",
+                "wormhole.build",
+                "wormhole.config",
+                "wormhole.list",
+            "wormhole.go"};
+
             final String[] sp = new String[] { "wormhole.simple.use",
-                                                            "wormhole.simple.build",
-                                                            "wormhole.simple.config",
-                                                            "wormhole.simple.remove"};
-            
-            
+                "wormhole.simple.build",
+                "wormhole.simple.config",
+            "wormhole.simple.remove"};
+
+
             String dial;
             String wxidc;
             String[] wxforce;
@@ -170,7 +169,7 @@ public class HelpSupport {
                 wxbuild = "OP";
                 wormhole = "OP";
             }
-          
+
             WormholeXTreme.getHelp().registerCommand("dial [stargate] <idc>","Dial [stargate] and optionally unlock <idc>" , WormholeXTreme.getThisPlugin(), true, dial);
             WormholeXTreme.getHelp().registerCommand("wxidc [stargate] <idc|-clear>", "Display [stargate] idc, optionally set <idc> or <-clear> idc", WormholeXTreme.getThisPlugin(), wxidc);
             WormholeXTreme.getHelp().registerCommand("wxforce [close|drop]", "Forcefully [close] all gates or [drop] all iris", WormholeXTreme.getThisPlugin(), wxforce);

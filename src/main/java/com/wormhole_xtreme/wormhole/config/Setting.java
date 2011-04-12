@@ -27,179 +27,158 @@ import com.wormhole_xtreme.wormhole.config.ConfigManager.ConfigKeys;
 import com.wormhole_xtreme.wormhole.permissions.PermissionsManager.PermissionLevel;
 
 
-
-// TODO: Auto-generated Javadoc
-/*
- * This class is based on a class "Setting.java" 
- * from MinecartMania written by Afforess from Bukkit.org
- */
 /**
  * The Class Setting.
+ * Based on class "Setting" from MinecartMania by Afforess.
  */
 public class Setting 
 {
 
-	/** The name. */
-	private ConfigKeys name;
-	
-	/** The desc. */
-	private String desc;
-	
-	/** The value. */
-	private Object value;
-	
-	/** The plugin. */
-	private String plugin;
+    /** The name. */
+    private ConfigKeys name;
 
-	/**
-	 * Instantiates a new setting.
-	 *
-	 * @param name the name
-	 * @param value the value
-	 * @param desc the desc
-	 * @param plugin the plugin
-	 */
-	public Setting(ConfigKeys name, Object value, String desc, String plugin) 
-	{
-		if (name != null && desc != null && value != null && plugin != null ) {
-			this.name = name;
-			this.desc = desc;
-			this.value = value;
-			this.plugin = plugin;
-		}
-	}
-	
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-	public ConfigKeys getName() 
-	{
-		return name;
-	}
+    /** The desc. */
+    private String desc;
 
-	/**
-	 * Gets the description.
-	 *
-	 * @return the description
-	 */
-	public String getDescription() {
-		return desc;
-	}
+    /** The value. */
+    private Object value;
 
-	/**
-	 * Gets the value.
-	 *
-	 * @return the value
-	 */
-	public Object getValue() {
-		return value;
-	}
-	
-	/**
-	 * Gets the boolean value.
-	 *
-	 * @return the boolean value
-	 */
-	public boolean getBooleanValue()
-	{
-		return ((Boolean)value).booleanValue();
-	}
+    /** The plugin. */
+    private String plugin;
 
-	/**
-	 * Gets the int value.
-	 *
-	 * @return the int value
-	 */
-	public int getIntValue()
-	{
-		return ((Integer)value).intValue();
-	}
-	
-	/**
-	 * Gets the double value.
-	 *
-	 * @return the double value
-	 */
-	public double getDoubleValue()
-	{
-		return ((Double)value).doubleValue();
-	}
+    /**
+     * Instantiates a new setting.
+     *
+     * @param name the name
+     * @param value the value
+     * @param desc the desc
+     * @param plugin the plugin
+     */
+    public Setting(ConfigKeys name, Object value, String desc, String plugin) 
+    {
+        if (name != null && desc != null && value != null && plugin != null ) {
+            this.name = name;
+            this.desc = desc;
+            this.value = value;
+            this.plugin = plugin;
+        }
+    }
 
-	/**
-	 * Gets the string value.
-	 *
-	 * @return the string value
-	 */
-	public String getStringValue()
-	{
-		return (String)value;
-	}
-	
-	/**
-	 * Gets the material value.
-	 *
-	 * @return the material value
-	 */
-	public Material getMaterialValue()
-	{
-		return (Material)value;
-	}
-	
-	/**
-	 * Gets the plugin name.
-	 *
-	 * @return the plugin name
-	 */
-	public String getPluginName() 
-	{
-		return plugin;
-	}
-	
-	/**
-	 * Gets the permission level.
-	 *
-	 * @return the permission level
-	 */
-	public PermissionLevel getPermissionLevel()
-	{
-		return (PermissionLevel)value;
-	}
-	
-	/**
-	 * Sets the value.
-	 *
-	 * @param value the new value
-	 */
-	public void setValue(Object value)
-	{
-		this.value = value;
-	}
-	
-	/**
-	 * Gets the level.
-	 *
-	 * @return the level
-	 */
-	public Level getLevel()
-	{
-		return Level.parse((String)value);
-	}
-	/*
-	public boolean isBoolean() {
-		return value instanceof Boolean;
-	}
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    public ConfigKeys getName() 
+    {
+        return name;
+    }
 
-	public boolean isInteger() {
-		return value instanceof Integer;
-	}
+    /**
+     * Gets the description.
+     *
+     * @return the description
+     */
+    public String getDescription() {
+        return desc;
+    }
 
-	public boolean isDouble() {
-		return value instanceof Double;
-	}
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
+    public Object getValue() {
+        return value;
+    }
 
-	public boolean isString() {
-		return value instanceof String;
-	}*/
+    /**
+     * Gets the boolean value.
+     *
+     * @return the boolean value
+     */
+    public boolean getBooleanValue()
+    {
+        return ((Boolean)value).booleanValue();
+    }
+
+    /**
+     * Gets the int value.
+     *
+     * @return the int value
+     */
+    public int getIntValue()
+    {
+        return ((Integer)value).intValue();
+    }
+
+    /**
+     * Gets the double value.
+     *
+     * @return the double value
+     */
+    public double getDoubleValue()
+    {
+        return ((Double)value).doubleValue();
+    }
+
+    /**
+     * Gets the string value.
+     *
+     * @return the string value
+     */
+    public String getStringValue()
+    {
+        return (String)value;
+    }
+
+    /**
+     * Gets the material value.
+     *
+     * @return the material value
+     */
+    public Material getMaterialValue()
+    {
+        return (Material)value;
+    }
+
+    /**
+     * Gets the plugin name.
+     *
+     * @return the plugin name
+     */
+    public String getPluginName() 
+    {
+        return plugin;
+    }
+
+    /**
+     * Gets the permission level.
+     *
+     * @return the permission level
+     */
+    public PermissionLevel getPermissionLevel()
+    {
+        return (PermissionLevel)value;
+    }
+
+    /**
+     * Sets the value.
+     *
+     * @param value the new value
+     */
+    public void setValue(Object value)
+    {
+        this.value = value;
+    }
+
+    /**
+     * Gets the level.
+     *
+     * @return the level
+     */
+    public Level getLevel()
+    {
+        return Level.parse((String)value);
+    }
 }

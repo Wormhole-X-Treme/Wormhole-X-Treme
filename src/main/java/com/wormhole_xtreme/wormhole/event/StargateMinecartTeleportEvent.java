@@ -27,46 +27,47 @@ import org.bukkit.event.Event;
  *
  * @author alron
  */
-public class StargateMinecartTeleportEvent extends Event {
+public class StargateMinecartTeleportEvent extends Event
+{
 
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1176071751488327352L;
-    
+
     /** The old minecart. */
     Minecart oldMinecart;
-    
+
     /** The new minecart. */
     Minecart newMinecart;
-    
+
     /**
      * Instantiates a new stargate minecart teleport event.
      *
      * @param oldMinecart the old minecart
      * @param newMinecart the new minecart
      */
-    public StargateMinecartTeleportEvent(Minecart oldMinecart, Minecart newMinecart) 
+    public StargateMinecartTeleportEvent(Minecart oldMinecart, Minecart newMinecart)
     {
         super("StargateMinecartTeleportEvent");
         this.oldMinecart = oldMinecart;
         this.newMinecart = newMinecart;
     }
-    
+
     /**
      * Gets the old minecart.
      *
      * @return the old minecart
      */
-    public Minecart getOldMinecart() 
+    public Minecart getOldMinecart()
     {
         return this.oldMinecart;
     }
-    
+
     /**
      * Gets the new minecart.
      *
      * @return the new minecart
      */
-    public Minecart getNewMinecart() 
+    public Minecart getNewMinecart()
     {
         return this.newMinecart;
     }

@@ -35,7 +35,8 @@ import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
  *
  * @author alron
  */
-public class Build implements CommandExecutor {
+public class Build implements CommandExecutor 
+{
 
     /* (non-Javadoc)
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
@@ -55,7 +56,7 @@ public class Build implements CommandExecutor {
         }
         return true;
     }
-    
+
     /**
      * Do build.
      *

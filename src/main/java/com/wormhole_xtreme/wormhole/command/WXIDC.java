@@ -72,7 +72,7 @@ public class WXIDC implements CommandExecutor {
                             StargateManager.addBlockIndex(s.irisActivationBlock, s);
                         }
                     }
-                        
+
                     // 3. always display current value at end.
                     sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "IDC for gate: " + s.name + " is:" + s.irisDeactivationCode);
                 }

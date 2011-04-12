@@ -29,7 +29,6 @@ import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Complete.
  *
@@ -56,7 +55,7 @@ public class Complete implements CommandExecutor
         }
         return true;
     }
-    
+
     /**
      * Do complete.
      *

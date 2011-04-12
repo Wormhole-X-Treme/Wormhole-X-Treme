@@ -22,14 +22,9 @@ import com.wormhole_xtreme.wormhole.config.ConfigManager.ConfigKeys;
 import com.wormhole_xtreme.wormhole.permissions.PermissionsManager.PermissionLevel;
 
 
-
-// TODO: Auto-generated Javadoc
-/*
- * This class is based on a class "SettingsList.java" 
- * from MinecartMania written by Afforess from Bukkit.org
- */
 /**
  * The Class DefaultSettings.
+ * Based on class "SettingsList" from MinecartMania by Afforess.
  */
 public class DefaultSettings 
 {

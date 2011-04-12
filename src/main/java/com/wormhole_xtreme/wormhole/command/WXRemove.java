@@ -49,7 +49,7 @@ public class WXRemove implements CommandExecutor {
                 return false;
             }
             Stargate s = StargateManager.getStargate(args[0]);
-            
+
             if ( s != null )
             {
                 Player player = null;
@@ -71,7 +71,7 @@ public class WXRemove implements CommandExecutor {
                 {
                     sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
                 }
-                    
+
             }
             else
             {

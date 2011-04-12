@@ -34,7 +34,7 @@ import com.wormhole_xtreme.wormhole.plugin.PermissionsSupport;
  */
 public class WormholeXTremeServerListener extends ServerListener 
 {
-	
+
     /* (non-Javadoc)
      * @see org.bukkit.event.server.ServerListener#onPluginEnabled(org.bukkit.event.server.PluginEvent)
      */
@@ -47,16 +47,16 @@ public class WormholeXTremeServerListener extends ServerListener
         }
         else if(event.getPlugin().getDescription().getName().equals("Permissions") && !ConfigManager.getPermissionsSupportDisable())
         {
-    		PermissionsSupport.enablePermissions();
+            PermissionsSupport.enablePermissions();
         }
         else if (event.getPlugin().getDescription().getName().equals("Help") && !ConfigManager.getHelpSupportDisable())
         {
             HelpSupport.enableHelp();
         }
     }
-    
 
-    
+
+
     /* (non-Javadoc)
      * @see org.bukkit.event.server.ServerListener#onPluginDisabled(org.bukkit.event.server.PluginEvent)
      */

@@ -55,7 +55,7 @@ public class Go implements CommandExecutor {
         }
         return true;
     }
-    
+
     /**
      * Do go.
      *

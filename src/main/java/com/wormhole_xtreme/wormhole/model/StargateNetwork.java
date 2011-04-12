@@ -23,9 +23,6 @@ import java.util.HashMap;
 
 import com.wormhole_xtreme.wormhole.permissions.PermissionsManager;
 
-
-
-// TODO: Auto-generated Javadoc
 /**
  * WormholeXtreme StargateNetwork.
  *
@@ -33,21 +30,22 @@ import com.wormhole_xtreme.wormhole.permissions.PermissionsManager;
  */ 
 public class StargateNetwork 
 {
-	
-	/** The net name. */
-	public String netName;
-	
-	/** The gate_list. */
-	public ArrayList<Stargate> gateList = new ArrayList<Stargate>();
-	
-	public ArrayList<Stargate> signGateList = new ArrayList<Stargate>();
-	
-	/** The gate lock. */
-	public Object gateLock = new Object();
-	
-	/** The individual_permissions. */
-	public HashMap<String, PermissionsManager.PermissionLevel> individualPermissions = new HashMap<String, PermissionsManager.PermissionLevel>();
-	
-	/** The group_permissions. */
-	public HashMap<String, PermissionsManager.PermissionLevel> groupPermissions = new HashMap<String, PermissionsManager.PermissionLevel>();
+
+    /** The net name. */
+    public String netName;
+
+    /** The gate list. */
+    public ArrayList<Stargate> gateList = new ArrayList<Stargate>();
+
+    /** The sign gate list. */
+    public ArrayList<Stargate> signGateList = new ArrayList<Stargate>();
+
+    /** The gate lock. */
+    public Object gateLock = new Object();
+
+    /** The individual permissions. */
+    public HashMap<String, PermissionsManager.PermissionLevel> individualPermissions = new HashMap<String, PermissionsManager.PermissionLevel>();
+
+    /** The group permissions. */
+    public HashMap<String, PermissionsManager.PermissionLevel> groupPermissions = new HashMap<String, PermissionsManager.PermissionLevel>();
 }

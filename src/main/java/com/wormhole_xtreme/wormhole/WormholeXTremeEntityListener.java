@@ -43,7 +43,7 @@ import com.wormhole_xtreme.wormhole.model.StargateManager;
  */ 
 public class WormholeXTremeEntityListener extends EntityListener 
 { 
-    
+
     /**
      * Handle entity explode event.
      *
@@ -65,7 +65,7 @@ public class WormholeXTremeEntityListener extends EntityListener
         return false;
     }
 
-    
+
     /**
      * Handle Player damage event.
      *

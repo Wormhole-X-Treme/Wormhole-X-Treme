@@ -28,7 +28,6 @@ import org.bukkit.block.BlockFace;
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.model.Stargate;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class TeleportUtils.
  *
@@ -58,9 +57,9 @@ public class TeleportUtils {
         {
             location.setY(tlyaxis);
         }
-        
+
         location = findSafe(location,3,3,s);
-        
+
         if (location != s.teleportLocation && Math.floor(location.getX()) == Math.floor(s.teleportLocation.getX()) && Math.floor(location.getZ()) == Math.floor(s.teleportLocation.getZ()))
         {
             WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Unclean safe location: " + location);
@@ -81,7 +80,7 @@ public class TeleportUtils {
         }
         return location;
     }
-    
+
 
     /**
      * Find safe.

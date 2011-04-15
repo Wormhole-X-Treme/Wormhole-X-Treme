@@ -46,7 +46,7 @@ public class Complete implements CommandExecutor
         if (CommandUtilities.playerCheck(sender))
         {
             final String[] arguments = CommandUtilities.commandEscaper(args);
-            if (arguments.length <= 3 && arguments.length != 0 )
+            if (arguments.length <= 3 && arguments.length > 0 )
             {
                 final Player player = (Player)sender;
                 return doComplete(player, arguments);

@@ -149,11 +149,19 @@ public class Stargate3DShape extends StargateShape
             }
             else if ( line.contains("STARGATE_MATERIAL=") )
             {
-                stargateMaterial = Material.valueOf(line.split("=")[1]);
+                this.stargateMaterial = Material.valueOf(line.split("=")[1]);
             }
             else if ( line.contains("ACTIVE_MATERIAL=") )
             {
-                activeMaterial = Material.valueOf(line.split("=")[1]);
+                this.activeMaterial = Material.valueOf(line.split("=")[1]);
+            }
+            else if ( line.contains("LIGHT_TICKS=") )
+            {
+                this.lightTicks = Integer.valueOf(line.split("=")[1]);
+            }
+            else if ( line.contains("WOOSH_TICKS=") )
+            {
+                this.wooshTicks = Integer.valueOf(line.split("=")[1]);
             }
         }
         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Finished parsing shape: \"" + (String)this.shapeName + "\"");

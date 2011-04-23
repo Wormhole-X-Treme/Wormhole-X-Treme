@@ -86,6 +86,8 @@ public class StargateShape
     /** The active material. */
     public Material activeMaterial = Material.GLOWSTONE;
 
+    public int wooshTicks = 3;
+    public int lightTicks = 3;
     /**
      * Instantiates a new stargate shape.
      */

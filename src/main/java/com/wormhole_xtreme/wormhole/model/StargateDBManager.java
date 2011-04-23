@@ -54,7 +54,7 @@ public class StargateDBManager
      *
      * @param connection the new wormhole sql connection
      */
-    private static void setWormholeSQLConnection(Connection connection)
+    private static void setWormholeSQLConnection(final Connection connection)
     {
         StargateDBManager.wormholeSQLConnection = connection;
     }
@@ -64,7 +64,7 @@ public class StargateDBManager
      *
      * @param server the server
      */
-    public static void loadStargates(Server server)
+    public static void loadStargates(final Server server)
     {
         if ( wormholeSQLConnection == null )
         {
@@ -97,7 +97,6 @@ public class StargateDBManager
                 String worldname = gatesData.getString("WorldName");
                 String worldEnvironment = gatesData.getString("WorldEnvironment");
 
-
                 World w = null;
                 if ( worldname.equals("") )
                 {
@@ -111,7 +110,9 @@ public class StargateDBManager
                     }
                 }
                 else
+                {
                     w = server.getWorld(worldname);
+                }
 
                 if ( w == null && !worldname.equals("") )
                 {

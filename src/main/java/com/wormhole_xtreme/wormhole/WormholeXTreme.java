@@ -33,7 +33,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import com.nijiko.coelho.iConomy.iConomy;
 import com.nijiko.permissions.PermissionHandler;
 
-import com.wormhole_xtreme.worlds.WormholeXTremeWorlds;
+import com.wormhole_xtreme.worlds.handler.WorldHandler;
 import com.wormhole_xtreme.wormhole.command.*;
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.config.Configuration;
@@ -50,7 +50,6 @@ import com.wormhole_xtreme.wormhole.utils.DBUpdateUtil;
 
 import me.taylorkelly.help.Help;
 
-// TODO: Auto-generated Javadoc
 /**
  * WormholeXtreme for Bukkit.
  *
@@ -87,7 +86,7 @@ public class WormholeXTreme extends JavaPlugin
     private static Help help = null;
     
     /** The wormhole x treme worlds. */
-    private static WormholeXTremeWorlds wormholeWorlds = null;
+    private static WorldHandler worldHandler = null;
 
     /** The Scheduler. */
     private static BukkitScheduler scheduler = null;
@@ -145,11 +144,11 @@ public class WormholeXTreme extends JavaPlugin
             prettyLog(Level.WARNING,false, "Caught Exception while trying to load support plugins." + e.getMessage());
         }
         registerEvents(true);
+        HelpSupport.registerHelpCommands();
         if (!ConfigManager.isWormholeWorldsSupportEnabled())
         {
             registerEvents(false);
             registerCommands();
-            HelpSupport.registerHelpCommands();
             prettyLog(Level.INFO, true, "Enable Completed.");
         }
     }
@@ -427,8 +426,8 @@ public class WormholeXTreme extends JavaPlugin
      *
      * @param wormholeXTremeWorlds the new wormhole x treme worlds
      */
-    public static void setWormholeWorlds(WormholeXTremeWorlds wormholeXTremeWorlds) {
-        WormholeXTreme.wormholeWorlds = wormholeXTremeWorlds;
+    public static void setWorldHandler(WorldHandler worldHandler) {
+        WormholeXTreme.worldHandler = worldHandler;
     }
 
     /**
@@ -436,8 +435,8 @@ public class WormholeXTreme extends JavaPlugin
      *
      * @return the wormhole x treme worlds
      */
-    public static WormholeXTremeWorlds getWormholeWorlds() {
-        return wormholeWorlds;
+    public static WorldHandler getWorldHandler() {
+        return worldHandler;
     }
 } 
 

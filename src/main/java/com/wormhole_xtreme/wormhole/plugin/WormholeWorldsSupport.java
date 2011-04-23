@@ -41,7 +41,7 @@ public class WormholeWorldsSupport {
     {
         if (ConfigManager.isWormholeWorldsSupportEnabled()) 
         {
-            if (WormholeXTreme.getWormholeWorlds() == null) 
+            if (WormholeXTreme.getWorldHandler() == null) 
             {
                 final Plugin worldsTest = WormholeXTreme.getThisPlugin().getServer().getPluginManager().getPlugin("WormholeXTremeWorlds");
                 if (worldsTest != null)
@@ -50,13 +50,12 @@ public class WormholeWorldsSupport {
                     if (checkWorldsVersion(version)) 
                     {
                         try {
-                            WormholeXTreme.setWormholeWorlds((WormholeXTremeWorlds)worldsTest);
+                            WormholeXTreme.setWorldHandler(WormholeXTremeWorlds.getWorldHandler());
                             WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Attached to Wormhole Worlds version " + version );
                             // Worlds support means we can continue our load.
                             StargateDBManager.loadStargates(WormholeXTreme.getThisPlugin().getServer());
                             WormholeXTreme.registerEvents(false);
                             WormholeXTreme.registerCommands();
-                            HelpSupport.registerHelpCommands();
                             WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, true, "Enable Completed.");
                             
                         }
@@ -99,9 +98,9 @@ public class WormholeWorldsSupport {
      */
     public static void disableWormholeWorlds() 
     {
-        if (WormholeXTreme.getWormholeWorlds() != null) 
+        if (WormholeXTreme.getWorldHandler() != null) 
         {
-            WormholeXTreme.setWormholeWorlds(null);
+            WormholeXTreme.setWorldHandler(null);
             WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Detached from Wormhole Worlds plugin.");
         }
     }

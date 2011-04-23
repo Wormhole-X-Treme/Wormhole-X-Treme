@@ -80,7 +80,7 @@ public class StargateUpdateRunnable implements Runnable
         {    
             stargate.shutdownStargate();
         }
-        else if ( this.action == ActionToTake.ANIMATE_OPENING )
+        else if ( this.action == ActionToTake.ANIMATE_WOOSH )
         {
             stargate.animateOpening();
         }
@@ -124,7 +124,7 @@ public class StargateUpdateRunnable implements Runnable
         SHUTDOWN,
 
         /** The ANIMATE OPENING task. */
-        ANIMATE_OPENING,
+        ANIMATE_WOOSH,
 
         /** The DEACTIVATE task. */
         DEACTIVATE,

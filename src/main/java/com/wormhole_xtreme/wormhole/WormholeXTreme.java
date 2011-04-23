@@ -33,6 +33,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import com.nijiko.coelho.iConomy.iConomy;
 import com.nijiko.permissions.PermissionHandler;
 
+import com.wormhole_xtreme.worlds.WormholeXTremeWorlds;
 import com.wormhole_xtreme.wormhole.command.*;
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.config.Configuration;
@@ -44,10 +45,12 @@ import com.wormhole_xtreme.wormhole.permissions.PermissionsManager;
 import com.wormhole_xtreme.wormhole.plugin.HelpSupport;
 import com.wormhole_xtreme.wormhole.plugin.IConomySupport;
 import com.wormhole_xtreme.wormhole.plugin.PermissionsSupport;
+import com.wormhole_xtreme.wormhole.plugin.WormholeWorldsSupport;
 import com.wormhole_xtreme.wormhole.utils.DBUpdateUtil;
 
 import me.taylorkelly.help.Help;
 
+// TODO: Auto-generated Javadoc
 /**
  * WormholeXtreme for Bukkit.
  *
@@ -82,6 +85,9 @@ public class WormholeXTreme extends JavaPlugin
 
     /** The Help. */
     private static Help help = null;
+    
+    /** The wormhole x treme worlds. */
+    private static WormholeXTremeWorlds wormholeWorlds = null;
 
     /** The Scheduler. */
     private static BukkitScheduler scheduler = null;
@@ -109,8 +115,12 @@ public class WormholeXTreme extends JavaPlugin
         // Make sure DB is up to date with latest SCHEMA
         DBUpdateUtil.updateDB();
         // Load our shapes, stargates, and internal permissions.
-        StargateHelper.loadShapes();	 
-        StargateDBManager.loadStargates(getThisPlugin().getServer());
+        StargateHelper.loadShapes();
+        if (!ConfigManager.isWormholeWorldsSupportEnabled())
+        {
+            prettyLog(Level.INFO, true, "Wormhole Worlds support disabled in settings.txt, loading stargates and worlds ourself.");
+            StargateDBManager.loadStargates(getThisPlugin().getServer());
+        }
         PermissionsManager.loadPermissions();
         prettyLog(Level.INFO,true, "Load Completed.");
     }
@@ -128,22 +138,26 @@ public class WormholeXTreme extends JavaPlugin
             PermissionsSupport.enablePermissions();
             IConomySupport.enableIconomy();
             HelpSupport.enableHelp();
+            WormholeWorldsSupport.enableWormholeWorlds();
         }
         catch ( Exception e)
         {
             prettyLog(Level.WARNING,false, "Caught Exception while trying to load support plugins." + e.getMessage());
         }
-        // Register our events and commands
-        registerEvents();
-        registerCommands();
-        HelpSupport.registerHelpCommands();
-        prettyLog(Level.INFO, true, "Enable Completed.");
+        registerEvents(true);
+        if (!ConfigManager.isWormholeWorldsSupportEnabled())
+        {
+            registerEvents(false);
+            registerCommands();
+            HelpSupport.registerHelpCommands();
+            prettyLog(Level.INFO, true, "Enable Completed.");
+        }
     }
 
     /**
      * Register commands.
      */
-    private static void registerCommands()
+    public static void registerCommands()
     {
         final WormholeXTreme tp = getThisPlugin();
         tp.getCommand("wxforce").setExecutor(new Force());
@@ -161,38 +175,45 @@ public class WormholeXTreme extends JavaPlugin
     /**
      * Register events.
      */
-    private static void registerEvents() 
+    public static void registerEvents(boolean critical) 
     {
         final WormholeXTreme tp = getThisPlugin();
         final PluginManager pm = tp.getServer().getPluginManager();
-        //Listen for Interact, Physics, Break, Flow, and RightClick events. Pass to blockListener
-        pm.registerEvent(Event.Type.BLOCK_PHYSICS, blockListener, Priority.Highest, tp);
-        pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.High, tp);
-        pm.registerEvent(Event.Type.BLOCK_FROMTO, blockListener, Priority.Highest, tp);
-        pm.registerEvent(Event.Type.BLOCK_IGNITE, blockListener, Priority.High, tp);
-        pm.registerEvent(Event.Type.BLOCK_BURN, blockListener, Priority.High, tp);
-        pm.registerEvent(Event.Type.BLOCK_DAMAGE, blockListener, Priority.High, tp);
 
-        // To handle teleporting when walking into a gate.
-        pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.High, tp);
-        pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.High, tp);
-        pm.registerEvent(Event.Type.PLAYER_BUCKET_FILL, playerListener, Priority.High, tp);
-        pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, playerListener, Priority.High, tp);
+        if (critical) 
+        {
+            // Listen for enable events.
+            pm.registerEvent(Event.Type.PLUGIN_ENABLE, serverListener, Priority.Monitor, tp);
+            // Listen for disable events.
+            pm.registerEvent(Event.Type.PLUGIN_DISABLE, serverListener, Priority.Monitor, tp);
+        }
+        else 
+        {
+            //Listen for Interact, Physics, Break, Flow, and RightClick events. Pass to blockListener
+            pm.registerEvent(Event.Type.BLOCK_PHYSICS, blockListener, Priority.Highest, tp);
+            pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.High, tp);
+            pm.registerEvent(Event.Type.BLOCK_FROMTO, blockListener, Priority.Highest, tp);
+            pm.registerEvent(Event.Type.BLOCK_IGNITE, blockListener, Priority.High, tp);
+            pm.registerEvent(Event.Type.BLOCK_BURN, blockListener, Priority.High, tp);
+            pm.registerEvent(Event.Type.BLOCK_DAMAGE, blockListener, Priority.High, tp);
 
-        pm.registerEvent(Event.Type.REDSTONE_CHANGE, redstoneListener, Priority.Normal, tp);
-        // Handle removing player data
-        // pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Normal, this);
-        // Handle minecarts going through portal
-        pm.registerEvent(Event.Type.VEHICLE_MOVE, vehicleListener, Priority.High, tp);
-        pm.registerEvent(Event.Type.VEHICLE_DAMAGE, vehicleListener, Priority.High, tp);
-        // Handle player walking through the lava.
-        pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Priority.High, tp);
-        // Handle Creeper explosions damaging Gate components.
-        pm.registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.High, tp);
-        // Listen for enable events.
-        pm.registerEvent(Event.Type.PLUGIN_ENABLE, serverListener, Priority.Monitor, tp);
-        // Listen for disable events.
-        pm.registerEvent(Event.Type.PLUGIN_DISABLE, serverListener, Priority.Monitor, tp);
+            // To handle teleporting when walking into a gate.
+            pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.High, tp);
+            pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.High, tp);
+            pm.registerEvent(Event.Type.PLAYER_BUCKET_FILL, playerListener, Priority.High, tp);
+            pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, playerListener, Priority.High, tp);
+
+            pm.registerEvent(Event.Type.REDSTONE_CHANGE, redstoneListener, Priority.Normal, tp);
+            // Handle removing player data
+            // pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Normal, this);
+            // Handle minecarts going through portal
+            pm.registerEvent(Event.Type.VEHICLE_MOVE, vehicleListener, Priority.High, tp);
+            pm.registerEvent(Event.Type.VEHICLE_DAMAGE, vehicleListener, Priority.High, tp);
+            // Handle player walking through the lava.
+            pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, Priority.High, tp);
+            // Handle Creeper explosions damaging Gate components.
+            pm.registerEvent(Event.Type.ENTITY_EXPLODE, entityListener, Priority.High, tp);
+        }
     }
 
 
@@ -399,6 +420,24 @@ public class WormholeXTreme extends JavaPlugin
      */
     public static Help getHelp() {
         return help;
+    }
+
+    /**
+     * Sets the wormhole x treme worlds.
+     *
+     * @param wormholeXTremeWorlds the new wormhole x treme worlds
+     */
+    public static void setWormholeWorlds(WormholeXTremeWorlds wormholeXTremeWorlds) {
+        WormholeXTreme.wormholeWorlds = wormholeXTremeWorlds;
+    }
+
+    /**
+     * Gets the wormhole x treme worlds.
+     *
+     * @return the wormhole x treme worlds
+     */
+    public static WormholeXTremeWorlds getWormholeWorlds() {
+        return wormholeWorlds;
     }
 } 
 

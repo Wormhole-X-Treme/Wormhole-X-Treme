@@ -116,6 +116,12 @@ public class DefaultSettings
                     "WormholeXTreme"
         ),
         new Setting(
+                    ConfigKeys.WORLDS_SUPPORT_ENABLED,
+                    false,
+                    "If set to true, the Wormhole X-Treme will offload all of its Chunk and World loading functionality to Wormhole Extreme Worlds.",
+                    "WormholeXTreme"
+        ),
+        new Setting(
                     ConfigKeys.LOG_LEVEL,
                     "INFO",
                     "Log level to use for minecraft logging purposes. Values are SEVERE, WARNING, INFO, CONFIG, FINE, FINER, and FINEST. In order of least to most logging output.",

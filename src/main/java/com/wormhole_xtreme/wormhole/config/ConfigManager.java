@@ -359,7 +359,20 @@ public class ConfigManager
             return false;
         }
     }
-
+    
+    public static boolean isWormholeWorldsSupportEnabled()
+    {
+        Setting wsd;
+        if ((wsd = ConfigManager.configurations.get(ConfigKeys.WORLDS_SUPPORT_ENABLED)) != null)
+        {
+            return wsd.getBooleanValue();
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
     /**
      * Gets the iConomy plugin support status.
      *
@@ -508,7 +521,10 @@ public class ConfigManager
         /** The HELP SUPPORT DISABLE. */
         HELP_SUPPORT_DISABLE,
 
-        /** The LO g_ level. */
+        /** The WORLDS SUPPORT DISABLE key. */
+        WORLDS_SUPPORT_ENABLED,
+        
+        /** The LOG LEVEL. */
         LOG_LEVEL
     }
 }

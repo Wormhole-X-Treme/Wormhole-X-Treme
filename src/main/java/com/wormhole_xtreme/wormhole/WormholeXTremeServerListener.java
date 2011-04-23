@@ -25,6 +25,7 @@ import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.plugin.HelpSupport;
 import com.wormhole_xtreme.wormhole.plugin.IConomySupport;
 import com.wormhole_xtreme.wormhole.plugin.PermissionsSupport;
+import com.wormhole_xtreme.wormhole.plugin.WormholeWorldsSupport;
 
 /**
  * WormholeXTreme Server Listener.
@@ -53,6 +54,9 @@ public class WormholeXTremeServerListener extends ServerListener
         {
             HelpSupport.enableHelp();
         }
+        else if (event.getPlugin().getDescription().getName().equals("WormholeXTremeWorlds") && ConfigManager.isWormholeWorldsSupportEnabled()) {
+            WormholeWorldsSupport.enableWormholeWorlds();
+        }
     }
 
 
@@ -74,6 +78,9 @@ public class WormholeXTremeServerListener extends ServerListener
         if(event.getPlugin().getDescription().getName().equals("Help") && !ConfigManager.getHelpSupportDisable())
         {
             HelpSupport.disableHelp();
+        }
+        else if (event.getPlugin().getDescription().getName().equals("WormholeXTremeWorlds") && ConfigManager.isWormholeWorldsSupportEnabled()) {
+            WormholeWorldsSupport.disableWormholeWorlds();
         }
     }
 }

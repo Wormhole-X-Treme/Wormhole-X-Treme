@@ -81,8 +81,10 @@ public class WorldUtils
         switch ( bf )
         {
             case NORTH:
+            case UP:
                 return BlockFace.EAST;
             case SOUTH:
+            case DOWN:
                 return BlockFace.WEST;
             case EAST:
                 return BlockFace.SOUTH;
@@ -96,10 +98,6 @@ public class WorldUtils
                 return BlockFace.NORTH_EAST;
             case SOUTH_EAST:
                 return BlockFace.SOUTH_WEST;
-            case UP:
-                return BlockFace.EAST;
-            case DOWN:
-                return BlockFace.WEST;
             default:
                 return bf;
         }

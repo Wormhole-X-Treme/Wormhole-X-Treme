@@ -1,20 +1,20 @@
 /*
- *   Wormhole X-Treme Plugin for Bukkit
- *   Copyright (C) 2011  Ben Echols
- *                       Dean Bailey
- *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Wormhole X-Treme Plugin for Bukkit
+ * Copyright (C) 2011 Ben Echols
+ *                    Dean Bailey
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package com.wormhole_xtreme.wormhole.model;
 
@@ -29,7 +29,7 @@ import com.wormhole_xtreme.wormhole.WormholeXTreme;
 /**
  * The Class StargateShapeLayer.
  */
-public class StargateShapeLayer 
+public class StargateShapeLayer
 {
 
     /** The block positions. */
@@ -50,9 +50,9 @@ public class StargateShapeLayer
     /** The dialer position. */
     public int[] dialerPosition = null;
     /** Position of point that allows gate to be activated via redstone. */
-    public int[]  redstoneActivationPosition = null;
+    public int[] redstoneActivationPosition = null;
     /** Position of point that allows gate to cycle sign targets via redstone. */
-    public int[]  redstoneDialerActivationPosition = null;
+    public int[] redstoneDialerActivationPosition = null;
 
     /** The light_positions. */
     public ArrayList<ArrayList<Integer[]>> lightPositions = new ArrayList<ArrayList<Integer[]>>();
@@ -65,105 +65,117 @@ public class StargateShapeLayer
 
     /**
      * Instantiates a new stargate shape layer.
-     *
-     * @param layerLines the layer lines
-     * @param height the height
-     * @param width the width
+     * 
+     * @param layerLines
+     *            the layer lines
+     * @param height
+     *            the height
+     * @param width
+     *            the width
      */
-    public StargateShapeLayer(String[] layerLines, int height, int width)
+    public StargateShapeLayer(final String[] layerLines, final int height, final int width)
     {
         int numBlocks = 0;
 
         // 1. scan all lines for lines beginning with [  - that is the height of the gate
-        for ( int i = 0; i < layerLines.length; i++ )
+        for (int i = 0; i < layerLines.length; i++)
         {
-            Pattern p = Pattern.compile("\\[(.+?)\\]");
-            Matcher m = p.matcher(layerLines[i]);
+            // final Pattern p = Pattern.compile("\\[(.+?)\\]");
+            final Matcher m = Pattern.compile("\\[(.+?)\\]").matcher(layerLines[i]);
             int j = 0;
-            while ( m.find() )
+            while (m.find())
             {
-                String block = m.group(1);
-                Integer[] point = { 0, (height - 1 - i), (width - 1 - j) };
-
-                String[] modifiers = block.split(":");
-                for ( String mod : modifiers )
+                //final String block = m.group(1);
+                final Integer[] point =
                 {
-                    if ( mod.equals("S") )
+                    0, (height - 1 - i), (width - 1 - j)
+                };
+
+                //final String[] modifiers = block.split(":");
+                for (final String mod : m.group(1).split(":"))
+                {
+                    if (mod.equalsIgnoreCase("S"))
                     {
                         numBlocks++;
-                        this.blockPositions.add(point);
+                        blockPositions.add(point);
                     }
-                    else if ( mod.equals("P") )
+                    else if (mod.equalsIgnoreCase("P"))
                     {
-                        this.portalPositions.add(point);
+                        portalPositions.add(point);
                     }
-                    else if ( mod.equals("N") || mod.equals("E") || mod.equals("A") || mod.equals("D") || mod.equals("IA") )
+                    else if (mod.equalsIgnoreCase("N") || mod.equalsIgnoreCase("E") || mod.equalsIgnoreCase("A") || mod.equalsIgnoreCase("D") || mod.equalsIgnoreCase("IA"))
                     {
-                        int[] pointI = new int[3];
-                        for (int k = 0; k < 3; k++ )
+                        final int[] pointI = new int[3];
+                        for (int k = 0; k < 3; k++)
+                        {
                             pointI[k] = point[k];
+                        }
 
-                        if ( mod.equals("N") )
+                        if (mod.equalsIgnoreCase("N"))
                         {
-                            this.signPosition = pointI;
+                            signPosition = pointI;
                         }
-                        if ( mod.equals("E") )
+                        if (mod.equalsIgnoreCase("E"))
                         {
-                            this.enterPosition = pointI;
+                            enterPosition = pointI;
                         }
-                        if ( mod.equals("A") )
+                        if (mod.equalsIgnoreCase("A"))
                         {
-                            this.activationPosition = pointI;
+                            activationPosition = pointI;
                         }
-                        if ( mod.equals("D") )
+                        if (mod.equalsIgnoreCase("D"))
                         {
-                            this.dialerPosition = pointI;
+                            dialerPosition = pointI;
                         }
-                        if ( mod.equals("IA") )
+                        if (mod.equalsIgnoreCase("IA"))
                         {
-                            this.irisActivationPosition = pointI;
+                            irisActivationPosition = pointI;
                         }
-                        if ( mod.equals("RA") )
+                        if (mod.equalsIgnoreCase("RA"))
                         {
-                            this.redstoneActivationPosition = pointI;
+                            redstoneActivationPosition = pointI;
                         }
-                        if ( mod.equals("RD") )
+                        if (mod.equalsIgnoreCase("RD"))
                         {
-                            this.redstoneDialerActivationPosition = pointI;
+                            redstoneDialerActivationPosition = pointI;
                         }
                     }
-                    else if ( mod.contains("L") )
+                    else if (mod.contains("L") || mod.contains("l"))
                     {
-                        String[] light_parts = mod.split("#");
-                        int light_iteration = Integer.parseInt(light_parts[1]);
+                        final String[] light_parts = mod.split("#");
+                        final int light_iteration = Integer.parseInt(light_parts[1]);
 
-                        while( this.lightPositions.size() <= light_iteration)
-                            this.lightPositions.add(null);
-
-                        if ( this.lightPositions.get(light_iteration) == null )
+                        while (lightPositions.size() <= light_iteration)
                         {
-                            ArrayList<Integer[]> new_it = new ArrayList<Integer[]>();
-                            this.lightPositions.set(light_iteration, new_it);
+                            lightPositions.add(null);
                         }
-                        
-                        this.lightPositions.get(light_iteration).add(point);
+
+                        if (lightPositions.get(light_iteration) == null)
+                        {
+                            final ArrayList<Integer[]> new_it = new ArrayList<Integer[]>();
+                            lightPositions.set(light_iteration, new_it);
+                        }
+
+                        lightPositions.get(light_iteration).add(point);
                         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Light Material Position (Order:" + light_parts[1] + " Position:" + Arrays.toString(point) + ")");
                     }
-                    else if ( mod.contains("W") )
+                    else if (mod.contains("W") || mod.contains("w"))
                     {
-                        String[] w_parts = mod.split("#");
-                        int w_iteration = Integer.parseInt(w_parts[1]);
+                        final String[] w_parts = mod.split("#");
+                        final int w_iteration = Integer.parseInt(w_parts[1]);
 
-                        while( this.wooshPositions.size() <= w_iteration)
-                            this.wooshPositions.add(null);
-
-                        if ( this.wooshPositions.get(w_iteration) == null )
+                        while (wooshPositions.size() <= w_iteration)
                         {
-                            ArrayList<Integer[]> new_it = new ArrayList<Integer[]>();
-                            this.wooshPositions.set(w_iteration, new_it);
+                            wooshPositions.add(null);
                         }
 
-                        this.wooshPositions.get(w_iteration).add(point);
+                        if (wooshPositions.get(w_iteration) == null)
+                        {
+                            final ArrayList<Integer[]> new_it = new ArrayList<Integer[]>();
+                            wooshPositions.set(w_iteration, new_it);
+                        }
+
+                        wooshPositions.get(w_iteration).add(point);
                         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Woosh Position (Order:" + w_parts[1] + " Position:" + Arrays.toString(point) + ")");
                     }
                 }

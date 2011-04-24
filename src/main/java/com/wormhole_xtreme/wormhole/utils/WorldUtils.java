@@ -29,113 +29,133 @@ import com.wormhole_xtreme.wormhole.WormholeXTreme;
 
 /**
  * WormholeXTreme WorldUtils.
- *
+ * 
  * @author Ben Echols (Lologarithm)
  */
-public class WorldUtils 
+public class WorldUtils
 {
 
     /**
+     * Check chunk load.
+     * 
+     * @param b
+     *            the b
+     */
+    public static void checkChunkLoad(final Block b)
+    {
+        final World w = b.getWorld();
+        final Chunk c = b.getChunk();
+        if (WormholeXTreme.getWorldHandler() != null)
+        {
+            WormholeXTreme.getWorldHandler().addStickyChunk(c, "WormholeXTreme");
+        }
+        else
+        {
+            if ( !w.isChunkLoaded(c))
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Loading chunk: " + c.toString() + " on: " + w.toString());
+                w.loadChunk(c);
+            }
+        }
+    }
+
+    /**
+     * Gets the degrees from block face.
+     * 
+     * @param bf
+     *            the bf
+     * @return the degrees from block face
+     */
+    public static Float getDegreesFromBlockFace(final BlockFace bf)
+    {
+        if (bf == BlockFace.NORTH)
+        {
+            return (float) 90;
+        }
+        else if (bf == BlockFace.EAST)
+        {
+            return (float) 180;
+        }
+        else if (bf == BlockFace.SOUTH)
+        {
+            return (float) 270;
+        }
+        else if (bf == BlockFace.WEST)
+        {
+            return (float) 0;
+        }
+
+        return (float) 0;
+    }
+
+    /**
      * Gets the inverse direction.
-     *
-     * @param bf the bf
+     * 
+     * @param bf
+     *            the bf
      * @return the inverse direction
      */
-    public static BlockFace getInverseDirection(BlockFace bf)
+    public static BlockFace getInverseDirection(final BlockFace bf)
     {
-        switch ( bf )
+        switch (bf)
         {
-            case NORTH:
+            case NORTH :
                 return BlockFace.SOUTH;
-            case SOUTH:
+            case SOUTH :
                 return BlockFace.NORTH;
-            case EAST:
+            case EAST :
                 return BlockFace.WEST;
-            case WEST:
+            case WEST :
                 return BlockFace.EAST;
-            case NORTH_EAST:
+            case NORTH_EAST :
                 return BlockFace.SOUTH_WEST;
-            case SOUTH_WEST:
+            case SOUTH_WEST :
                 return BlockFace.NORTH_EAST;
-            case NORTH_WEST:
+            case NORTH_WEST :
                 return BlockFace.SOUTH_EAST;
-            case SOUTH_EAST:
+            case SOUTH_EAST :
                 return BlockFace.NORTH_WEST;
-            case UP:
+            case UP :
                 return BlockFace.DOWN;
-            case DOWN:
+            case DOWN :
                 return BlockFace.UP;
-            default:
+            default :
                 return bf;
         }
     }
 
     /**
      * Gets the perpendicular right direction.
-     *
-     * @param bf the bf
+     * 
+     * @param bf
+     *            the bf
      * @return the perpendicular right direction
      */
-    public static BlockFace getPerpendicularRightDirection(BlockFace bf)
+    public static BlockFace getPerpendicularRightDirection(final BlockFace bf)
     {
-        switch ( bf )
+        switch (bf)
         {
-            case NORTH:
-            case UP:
+            case NORTH :
+            case UP :
                 return BlockFace.EAST;
-            case SOUTH:
-            case DOWN:
+            case SOUTH :
+            case DOWN :
                 return BlockFace.WEST;
-            case EAST:
+            case EAST :
                 return BlockFace.SOUTH;
-            case WEST:
+            case WEST :
                 return BlockFace.NORTH;
-            case NORTH_EAST:
+            case NORTH_EAST :
                 return BlockFace.SOUTH_EAST;
-            case SOUTH_WEST:
+            case SOUTH_WEST :
                 return BlockFace.NORTH_WEST;
-            case NORTH_WEST:
+            case NORTH_WEST :
                 return BlockFace.NORTH_EAST;
-            case SOUTH_EAST:
+            case SOUTH_EAST :
                 return BlockFace.SOUTH_WEST;
-            default:
+            default :
                 return bf;
         }
-    }
-
-    /**
-     * Gets the degrees from block face.
-     *
-     * @param bf the bf
-     * @return the degrees from block face
-     */
-    public static Float getDegreesFromBlockFace(BlockFace bf)
-    {
-        if ( bf == BlockFace.NORTH )
-            return (float) 90;
-        else if ( bf == BlockFace.EAST )
-            return (float) 180;
-        else if ( bf == BlockFace.SOUTH )
-            return (float) 270;
-        else if ( bf == BlockFace.WEST )
-            return (float) 0;
-
-        return (float) 0; 
-    }
-
-    /**
-     * Checks if is same block.
-     *
-     * @param b1 the b1
-     * @param b2 the b2
-     * @return true, if is same block
-     */
-    public static boolean isSameBlock(Block b1, Block b2)
-    {
-        if ( b1 == null || b2 == null )
-            return false;
-
-        return b1.getX() == b2.getX() && b1.getY() == b2.getY() &&	b1.getZ() == b2.getZ();
     }
 
 //    /**
@@ -185,19 +205,21 @@ public class WorldUtils
 //    }
 
     /**
-     * Check chunk load.
-     *
-     * @param b the b
+     * Checks if is same block.
+     * 
+     * @param b1
+     *            the b1
+     * @param b2
+     *            the b2
+     * @return true, if is same block
      */
-    public static void checkChunkLoad(Block b) 
+    public static boolean isSameBlock(final Block b1, final Block b2)
     {
-        World w = b.getWorld();
-        Chunk c = b.getChunk();
-
-        if ( !w.isChunkLoaded(c) )
+        if ((b1 == null) || (b2 == null))
         {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Loading chunk: " + c.toString() + " on: " + w.toString());
-            w.loadChunk(c);
+            return false;
         }
+
+        return (b1.getX() == b2.getX()) && (b1.getY() == b2.getY()) && (b1.getZ() == b2.getZ());
     }
 }

@@ -194,7 +194,7 @@ public class Stargate
     int animationStep = 0;
     boolean animationRemoving = false;
     /** The Animated blocks. */
-    // ArrayList<Block> animatedBlocks = new ArrayList<Block>();
+    ArrayList<Block> animatedBlocks = new ArrayList<Block>();
 
     /**
      * Animate opening.
@@ -210,11 +210,13 @@ public class Stargate
                 {
                     for ( Location l : this.wooshBlocks.get(animationStep) )
                     {
-                        Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ()); 
+                        Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
+                        animatedBlocks.add(b);
+                        StargateManager.openingAnimationBlocks.put(l, b);
                         b.setType(wooshMaterial);
                     }
                 }
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Adding: " + animationStep);
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINEST, false, this.name + " Woosh Adding: " + animationStep + " Woosh Block Size: " + this.wooshBlocks.get(animationStep).size() );
                 if ( this.wooshBlocks.size() == animationStep + 1)
                 {
                     this.animationRemoving = true;
@@ -232,11 +234,13 @@ public class Stargate
                 {
                     for ( Location l : this.wooshBlocks.get(animationStep) )
                     {
-                        Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ()); 
+                        Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
+                        StargateManager.openingAnimationBlocks.remove(l, b);
+                        animatedBlocks.remove(b);
                         b.setType(Material.AIR);
                     }
                 }
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Removing: " + animationStep);
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINEST, false, this.name + " Woosh Removing: " + animationStep + " Woosh Block Size: " + this.wooshBlocks.get(animationStep).size() );
                 // If this is the last step to animate, we now add all the portal blocks in.
                 if ( animationStep == 0 )
                 {
@@ -283,6 +287,7 @@ public class Stargate
      */
     public void lightStargate()
     {
+        WormholeXTreme.getThisPlugin().prettyLog(Level.FINEST, false, "Lighting up Order: " + this.current_lighting_iteration );
         this.litGate = true;
         this.current_lighting_iteration++;
         // Light up blocks

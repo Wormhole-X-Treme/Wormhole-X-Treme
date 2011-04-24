@@ -145,8 +145,9 @@ public class StargateShapeLayer
                             ArrayList<Integer[]> new_it = new ArrayList<Integer[]>();
                             this.lightPositions.set(light_iteration, new_it);
                         }
-
+                        
                         this.lightPositions.get(light_iteration).add(point);
+                        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Light Material Position (Order:" + light_parts[1] + " Position:" + Arrays.toString(point) + ")");
                     }
                     else if ( mod.contains("W") )
                     {
@@ -163,6 +164,7 @@ public class StargateShapeLayer
                         }
 
                         this.wooshPositions.get(w_iteration).add(point);
+                        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Woosh Position (Order:" + w_parts[1] + " Position:" + Arrays.toString(point) + ")");
                     }
                 }
                 j++;
@@ -177,7 +179,7 @@ public class StargateShapeLayer
         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Dialer Position: \"" + Arrays.toString(dialerPosition) + "\"");
         //WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Portal Positions: \"" + Arrays.deepToString((int[][])this.waterPositions) + "\"");
 
-        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Light Material Positions: \"" + lightPositions.toString() + "\"");
+        // WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Light Material Positions: \"" + lightPositions.toString() + "\"");
         //WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Material Positions: \"" + Arrays.deepToString((int[][])this.stargatePositions) + "\"");
     }
 }

@@ -90,6 +90,15 @@ public class Force implements CommandExecutor {
                     {
                         activelist.add(gate.name);
                         gate.shutdownStargate();
+                        if (gate.active)
+                        {
+                            gate.deActivateStargate();
+                        }
+                    }
+                    if (gate.litGate && close)
+                    {
+                        gate.unLightStargate();
+                        gate.stopActivationTimer();
                     }
                     if (gate.irisActive && drop)
                     {

@@ -36,30 +36,6 @@ public class WorldUtils
 {
 
     /**
-     * Check chunk load.
-     * 
-     * @param b
-     *            the b
-     */
-    public static void checkChunkLoad(final Block b)
-    {
-        final World w = b.getWorld();
-        final Chunk c = b.getChunk();
-        if (WormholeXTreme.getWorldHandler() != null)
-        {
-            WormholeXTreme.getWorldHandler().addStickyChunk(c, "WormholeXTreme");
-        }
-        else
-        {
-            if ( !w.isChunkLoaded(c))
-            {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Loading chunk: " + c.toString() + " on: " + w.toString());
-                w.loadChunk(c);
-            }
-        }
-    }
-
-    /**
      * Gets the degrees from block face.
      * 
      * @param bf
@@ -158,6 +134,51 @@ public class WorldUtils
         }
     }
 
+    /**
+     * Checks if is same block.
+     * 
+     * @param b1
+     *            the b1
+     * @param b2
+     *            the b2
+     * @return true, if is same block
+     */
+    public static boolean isSameBlock(final Block b1, final Block b2)
+    {
+        if ((b1 == null) || (b2 == null))
+        {
+            return false;
+        }
+
+        return (b1.getX() == b2.getX()) && (b1.getY() == b2.getY()) && (b1.getZ() == b2.getZ());
+    }
+
+    /**
+     * Schedule chunk load.
+     * 
+     * @param b
+     *            the b
+     */
+    public static void scheduleChunkLoad(final Block b)
+    {
+        final World w = b.getWorld();
+        final Chunk c = b.getChunk();
+        if (WormholeXTreme.getWorldHandler() != null)
+        {
+            WormholeXTreme.getWorldHandler().addStickyChunk(c, "WormholeXTreme");
+        }
+        else
+        {
+            final int cX = c.getX();
+            final int cZ = c.getZ();
+            if ( !w.isChunkLoaded(cX, cZ))
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Loading chunk: " + c.toString() + " on: " + w.getName());
+                w.loadChunk(cX, cZ);
+            }
+        }
+    }
+
 //    /**
 //     * Sign facing data from block face.
 //     *
@@ -205,21 +226,28 @@ public class WorldUtils
 //    }
 
     /**
-     * Checks if is same block.
+     * Schedule chunk unload.
      * 
-     * @param b1
-     *            the b1
-     * @param b2
-     *            the b2
-     * @return true, if is same block
+     * @param b
+     *            the b
      */
-    public static boolean isSameBlock(final Block b1, final Block b2)
+    public static void scheduleChunkUnload(final Block b)
     {
-        if ((b1 == null) || (b2 == null))
+        final World w = b.getWorld();
+        final Chunk c = b.getChunk();
+        if (WormholeXTreme.getWorldHandler() != null)
         {
-            return false;
+            WormholeXTreme.getWorldHandler().removeStickyChunk(c, "WormholeXTreme");
         }
-
-        return (b1.getX() == b2.getX()) && (b1.getY() == b2.getY()) && (b1.getZ() == b2.getZ());
+        else
+        {
+            final int cX = c.getX();
+            final int cZ = c.getZ();
+            if (w.isChunkLoaded(cX, cZ))
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Scheduling chunk unload: " + c.toString() + " on: " + w.getName());
+                w.unloadChunkRequest(cX, cZ);
+            }
+        }
     }
 }

@@ -28,39 +28,40 @@ import com.wormhole_xtreme.wormhole.model.StargateManager;
 
 /**
  * WormholeXTreme Commands and command specific methods.
- *
+ * 
  * @author Dean Bailey (alron)
  * @author Ben Echols (Lologarithm)
  */
-class CommandUtilities 
+class CommandUtilities
 {
 
     /**
-     * Player check.
-     *
-     * @param sender the sender
-     * @return true, if successful
+     * Close gate.
+     * 
+     * @param stargate
+     *            the stargate
+     * @param player
+     *            the player
      */
-    static boolean playerCheck(CommandSender sender) 
+    static final void closeGate(final Stargate stargate)
     {
-        if (sender instanceof Player)
+        if (stargate != null)
         {
-            return true;
-        }
-        else
-        {
-            return false;
+            stargate.stopActivationTimer();
+            stargate.deActivateStargate();
+            stargate.unLightStargate();
         }
     }
 
     /**
      * Command escaper.
      * Checks for " and escapes it.
-     *
-     * @param args The String[] argument list to escape quotes on.
+     * 
+     * @param args
+     *            The String[] argument list to escape quotes on.
      * @return String[] with properly escaped quotes.
      */
-    static String[] commandEscaper(String[] args)
+    static String[] commandEscaper(final String[] args)
     {
         StringBuilder tempString = new StringBuilder();
         boolean startQuoteFound = false;
@@ -68,32 +69,34 @@ class CommandUtilities
 
         final ArrayList<String> argsPartsList = new ArrayList<String>();
 
-        for(String part : args)
+        for (final String part : args)
         {
             // First check to see if we have a starting or stopping quote
-            if ( part.contains("\"") && !startQuoteFound)
+            if (part.contains("\"") && !startQuoteFound)
             {
                 // Two quotes in same string = no spaces in quoted text;
-                if ( !part.replaceFirst("\"", "").contains("\"") )
+                if ( !part.replaceFirst("\"", "").contains("\""))
                 {
                     startQuoteFound = true;
                 }
             }
-            else if ( part.contains("\"") && startQuoteFound)
+            else if (part.contains("\"") && startQuoteFound)
             {
                 endQuoteFound = true;
             }
 
             // If no quotes yet, we just append to list
-            if ( !startQuoteFound )
+            if ( !startQuoteFound)
+            {
                 argsPartsList.add(part);
+            }
 
             // If we have quotes we should make sure to append the values
             // if we found the last quote we should stop adding.
-            if ( startQuoteFound)
+            if (startQuoteFound)
             {
                 tempString.append(part.replace("\"", ""));
-                if ( endQuoteFound )
+                if (endQuoteFound)
                 {
                     argsPartsList.add(tempString.toString());
                     startQuoteFound = false;
@@ -101,7 +104,9 @@ class CommandUtilities
                     tempString = new StringBuilder();
                 }
                 else
+                {
                     tempString.append(" ");
+                }
             }
         }
         return argsPartsList.toArray(new String[argsPartsList.size()]);
@@ -109,15 +114,17 @@ class CommandUtilities
 
     /**
      * Gate remove.
-     *
-     * @param stargate the stargate
-     * @param destroy true to destroy gate blocks
+     * 
+     * @param stargate
+     *            the stargate
+     * @param destroy
+     *            true to destroy gate blocks
      */
-    static void gateRemove(Stargate stargate, boolean destroy)
+    static void gateRemove(final Stargate stargate, final boolean destroy)
     {
         stargate.setupGateSign(false);
         stargate.resetTeleportSign();
-        if (!stargate.irisDeactivationCode.equals(""))
+        if ( !stargate.irisDeactivationCode.equals(""))
         {
             if (stargate.irisActive)
             {
@@ -136,11 +143,12 @@ class CommandUtilities
 
     /**
      * Gets the gate network.
-     *
-     * @param stargate the stargate
+     * 
+     * @param stargate
+     *            the stargate
      * @return the gate network
      */
-    static String getGateNetwork(Stargate stargate)
+    static String getGateNetwork(final Stargate stargate)
     {
         if (stargate != null)
         {
@@ -153,20 +161,21 @@ class CommandUtilities
     }
 
     /**
-     * Close gate.
-     *
-     * @param stargate the stargate
-     * @param player the player
+     * Player check.
+     * 
+     * @param sender
+     *            the sender
+     * @return true, if successful
      */
-    static final void closeGate(Stargate stargate, Player player)
+    static boolean playerCheck(final CommandSender sender)
     {
-        if (stargate != null && player != null)
+        if (sender instanceof Player)
         {
-            final Stargate gate = stargate;
-            final Player p = player;
-            gate.stopActivationTimer(p);
-            gate.deActivateStargate();
-            gate.unLightStargate();
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

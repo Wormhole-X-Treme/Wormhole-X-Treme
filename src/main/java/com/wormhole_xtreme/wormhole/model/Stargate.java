@@ -191,7 +191,7 @@ public class Stargate
     }
 
     /** The animation_step. */
-    int animationStep = 0;
+    int animationStep = 1;
     boolean animationRemoving = false;
     /** The Animated blocks. */
     ArrayList<Block> animatedBlocks = new ArrayList<Block>();
@@ -204,19 +204,28 @@ public class Stargate
         final Material wooshMaterial = this.gateShape.portalMaterial;
         if (this.wooshBlocks != null && this.wooshBlocks.size() != 0) 
         {
+            boolean skip = false;
+            ArrayList<Location> wooshBlockStep = this.wooshBlocks.get(animationStep);
             if ( !animationRemoving )
             {
-                if ( this.wooshBlocks.get(animationStep) != null )
+                if (  wooshBlockStep != null )
                 {
-                    for ( Location l : this.wooshBlocks.get(animationStep) )
-                    {
-                        Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
-                        animatedBlocks.add(b);
-                        StargateManager.openingAnimationBlocks.put(l, b);
-                        b.setType(wooshMaterial);
+                    if (wooshBlockStep.size() != 0) {
+                        for ( Location l : wooshBlockStep )
+                        {
+                            Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
+                            animatedBlocks.add(b);
+                            StargateManager.openingAnimationBlocks.put(l, b);
+                            b.setType(wooshMaterial);
+                        }
                     }
+                    else 
+                    {
+                        skip = true;
+                    }
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, this.name + " Woosh Adding: " + animationStep + " Woosh Block Size: " + wooshBlockStep.size() );
                 }
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINEST, false, this.name + " Woosh Adding: " + animationStep + " Woosh Block Size: " + this.wooshBlocks.get(animationStep).size() );
+
                 if ( this.wooshBlocks.size() == animationStep + 1)
                 {
                     this.animationRemoving = true;
@@ -225,40 +234,58 @@ public class Stargate
                 {
                     animationStep++;
                 }
-                WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH), this.gateShape.wooshTicks);
+                if (skip) 
+                {
+                    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH));
+                }
+                else 
+                {
+                    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH), this.gateShape.wooshTicks);
+                }
             }
             else
             {
                 // remove in reverse order, if block is not a portal block!
-                if ( this.wooshBlocks.get(animationStep) != null)
+                if ( wooshBlockStep != null)
                 {
-                    for ( Location l : this.wooshBlocks.get(animationStep) )
-                    {
-                        Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
-                        StargateManager.openingAnimationBlocks.remove(l, b);
-                        animatedBlocks.remove(b);
-                        b.setType(Material.AIR);
+                    if (wooshBlockStep.size() != 0) {
+                        for ( Location l : wooshBlockStep )
+                        {
+                            Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
+                            StargateManager.openingAnimationBlocks.remove(l, b);
+                            animatedBlocks.remove(b);
+                            b.setType(Material.AIR);
+                        }
                     }
+                    else {
+                        skip = true;
+                    }
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, this.name + " Woosh Removing: " + animationStep + " Woosh Block Size: " + wooshBlockStep.size() );
                 }
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINEST, false, this.name + " Woosh Removing: " + animationStep + " Woosh Block Size: " + this.wooshBlocks.get(animationStep).size() );
+                
                 // If this is the last step to animate, we now add all the portal blocks in.
-                if ( animationStep == 0 )
+                if ( animationStep == 1 )
                 {
                     this.animationRemoving = false;
-                    if (this.litGate) {
+                    if (this.litGate && this.active) {
                         this.fillGateInterior(this.gateShape.portalMaterial);
                     }
                 }
                 else
                 {
                     animationStep--;
-                    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH), this.gateShape.wooshTicks);
+                    if (skip) {
+                        WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH));
+                    }
+                    else {
+                        WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH), this.gateShape.wooshTicks);
+                    }
                 }
             }
         }
         else 
         {
-            if (this.litGate) {
+            if (this.active) {
                 this.fillGateInterior(this.gateShape.portalMaterial);
             }
         }
@@ -287,7 +314,7 @@ public class Stargate
      */
     public void lightStargate()
     {
-        WormholeXTreme.getThisPlugin().prettyLog(Level.FINEST, false, "Lighting up Order: " + this.current_lighting_iteration );
+        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Lighting up Order: " + this.current_lighting_iteration );
         this.litGate = true;
         this.current_lighting_iteration++;
         // Light up blocks
@@ -302,12 +329,15 @@ public class Stargate
                 }
             }
 
-            if ( current_lighting_iteration >= lightBlocks.size() - 1 )
+            if ( current_lighting_iteration >= lightBlocks.size() - 1)
             {
             	// Reset back to start
                 this.current_lighting_iteration = 0;
-                // Start up animation for woosh now!
-                WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH), this.gateShape.wooshTicks);
+                if (this.active)
+                {
+                    // Start up animation for woosh now!
+                    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH));
+                }
             }
             else
             {
@@ -340,7 +370,7 @@ public class Stargate
      *
      * @param p the p
      */
-    public void stopActivationTimer(Player p)
+    public void stopActivationTimer()
     {
         if ( this.activateTaskId > 0)
         {
@@ -472,6 +502,11 @@ public class Stargate
             	// This function lights, wooshes, and then adds portal material
                 lightStargate();
             }
+            else 
+            {
+                // Just skip top woosh if already lit (/dial gate)
+                WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH));
+            }
             // Show water if you are dialing out OR if the iris isn't active
             /*if ( this.target != null || !this.irisActive )
             {
@@ -523,7 +558,7 @@ public class Stargate
 
         if ( !target.litGate )
         {
-            WorldUtils.checkChunkLoad(target.activationBlock);
+            WorldUtils.scheduleChunkLoad(target.activationBlock);
             this.target = target;
             this.dialStargate();
             target.dialStargate();
@@ -561,7 +596,7 @@ public class Stargate
 
         //if ( !target.LitGate )
         //{
-        WorldUtils.checkChunkLoad(target.activationBlock);
+        WorldUtils.scheduleChunkLoad(target.activationBlock);
         this.target = target;
         this.dialStargate();
         target.dialStargate();
@@ -627,9 +662,7 @@ public class Stargate
         {
             this.afterShutdown();
         }
-        if (WormholeXTreme.getWorldHandler() != null) {
-            WormholeXTreme.getWorldHandler().removeStickyChunk(this.teleportLocation.getBlock().getChunk(), "WormholeXTreme");
-        }
+        WorldUtils.scheduleChunkUnload(this.teleportLocation.getBlock());
     }
 
     /**

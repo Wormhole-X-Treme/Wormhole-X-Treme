@@ -244,7 +244,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
             if (target != stargate.teleportLocation)
             {
                 target = TeleportUtils.findSafeTeleportFromStargate(stargate.target);
-                WorldUtils.checkChunkLoad(target.getBlock());
+                // WorldUtils.checkChunkLoad(target.getBlock());
             }
             player.setNoDamageTicks(5);
             event.setFrom(target);
@@ -431,7 +431,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
                 Stargate s2 = StargateManager.removeActivatedStargate(player);
                 if ( s2 != null && stargate.gateId == s2.gateId )
                 {
-                    stargate.stopActivationTimer(player);
+                    stargate.stopActivationTimer();
                     stargate.deActivateStargate();
                     stargate.dialButtonLeverState();
                     stargate.unLightStargate();

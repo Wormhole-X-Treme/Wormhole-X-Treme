@@ -855,7 +855,7 @@ public class StargateHelper
 
             byteBuff.get(blocArray);
             s.activationBlock = DataUtils.blockFromBytes(blocArray, w);
-            WorldUtils.checkChunkLoad(s.activationBlock);
+            // WorldUtils.checkChunkLoad(s.activationBlock);
 
             byteBuff.get(blocArray); 
             s.irisActivationBlock = DataUtils.blockFromBytes(blocArray, w);
@@ -930,7 +930,7 @@ public class StargateHelper
 
             byteBuff.get(blocArray);
             s.activationBlock = DataUtils.blockFromBytes(blocArray, w);
-            WorldUtils.checkChunkLoad(s.activationBlock);
+            // WorldUtils.checkChunkLoad(s.activationBlock);
 
             byteBuff.get(blocArray); 
             s.irisActivationBlock = DataUtils.blockFromBytes(blocArray, w);
@@ -1011,7 +1011,7 @@ public class StargateHelper
 
             byteBuff.get(blocArray);
             s.activationBlock = DataUtils.blockFromBytes(blocArray, w);
-            WorldUtils.checkChunkLoad(s.activationBlock);
+            // WorldUtils.checkChunkLoad(s.activationBlock);
 
             byteBuff.get(blocArray); 
             s.irisActivationBlock = DataUtils.blockFromBytes(blocArray, w);
@@ -1092,7 +1092,7 @@ public class StargateHelper
 
             byteBuff.get(blocArray);
             s.activationBlock = DataUtils.blockFromBytes(blocArray, w);
-            WorldUtils.checkChunkLoad(s.activationBlock);
+            // WorldUtils.checkChunkLoad(s.activationBlock);
 
             byteBuff.get(blocArray); 
             s.irisActivationBlock = DataUtils.blockFromBytes(blocArray, w);
@@ -1189,7 +1189,7 @@ public class StargateHelper
 
             byteBuff.get(blocArray);
             s.activationBlock = DataUtils.blockFromBytes(blocArray, w);
-            WorldUtils.checkChunkLoad(s.activationBlock);
+            // WorldUtils.checkChunkLoad(s.activationBlock);
 
             byteBuff.get(blocArray); 
             s.irisActivationBlock = DataUtils.blockFromBytes(blocArray, w);

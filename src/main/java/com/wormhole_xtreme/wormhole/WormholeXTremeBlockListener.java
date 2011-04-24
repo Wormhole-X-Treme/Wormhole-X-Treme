@@ -88,7 +88,7 @@ public class WormholeXTremeBlockListener extends BlockListener
                     if (s.litGate) 
                     {
                         s.unLightStargate();
-                        s.stopActivationTimer(p);
+                        s.stopActivationTimer();
                         StargateManager.removeActivatedStargate(p);
                     }
                     s.resetTeleportSign();

@@ -30,68 +30,26 @@ import com.wormhole_xtreme.wormhole.model.Stargate;
 
 /**
  * The Class TeleportUtils.
- *
+ * 
  * @author alron
  */
-public class TeleportUtils {
-
-    /**
-     * Find safe teleport location from stargate.
-     * Will default to default teleport location associated with stargate if unable.
-     *
-     * @param stargate The unsafe stargate to find a location from.
-     * @return The safe stading location (probably)
-     */
-    public static Location findSafeTeleportFromStargate(Stargate stargate)
-    {
-        final Stargate s = stargate;
-        Location location = s.teleportLocation;
-        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Unsafe location: " + location);
-        final double tlyaxis = Math.floor(s.teleportLocation.getY());
-        final double abyaxis = Math.floor(s.activationBlock.getY());
-        if (tlyaxis != abyaxis && (tlyaxis <= abyaxis - 6.0 || tlyaxis >= abyaxis + 6.0))
-        {
-            location.setY(abyaxis - 1.0);
-        }
-        else
-        {
-            location.setY(tlyaxis);
-        }
-
-        location = findSafe(location,3,3,s);
-
-        if (location != s.teleportLocation && Math.floor(location.getX()) == Math.floor(s.teleportLocation.getX()) && Math.floor(location.getZ()) == Math.floor(s.teleportLocation.getZ()))
-        {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Unclean safe location: " + location);
-            location.setPitch(s.teleportLocation.getPitch());
-            location.setYaw(s.teleportLocation.getYaw());
-            location.setX(s.teleportLocation.getX());
-            location.setZ(s.teleportLocation.getZ());
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Cleaned safe location: " + location);
-        }
-        else
-        {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Unclean fallback location: " + location);
-            location.setPitch(s.teleportLocation.getPitch());
-            location.setYaw(s.teleportLocation.getYaw());
-            location.setX(Math.floor(location.getX()));
-            location.setZ(Math.floor(location.getZ()));
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Cleaned fallback location: " + location);
-        }
-        return location;
-    }
-
+public class TeleportUtils
+{
 
     /**
      * Find safe.
-     *
-     * @param location The initial location to start our checks on.
-     * @param max The max block distance to run our checks, per iteration.
-     * @param iteration The number of iterations we will run the safe check.
-     * @param stargate The destination stargate.
+     * 
+     * @param location
+     *            The initial location to start our checks on.
+     * @param max
+     *            The max block distance to run our checks, per iteration.
+     * @param iteration
+     *            The number of iterations we will run the safe check.
+     * @param stargate
+     *            The destination stargate.
      * @return The safe location, if no safe location is found, we use the top of the DHD Activation Block.
      */
-    private static Location findSafe(Location location, int max, int iteration, Stargate stargate)
+    private static Location findSafe(final Location location, final int max, final int iteration, final Stargate stargate)
     {
         Block initialBlock = location.getBlock();
         Material initialMaterial = initialBlock.getType();
@@ -116,31 +74,31 @@ public class TeleportUtils {
             int secondStageDownState = 0;
 
             WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "initial material=" + initialMaterial);
-            if (initialMaterial == Material.AIR || initialMaterial == Material.WATER || initialMaterial == Material.RAILS)
+            if ((initialMaterial == Material.AIR) || (initialMaterial == Material.WATER) || (initialMaterial == Material.RAILS))
             {
                 // Start block is a safe block. Iterate downwards until a non-safe block is found (or max is hit)
                 // if non-safe block is found immediately below safe block, iterate up once from safe block
                 // to check if there is headroom. Set return value to bottom-most safe block.
-                while (firstStageDistance <= max * 3 && !up)
+                while ((firstStageDistance <= max * 3) && !up)
                 {
                     if (firstStageDistance == 0)
                     {
                         tempBlockOne = initialBlock;
                         tempMaterialOne = initialMaterial;
                     }
-                    else 
+                    else
                     {
-                        tempBlockOne = initialBlock.getFace(BlockFace.DOWN,firstStageDistance);
+                        tempBlockOne = initialBlock.getFace(BlockFace.DOWN, firstStageDistance);
                         tempMaterialOne = tempBlockOne.getType();
                     }
-                    if (tempMaterialOne == Material.AIR || tempMaterialOne == Material.WATER || tempMaterialOne == Material.RAILS)
+                    if ((tempMaterialOne == Material.AIR) || (tempMaterialOne == Material.WATER) || (tempMaterialOne == Material.RAILS))
                     {
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "1st down="+ firstStageDistance + " material=" + tempMaterialOne);
+                        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "1st down=" + firstStageDistance + " material=" + tempMaterialOne);
                         firstStageDistance++;
                     }
                     else
                     {
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "1st break=" + firstStageDistance );
+                        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "1st break=" + firstStageDistance);
                         up = true;
                     }
                 }
@@ -150,11 +108,11 @@ public class TeleportUtils {
             // found, iterate once more to make sure it has head room. Return bottom-most safe block.
             // If no safe block is found, start iterating downwards from initial block location. If safe block is found
             // start iterating downards until non-safe block is found.
-            while (secondStageDistance <= max && !safe)
+            while ((secondStageDistance <= max) && !safe)
             {
                 if (up)
                 {
-                    tempBlockOne = initialBlock.getFace(BlockFace.DOWN,firstStageDistance);
+                    tempBlockOne = initialBlock.getFace(BlockFace.DOWN, firstStageDistance);
                     tempMaterialOne = tempBlockOne.getType();
                     up = false;
                     down = true;
@@ -164,16 +122,16 @@ public class TeleportUtils {
                     tempBlockOne = initialBlock;
                     tempMaterialOne = initialMaterial;
                 }
-                else 
+                else
                 {
                     if (down)
                     {
                         if (firstStageDistance - secondStageDistance > 0)
                         {
-                            tempBlockOne = initialBlock.getFace(BlockFace.DOWN,firstStageDistance - secondStageDistance);
+                            tempBlockOne = initialBlock.getFace(BlockFace.DOWN, firstStageDistance - secondStageDistance);
                             tempMaterialOne = tempBlockOne.getType();
                             secondStageDownState = 1;
-                        } 
+                        }
                         else if (firstStageDistance - secondStageDistance == 0)
                         {
                             tempBlockOne = initialBlock;
@@ -182,27 +140,27 @@ public class TeleportUtils {
                         }
                         else
                         {
-                            tempBlockOne = initialBlock.getFace(BlockFace.UP,secondStageDistance - firstStageDistance);
+                            tempBlockOne = initialBlock.getFace(BlockFace.UP, secondStageDistance - firstStageDistance);
                             tempMaterialOne = tempBlockOne.getType();
                             secondStageDownState = 3;
                         }
                     }
                     else
                     {
-                        tempBlockOne = initialBlock.getFace(BlockFace.UP,secondStageDistance);
+                        tempBlockOne = initialBlock.getFace(BlockFace.UP, secondStageDistance);
                         tempMaterialOne = tempBlockOne.getType();
                     }
                 }
-                if (tempMaterialOne != Material.WATER && tempMaterialOne != Material.RAILS && tempMaterialOne != Material.AIR)
+                if ((tempMaterialOne != Material.WATER) && (tempMaterialOne != Material.RAILS) && (tempMaterialOne != Material.AIR))
                 {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "2nd up="+ secondStageDistance + " material=" + tempMaterialOne);
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "2nd up=" + secondStageDistance + " material=" + tempMaterialOne);
                     secondStageDistance++;
                 }
                 else
                 {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "2nd break=" + secondStageDistance );
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "2nd break=" + secondStageDistance);
                     safe = true;
-                } 
+                }
             }
             if (safe)
             {
@@ -210,14 +168,14 @@ public class TeleportUtils {
                 {
                     if (secondStageDownState == 1)
                     {
-                        tempBlockOne = initialBlock.getFace(BlockFace.DOWN,(firstStageDistance - secondStageDistance) - 1);
+                        tempBlockOne = initialBlock.getFace(BlockFace.DOWN, (firstStageDistance - secondStageDistance) - 1);
                         tempMaterialOne = tempBlockOne.getType();
                         tempBlockTwo = tempBlockOne.getFace(BlockFace.DOWN, 2);
                         tempMaterialTwo = tempBlockTwo.getType();
-                        if ((tempMaterialOne == Material.AIR || tempMaterialOne == Material.WATER) && (tempMaterialTwo != Material.AIR && tempMaterialTwo != Material.WATER))
+                        if (((tempMaterialOne == Material.AIR) || (tempMaterialOne == Material.WATER)) && ((tempMaterialTwo != Material.AIR) && (tempMaterialTwo != Material.WATER)))
                         {
                             WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Returning down based safe location, downstate: " + secondStageDownState);
-                            finalLocation = initialBlock.getFace(BlockFace.DOWN,firstStageDistance - secondStageDistance).getLocation();
+                            finalLocation = initialBlock.getFace(BlockFace.DOWN, firstStageDistance - secondStageDistance).getLocation();
                             retry = false;
                         }
                         else
@@ -228,11 +186,11 @@ public class TeleportUtils {
                     }
                     else if (secondStageDownState == 2)
                     {
-                        tempBlockOne = initialBlock.getFace(BlockFace.UP,1);
+                        tempBlockOne = initialBlock.getFace(BlockFace.UP, 1);
                         tempMaterialOne = tempBlockOne.getType();
                         tempBlockTwo = tempBlockOne.getFace(BlockFace.DOWN, 2);
                         tempMaterialTwo = tempBlockTwo.getType();
-                        if ((tempMaterialOne == Material.AIR || tempMaterialOne == Material.WATER) && (tempMaterialTwo != Material.AIR && tempMaterialTwo != Material.WATER))
+                        if (((tempMaterialOne == Material.AIR) || (tempMaterialOne == Material.WATER)) && ((tempMaterialTwo != Material.AIR) && (tempMaterialTwo != Material.WATER)))
                         {
                             WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Returning down based safe location, downstate: " + secondStageDownState);
                             finalLocation = initialBlock.getLocation();
@@ -250,7 +208,7 @@ public class TeleportUtils {
                         tempMaterialOne = tempBlockOne.getType();
                         tempBlockTwo = tempBlockOne.getFace(BlockFace.DOWN, 2);
                         tempMaterialTwo = tempBlockTwo.getType();
-                        if ((tempMaterialOne == Material.AIR || tempMaterialOne == Material.WATER) && (tempMaterialTwo != Material.AIR && tempMaterialTwo != Material.WATER))
+                        if (((tempMaterialOne == Material.AIR) || (tempMaterialOne == Material.WATER)) && ((tempMaterialTwo != Material.AIR) && (tempMaterialTwo != Material.WATER)))
                         {
                             WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Returning down based safe location, downstate: " + secondStageDownState);
                             finalLocation = initialBlock.getFace(BlockFace.UP, secondStageDistance - firstStageDistance).getLocation();
@@ -269,10 +227,10 @@ public class TeleportUtils {
                     tempMaterialOne = tempBlockOne.getType();
                     tempBlockTwo = tempBlockOne.getFace(BlockFace.DOWN, 2);
                     tempMaterialTwo = tempBlockTwo.getType();
-                    if ((tempMaterialOne == Material.AIR || tempMaterialOne == Material.WATER) && (tempMaterialTwo != Material.AIR && tempMaterialTwo != Material.WATER))
+                    if (((tempMaterialOne == Material.AIR) || (tempMaterialOne == Material.WATER)) && ((tempMaterialTwo != Material.AIR) && (tempMaterialTwo != Material.WATER)))
                     {
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Returning up based safe location." );
-                        finalLocation = initialBlock.getFace(BlockFace.UP,secondStageDistance).getLocation();
+                        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Returning up based safe location.");
+                        finalLocation = initialBlock.getFace(BlockFace.UP, secondStageDistance).getLocation();
                         retry = false;
                     }
                     else
@@ -287,7 +245,7 @@ public class TeleportUtils {
                 initialBlock = tempBlockOne;
                 initialMaterial = tempMaterialOne;
             }
-            if (i == iteration || iteration == 0)
+            if ((i == iteration) || (iteration == 0))
             {
                 retry = false;
             }
@@ -303,5 +261,52 @@ public class TeleportUtils {
             return stargate.activationBlock.getLocation();
         }
 
+    }
+
+    /**
+     * Find safe teleport location from stargate.
+     * Will default to default teleport location associated with stargate if unable.
+     * 
+     * @param stargate
+     *            The unsafe stargate to find a location from.
+     * @return The safe stading location (probably)
+     */
+    public static Location findSafeTeleportFromStargate(final Stargate stargate)
+    {
+        final Stargate s = stargate;
+        Location location = s.teleportLocation;
+        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Unsafe location: " + location);
+        final double tlyaxis = Math.floor(s.teleportLocation.getY());
+        final double abyaxis = Math.floor(s.activationBlock.getY());
+        if ((tlyaxis != abyaxis) && ((tlyaxis <= abyaxis - 6.0) || (tlyaxis >= abyaxis + 6.0)))
+        {
+            location.setY(abyaxis - 1.0);
+        }
+        else
+        {
+            location.setY(tlyaxis);
+        }
+
+        location = findSafe(location, 3, 3, s);
+
+        if ((location != s.teleportLocation) && (Math.floor(location.getX()) == Math.floor(s.teleportLocation.getX())) && (Math.floor(location.getZ()) == Math.floor(s.teleportLocation.getZ())))
+        {
+            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Unclean safe location: " + location);
+            location.setPitch(s.teleportLocation.getPitch());
+            location.setYaw(s.teleportLocation.getYaw());
+            location.setX(s.teleportLocation.getX());
+            location.setZ(s.teleportLocation.getZ());
+            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Cleaned safe location: " + location);
+        }
+        else
+        {
+            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Unclean fallback location: " + location);
+            location.setPitch(s.teleportLocation.getPitch());
+            location.setYaw(s.teleportLocation.getYaw());
+            location.setX(Math.floor(location.getX()));
+            location.setZ(Math.floor(location.getZ()));
+            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Cleaned fallback location: " + location);
+        }
+        return location;
     }
 }

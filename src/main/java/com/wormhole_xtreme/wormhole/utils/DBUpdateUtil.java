@@ -37,83 +37,62 @@ import java.util.zip.ZipInputStream;
 
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
 
-
 /**
  * WormholeXTreme DBUpdateUtil.
- *
+ * 
  * @author Ben Echols (Lologarithm)
  */
-public class DBUpdateUtil 
+public class DBUpdateUtil
 {
 
     /** The sql_con. */
     static Connection sql_con;
 
     /**
-     * Update db.
-     *
-     * @return true, if successful
+     * Gets the count db files.
+     * 
+     * @return the count db files
      */
-    public static boolean updateDB()
+    private static int getCountDBFiles()
     {
-        File dir = new File("plugins" + File.separator + "WormholeXTremeDB" + File.separator);
-        File dest_dir = new File("plugins" + File.separator + "WormholeXTreme" + File.separator + "WormholeXTremeDB" + File.separator);
-        if ( dir.exists() && dir.isDirectory() )
+        final CodeSource src = WormholeXTreme.class.getProtectionDomain().getCodeSource();
+        final URL jar = src.getLocation();
+        int count = 0;
+        ZipInputStream zis = null;
+        try
         {
-            if ( !dest_dir.exists() )
-                try {
-                    dest_dir.mkdir();
-                } catch (Exception e) {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to make directory: " + e.getMessage());
-                }
-                File[] files = dir.listFiles();
-                for ( File f : files)
+            zis = new ZipInputStream(jar.openStream());
+            ZipEntry entry;
+            while ((entry = zis.getNextEntry()) != null)
+            {
+                if (entry.getName().contains("db_create_"))
                 {
-                    try {
-                        f.renameTo(new File(dest_dir, f.getName()));
-                    } catch (Exception e) {
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to rename files: " + e.getMessage());
-                    }
+                    count++;
                 }
-
-                try {
-                    dir.delete();
-                } catch (Exception e) {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to delete directory: " + e.getMessage() );
-                }
+            }
+            zis.close();
         }
-
-        try
-        {		
-            Class.forName("org.hsqldb.jdbcDriver" );
-        }
-        catch (ClassNotFoundException e)
+        catch (final IOException e)
         {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
-            return false;
+            WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to open jar file to read SQL Update commands: " + e.getMessage());
         }
-        try
+        finally
         {
-            sql_con = DriverManager.getConnection("jdbc:hsqldb:./plugins/WormholeXTreme/WormholeXTremeDB/WormholeXTremeDB", "sa", "");
-            sql_con.setAutoCommit(true);
+            try
+            {
+                zis.close();
+            }
+            catch (final IOException e)
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+            }
         }
-        catch (SQLException e)
-        {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
-            return false;
-        }
-
-        int version = getCurrentVersion();		
-        int count = getCountDBFiles();
-
-        updateDB(version, count);
-
-        return true;
+        return count;
     }
 
     /**
      * Gets the current version.
-     *
+     * 
      * @return the current version
      */
     private static int getCurrentVersion()
@@ -125,38 +104,39 @@ public class DBUpdateUtil
         {
             stmt = sql_con.createStatement();
             rs = stmt.executeQuery("SELECT MAX(Version) as ver FROM VersionInfo");
-            if (rs.next()) {
+            if (rs.next())
+            {
                 ver = rs.getInt("ver");
             }
             stmt.close();
         }
-        catch (SQLException e)
+        catch (final SQLException e)
         {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING,false,"Failed to load WormholeXTremeDB version info, defaulting to 0.");
-            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING,false,"If this is your first time running this plugin, you can ignore this error.");
+            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failed to load WormholeXTremeDB version info, defaulting to 0.");
+            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "If this is your first time running this plugin, you can ignore this error.");
             return 0;
         }
         finally
         {
-            try 
+            try
             {
                 if (rs != null)
                 {
                     rs.close();
                 }
             }
-            catch (SQLException e) 
+            catch (final SQLException e)
             {
                 WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
             }
-            try 
+            try
             {
                 if (stmt != null)
                 {
                     stmt.close();
                 }
             }
-            catch (SQLException e) 
+            catch (final SQLException e)
             {
                 WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
             }
@@ -166,87 +146,172 @@ public class DBUpdateUtil
     }
 
     /**
-     * Gets the count db files.
-     *
-     * @return the count db files
+     * Read text from jar.
+     * 
+     * @param s
+     *            the s
+     * @return the array list
      */
-    private static int getCountDBFiles()
+    public static ArrayList<String> readTextFromJar(final String s)
     {
-        CodeSource src = WormholeXTreme.class.getProtectionDomain().getCodeSource();
-        URL jar = src.getLocation();
-        int count = 0;
-        ZipInputStream zis = null;
+        InputStream is = null;
+        BufferedReader br = null;
+        String line;
+        final ArrayList<String> list = new ArrayList<String>();
+
         try
         {
-            zis = new ZipInputStream(jar.openStream());
-            ZipEntry entry;
-            while ( (entry = zis.getNextEntry()) != null )
+            is = WormholeXTreme.class.getResourceAsStream(s);
+            br = new BufferedReader(new InputStreamReader(is));
+            while (null != (line = br.readLine()))
             {
-                if ( entry.getName().contains("db_create_") )
-                    count++;
+                list.add(line);
             }
-            zis.close();
         }
-        catch (IOException e)
+        catch (final Exception e)
         {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to open jar file to read SQL Update commands: " + e.getMessage() );
+            e.printStackTrace();
         }
         finally
         {
-            try 
+            try
             {
-                zis.close();
+                if (br != null)
+                {
+                    br.close();
+                }
+                if (is != null)
+                {
+                    is.close();
+                }
             }
-            catch (IOException e) 
+            catch (final IOException e)
             {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+                e.printStackTrace();
             }
         }
-        return count;
+        return list;
     }
 
     /**
      * Update db.
-     *
-     * @param version the version
-     * @param count the count
+     * 
+     * @return true, if successful
      */
-    private static void updateDB(int version, int count)
+    public static boolean updateDB()
     {
-        if ( count > version )
+        final File dir = new File("plugins" + File.separator + "WormholeXTremeDB" + File.separator);
+        final File dest_dir = new File("plugins" + File.separator + "WormholeXTreme" + File.separator + "WormholeXTremeDB" + File.separator);
+        if (dir.exists() && dir.isDirectory())
+        {
+            if ( !dest_dir.exists())
+            {
+                try
+                {
+                    dest_dir.mkdir();
+                }
+                catch (final Exception e)
+                {
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to make directory: " + e.getMessage());
+                }
+            }
+            final File[] files = dir.listFiles();
+            for (final File f : files)
+            {
+                try
+                {
+                    f.renameTo(new File(dest_dir, f.getName()));
+                }
+                catch (final Exception e)
+                {
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to rename files: " + e.getMessage());
+                }
+            }
+
+            try
+            {
+                dir.delete();
+            }
+            catch (final Exception e)
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to delete directory: " + e.getMessage());
+            }
+        }
+
+        try
+        {
+            Class.forName("org.hsqldb.jdbcDriver");
+        }
+        catch (final ClassNotFoundException e)
+        {
+            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+            return false;
+        }
+        try
+        {
+            sql_con = DriverManager.getConnection("jdbc:hsqldb:./plugins/WormholeXTreme/WormholeXTremeDB/WormholeXTremeDB", "sa", "");
+            sql_con.setAutoCommit(true);
+        }
+        catch (final SQLException e)
+        {
+            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+            return false;
+        }
+
+        final int version = getCurrentVersion();
+        final int count = getCountDBFiles();
+
+        updateDB(version, count);
+
+        return true;
+    }
+
+    /**
+     * Update db.
+     * 
+     * @param version
+     *            the version
+     * @param count
+     *            the count
+     */
+    private static void updateDB(final int version, final int count)
+    {
+        if (count > version)
         {
             boolean success = true;
             Statement stmt = null;
             try
             {
                 stmt = sql_con.createStatement();
-                for (int i = (version+1); i <= count; i++)
+                for (int i = (version + 1); i <= count; i++)
                 {
                     StringBuilder sb = new StringBuilder();
-                    ArrayList<String> lines = readTextFromJar("/sql_commands/db_create_" + i);
+                    final ArrayList<String> lines = readTextFromJar("/sql_commands/db_create_" + i);
 
-                    for( String line : lines)
+                    for (final String line : lines)
                     {
-                        if(!line.startsWith("#") && !line.startsWith("--"))
+                        if ( !line.startsWith("#") && !line.startsWith("--"))
+                        {
                             sb.append(line);
+                        }
 
-                        if( line.endsWith(";") && !line.startsWith("#") )
+                        if (line.endsWith(";") && !line.startsWith("#"))
                         {
                             try
                             {
                                 stmt.executeUpdate(sb.toString());
                                 //System.out.println("StargatesDB updated:" + rs + " : " + sb.toString());
                             }
-                            catch (SQLException sql_e)
+                            catch (final SQLException sql_e)
                             {
-                                int code = sql_e.getErrorCode(); 
-                                if ( code == -27 || code == -21)
+                                final int code = sql_e.getErrorCode();
+                                if ((code == -27) || (code == -21))
                                 {
-                                    WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING,false,"(" + code + ")Continuing after Error:" + sql_e);
+                                    WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "(" + code + ")Continuing after Error:" + sql_e);
                                 }
                                 else
                                 {
-                                    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"(" + code + ")Failure On:" + sql_e);
+                                    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "(" + code + ")Failure On:" + sql_e);
                                     success = false;
                                     break;
                                 }
@@ -260,70 +325,33 @@ public class DBUpdateUtil
                 stmt.close();
                 sql_con.close();
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Failure to update db:" + e);
+                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Failure to update db:" + e);
             }
             finally
             {
-                try 
+                try
                 {
                     stmt.close();
                 }
-                catch (SQLException e) 
+                catch (final SQLException e)
                 {
                     WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
                 }
             }
-            if ( success )
-                WormholeXTreme.getThisPlugin().prettyLog(Level.INFO,false,"Successfully updated database.");
+            if (success)
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Successfully updated database.");
+            }
             else
-                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Failed to update DB.");
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Failed to update DB.");
+            }
         }
         else
         {
             //System.out.println("Database is already up to date.");
         }
-    }
-
-    /**
-     * Read text from jar.
-     *
-     * @param s the s
-     * @return the array list
-     */
-    public static ArrayList<String> readTextFromJar(String s) 
-    {
-        InputStream is = null;
-        BufferedReader br = null;
-        String line;
-        ArrayList<String> list = new ArrayList<String>();
-
-        try 
-        { 
-            is = WormholeXTreme.class.getResourceAsStream(s);
-            br = new BufferedReader(new InputStreamReader(is));
-            while (null != (line = br.readLine())) 
-            {
-                list.add(line);
-            }
-        }
-        catch (Exception e) 
-        {
-            e.printStackTrace();
-        }
-        finally 
-        {
-            try 
-            {
-                if (br != null) br.close();
-                if (is != null) is.close();
-            }
-            catch (IOException e) 
-            {
-                e.printStackTrace();
-            }
-        }
-        return list;
     }
 }

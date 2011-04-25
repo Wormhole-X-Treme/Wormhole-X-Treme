@@ -31,76 +31,59 @@ import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 
 /**
  * The Class Complete.
- *
+ * 
  * @author alron
  */
-public class Complete implements CommandExecutor 
+public class Complete implements CommandExecutor
 {
-
-    /* (non-Javadoc)
-     * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
-     */
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
-    {
-        if (CommandUtilities.playerCheck(sender))
-        {
-            final String[] arguments = CommandUtilities.commandEscaper(args);
-            if (arguments.length <= 3 && arguments.length > 0 )
-            {
-                final Player player = (Player)sender;
-                return doComplete(player, arguments);
-            }
-            return false;
-        }
-        return true;
-    }
 
     /**
      * Do complete.
-     *
-     * @param player the player
-     * @param args the args
+     * 
+     * @param player
+     *            the player
+     * @param args
+     *            the args
      * @return true, if successful
      */
-    private static boolean doComplete(Player player, String[] args)
+    private static boolean doComplete(final Player player, final String[] args)
     {
         final Player p = player;
         final String[] a = args;
         final String name = args[0].trim().replace("\n", "").replace("\r", "");
 
-        if ( name.length() < 12)
+        if (name.length() < 12)
         {
-            final Stargate dupName = StargateManager.getStargate( name );
+            final Stargate dupName = StargateManager.getStargate(name);
 
             String idc = "";
             String network = "Public";
 
-            for ( int i = 1; i < a.length; i++ )
+            for (int i = 1; i < a.length; i++)
             {
-                String[] key_value_string = a[i].split("=");
-                if ( key_value_string[0].equals("idc") )
+                final String[] key_value_string = a[i].split("=");
+                if (key_value_string[0].equals("idc"))
                 {
                     idc = key_value_string[1];
                 }
-                else if ( key_value_string[0].equals("net") )
+                else if (key_value_string[0].equals("net"))
                 {
                     network = key_value_string[1];
                 }
             }
             if (WXPermissions.checkWXPermissions(p, network, PermissionType.BUILD))
             {
-                if ( dupName == null )
+                if (dupName == null)
                 {
                     final boolean success = StargateManager.completeStargate(p, name, idc, network);
 
-                    if ( success )
+                    if (success)
                     {
-                        p.sendMessage( ConfigManager.MessageStrings.constructSuccess.toString() );
+                        p.sendMessage(ConfigManager.MessageStrings.constructSuccess.toString());
                     }
                     else
                     {
-                        p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Construction Failed!?" );
+                        p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Construction Failed!?");
                     }
                 }
                 else
@@ -108,14 +91,33 @@ public class Complete implements CommandExecutor
                     p.sendMessage(ConfigManager.MessageStrings.constructNameTaken.toString() + "\"" + name + "\"");
                 }
             }
-            else 
+            else
             {
                 p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
             }
         }
         else
         {
-            p.sendMessage( ConfigManager.MessageStrings.constructNameTooLong.toString() + "\"" + name + "\"" );
+            p.sendMessage(ConfigManager.MessageStrings.constructNameTooLong.toString() + "\"" + name + "\"");
+        }
+        return true;
+    }
+
+    /* (non-Javadoc)
+     * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+     */
+    @Override
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
+    {
+        if (CommandUtilities.playerCheck(sender))
+        {
+            final String[] arguments = CommandUtilities.commandEscaper(args);
+            if ((arguments.length <= 3) && (arguments.length > 0))
+            {
+                final Player player = (Player) sender;
+                return doComplete(player, arguments);
+            }
+            return false;
         }
         return true;
     }

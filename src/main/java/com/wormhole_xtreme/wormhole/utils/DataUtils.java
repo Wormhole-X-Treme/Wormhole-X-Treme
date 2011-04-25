@@ -26,39 +26,55 @@ import org.bukkit.block.Block;
 
 /**
  * WormholeXTreme DataUtils.
- *
+ * 
  * @author Ben Echols (Lologarithm)
  */
-public class DataUtils 
+public class DataUtils
 {
 
     /**
-     * Location to bytes.
-     *
-     * @param l the l
+     * Block from bytes.
+     * 
+     * @param bytes
+     *            the bytes
+     * @param w
+     *            the w
+     * @return the block
+     */
+    public static Block blockFromBytes(final byte[] bytes, final World w)
+    {
+        final ByteBuffer b = ByteBuffer.wrap(bytes);
+        return w.getBlockAt(b.getInt(), b.getInt(), b.getInt());
+    }
+
+    /**
+     * Block location to bytes.
+     * 
+     * @param l
+     *            the l
      * @return the byte[]
      */
-    public static byte[] locationToBytes(Location l)
+    public static byte[] blockLocationToBytes(final Location l)
     {
-        ByteBuffer b = ByteBuffer.allocate(32);
-        b.putDouble(l.getX());
-        b.putDouble(l.getY());
-        b.putDouble(l.getZ());
-        b.putFloat(l.getPitch());
-        b.putFloat(l.getYaw());
+        final ByteBuffer bb = ByteBuffer.allocate(12);
 
-        return b.array();
+        bb.putInt(l.getBlockX());
+        bb.putInt(l.getBlockY());
+        bb.putInt(l.getBlockZ());
+
+        return bb.array();
     }
 
     /**
      * Block to bytes.
-     *
-     * @param b the b
+     * 
+     * @param b
+     *            the b
      * @return the byte[]
      */
-    public static byte[] blockToBytes(Block b)
+    public static byte[] blockToBytes(final Block b)
     {
-        ByteBuffer bb = ByteBuffer.allocate(12);
+        final ByteBuffer bb = ByteBuffer.allocate(12);
 
         bb.putInt(b.getX());
         bb.putInt(b.getY());
@@ -68,90 +84,84 @@ public class DataUtils
     }
 
     /**
-     * Block location to bytes.
-     *
-     * @param l the l
-     * @return the byte[]
-     */
-    public static byte[] blockLocationToBytes(Location l)
-    {
-        ByteBuffer bb = ByteBuffer.allocate(12);
-
-        bb.putInt(l.getBlockX());
-        bb.putInt(l.getBlockY());
-        bb.putInt(l.getBlockZ());
-
-        return bb.array();
-    }
-
-
-    /**
-     * Block from bytes.
-     *
-     * @param bytes the bytes
-     * @param w the w
-     * @return the block
-     */
-    public static Block blockFromBytes(byte[] bytes, World w)
-    {
-        ByteBuffer b = ByteBuffer.wrap(bytes);
-        return w.getBlockAt( b.getInt(), b.getInt(), b.getInt() );
-    }
-
-    /**
-     * Location from bytes.
-     *
-     * @param bytes the bytes
-     * @param w the w
-     * @return the location
-     */
-    public static Location locationFromBytes(byte[] bytes, World w)
-    {
-        ByteBuffer b = ByteBuffer.wrap(bytes);
-        return new Location(w, b.getDouble(), b.getDouble(), b.getDouble(), b.getFloat(), b.getFloat());
-    }
-
-    /**
-     * Int to byte array.
-     *
-     * @param value the value
-     * @return the byte[]
-     */
-    public static final byte[] intToByteArray(int value) 
-    {
-        return new byte[] {
-            (byte)(value >>> 24),
-            (byte)(value >>> 16),
-            (byte)(value >>> 8),
-            (byte)value};
-    }
-
-    /**
      * Byte array to int.
-     *
-     * @param b the b
-     * @param index the index
+     * 
+     * @param b
+     *            the b
+     * @param index
+     *            the index
      * @return the int
      */
-    public static final int byteArrayToInt(byte [] b, int index) 
+    public static final int byteArrayToInt(final byte[] b, final int index)
     {
-        return (b[index] << 24)
-        + ((b[index + 1] & 0xFF) << 16)
-        + ((b[index + 2] & 0xFF) << 8)
-        + (b[index + 3] & 0xFF);
+        return (b[index] << 24) + ((b[index + 1] & 0xFF) << 16) + ((b[index + 2] & 0xFF) << 8) + (b[index + 3] & 0xFF);
     }
 
     /**
      * Byte to boolean.
-     *
-     * @param b the b
+     * 
+     * @param b
+     *            the b
      * @return true, if successful
      */
-    public static final boolean byteToBoolean(byte b)
+    public static final boolean byteToBoolean(final byte b)
     {
-        if ( b >= 1 )
+        if (b >= 1)
+        {
             return true;
+        }
         else
+        {
             return false;
+        }
+    }
+
+    /**
+     * Int to byte array.
+     * 
+     * @param value
+     *            the value
+     * @return the byte[]
+     */
+    public static final byte[] intToByteArray(final int value)
+    {
+        return new byte[]
+        {
+            (byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value
+        };
+    }
+
+    /**
+     * Location from bytes.
+     * 
+     * @param bytes
+     *            the bytes
+     * @param w
+     *            the w
+     * @return the location
+     */
+    public static Location locationFromBytes(final byte[] bytes, final World w)
+    {
+        final ByteBuffer b = ByteBuffer.wrap(bytes);
+        return new Location(w, b.getDouble(), b.getDouble(), b.getDouble(), b.getFloat(), b.getFloat());
+    }
+
+    /**
+     * Location to bytes.
+     * 
+     * @param l
+     *            the l
+     * @return the byte[]
+     */
+    public static byte[] locationToBytes(final Location l)
+    {
+        final ByteBuffer b = ByteBuffer.allocate(32);
+        b.putDouble(l.getX());
+        b.putDouble(l.getY());
+        b.putDouble(l.getZ());
+        b.putFloat(l.getPitch());
+        b.putFloat(l.getYaw());
+
+        return b.array();
     }
 }

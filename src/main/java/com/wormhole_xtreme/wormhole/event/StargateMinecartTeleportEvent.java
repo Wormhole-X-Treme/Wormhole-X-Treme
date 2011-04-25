@@ -21,10 +21,9 @@ package com.wormhole_xtreme.wormhole.event;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.Event;
 
-
 /**
  * The Stargate Minecart Teleport Event Class.
- *
+ * 
  * @author alron
  */
 public class StargateMinecartTeleportEvent extends Event
@@ -41,11 +40,13 @@ public class StargateMinecartTeleportEvent extends Event
 
     /**
      * Instantiates a new stargate minecart teleport event.
-     *
-     * @param oldMinecart the old minecart
-     * @param newMinecart the new minecart
+     * 
+     * @param oldMinecart
+     *            the old minecart
+     * @param newMinecart
+     *            the new minecart
      */
-    public StargateMinecartTeleportEvent(Minecart oldMinecart, Minecart newMinecart)
+    public StargateMinecartTeleportEvent(final Minecart oldMinecart, final Minecart newMinecart)
     {
         super("StargateMinecartTeleportEvent");
         this.oldMinecart = oldMinecart;
@@ -53,23 +54,23 @@ public class StargateMinecartTeleportEvent extends Event
     }
 
     /**
-     * Gets the old minecart.
-     *
-     * @return the old minecart
-     */
-    public Minecart getOldMinecart()
-    {
-        return this.oldMinecart;
-    }
-
-    /**
      * Gets the new minecart.
-     *
+     * 
      * @return the new minecart
      */
     public Minecart getNewMinecart()
     {
-        return this.newMinecart;
+        return newMinecart;
+    }
+
+    /**
+     * Gets the old minecart.
+     * 
+     * @return the old minecart
+     */
+    public Minecart getOldMinecart()
+    {
+        return oldMinecart;
     }
 
 }

@@ -16,12 +16,11 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.wormhole_xtreme.wormhole; 
-
+package com.wormhole_xtreme.wormhole;
 
 import java.util.logging.Level;
 
-import org.bukkit.Location; 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -44,40 +43,29 @@ import com.wormhole_xtreme.wormhole.utils.TeleportUtils;
 
 /**
  * WormholeXtreme Vehicle Listener.
- *
+ * 
  * @author Ben Echols (Lologarithm)
  * @author Dean Bailey (alron)
- */ 
-public class WormholeXTremeVehicleListener extends VehicleListener 
-{ 
+ */
+public class WormholeXTremeVehicleListener extends VehicleListener
+{
 
     /** The nospeed. */
     private static Vector nospeed = new Vector();
 
-    /* (non-Javadoc)
-     * @see org.bukkit.event.vehicle.VehicleListener#onVehicleMove(org.bukkit.event.vehicle.VehicleMoveEvent)
-     */
-    @Override
-    public void onVehicleMove(VehicleMoveEvent event)
-    {
-        if (event.getVehicle() instanceof Minecart)
-        {
-            handleStargateMinecartTeleportEvent(event);
-        }
-    }
-
     /**
      * Handle stargate minecart teleport event.
-     *
-     * @param event the event
+     * 
+     * @param event
+     *            the event
      * @return true, if successful
      */
-    private static boolean handleStargateMinecartTeleportEvent(VehicleMoveEvent event)
+    private static boolean handleStargateMinecartTeleportEvent(final VehicleMoveEvent event)
     {
         final Location l = event.getTo();
-        final Block ch = l.getWorld().getBlockAt( l.getBlockX(), l.getBlockY(), l.getBlockZ());
-        final Stargate st = StargateManager.getGateFromBlock( ch );
-        if ( st != null &&  st.active && st.target != null && st.gateShape != null && ch.getType() == st.gateShape.portalMaterial )
+        final Block ch = l.getWorld().getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
+        final Stargate st = StargateManager.getGateFromBlock(ch);
+        if ((st != null) && st.active && (st.target != null) && (st.gateShape != null) && (ch.getType() == st.gateShape.portalMaterial))
         {
             String gatenetwork;
             if (st.network != null)
@@ -89,23 +77,22 @@ public class WormholeXTremeVehicleListener extends VehicleListener
                 gatenetwork = "Public";
             }
             Location target = st.target.teleportLocation;
-            final Minecart veh = (Minecart)event.getVehicle();
-            Vector v = veh.getVelocity();
+            final Minecart veh = (Minecart) event.getVehicle();
+            final Vector v = veh.getVelocity();
             veh.setVelocity(nospeed);
             final Entity e = veh.getPassenger();
-            if ( e != null )
+            if (e != null)
             {
-                if ( e instanceof Player )
+                if (e instanceof Player)
                 {
-                    final Player p = (Player)e;
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Minecart Player in gate:" + st.name + " gate Active: " + st.active + " Target Gate: " + st.target.name + " Network: " + gatenetwork );
-                    if (ConfigManager.getWormholeUseIsTeleport() && ((st.isSignPowered && !WXPermissions.checkWXPermissions(p, st, PermissionType.SIGN)) ||
-                        (!st.isSignPowered && !WXPermissions.checkWXPermissions(p, st, PermissionType.DIALER))))
+                    final Player p = (Player) e;
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Minecart Player in gate:" + st.name + " gate Active: " + st.active + " Target Gate: " + st.target.name + " Network: " + gatenetwork);
+                    if (ConfigManager.getWormholeUseIsTeleport() && ((st.isSignPowered && !WXPermissions.checkWXPermissions(p, st, PermissionType.SIGN)) || ( !st.isSignPowered && !WXPermissions.checkWXPermissions(p, st, PermissionType.DIALER))))
                     {
                         p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
                         return false;
                     }
-                    if ( st.target.irisActive )
+                    if (st.target.irisActive)
                     {
                         p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Remote Iris is locked!");
                         veh.teleport(st.teleportLocation);
@@ -115,32 +102,32 @@ public class WormholeXTremeVehicleListener extends VehicleListener
                         }
                         return false;
                     }
-                    if ( WormholeXTreme.getIconomy() != null )
+                    if (WormholeXTreme.getIconomy() != null)
                     {
-                        double cost = ConfigManager.getIconomyWormholeUseCost();
+                        final double cost = ConfigManager.getIconomyWormholeUseCost();
                         boolean charge = true;
-                        if ((ConfigManager.getIconomyOpsExcempt() && p.isOp()) || (ConfigManager.getIconomyOwnerExempt() && st.owner != null && st.owner.equals(p.getName())))
+                        if ((ConfigManager.getIconomyOpsExcempt() && p.isOp()) || (ConfigManager.getIconomyOwnerExempt() && (st.owner != null) && st.owner.equals(p.getName())))
                         {
                             charge = false;
                         }
-                        if (charge && cost > 0.0)
+                        if (charge && (cost > 0.0))
                         {
-                            Account player_account = iConomy.getBank().getAccount(p.getName());
-                            double balance = player_account.getBalance();
-                            String currency = iConomy.getBank().getCurrency();
-                            if ( balance >= cost )
+                            final Account player_account = iConomy.getBank().getAccount(p.getName());
+                            final double balance = player_account.getBalance();
+                            final String currency = iConomy.getBank().getCurrency();
+                            if (balance >= cost)
                             {
                                 player_account.subtract(cost);
                                 //  player_account.save();
-                                p.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole Use \u00A7F- \u00A72" + cost + " \u00A77" + currency );
+                                p.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole Use \u00A7F- \u00A72" + cost + " \u00A77" + currency);
                                 //p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
-                                double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
+                                final double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
 
-                                if ( owner_percent != 0.0 && st.owner != null )
+                                if ((owner_percent != 0.0) && (st.owner != null))
                                 {
                                     if (iConomy.getBank().hasAccount(st.owner))
                                     {
-                                        Account own_acc = iConomy.getBank().getAccount(st.owner);
+                                        final Account own_acc = iConomy.getBank().getAccount(st.owner);
                                         own_acc.add(cost * owner_percent);
                                         // own_acc.save();
                                     }
@@ -148,25 +135,33 @@ public class WormholeXTremeVehicleListener extends VehicleListener
                             }
                             else
                             {
-                                p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Not enough " + currency  + "! - Requires: \u00A72" + cost + " \u00A77- Available: \u00A74" + player_account.getBalance() + " \u00A77" + currency);
+                                p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Not enough " + currency + "! - Requires: \u00A72" + cost + " \u00A77- Available: \u00A74" + player_account.getBalance() + " \u00A77" + currency);
                                 //p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
                                 target = st.teleportLocation;
                             }
                         }
-                    }			            
+                    }
                 }
             }
 
-            double speed = v.length();
-            Vector new_speed = new Vector();
-            if ( st.target.facing == BlockFace.NORTH )
-                new_speed.setX(-1);
-            else if ( st.target.facing == BlockFace.SOUTH )
+            final double speed = v.length();
+            final Vector new_speed = new Vector();
+            if (st.target.facing == BlockFace.NORTH)
+            {
+                new_speed.setX( -1);
+            }
+            else if (st.target.facing == BlockFace.SOUTH)
+            {
                 new_speed.setX(1);
-            else if ( st.target.facing == BlockFace.EAST )
-                new_speed.setZ(-1);
-            else if ( st.target.facing == BlockFace.WEST )
+            }
+            else if (st.target.facing == BlockFace.EAST)
+            {
+                new_speed.setZ( -1);
+            }
+            else if (st.target.facing == BlockFace.WEST)
+            {
                 new_speed.setZ(1);
+            }
             // As we all know stargates accelerate matter.
             new_speed.multiply(speed * 5);
             if (st.target.irisActive)
@@ -175,7 +170,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener
                 veh.teleport(target);
                 veh.setVelocity(new_speed);
             }
-            else 
+            else
             {
                 if (target != st.teleportLocation)
                 {
@@ -192,7 +187,9 @@ public class WormholeXTremeVehicleListener extends VehicleListener
                     WormholeXTreme.getThisPlugin().getServer().getPluginManager().callEvent(teleportevent);
                     e.teleport(target);
                     final Vector newnew_speed = new_speed;
-                    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new Runnable() {
+                    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new Runnable()
+                    {
+                        @Override
                         public void run()
                         {
                             newveh.setPassenger(e);
@@ -205,7 +202,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener
                 {
                     veh.teleport(target);
                     veh.setVelocity(new_speed);
-                } 
+                }
             }
 
             if (ConfigManager.getTimeoutShutdown() == 0)
@@ -216,5 +213,17 @@ public class WormholeXTremeVehicleListener extends VehicleListener
         }
 
         return false;
+    }
+
+    /* (non-Javadoc)
+     * @see org.bukkit.event.vehicle.VehicleListener#onVehicleMove(org.bukkit.event.vehicle.VehicleMoveEvent)
+     */
+    @Override
+    public void onVehicleMove(final VehicleMoveEvent event)
+    {
+        if (event.getVehicle() instanceof Minecart)
+        {
+            handleStargateMinecartTeleportEvent(event);
+        }
     }
 }

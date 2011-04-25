@@ -16,25 +16,35 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.wormhole_xtreme.wormhole; 
+package com.wormhole_xtreme.wormhole;
 
 import java.util.ArrayList;
-import java.util.HashMap; 
-import java.util.logging.Logger;
+import java.util.HashMap;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.bukkit.entity.Player; 
-import org.bukkit.event.Event; 
-import org.bukkit.event.Event.Priority; 
-import org.bukkit.plugin.PluginManager; 
-import org.bukkit.plugin.java.JavaPlugin; 
+import me.taylorkelly.help.Help;
+
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import com.nijiko.coelho.iConomy.iConomy;
 import com.nijiko.permissions.PermissionHandler;
-
 import com.wormhole_xtreme.worlds.handler.WorldHandler;
-import com.wormhole_xtreme.wormhole.command.*;
+import com.wormhole_xtreme.wormhole.command.Build;
+import com.wormhole_xtreme.wormhole.command.Compass;
+import com.wormhole_xtreme.wormhole.command.Complete;
+import com.wormhole_xtreme.wormhole.command.Dial;
+import com.wormhole_xtreme.wormhole.command.Force;
+import com.wormhole_xtreme.wormhole.command.Go;
+import com.wormhole_xtreme.wormhole.command.WXIDC;
+import com.wormhole_xtreme.wormhole.command.WXList;
+import com.wormhole_xtreme.wormhole.command.WXRemove;
+import com.wormhole_xtreme.wormhole.command.Wormhole;
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.config.Configuration;
 import com.wormhole_xtreme.wormhole.logic.StargateHelper;
@@ -48,14 +58,12 @@ import com.wormhole_xtreme.wormhole.plugin.PermissionsSupport;
 import com.wormhole_xtreme.wormhole.plugin.WormholeWorldsSupport;
 import com.wormhole_xtreme.wormhole.utils.DBUpdateUtil;
 
-import me.taylorkelly.help.Help;
-
 /**
  * WormholeXtreme for Bukkit.
- *
+ * 
  * @author Ben Echols (Lologarithm)
  * @author Dean Bailey (alron)
- */ 
+ */
 public class WormholeXTreme extends JavaPlugin
 {
 
@@ -72,9 +80,167 @@ public class WormholeXTreme extends JavaPlugin
     /** The server listener. */
     private static final WormholeXTremeRedstoneListener redstoneListener = new WormholeXTremeRedstoneListener();
 
+    /**
+     * Gets the help.
+     * 
+     * @return the help
+     */
+    public static Help getHelp()
+    {
+        return help;
+    }
+
+    /**
+     * Gets the iconomy.
+     * 
+     * @return the iconomy
+     */
+    public static iConomy getIconomy()
+    {
+        return iconomy;
+    }
+
+    /**
+     * Gets the logger.
+     * 
+     * @return the log
+     */
+    private static Logger getLog()
+    {
+        return log;
+    }
+
+    /**
+     * Gets the permissions.
+     * 
+     * @return the permissions
+     */
+    public static PermissionHandler getPermissions()
+    {
+        return permissions;
+    }
+
+    /**
+     * Gets the scheduler.
+     * 
+     * @return the scheduler
+     */
+    public static BukkitScheduler getScheduler()
+    {
+        return scheduler;
+    }
+
+    /**
+     * Gets the this plugin.
+     * 
+     * @return the this plugin
+     */
+    public static WormholeXTreme getThisPlugin()
+    {
+        return thisPlugin;
+    }
+
+    /**
+     * Gets the wormhole x treme worlds.
+     * 
+     * @return the wormhole x treme worlds
+     */
+    public static WorldHandler getWorldHandler()
+    {
+        return worldHandler;
+    }
+
+    /**
+     * Sets the help.
+     * 
+     * @param help
+     *            the new help
+     */
+    public static void setHelp(final Help help)
+    {
+        WormholeXTreme.help = help;
+    }
+
+    /**
+     * Sets the iconomy.
+     * 
+     * @param iconomy
+     *            the new iconomy
+     */
+    public static void setIconomy(final iConomy iconomy)
+    {
+        WormholeXTreme.iconomy = iconomy;
+    }
+
+    /**
+     * Sets the log.
+     * 
+     * @param log
+     *            the new log
+     */
+    private static void setLog(final Logger log)
+    {
+        WormholeXTreme.log = log;
+    }
+
+    /**
+     * Sets the permissions.
+     * 
+     * @param permissions
+     *            the new permissions
+     */
+    public static void setPermissions(final PermissionHandler permissions)
+    {
+        WormholeXTreme.permissions = permissions;
+    }
+
+    /**
+     * Sets the pretty log level.
+     * 
+     * @param level
+     *            the new pretty log level
+     */
+    public static void setPrettyLogLevel(final Level level)
+    {
+        getLog().setLevel(level);
+        getThisPlugin().prettyLog(Level.CONFIG, false, "Logging set to: " + level);
+    }
+
+    /**
+     * Sets the scheduler.
+     * 
+     * @param scheduler
+     *            the new scheduler
+     */
+    private static void setScheduler(final BukkitScheduler scheduler)
+    {
+        WormholeXTreme.scheduler = scheduler;
+    }
+
+    /**
+     * Sets the this plugin.
+     * 
+     * @param thisPlugin
+     *            the new this plugin
+     */
+    private static void setThisPlugin(final WormholeXTreme thisPlugin)
+    {
+        WormholeXTreme.thisPlugin = thisPlugin;
+    }
+
+    /**
+     * Sets the wormhole x treme worlds.
+     * 
+     * @param wormholeXTremeWorlds
+     *            the new wormhole x treme worlds
+     */
+    public static void setWorldHandler(final WorldHandler worldHandler)
+    {
+        WormholeXTreme.worldHandler = worldHandler;
+    }
+
     /** The debugees. */
     private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
-
 
     /** The Permissions. */
     private static PermissionHandler permissions = null;
@@ -84,7 +250,7 @@ public class WormholeXTreme extends JavaPlugin
 
     /** The Help. */
     private static Help help = null;
-    
+
     /** The wormhole x treme worlds. */
     private static WorldHandler worldHandler = null;
 
@@ -96,62 +262,6 @@ public class WormholeXTreme extends JavaPlugin
 
     /** The log. */
     private static Logger log = null;
-
-    /* (non-Javadoc)
-     * @see org.bukkit.plugin.java.JavaPlugin#onLoad()
-     */
-    @Override
-    public void onLoad()
-    {
-        setThisPlugin(this);
-        setLog(getThisPlugin().getServer().getLogger()); 
-        setScheduler(getThisPlugin().getServer().getScheduler());
-
-        prettyLog(Level.INFO,true,getThisPlugin().getDescription().getAuthors().toString() + "Load Beginning." );
-        // Load our config files and set logging level right away.
-        ConfigManager.setupConfigs(getThisPlugin().getDescription());
-        WormholeXTreme.setPrettyLogLevel(ConfigManager.getLogLevel());
-        // Make sure DB is up to date with latest SCHEMA
-        DBUpdateUtil.updateDB();
-        // Load our shapes, stargates, and internal permissions.
-        StargateHelper.loadShapes();
-        if (!ConfigManager.isWormholeWorldsSupportEnabled())
-        {
-            prettyLog(Level.INFO, true, "Wormhole Worlds support disabled in settings.txt, loading stargates and worlds ourself.");
-            StargateDBManager.loadStargates(getThisPlugin().getServer());
-        }
-        PermissionsManager.loadPermissions();
-        prettyLog(Level.INFO,true, "Load Completed.");
-    }
-
-    /* (non-Javadoc)
-     * @see org.bukkit.plugin.Plugin#onEnable()
-     */
-    @Override
-    public void onEnable()
-    { 
-        prettyLog(Level.INFO,true,"Enable Beginning.");
-        // Try and attach to Permissions and iConomy and Help
-        try
-        {
-            PermissionsSupport.enablePermissions();
-            IConomySupport.enableIconomy();
-            HelpSupport.enableHelp();
-            WormholeWorldsSupport.enableWormholeWorlds();
-        }
-        catch ( Exception e)
-        {
-            prettyLog(Level.WARNING,false, "Caught Exception while trying to load support plugins." + e.getMessage());
-        }
-        registerEvents(true);
-        HelpSupport.registerHelpCommands();
-        if (!ConfigManager.isWormholeWorldsSupportEnabled())
-        {
-            registerEvents(false);
-            registerCommands();
-            prettyLog(Level.INFO, true, "Enable Completed.");
-        }
-    }
 
     /**
      * Register commands.
@@ -174,19 +284,19 @@ public class WormholeXTreme extends JavaPlugin
     /**
      * Register events.
      */
-    public static void registerEvents(boolean critical) 
+    public static void registerEvents(final boolean critical)
     {
         final WormholeXTreme tp = getThisPlugin();
         final PluginManager pm = tp.getServer().getPluginManager();
 
-        if (critical) 
+        if (critical)
         {
             // Listen for enable events.
             pm.registerEvent(Event.Type.PLUGIN_ENABLE, serverListener, Priority.Monitor, tp);
             // Listen for disable events.
             pm.registerEvent(Event.Type.PLUGIN_DISABLE, serverListener, Priority.Monitor, tp);
         }
-        else 
+        else
         {
             //Listen for Interact, Physics, Break, Flow, and RightClick events. Pass to blockListener
             pm.registerEvent(Event.Type.BLOCK_PHYSICS, blockListener, Priority.Highest, tp);
@@ -215,19 +325,30 @@ public class WormholeXTreme extends JavaPlugin
         }
     }
 
+    /**
+     * Checks if is debugging.
+     * 
+     * @param player
+     *            the player
+     * @return true, if is debugging
+     */
+    public boolean isDebugging(final Player player)
+    {
+        return debugees.containsKey(player) && debugees.get(player).booleanValue();
+    }
 
     /* (non-Javadoc)
      * @see org.bukkit.plugin.Plugin#onDisable()
      */
     @Override
-    public void onDisable() 
-    {  
+    public void onDisable()
+    {
         try
         {
-            Configuration.writeFile(this.getDescription());
+            Configuration.writeFile(getDescription());
             final ArrayList<Stargate> gates = StargateManager.getAllGates();
             // Store all our gates
-            for ( Stargate gate : gates )
+            for (final Stargate gate : gates)
             {
                 gate.shutdownStargate(false);
                 StargateDBManager.stargateToSQL(gate);
@@ -236,207 +357,107 @@ public class WormholeXTreme extends JavaPlugin
             StargateDBManager.shutdown();
             prettyLog(Level.INFO, true, "Successfully shutdown.");
         }
-        catch ( Exception e)
+        catch (final Exception e)
         {
-            prettyLog(Level.SEVERE,false,"Caught exception while shutting down: " + e.getMessage());
+            prettyLog(Level.SEVERE, false, "Caught exception while shutting down: " + e.getMessage());
             e.printStackTrace();
         }
-    } 
-
-
-    /**
-     * Checks if is debugging.
-     *
-     * @param player the player
-     * @return true, if is debugging
-     */
-    public boolean isDebugging(final Player player) 
-    { 
-        return debugees.containsKey(player) && debugees.get(player).booleanValue();
     }
 
-    /**
-     * Sets the debugging.
-     *
-     * @param player the player
-     * @param value the value
+    /* (non-Javadoc)
+     * @see org.bukkit.plugin.Plugin#onEnable()
      */
-    public void setDebugging(final Player player, final boolean value) 
+    @Override
+    public void onEnable()
     {
-        debugees.put(player, Boolean.valueOf(value)); 
+        prettyLog(Level.INFO, true, "Enable Beginning.");
+        // Try and attach to Permissions and iConomy and Help
+        try
+        {
+            PermissionsSupport.enablePermissions();
+            IConomySupport.enableIconomy();
+            HelpSupport.enableHelp();
+            WormholeWorldsSupport.enableWormholeWorlds();
+        }
+        catch (final Exception e)
+        {
+            prettyLog(Level.WARNING, false, "Caught Exception while trying to load support plugins." + e.getMessage());
+        }
+        registerEvents(true);
+        HelpSupport.registerHelpCommands();
+        if ( !ConfigManager.isWormholeWorldsSupportEnabled())
+        {
+            registerEvents(false);
+            registerCommands();
+            prettyLog(Level.INFO, true, "Enable Completed.");
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.bukkit.plugin.java.JavaPlugin#onLoad()
+     */
+    @Override
+    public void onLoad()
+    {
+        setThisPlugin(this);
+        setLog(getThisPlugin().getServer().getLogger());
+        setScheduler(getThisPlugin().getServer().getScheduler());
+
+        prettyLog(Level.INFO, true, getThisPlugin().getDescription().getAuthors().toString() + "Load Beginning.");
+        // Load our config files and set logging level right away.
+        ConfigManager.setupConfigs(getThisPlugin().getDescription());
+        WormholeXTreme.setPrettyLogLevel(ConfigManager.getLogLevel());
+        // Make sure DB is up to date with latest SCHEMA
+        DBUpdateUtil.updateDB();
+        // Load our shapes, stargates, and internal permissions.
+        StargateHelper.loadShapes();
+        if ( !ConfigManager.isWormholeWorldsSupportEnabled())
+        {
+            prettyLog(Level.INFO, true, "Wormhole Worlds support disabled in settings.txt, loading stargates and worlds ourself.");
+            StargateDBManager.loadStargates(getThisPlugin().getServer());
+        }
+        PermissionsManager.loadPermissions();
+        prettyLog(Level.INFO, true, "Load Completed.");
     }
 
     /**
      * 
      * prettyLog: A quick and dirty way to make log output clean, unified, and with versioning as needed.
      * 
-     * @param severity Level of severity in the form of INFO, WARNING, SEVERE, etc.
-     * @param version true causes version display in log entries.
-     * @param message to prettyLog.
+     * @param severity
+     *            Level of severity in the form of INFO, WARNING, SEVERE, etc.
+     * @param version
+     *            true causes version display in log entries.
+     * @param message
+     *            to prettyLog.
      * 
      */
-    public void prettyLog(Level severity, boolean version, String message) 
+    public void prettyLog(final Level severity, final boolean version, final String message)
     {
-        final String prettyName = (String)("[" + getThisPlugin().getDescription().getName() + "]");
-        final String prettyVersion = (String)("[v" + getThisPlugin().getDescription().getVersion() + "]");
+        final String prettyName = ("[" + getThisPlugin().getDescription().getName() + "]");
+        final String prettyVersion = ("[v" + getThisPlugin().getDescription().getVersion() + "]");
         String prettyLogLine = prettyName;
         if (version)
         {
             prettyLogLine += prettyVersion;
-            getLogger().log(severity,prettyLogLine + message);
-        } 
+            getLog().log(severity, prettyLogLine + message);
+        }
         else
         {
-            getLogger().log(severity,prettyLogLine + message);
+            getLog().log(severity, prettyLogLine + message);
         }
     }
 
     /**
-     * Sets the pretty log level.
-     *
-     * @param level the new pretty log level
+     * Sets the debugging.
+     * 
+     * @param player
+     *            the player
+     * @param value
+     *            the value
      */
-    public static void setPrettyLogLevel(Level level)
+    public void setDebugging(final Player player, final boolean value)
     {
-        getLogger().setLevel(level);
-        getThisPlugin().prettyLog(Level.CONFIG, false, "Logging set to: " + level );
+        debugees.put(player, Boolean.valueOf(value));
     }
-
-    /**
-     * Sets the this plugin.
-     *
-     * @param thisPlugin the new this plugin
-     */
-    private static void setThisPlugin(WormholeXTreme thisPlugin)
-    {
-        WormholeXTreme.thisPlugin = thisPlugin;
-    }
-
-    /**
-     * Gets the this plugin.
-     *
-     * @return the this plugin
-     */
-    public static WormholeXTreme getThisPlugin()
-    {
-        return thisPlugin;
-    }
-
-    /**
-     * Sets the scheduler.
-     *
-     * @param scheduler the new scheduler
-     */
-    private static void setScheduler(BukkitScheduler scheduler)
-    {
-        WormholeXTreme.scheduler = scheduler;
-    }
-
-    /**
-     * Gets the scheduler.
-     *
-     * @return the scheduler
-     */
-    public static BukkitScheduler getScheduler()
-    {
-        return scheduler;
-    }
-
-    /**
-     * Sets the log.
-     *
-     * @param log the new log
-     */
-    private static void setLog(Logger log)
-    {
-        WormholeXTreme.log = log;
-    }
-
-    /**
-     * Gets the logger.
-     *
-     * @return the logger
-     */
-    private static Logger getLogger()
-    {
-        return log;
-    }
-
-    /**
-     * Sets the iconomy.
-     *
-     * @param iconomy the new iconomy
-     */
-    public static void setIconomy(iConomy iconomy)
-    {
-        WormholeXTreme.iconomy = iconomy;
-    }
-
-    /**
-     * Gets the iconomy.
-     *
-     * @return the iconomy
-     */
-    public static iConomy getIconomy()
-    {
-        return iconomy;
-    }
-
-    /**
-     * Sets the permissions.
-     *
-     * @param permissions the new permissions
-     */
-    public static void setPermissions(PermissionHandler permissions)
-    {
-        WormholeXTreme.permissions = permissions;
-    }
-
-    /**
-     * Gets the permissions.
-     *
-     * @return the permissions
-     */
-    public static PermissionHandler getPermissions()
-    {
-        return permissions;
-    }
-
-    /**
-     * Sets the help.
-     *
-     * @param help the new help
-     */
-    public static void setHelp(Help help)
-    {
-        WormholeXTreme.help = help;
-    }
-
-    /**
-     * Gets the help.
-     *
-     * @return the help
-     */
-    public static Help getHelp() {
-        return help;
-    }
-
-    /**
-     * Sets the wormhole x treme worlds.
-     *
-     * @param wormholeXTremeWorlds the new wormhole x treme worlds
-     */
-    public static void setWorldHandler(WorldHandler worldHandler) {
-        WormholeXTreme.worldHandler = worldHandler;
-    }
-
-    /**
-     * Gets the wormhole x treme worlds.
-     *
-     * @return the wormhole x treme worlds
-     */
-    public static WorldHandler getWorldHandler() {
-        return worldHandler;
-    }
-} 
-
+}

@@ -32,51 +32,34 @@ import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 
 /**
  * The Class Build.
- *
+ * 
  * @author alron
  */
-public class Build implements CommandExecutor 
+public class Build implements CommandExecutor
 {
-
-    /* (non-Javadoc)
-     * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
-     */
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
-    {
-        if (CommandUtilities.playerCheck(sender))
-        {
-            final String[] arguments = CommandUtilities.commandEscaper(args);
-            if (arguments.length < 3 && arguments.length > 0 )
-            {
-                final Player player = (Player)sender;
-                return doBuild(player,arguments);
-            }
-            return false;
-        }
-        return true;
-    }
 
     /**
      * Do build.
-     *
-     * @param player the player
-     * @param args the args
+     * 
+     * @param player
+     *            the player
+     * @param args
+     *            the args
      * @return true, if successful
      */
-    private static boolean doBuild(Player player, String[] args)
+    private static boolean doBuild(final Player player, final String[] args)
     {
         final Player p = player;
-        final String[] a = args; 
-        if (a.length == 1) 
+        final String[] a = args;
+        if (a.length == 1)
         {
-            if ( WXPermissions.checkWXPermissions(p, PermissionType.CONFIG) )
+            if (WXPermissions.checkWXPermissions(p, PermissionType.CONFIG))
             {
                 final StargateShape shape = StargateHelper.getShape(a[0]);
-                if  ( shape != null)
+                if (shape != null)
                 {
                     StargateManager.addPlayerBuilderShape(p, shape);
-                    p.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Press Activation button on new DHD to autobuild Stargate in the shape of: " + a[0] );
+                    p.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Press Activation button on new DHD to autobuild Stargate in the shape of: " + a[0]);
                 }
                 else
                 {
@@ -90,6 +73,25 @@ public class Build implements CommandExecutor
         }
         else
         {
+            return false;
+        }
+        return true;
+    }
+
+    /* (non-Javadoc)
+     * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+     */
+    @Override
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
+    {
+        if (CommandUtilities.playerCheck(sender))
+        {
+            final String[] arguments = CommandUtilities.commandEscaper(args);
+            if ((arguments.length < 3) && (arguments.length > 0))
+            {
+                final Player player = (Player) sender;
+                return doBuild(player, arguments);
+            }
             return false;
         }
         return true;

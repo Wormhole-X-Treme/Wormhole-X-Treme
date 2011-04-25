@@ -33,41 +33,44 @@ import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 
 /**
  * The Class WXList.
- *
+ * 
  * @author alron
  */
-public class WXList implements CommandExecutor {
+public class WXList implements CommandExecutor
+{
 
     /* (non-Javadoc)
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
      */
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
+    {
         Player player = null;
 
-        if (CommandUtilities.playerCheck(sender)) {
+        if (CommandUtilities.playerCheck(sender))
+        {
             player = (Player) sender;
         }
-        if (!CommandUtilities.playerCheck(sender) || (player != null && WXPermissions.checkWXPermissions(player, PermissionType.LIST)) )
+        if ( !CommandUtilities.playerCheck(sender) || ((player != null) && WXPermissions.checkWXPermissions(player, PermissionType.LIST)))
         {
-            ArrayList<Stargate> gates = StargateManager.getAllGates();
+            final ArrayList<Stargate> gates = StargateManager.getAllGates();
             sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Available gates \u00A73::");
             StringBuilder sb = new StringBuilder();
             // TODO: Add checks for complex permissions enabled users running this command and only display what they have access to use.
-            for ( int i = 0; i < gates.size(); i++)
+            for (int i = 0; i < gates.size(); i++)
             {
                 sb.append("\u00A77" + gates.get(i).name);
-                if ( i != gates.size() - 1)
+                if (i != gates.size() - 1)
                 {
                     sb.append("\u00A78, ");
                 }
-                if (sb.toString().length() >= 75 )
+                if (sb.toString().length() >= 75)
                 {
                     sender.sendMessage(sb.toString());
                     sb = new StringBuilder();
                 }
             }
-            if (!sb.toString().equals(""))
+            if ( !sb.toString().equals(""))
             {
                 sender.sendMessage(sb.toString());
             }

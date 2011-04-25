@@ -204,25 +204,19 @@ public class Stargate
         final Material wooshMaterial = this.gateShape.portalMaterial;
         if (this.wooshBlocks != null && this.wooshBlocks.size() != 0) 
         {
-            boolean skip = false;
             ArrayList<Location> wooshBlockStep = this.wooshBlocks.get(animationStep);
             if ( !animationRemoving )
             {
                 if (  wooshBlockStep != null )
                 {
-                    if (wooshBlockStep.size() != 0) {
-                        for ( Location l : wooshBlockStep )
-                        {
-                            Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
-                            animatedBlocks.add(b);
-                            StargateManager.openingAnimationBlocks.put(l, b);
-                            b.setType(wooshMaterial);
-                        }
-                    }
-                    else 
+                    for ( Location l : wooshBlockStep )
                     {
-                        skip = true;
+                        Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
+                        animatedBlocks.add(b);
+                        StargateManager.openingAnimationBlocks.put(l, b);
+                        b.setType(wooshMaterial);
                     }
+
                     WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, this.name + " Woosh Adding: " + animationStep + " Woosh Block Size: " + wooshBlockStep.size() );
                 }
 
@@ -234,31 +228,21 @@ public class Stargate
                 {
                     animationStep++;
                 }
-                if (skip) 
-                {
-                    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH));
-                }
-                else 
-                {
-                    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH), this.gateShape.wooshTicks);
-                }
+                WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH), this.gateShape.wooshTicks);
+
             }
             else
             {
                 // remove in reverse order, if block is not a portal block!
                 if ( wooshBlockStep != null)
                 {
-                    if (wooshBlockStep.size() != 0) {
-                        for ( Location l : wooshBlockStep )
-                        {
-                            Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
-                            StargateManager.openingAnimationBlocks.remove(l, b);
-                            animatedBlocks.remove(b);
-                            b.setType(Material.AIR);
-                        }
-                    }
-                    else {
-                        skip = true;
+
+                    for ( Location l : wooshBlockStep )
+                    {
+                        Block b = myWorld.getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
+                        StargateManager.openingAnimationBlocks.remove(l, b);
+                        animatedBlocks.remove(b);
+                        b.setType(Material.AIR);
                     }
                     WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, this.name + " Woosh Removing: " + animationStep + " Woosh Block Size: " + wooshBlockStep.size() );
                 }
@@ -274,12 +258,7 @@ public class Stargate
                 else
                 {
                     animationStep--;
-                    if (skip) {
-                        WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH));
-                    }
-                    else {
-                        WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH), this.gateShape.wooshTicks);
-                    }
+                    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH), this.gateShape.wooshTicks);
                 }
             }
         }

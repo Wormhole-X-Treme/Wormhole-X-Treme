@@ -676,7 +676,10 @@ public class StargateHelper
 
         for ( int i = 0; i < layer.wooshPositions.size(); i++ )
         {
-            tempGate.wooshBlocks.add(new ArrayList<Location>());
+            if (tempGate.wooshBlocks.size() < i + 1) 
+            {
+                tempGate.wooshBlocks.add(new ArrayList<Location>());
+            }
             if ( layer.wooshPositions.get(i) != null )
             {
                 for ( Integer[] position : layer.wooshPositions.get(i) )
@@ -687,10 +690,12 @@ public class StargateHelper
             }
         }
 
-
         for ( int i = 0; i < layer.lightPositions.size(); i++ )
         {
-            tempGate.lightBlocks.add(new ArrayList<Location>());
+            if (tempGate.lightBlocks.size() < i + 1) 
+            {
+                tempGate.lightBlocks.add(new ArrayList<Location>());
+            }
             if ( layer.lightPositions.get(i) != null )
             {
                 for ( Integer[] position : layer.lightPositions.get(i) )

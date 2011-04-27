@@ -47,11 +47,11 @@ import com.wormhole_xtreme.wormhole.utils.TeleportUtils;
  * @author Ben Echols (Lologarithm)
  * @author Dean Bailey (alron)
  */
-public class WormholeXTremeVehicleListener extends VehicleListener
+class WormholeXTremeVehicleListener extends VehicleListener
 {
 
     /** The nospeed. */
-    private static Vector nospeed = new Vector();
+    private final static Vector nospeed = new Vector();
 
     /**
      * Handle stargate minecart teleport event.
@@ -76,7 +76,9 @@ public class WormholeXTremeVehicleListener extends VehicleListener
             {
                 gatenetwork = "Public";
             }
-            Location target = st.getGateTarget().getGateMinecartTeleportLocation() != null ? st.getGateTarget().getGateMinecartTeleportLocation() : st.getGateTarget().getGatePlayerTeleportLocation();
+            Location target = st.getGateTarget().getGateMinecartTeleportLocation() != null
+                ? st.getGateTarget().getGateMinecartTeleportLocation()
+                : st.getGateTarget().getGatePlayerTeleportLocation();
             final Minecart veh = (Minecart) event.getVehicle();
             final Vector v = veh.getVelocity();
             veh.setVelocity(nospeed);
@@ -95,7 +97,8 @@ public class WormholeXTremeVehicleListener extends VehicleListener
                     if (st.getGateTarget().isGateIrisActive())
                     {
                         p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Remote Iris is locked!");
-                        veh.teleport(st.getGateMinecartTeleportLocation() != null ? st.getGateMinecartTeleportLocation() : st.getGatePlayerTeleportLocation());
+                        veh.teleport(st.getGateMinecartTeleportLocation() != null
+                            ? st.getGateMinecartTeleportLocation() : st.getGatePlayerTeleportLocation());
                         if (ConfigManager.getTimeoutShutdown() == 0)
                         {
                             st.shutdownStargate();
@@ -137,7 +140,8 @@ public class WormholeXTremeVehicleListener extends VehicleListener
                             {
                                 p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Not enough " + currency + "! - Requires: \u00A72" + cost + " \u00A77- Available: \u00A74" + player_account.getBalance() + " \u00A77" + currency);
                                 //p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
-                                target = st.getGateMinecartTeleportLocation() != null ? st.getGateMinecartTeleportLocation() : st.getGatePlayerTeleportLocation();
+                                target = st.getGateMinecartTeleportLocation() != null
+                                    ? st.getGateMinecartTeleportLocation() : st.getGatePlayerTeleportLocation();
                             }
                         }
                     }
@@ -172,7 +176,8 @@ public class WormholeXTremeVehicleListener extends VehicleListener
             }
             else
             {
-                if (target != (st.getGateMinecartTeleportLocation() != null ? st.getGateMinecartTeleportLocation() : st.getGatePlayerTeleportLocation()))
+                if (target != (st.getGateMinecartTeleportLocation() != null ? st.getGateMinecartTeleportLocation()
+                    : st.getGatePlayerTeleportLocation()))
                 {
                     target = TeleportUtils.findSafeTeleportFromStargate(st.getGateTarget());
                     // WorldUtils.checkChunkLoad(target.getBlock());

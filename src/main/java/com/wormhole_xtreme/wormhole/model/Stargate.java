@@ -124,17 +124,17 @@ public class Stargate
     /** The current_lighting_iteration. */
     private int gateLightingCurrentIteration = 0;
     /** List of all blocks contained in this stargate, including buttons and levers. */
-    private ArrayList<Location> gateStructureBlocks = new ArrayList<Location>();
+    private final ArrayList<Location> gateStructureBlocks = new ArrayList<Location>();
     /** List of all blocks that that are part of the "portal". */
-    private ArrayList<Location> gatePortalBlocks = new ArrayList<Location>();
+    private final ArrayList<Location> gatePortalBlocks = new ArrayList<Location>();
     /** List of all blocks that turn on when gate is active. */
-    private ArrayList<ArrayList<Location>> gateLightBlocks = new ArrayList<ArrayList<Location>>();
+    private final ArrayList<ArrayList<Location>> gateLightBlocks = new ArrayList<ArrayList<Location>>();
     /** List of all blocks that woosh in order when gate is active. */
-    private ArrayList<ArrayList<Location>> gateWooshBlocks = new ArrayList<ArrayList<Location>>();
+    private final ArrayList<ArrayList<Location>> gateWooshBlocks = new ArrayList<ArrayList<Location>>();
     /** The Animated blocks. */
-    private ArrayList<Block> gateAnimatedBlocks = new ArrayList<Block>();
+    private final ArrayList<Block> gateAnimatedBlocks = new ArrayList<Block>();
     /** The gate_order. */
-    private HashMap<Integer, Stargate> gateSignOrder = new HashMap<Integer, Stargate>();
+    private final HashMap<Integer, Stargate> gateSignOrder = new HashMap<Integer, Stargate>();
 
     /**
      * Instantiates a new stargate.
@@ -227,7 +227,7 @@ public class Stargate
      * @param idc
      *            the idc
      */
-    public void completeGate(final String name, final String idc)
+    void completeGate(final String name, final String idc)
     {
         setGateName(name);
 
@@ -350,7 +350,7 @@ public class Stargate
      * scheduling the shutdown time and scheduling the WOOSH if enabled.
      * Failed task schedules will cause gate to not activate, fill, or animate.
      */
-    public void dialStargate()
+    private void dialStargate()
     {
         if (WormholeXTreme.getWorldHandler() != null)
         {
@@ -474,7 +474,7 @@ public class Stargate
      * 
      * @return the gate activate task id
      */
-    public int getGateActivateTaskId()
+    private int getGateActivateTaskId()
     {
         return gateActivateTaskId;
     }
@@ -494,7 +494,7 @@ public class Stargate
      * 
      * @return the gate after shutdown task id
      */
-    public int getGateAfterShutdownTaskId()
+    private int getGateAfterShutdownTaskId()
     {
         return gateAfterShutdownTaskId;
     }
@@ -504,7 +504,7 @@ public class Stargate
      * 
      * @return the gate animated blocks
      */
-    public ArrayList<Block> getGateAnimatedBlocks()
+    private ArrayList<Block> getGateAnimatedBlocks()
     {
         return gateAnimatedBlocks;
     }
@@ -514,7 +514,7 @@ public class Stargate
      * 
      * @return the gate animation step
      */
-    public int getGateAnimationStep()
+    private int getGateAnimationStep()
     {
         return gateAnimationStep;
     }
@@ -574,9 +574,19 @@ public class Stargate
      * 
      * @return the gate lighting current iteration
      */
-    public int getGateLightingCurrentIteration()
+    private int getGateLightingCurrentIteration()
     {
         return gateLightingCurrentIteration;
+    }
+
+    /**
+     * Gets the gate minecart teleport location.
+     * 
+     * @return the gate minecart teleport location
+     */
+    public Location getGateMinecartTeleportLocation()
+    {
+        return gateMinecartTeleportLocation;
     }
 
     /**
@@ -617,6 +627,16 @@ public class Stargate
     public String getGateOwner()
     {
         return gateOwner;
+    }
+
+    /**
+     * Gets the gate teleport location.
+     * 
+     * @return the gate teleport location
+     */
+    public Location getGatePlayerTeleportLocation()
+    {
+        return gatePlayerTeleportLocation;
     }
 
     /**
@@ -664,7 +684,7 @@ public class Stargate
      * 
      * @return the gate shutdown task id
      */
-    public int getGateShutdownTaskId()
+    private int getGateShutdownTaskId()
     {
         return gateShutdownTaskId;
     }
@@ -684,7 +704,7 @@ public class Stargate
      * 
      * @return the gate sign order
      */
-    public HashMap<Integer, Stargate> getGateSignOrder()
+    private HashMap<Integer, Stargate> getGateSignOrder()
     {
         return gateSignOrder;
     }
@@ -720,16 +740,6 @@ public class Stargate
     }
 
     /**
-     * Gets the gate teleport location.
-     * 
-     * @return the gate teleport location
-     */
-    public Location getGatePlayerTeleportLocation()
-    {
-        return gatePlayerTeleportLocation;
-    }
-
-    /**
      * Gets the gate teleport sign.
      * 
      * @return the gate teleport sign
@@ -754,7 +764,7 @@ public class Stargate
      * 
      * @return the gate temp sign target
      */
-    public long getGateTempSignTarget()
+    long getGateTempSignTarget()
     {
         return gateTempSignTarget;
     }
@@ -764,7 +774,7 @@ public class Stargate
      * 
      * @return the gate temp target id
      */
-    public long getGateTempTargetId()
+    long getGateTempTargetId()
     {
         return gateTempTargetId;
     }
@@ -814,7 +824,7 @@ public class Stargate
      * 
      * @return true, if is gate animation removing
      */
-    public boolean isGateAnimationRemoving()
+    private boolean isGateAnimationRemoving()
     {
         return gateAnimationRemoving;
     }
@@ -834,7 +844,7 @@ public class Stargate
      * 
      * @return true, if is gate iris default active
      */
-    public boolean isGateIrisDefaultActive()
+    private boolean isGateIrisDefaultActive()
     {
         return gateIrisDefaultActive;
     }
@@ -962,7 +972,7 @@ public class Stargate
      * @param gateActivateTaskId
      *            the new gate activate task id
      */
-    public void setGateActivateTaskId(final int gateActivateTaskId)
+    private void setGateActivateTaskId(final int gateActivateTaskId)
     {
         this.gateActivateTaskId = gateActivateTaskId;
     }
@@ -995,20 +1005,9 @@ public class Stargate
      * @param gateAfterShutdownTaskId
      *            the new gate after shutdown task id
      */
-    public void setGateAfterShutdownTaskId(final int gateAfterShutdownTaskId)
+    private void setGateAfterShutdownTaskId(final int gateAfterShutdownTaskId)
     {
         this.gateAfterShutdownTaskId = gateAfterShutdownTaskId;
-    }
-
-    /**
-     * Sets the gate animated blocks.
-     * 
-     * @param gateAnimatedBlocks
-     *            the new gate animated blocks
-     */
-    public void setGateAnimatedBlocks(final ArrayList<Block> gateAnimatedBlocks)
-    {
-        this.gateAnimatedBlocks = gateAnimatedBlocks;
     }
 
     /**
@@ -1017,7 +1016,7 @@ public class Stargate
      * @param gateAnimationRemoving
      *            the new gate animation removing
      */
-    public void setGateAnimationRemoving(final boolean gateAnimationRemoving)
+    private void setGateAnimationRemoving(final boolean gateAnimationRemoving)
     {
         this.gateAnimationRemoving = gateAnimationRemoving;
     }
@@ -1028,7 +1027,7 @@ public class Stargate
      * @param gateAnimationStep
      *            the new gate animation step
      */
-    public void setGateAnimationStep(final int gateAnimationStep)
+    private void setGateAnimationStep(final int gateAnimationStep)
     {
         this.gateAnimationStep = gateAnimationStep;
     }
@@ -1050,7 +1049,7 @@ public class Stargate
      * @param gateId
      *            the new gate id
      */
-    public void setGateId(final long gateId)
+    void setGateId(final long gateId)
     {
         this.gateId = gateId;
     }
@@ -1100,23 +1099,12 @@ public class Stargate
     }
 
     /**
-     * Sets the gate light blocks.
-     * 
-     * @param gateLightBlocks
-     *            the new gate light blocks
-     */
-    public void setGateLightBlocks(final ArrayList<ArrayList<Location>> gateLightBlocks)
-    {
-        this.gateLightBlocks = gateLightBlocks;
-    }
-
-    /**
      * Sets the gate lighting current iteration.
      * 
      * @param gateLightingCurrentIteration
      *            the new gate lighting current iteration
      */
-    public void setGateLightingCurrentIteration(final int gateLightingCurrentIteration)
+    private void setGateLightingCurrentIteration(final int gateLightingCurrentIteration)
     {
         this.gateLightingCurrentIteration = gateLightingCurrentIteration;
     }
@@ -1130,6 +1118,17 @@ public class Stargate
     public void setGateLit(final boolean gateLit)
     {
         this.gateLit = gateLit;
+    }
+
+    /**
+     * Sets the gate minecart teleport location.
+     * 
+     * @param gateMinecartTeleportLocation
+     *            the new gate minecart teleport location
+     */
+    public void setGateMinecartTeleportLocation(final Location gateMinecartTeleportLocation)
+    {
+        this.gateMinecartTeleportLocation = gateMinecartTeleportLocation;
     }
 
     /**
@@ -1177,14 +1176,14 @@ public class Stargate
     }
 
     /**
-     * Sets the gate portal blocks.
+     * Sets the gate teleport location.
      * 
-     * @param gatePortalBlocks
-     *            the new gate portal blocks
+     * @param gatePlayerTeleportLocation
+     *            the new gate player teleport location
      */
-    public void setGatePortalBlocks(final ArrayList<Location> gatePortalBlocks)
+    public void setGatePlayerTeleportLocation(final Location gatePlayerTeleportLocation)
     {
-        this.gatePortalBlocks = gatePortalBlocks;
+        this.gatePlayerTeleportLocation = gatePlayerTeleportLocation;
     }
 
     /**
@@ -1193,7 +1192,7 @@ public class Stargate
      * @param gateRecentlyActive
      *            the new gate recently active
      */
-    public void setGateRecentlyActive(final boolean gateRecentlyActive)
+    private void setGateRecentlyActive(final boolean gateRecentlyActive)
     {
         this.gateRecentlyActive = gateRecentlyActive;
     }
@@ -1237,7 +1236,7 @@ public class Stargate
      * @param gateShutdownTaskId
      *            the new gate shutdown task id
      */
-    public void setGateShutdownTaskId(final int gateShutdownTaskId)
+    private void setGateShutdownTaskId(final int gateShutdownTaskId)
     {
         this.gateShutdownTaskId = gateShutdownTaskId;
     }
@@ -1251,17 +1250,6 @@ public class Stargate
     public void setGateSignIndex(final int gateSignIndex)
     {
         this.gateSignIndex = gateSignIndex;
-    }
-
-    /**
-     * Sets the gate sign order.
-     * 
-     * @param gateSignOrder
-     *            the gate sign order
-     */
-    public void setGateSignOrder(final HashMap<Integer, Stargate> gateSignOrder)
-    {
-        this.gateSignOrder = gateSignOrder;
     }
 
     /**
@@ -1281,20 +1269,9 @@ public class Stargate
      * @param gateSignTarget
      *            the new gate sign target
      */
-    public void setGateSignTarget(final Stargate gateSignTarget)
+    protected void setGateSignTarget(final Stargate gateSignTarget)
     {
         this.gateSignTarget = gateSignTarget;
-    }
-
-    /**
-     * Sets the gate structure blocks.
-     * 
-     * @param gateStructureBlocks
-     *            the new gate structure blocks
-     */
-    public void setGateStructureBlocks(final ArrayList<Location> gateStructureBlocks)
-    {
-        this.gateStructureBlocks = gateStructureBlocks;
     }
 
     /**
@@ -1303,20 +1280,9 @@ public class Stargate
      * @param gateTarget
      *            the new gate target
      */
-    public void setGateTarget(final Stargate gateTarget)
+    private void setGateTarget(final Stargate gateTarget)
     {
         this.gateTarget = gateTarget;
-    }
-
-    /**
-     * Sets the gate teleport location.
-     * 
-     * @param gateTeleportLocation
-     *            the new gate teleport location
-     */
-    public void setGatePlayerTeleportLocation(final Location gatePlayerTeleportLocation)
-    {
-        this.gatePlayerTeleportLocation = gatePlayerTeleportLocation;
     }
 
     /**
@@ -1361,17 +1327,6 @@ public class Stargate
     public void setGateTempTargetId(final long gateTempTargetId)
     {
         this.gateTempTargetId = gateTempTargetId;
-    }
-
-    /**
-     * Sets the gate woosh blocks.
-     * 
-     * @param gateWooshBlocks
-     *            the new gate woosh blocks
-     */
-    public void setGateWooshBlocks(final ArrayList<ArrayList<Location>> gateWooshBlocks)
-    {
-        this.gateWooshBlocks = gateWooshBlocks;
     }
 
     /**
@@ -1601,7 +1556,7 @@ public class Stargate
      * After shutdown of stargate, spawn off task to set RecentActive = false;
      * This way we can depend on RecentActive for gate fire/lava protection.
      */
-    public void startAfterShutdownTimer()
+    private void startAfterShutdownTimer()
     {
         if (getGateAfterShutdownTaskId() > 0)
         {
@@ -1828,7 +1783,7 @@ public class Stargate
      * @param irisactive
      *            true for iris on, false for off.
      */
-    public void toggleIrisActive(final boolean irisactive)
+    private void toggleIrisActive(final boolean irisactive)
     {
         setGateIrisActive(irisactive);
         int leverstate = getGateIrisActivationBlock().getData();
@@ -1911,15 +1866,5 @@ public class Stargate
         }
 
         return false;
-    }
-
-    public void setGateMinecartTeleportLocation(Location gateMinecartTeleportLocation)
-    {
-        this.gateMinecartTeleportLocation = gateMinecartTeleportLocation;
-    }
-
-    public Location getGateMinecartTeleportLocation()
-    {
-        return gateMinecartTeleportLocation;
     }
 }

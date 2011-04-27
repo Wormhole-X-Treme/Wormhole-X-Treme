@@ -44,26 +44,26 @@ public class StargateManager
     // A list of all blocks contained by all stargates. Makes for easy indexing when a player is trying
     // to enter a gate or if water is trying to flow out, also will contain the stone buttons used to activate.
     /** The all_gate_blocks. */
-    private static ConcurrentHashMap<Location, Stargate> allGateBlocks = new ConcurrentHashMap<Location, Stargate>();
+    private final static ConcurrentHashMap<Location, Stargate> allGateBlocks = new ConcurrentHashMap<Location, Stargate>();
     // List of All stargates indexed by name. Useful for dialing and such
     /** The stargate_list. */
-    private static ConcurrentHashMap<String, Stargate> stargateList = new ConcurrentHashMap<String, Stargate>();
+    private final static ConcurrentHashMap<String, Stargate> stargateList = new ConcurrentHashMap<String, Stargate>();
     // List of stargates built but not named. Indexed by the player that built it.
     /** The incomplete_stargates. */
-    private static ConcurrentHashMap<Player, Stargate> incompleteStargates = new ConcurrentHashMap<Player, Stargate>();
+    private final static ConcurrentHashMap<Player, Stargate> incompleteStargates = new ConcurrentHashMap<Player, Stargate>();
     // List of stargates that have been activated but not yet dialed. Only used for gates without public use sign.
     /** The activated_stargates. */
-    private static ConcurrentHashMap<Player, Stargate> activatedStargates = new ConcurrentHashMap<Player, Stargate>();
+    private final static ConcurrentHashMap<Player, Stargate> activatedStargates = new ConcurrentHashMap<Player, Stargate>();
     // List of networks indexed by their name
     /** The stargate_networks. */
-    private static ConcurrentHashMap<String, StargateNetwork> stargateNetworks = new ConcurrentHashMap<String, StargateNetwork>();
+    private final static ConcurrentHashMap<String, StargateNetwork> stargateNetworks = new ConcurrentHashMap<String, StargateNetwork>();
     // List of players ready to build a stargate, with the shape they are trying to build.
     /** The player_builders. */
-    private static ConcurrentHashMap<Player, StargateShape> playerBuilders = new ConcurrentHashMap<Player, StargateShape>();
+    private final static ConcurrentHashMap<Player, StargateShape> playerBuilders = new ConcurrentHashMap<Player, StargateShape>();
 
     // List of blocks that are part of an active animation. Only use this to make sure water doesn't flow everywhere.
     /** The Constant opening_animation_blocks. */
-    public static final ConcurrentHashMap<Location, Block> openingAnimationBlocks = new ConcurrentHashMap<Location, Block>();
+    protected static final ConcurrentHashMap<Location, Block> openingAnimationBlocks = new ConcurrentHashMap<Location, Block>();
 
     /**
      * This method adds a stargate that has been activated but not dialed by a player.
@@ -158,7 +158,7 @@ public class StargateManager
      * @param s
      *            The Stargate you want added.
      */
-    public static void addStargate(final Stargate s)
+    protected static void addStargate(final Stargate s)
     {
         stargateList.put(s.getGateName(), s);
         for (final Location b : s.getGateStructureBlocks())
@@ -430,7 +430,7 @@ public class StargateManager
      *            Location of the target object.
      * @return square of distance to target object from local object.
      */
-    public static double getSquaredDistance(final Location self, final Location target)
+    private static double getSquaredDistance(final Location self, final Location target)
     {
         double distance = Double.MAX_VALUE;
         if ((self != null) && (target != null))

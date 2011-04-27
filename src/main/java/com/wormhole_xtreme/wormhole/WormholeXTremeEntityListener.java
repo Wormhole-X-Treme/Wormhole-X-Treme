@@ -39,7 +39,7 @@ import com.wormhole_xtreme.wormhole.model.StargateManager;
  * @author Ben Echols (Lologarithm)
  * @author Dean Bailey (alron)
  */
-public class WormholeXTremeEntityListener extends EntityListener
+class WormholeXTremeEntityListener extends EntityListener
 {
 
     /**

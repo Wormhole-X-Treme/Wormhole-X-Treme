@@ -95,7 +95,7 @@ public class Configuration
      * @param desc
      *            the desc
      */
-    public static void loadConfiguration(final PluginDescriptionFile desc)
+    protected static void loadConfiguration(final PluginDescriptionFile desc)
     {
         readFile(desc);
     }

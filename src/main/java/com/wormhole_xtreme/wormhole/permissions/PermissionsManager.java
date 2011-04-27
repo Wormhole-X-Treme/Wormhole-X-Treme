@@ -70,7 +70,7 @@ public class PermissionsManager
      *            the player
      * @return the permission level
      */
-    public static PermissionLevel getIndividualPermissionLevel(final String player)
+    private static PermissionLevel getIndividualPermissionLevel(final String player)
     {
         final String pl_lower = player.toLowerCase();
         if (player_general_permission.containsKey(pl_lower))
@@ -92,7 +92,7 @@ public class PermissionsManager
      *            the s
      * @return the permission level
      */
-    public static PermissionLevel getPermissionLevel(final Player p, final Stargate s)
+    protected static PermissionLevel getPermissionLevel(final Player p, final Stargate s)
     {
         if ( !ConfigManager.getBuiltInPermissionsEnabled())
         {
@@ -201,7 +201,7 @@ public class PermissionsManager
                             ConfigManager.setConfigValue(ConfigKeys.BUILT_IN_PERMISSIONS_ENABLED, PermissionLevel.valueOf(message_parts[3]));
                             p.sendMessage("Default Permission is now: " + ConfigManager.getBuiltInDefaultPermissionLevel());
                         }
-                        catch (final Exception e)
+                        catch (final NullPointerException e)
                         {
                             p.sendMessage("Invalid format - /wormhole perms default <perm>");
                             p.sendMessage("Valid Permission Levels: ");
@@ -248,7 +248,7 @@ public class PermissionsManager
      * @param lvl
      *            the lvl
      */
-    public static void setIndividualPermissionLevel(final String player, final PermissionLevel lvl)
+    private static void setIndividualPermissionLevel(final String player, final PermissionLevel lvl)
     {
         final String pl_lower = player.toLowerCase();
         player_general_permission.put(pl_lower, lvl);

@@ -76,7 +76,7 @@ public class StargateShapeLayer
      * @param width
      *            the width
      */
-    public StargateShapeLayer(final String[] layerLines, final int height, final int width)
+    protected StargateShapeLayer(final String[] layerLines, final int height, final int width)
     {
         int numBlocks = 0;
 

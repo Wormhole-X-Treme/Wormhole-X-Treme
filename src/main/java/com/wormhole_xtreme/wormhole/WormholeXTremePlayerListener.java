@@ -49,7 +49,7 @@ import com.wormhole_xtreme.wormhole.utils.WorldUtils;
  * @author Ben Echols (Lologarithm)
  * @author Dean Bailey (alron)
  */
-public class WormholeXTremePlayerListener extends PlayerListener
+class WormholeXTremePlayerListener extends PlayerListener
 {
 
     /**

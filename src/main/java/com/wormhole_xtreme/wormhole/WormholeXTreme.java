@@ -19,13 +19,11 @@
 package com.wormhole_xtreme.wormhole;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import me.taylorkelly.help.Help;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.PluginManager;
@@ -79,6 +77,27 @@ public class WormholeXTreme extends JavaPlugin
     private static final WormholeXTremeServerListener serverListener = new WormholeXTremeServerListener();
     /** The server listener. */
     private static final WormholeXTremeRedstoneListener redstoneListener = new WormholeXTremeRedstoneListener();
+
+    /** The Permissions. */
+    private static PermissionHandler permissions = null;
+
+    /** The Iconomy. */
+    private static iConomy iconomy = null;
+
+    /** The Help. */
+    private static Help help = null;
+
+    /** The wormhole x treme worlds. */
+    private static WorldHandler worldHandler = null;
+
+    /** The Scheduler. */
+    private static BukkitScheduler scheduler = null;
+
+    /** The This plugin. */
+    private static WormholeXTreme thisPlugin = null;
+
+    /** The log. */
+    private static Logger log = null;
 
     /**
      * Gets the help.
@@ -151,119 +170,6 @@ public class WormholeXTreme extends JavaPlugin
     }
 
     /**
-     * Sets the help.
-     * 
-     * @param help
-     *            the new help
-     */
-    public static void setHelp(final Help help)
-    {
-        WormholeXTreme.help = help;
-    }
-
-    /**
-     * Sets the iconomy.
-     * 
-     * @param iconomy
-     *            the new iconomy
-     */
-    public static void setIconomy(final iConomy iconomy)
-    {
-        WormholeXTreme.iconomy = iconomy;
-    }
-
-    /**
-     * Sets the log.
-     * 
-     * @param log
-     *            the new log
-     */
-    private static void setLog(final Logger log)
-    {
-        WormholeXTreme.log = log;
-    }
-
-    /**
-     * Sets the permissions.
-     * 
-     * @param permissions
-     *            the new permissions
-     */
-    public static void setPermissions(final PermissionHandler permissions)
-    {
-        WormholeXTreme.permissions = permissions;
-    }
-
-    /**
-     * Sets the pretty log level.
-     * 
-     * @param level
-     *            the new pretty log level
-     */
-    public static void setPrettyLogLevel(final Level level)
-    {
-        getLog().setLevel(level);
-        getThisPlugin().prettyLog(Level.CONFIG, false, "Logging set to: " + level);
-    }
-
-    /**
-     * Sets the scheduler.
-     * 
-     * @param scheduler
-     *            the new scheduler
-     */
-    private static void setScheduler(final BukkitScheduler scheduler)
-    {
-        WormholeXTreme.scheduler = scheduler;
-    }
-
-    /**
-     * Sets the this plugin.
-     * 
-     * @param thisPlugin
-     *            the new this plugin
-     */
-    private static void setThisPlugin(final WormholeXTreme thisPlugin)
-    {
-        WormholeXTreme.thisPlugin = thisPlugin;
-    }
-
-    /**
-     * Sets the wormhole x treme worlds.
-     * 
-     * @param wormholeXTremeWorlds
-     *            the new wormhole x treme worlds
-     */
-    public static void setWorldHandler(final WorldHandler worldHandler)
-    {
-        WormholeXTreme.worldHandler = worldHandler;
-    }
-
-    /** The debugees. */
-    private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
-
-    /** The Permissions. */
-    private static PermissionHandler permissions = null;
-
-    /** The Iconomy. */
-    private static iConomy iconomy = null;
-
-    /** The Help. */
-    private static Help help = null;
-
-    /** The wormhole x treme worlds. */
-    private static WorldHandler worldHandler = null;
-
-    /** The Scheduler. */
-    private static BukkitScheduler scheduler = null;
-
-    /** The This plugin. */
-    private static WormholeXTreme thisPlugin = null;
-
-    /** The log. */
-    private static Logger log = null;
-
-    /**
      * Register commands.
      */
     public static void registerCommands()
@@ -326,15 +232,92 @@ public class WormholeXTreme extends JavaPlugin
     }
 
     /**
-     * Checks if is debugging.
+     * Sets the help.
      * 
-     * @param player
-     *            the player
-     * @return true, if is debugging
+     * @param help
+     *            the new help
      */
-    public boolean isDebugging(final Player player)
+    public static void setHelp(final Help help)
     {
-        return debugees.containsKey(player) && debugees.get(player).booleanValue();
+        WormholeXTreme.help = help;
+    }
+
+    /**
+     * Sets the iconomy.
+     * 
+     * @param iconomy
+     *            the new iconomy
+     */
+    public static void setIconomy(final iConomy iconomy)
+    {
+        WormholeXTreme.iconomy = iconomy;
+    }
+
+    /**
+     * Sets the log.
+     * 
+     * @param log
+     *            the new log
+     */
+    private static void setLog(final Logger log)
+    {
+        WormholeXTreme.log = log;
+    }
+
+    /**
+     * Sets the permissions.
+     * 
+     * @param permissions
+     *            the new permissions
+     */
+    public static void setPermissions(final PermissionHandler permissions)
+    {
+        WormholeXTreme.permissions = permissions;
+    }
+
+    /**
+     * Sets the pretty log level.
+     * 
+     * @param level
+     *            the new pretty log level
+     */
+    private static void setPrettyLogLevel(final Level level)
+    {
+        getLog().setLevel(level);
+        getThisPlugin().prettyLog(Level.CONFIG, false, "Logging set to: " + level);
+    }
+
+    /**
+     * Sets the scheduler.
+     * 
+     * @param scheduler
+     *            the new scheduler
+     */
+    private static void setScheduler(final BukkitScheduler scheduler)
+    {
+        WormholeXTreme.scheduler = scheduler;
+    }
+
+    /**
+     * Sets the this plugin.
+     * 
+     * @param thisPlugin
+     *            the new this plugin
+     */
+    private static void setThisPlugin(final WormholeXTreme thisPlugin)
+    {
+        WormholeXTreme.thisPlugin = thisPlugin;
+    }
+
+    /**
+     * Sets the wormhole x treme worlds.
+     * 
+     * @param wormholeXTremeWorlds
+     *            the new wormhole x treme worlds
+     */
+    public static void setWorldHandler(final WorldHandler worldHandler)
+    {
+        WormholeXTreme.worldHandler = worldHandler;
     }
 
     /* (non-Javadoc)
@@ -448,16 +431,4 @@ public class WormholeXTreme extends JavaPlugin
         }
     }
 
-    /**
-     * Sets the debugging.
-     * 
-     * @param player
-     *            the player
-     * @param value
-     *            the value
-     */
-    public void setDebugging(final Player player, final boolean value)
-    {
-        debugees.put(player, Boolean.valueOf(value));
-    }
 }

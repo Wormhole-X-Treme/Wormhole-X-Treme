@@ -29,20 +29,20 @@ import com.wormhole_xtreme.wormhole.permissions.PermissionsManager.PermissionLev
  * The Class Setting.
  * Based on class "Setting" from MinecartMania by Afforess.
  */
-public class Setting
+class Setting
 {
 
     /** The name. */
-    private ConfigKeys name;
+    private final ConfigKeys name;
 
     /** The desc. */
-    private String desc;
+    private final String desc;
 
     /** The value. */
     private Object value;
 
     /** The plugin. */
-    private String plugin;
+    private final String plugin;
 
     /**
      * Instantiates a new setting.
@@ -56,15 +56,12 @@ public class Setting
      * @param plugin
      *            the plugin
      */
-    public Setting(final ConfigKeys name, final Object value, final String desc, final String plugin)
+    protected Setting(final ConfigKeys name, final Object value, final String desc, final String plugin)
     {
-        if ((name != null) && (desc != null) && (value != null) && (plugin != null))
-        {
-            this.name = name;
-            this.desc = desc;
-            this.value = value;
-            this.plugin = plugin;
-        }
+        this.name = name;
+        this.desc = desc;
+        this.value = value;
+        this.plugin = plugin;
     }
 
     /**

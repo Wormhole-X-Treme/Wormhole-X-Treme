@@ -34,7 +34,7 @@ import com.wormhole_xtreme.wormhole.config.ConfigManager.ConfigKeys;
  * The Class ConfigurationFlatFile.
  * Based on class "MinecartFlatFile" from MinecartMania by Afforess.
  */
-public class ConfigurationFlatFile
+class ConfigurationFlatFile
 {
 
     /**
@@ -51,7 +51,7 @@ public class ConfigurationFlatFile
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
-    public static void createNewHeader(final BufferedWriter output, final String title, final String subtitle, final boolean firstHeader) throws IOException
+    protected static void createNewHeader(final BufferedWriter output, final String title, final String subtitle, final boolean firstHeader) throws IOException
     {
         final String linebreak = "-------------------------------";
         if ( !firstHeader)
@@ -85,7 +85,7 @@ public class ConfigurationFlatFile
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
-    public static void createNewSetting(final BufferedWriter output, final ConfigKeys name, final String value, final String description) throws IOException
+    protected static void createNewSetting(final BufferedWriter output, final ConfigKeys name, final String value, final String description) throws IOException
     {
         final String linebreak = "---------------";
         output.append(linebreak);
@@ -133,7 +133,7 @@ public class ConfigurationFlatFile
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
-    public static String getValueFromSetting(final File input, final ConfigKeys name, final String defaultVal) throws IOException
+    protected static String getValueFromSetting(final File input, final ConfigKeys name, final String defaultVal) throws IOException
     {
 
         BufferedReader bufferedReader = null;

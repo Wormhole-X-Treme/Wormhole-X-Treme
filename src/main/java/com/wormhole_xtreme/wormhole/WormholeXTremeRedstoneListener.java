@@ -32,7 +32,7 @@ import org.bukkit.event.block.BlockRedstoneEvent;
  * 
  * @see WormholeXTremeRedstoneEvent
  */
-public class WormholeXTremeRedstoneListener extends BlockListener
+class WormholeXTremeRedstoneListener extends BlockListener
 {
 
     /**

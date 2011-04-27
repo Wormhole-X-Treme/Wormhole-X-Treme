@@ -34,7 +34,7 @@ import com.wormhole_xtreme.wormhole.plugin.WormholeWorldsSupport;
  * @author Ben Echols (Lologarithm)
  * @author Dean Bailey (alron)
  */
-public class WormholeXTremeServerListener extends ServerListener
+class WormholeXTremeServerListener extends ServerListener
 {
 
     /* (non-Javadoc)

@@ -24,7 +24,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -72,25 +71,25 @@ public class StargateDBManager
     /** The Get all indv perm statement. */
     private static volatile PreparedStatement getAllIndvPermStatement = null;
 
-    /** The Update group perm statement. */
-    private static volatile PreparedStatement updateGroupPermStatement = null;
+//    /** The Update group perm statement. */
+//    private static volatile PreparedStatement updateGroupPermStatement = null;
 
-    /** The Store group perm statement. */
-    private static volatile PreparedStatement storeGroupPermStatement = null;
+//    /** The Store group perm statement. */
+//    private static volatile PreparedStatement storeGroupPermStatement = null;
 
-    /** The Get group perm statement. */
-    private static volatile PreparedStatement getGroupPermStatement = null;
+//    /** The Get group perm statement. */
+//    private static volatile PreparedStatement getGroupPermStatement = null;
 
-    /** The Get all group perm statement. */
-    private static volatile PreparedStatement getAllGroupPermStatement = null;
+//    /** The Get all group perm statement. */
+//    private static volatile PreparedStatement getAllGroupPermStatement = null;
 
     /*private static PreparedStatement StoreConfigStatement = null;
     private static PreparedStatement UpdateConfigStatement = null;*/
-    /** The Delete config statement. */
-    private static volatile PreparedStatement deleteConfigStatement = null;
+//    /** The Delete config statement. */
+//    private static volatile PreparedStatement deleteConfigStatement = null;
 
-    /** The Get all config statement. */
-    private static volatile PreparedStatement getAllConfigStatement = null;
+//    /** The Get all config statement. */
+//    private static volatile PreparedStatement getAllConfigStatement = null;
 
 //	public static PermissionLevel GetIndividualPermission(String player)
 //	{
@@ -153,86 +152,88 @@ public class StargateDBManager
         }
     }
 
-    /**
-     * Delete configurations.
-     */
-    public static void deleteConfigurations()
-    {
-        if (wormholeSQLConnection == null)
-        {
-            connectDB();
-        }
+// TODO Remove unused code found by UCDetector
+//     /**
+//      * Delete configurations.
+//      */
+//     public static void deleteConfigurations()
+//     {
+//         if (wormholeSQLConnection == null)
+//         {
+//             connectDB();
+//         }
+// 
+//         try
+//         {
+//             if (wormholeSQLConnection.isClosed())
+//             {
+//                 connectDB();
+//             }
+// 
+//             if (deleteConfigStatement == null)
+//             {
+//                 deleteConfigStatement = wormholeSQLConnection.prepareStatement("DELETE FROM Configurations");
+//             }
+// 
+//             deleteConfigStatement.execute();
+//         }
+//         catch (final SQLException e)
+//         {
+//             WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Error storing stargate to DB: " + e.getMessage());
+//             e.printStackTrace();
+//         }
+//     }
 
-        try
-        {
-            if (wormholeSQLConnection.isClosed())
-            {
-                connectDB();
-            }
-
-            if (deleteConfigStatement == null)
-            {
-                deleteConfigStatement = wormholeSQLConnection.prepareStatement("DELETE FROM Configurations");
-            }
-
-            deleteConfigStatement.execute();
-        }
-        catch (final SQLException e)
-        {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Error storing stargate to DB: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Gets the all configuration.
-     * 
-     * @return the hash map
-     */
-    public static HashMap<String, String> getAllConfiguration()
-    {
-        final HashMap<String, String> configs = new HashMap<String, String>();
-        if (wormholeSQLConnection == null)
-        {
-            connectDB();
-        }
-        ResultSet conf = null;
-        try
-        {
-            if (wormholeSQLConnection.isClosed())
-            {
-                connectDB();
-            }
-
-            if (getAllConfigStatement == null)
-            {
-                getAllConfigStatement = wormholeSQLConnection.prepareStatement("SELECT Key, Value FROM Configurations;");
-            }
-
-            conf = getAllConfigStatement.executeQuery();
-            while (conf.next())
-            {
-                configs.put(conf.getString("Key"), conf.getString("Value"));
-            }
-        }
-        catch (final SQLException e)
-        {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Error GetAllGroupPermStatement: " + e.getMessage());
-            e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
-                conf.close();
-            }
-            catch (final SQLException e)
-            {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
-            }
-        }
-        return configs;
-    }
+// TODO Remove unused code found by UCDetector
+//     /**
+//      * Gets the all configuration.
+//      * 
+//      * @return the hash map
+//      */
+//     public static HashMap<String, String> getAllConfiguration()
+//     {
+//         final HashMap<String, String> configs = new HashMap<String, String>();
+//         if (wormholeSQLConnection == null)
+//         {
+//             connectDB();
+//         }
+//         ResultSet conf = null;
+//         try
+//         {
+//             if (wormholeSQLConnection.isClosed())
+//             {
+//                 connectDB();
+//             }
+// 
+//             if (getAllConfigStatement == null)
+//             {
+//                 getAllConfigStatement = wormholeSQLConnection.prepareStatement("SELECT Key, Value FROM Configurations;");
+//             }
+// 
+//             conf = getAllConfigStatement.executeQuery();
+//             while (conf.next())
+//             {
+//                 configs.put(conf.getString("Key"), conf.getString("Value"));
+//             }
+//         }
+//         catch (final SQLException e)
+//         {
+//             WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Error GetAllGroupPermStatement: " + e.getMessage());
+//             e.printStackTrace();
+//         }
+//         finally
+//         {
+//             try
+//             {
+//                 conf.close();
+//             }
+//             catch (final SQLException e)
+//             {
+//                 WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+//             }
+//         }
+//         return configs;
+//     }
 
     /*
     public static String GetConfiguration(String key)
@@ -240,55 +241,56 @@ public class StargateDBManager
     	return null;
     }*/
 
-    /**
-     * Gets the all group permissions.
-     * 
-     * @return the hash map
-     */
-    public static HashMap<String, PermissionLevel> getAllGroupPermissions()
-    {
-        final HashMap<String, PermissionLevel> perms = new HashMap<String, PermissionLevel>();
-        if (wormholeSQLConnection == null)
-        {
-            connectDB();
-        }
-        ResultSet perm = null;
-        try
-        {
-            if (wormholeSQLConnection.isClosed())
-            {
-                connectDB();
-            }
-
-            if (getAllGroupPermStatement == null)
-            {
-                getAllGroupPermStatement = wormholeSQLConnection.prepareStatement("SELECT GroupName, Permission FROM StargateGroupPermissions;");
-            }
-
-            perm = getAllGroupPermStatement.executeQuery();
-            while (perm.next())
-            {
-                perms.put(perm.getString("GroupName"), PermissionLevel.valueOf(perm.getString("Permission")));
-            }
-        }
-        catch (final SQLException e)
-        {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Error GetAllGroupPermStatement: " + e.getMessage());
-            e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
-                perm.close();
-            }
-            catch (final SQLException e)
-            {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
-            }
-        }
-        return perms;
-    }
+// TODO Remove unused code found by UCDetector
+//     /**
+//      * Gets the all group permissions.
+//      * 
+//      * @return the hash map
+//      */
+//     public static HashMap<String, PermissionLevel> getAllGroupPermissions()
+//     {
+//         final HashMap<String, PermissionLevel> perms = new HashMap<String, PermissionLevel>();
+//         if (wormholeSQLConnection == null)
+//         {
+//             connectDB();
+//         }
+//         ResultSet perm = null;
+//         try
+//         {
+//             if (wormholeSQLConnection.isClosed())
+//             {
+//                 connectDB();
+//             }
+// 
+//             if (getAllGroupPermStatement == null)
+//             {
+//                 getAllGroupPermStatement = wormholeSQLConnection.prepareStatement("SELECT GroupName, Permission FROM StargateGroupPermissions;");
+//             }
+// 
+//             perm = getAllGroupPermStatement.executeQuery();
+//             while (perm.next())
+//             {
+//                 perms.put(perm.getString("GroupName"), PermissionLevel.valueOf(perm.getString("Permission")));
+//             }
+//         }
+//         catch (final SQLException e)
+//         {
+//             WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Error GetAllGroupPermStatement: " + e.getMessage());
+//             e.printStackTrace();
+//         }
+//         finally
+//         {
+//             try
+//             {
+//                 perm.close();
+//             }
+//             catch (final SQLException e)
+//             {
+//                 WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+//             }
+//         }
+//         return perms;
+//     }
 
     /**
      * Gets the all individual permissions.
@@ -518,7 +520,7 @@ public class StargateDBManager
      * @param s
      *            the s
      */
-    public static void removeStargateFromSQL(final Stargate s)
+    protected static void removeStargateFromSQL(final Stargate s)
     {
         if (wormholeSQLConnection == null)
         {
@@ -693,76 +695,77 @@ public class StargateDBManager
         }
     }
 
-    /**
-     * Store group permission in db.
-     * 
-     * @param group
-     *            the group
-     * @param pl
-     *            the pl
-     */
-    public static void storeGroupPermissionInDB(final String group, final PermissionLevel pl)
-    {
-        if (wormholeSQLConnection == null)
-        {
-            connectDB();
-        }
-        ResultSet perm = null;
-        try
-        {
-            if (wormholeSQLConnection.isClosed())
-            {
-                connectDB();
-            }
-
-            if (getGroupPermStatement == null)
-            {
-                getGroupPermStatement = wormholeSQLConnection.prepareStatement("SELECT Permission FROM StargateGroupPermissions WHERE GroupName = ?;");
-            }
-
-            getGroupPermStatement.setString(1, group);
-            perm = getGroupPermStatement.executeQuery();
-
-            if ( !perm.next())
-            {
-                if (storeGroupPermStatement == null)
-                {
-                    storeGroupPermStatement = wormholeSQLConnection.prepareStatement("INSERT INTO StargateGroupPermissions ( GroupName, Permission ) VALUES ( ? , ? );");
-                }
-
-                storeGroupPermStatement.setString(1, group);
-                storeGroupPermStatement.setString(2, pl.toString());
-                storeGroupPermStatement.executeUpdate();
-            }
-            else
-            {
-                if (updateGroupPermStatement == null)
-                {
-                    updateGroupPermStatement = wormholeSQLConnection.prepareStatement("UPDATE StargateGroupPermissions SET Permission = ? WHERE GroupName = ?;");
-                }
-
-                updateGroupPermStatement.setString(2, group);
-                updateGroupPermStatement.setString(1, pl.toString());
-                updateGroupPermStatement.executeUpdate();
-            }
-        }
-        catch (final SQLException e)
-        {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Error StoreGroupPermissionInDB: " + e.getMessage());
-            e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
-                perm.close();
-            }
-            catch (final SQLException e)
-            {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
-            }
-        }
-    }
+// TODO Remove unused code found by UCDetector
+//     /**
+//      * Store group permission in db.
+//      * 
+//      * @param group
+//      *            the group
+//      * @param pl
+//      *            the pl
+//      */
+//     public static void storeGroupPermissionInDB(final String group, final PermissionLevel pl)
+//     {
+//         if (wormholeSQLConnection == null)
+//         {
+//             connectDB();
+//         }
+//         ResultSet perm = null;
+//         try
+//         {
+//             if (wormholeSQLConnection.isClosed())
+//             {
+//                 connectDB();
+//             }
+// 
+//             if (getGroupPermStatement == null)
+//             {
+//                 getGroupPermStatement = wormholeSQLConnection.prepareStatement("SELECT Permission FROM StargateGroupPermissions WHERE GroupName = ?;");
+//             }
+// 
+//             getGroupPermStatement.setString(1, group);
+//             perm = getGroupPermStatement.executeQuery();
+// 
+//             if ( !perm.next())
+//             {
+//                 if (storeGroupPermStatement == null)
+//                 {
+//                     storeGroupPermStatement = wormholeSQLConnection.prepareStatement("INSERT INTO StargateGroupPermissions ( GroupName, Permission ) VALUES ( ? , ? );");
+//                 }
+// 
+//                 storeGroupPermStatement.setString(1, group);
+//                 storeGroupPermStatement.setString(2, pl.toString());
+//                 storeGroupPermStatement.executeUpdate();
+//             }
+//             else
+//             {
+//                 if (updateGroupPermStatement == null)
+//                 {
+//                     updateGroupPermStatement = wormholeSQLConnection.prepareStatement("UPDATE StargateGroupPermissions SET Permission = ? WHERE GroupName = ?;");
+//                 }
+// 
+//                 updateGroupPermStatement.setString(2, group);
+//                 updateGroupPermStatement.setString(1, pl.toString());
+//                 updateGroupPermStatement.executeUpdate();
+//             }
+//         }
+//         catch (final SQLException e)
+//         {
+//             WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Error StoreGroupPermissionInDB: " + e.getMessage());
+//             e.printStackTrace();
+//         }
+//         finally
+//         {
+//             try
+//             {
+//                 perm.close();
+//             }
+//             catch (final SQLException e)
+//             {
+//                 WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+//             }
+//         }
+//     }
 
     /**
      * Store individual permission in db.

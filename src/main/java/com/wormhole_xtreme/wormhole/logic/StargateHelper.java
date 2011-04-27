@@ -61,10 +61,10 @@ public class StargateHelper
     private static final ConcurrentHashMap<String, StargateShape> shapes = new ConcurrentHashMap<String, StargateShape>();
 
     /** The Constant StargateSaveVersion. */
-    public static final byte StargateSaveVersion = 6;
+    private static final byte StargateSaveVersion = 6;
 
     /** The Empty block. */
-    private static byte[] emptyBlock = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private final static byte[] emptyBlock = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     /**
      * * This method takes in a button/lever and a facing and returns a completed stargate.
@@ -141,7 +141,7 @@ public class StargateHelper
      *            the create
      * @return the stargate
      */
-    public static Stargate checkStargate(final Block buttonBlock, final BlockFace facing, final StargateShape shape, final boolean create)
+    private static Stargate checkStargate(final Block buttonBlock, final BlockFace facing, final StargateShape shape, final boolean create)
     {
         final BlockFace opposite = WorldUtils.getInverseDirection(facing);
         final Block holdingBlock = buttonBlock.getFace(opposite);
@@ -331,7 +331,7 @@ public class StargateHelper
      *            the create
      * @return the stargate
      */
-    public static Stargate checkStargate3D(final Block buttonBlock, final BlockFace facing, final Stargate3DShape shape, final boolean create)
+    private static Stargate checkStargate3D(final Block buttonBlock, final BlockFace facing, final Stargate3DShape shape, final boolean create)
     {
         final Stargate s = new Stargate();
         s.setGateWorld(buttonBlock.getWorld());
@@ -436,7 +436,7 @@ public class StargateHelper
      *            the create
      * @return true, if successful
      */
-    public static boolean checkStargateLayer(final StargateShapeLayer layer, final int[] lowerCorner, final int[] directionVector, final Stargate tempGate, final boolean create)
+    private static boolean checkStargateLayer(final StargateShapeLayer layer, final int[] lowerCorner, final int[] directionVector, final Stargate tempGate, final boolean create)
     {
         final World w = tempGate.getGateWorld();
         // First check all the block positions!
@@ -526,7 +526,7 @@ public class StargateHelper
             teleLoc.setZ(teleLoc.getZ() + 0.5);
             tempGate.setGateMinecartTeleportLocation(teleLoc);
         }
-        
+
         for (int i = 0; i < layer.getLayerWooshPositions().size(); i++)
         {
             if (tempGate.getGateWooshBlocks().size() < i + 1)
@@ -1295,7 +1295,7 @@ public class StargateHelper
      * @param stargate
      *            the new up sign gate network
      */
-    public static void setupSignGateNetwork(final Stargate stargate)
+    private static void setupSignGateNetwork(final Stargate stargate)
     {
         // Moved this here so that it only creates the sign if the gate is correctly built.
         if ((stargate.getGateName() != null) && (stargate.getGateName().length() > 0))

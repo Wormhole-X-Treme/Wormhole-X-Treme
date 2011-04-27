@@ -95,7 +95,7 @@ public class Dial implements CommandExecutor
 
                     if (start.dialStargate(target, false))
                     {
-                        player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Stargates connected!");
+                        player.sendMessage(ConfigManager.MessageStrings.gateConnected.toString());
                     }
                     else
                     {

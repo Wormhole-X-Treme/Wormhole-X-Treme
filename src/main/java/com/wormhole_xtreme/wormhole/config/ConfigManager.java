@@ -125,7 +125,7 @@ public class ConfigManager
         gateDeactivated(normalHeader + "Gate successfully deactivated."),
 
         /** The gate dialed. */
-        gateDialed(normalHeader + "Gate successfully dialed."),
+        gateConnected(normalHeader + "Stargates connected."),
 
         /** The construct success. */
         constructSuccess(normalHeader + "Gate successfully constructed."),
@@ -170,7 +170,7 @@ public class ConfigManager
     }
 
     /** The Constant configurations. */
-    public static final ConcurrentHashMap<ConfigKeys, Setting> configurations = new ConcurrentHashMap<ConfigKeys, Setting>();
+    protected static final ConcurrentHashMap<ConfigKeys, Setting> configurations = new ConcurrentHashMap<ConfigKeys, Setting>();
 
     /**
      * Get Built in default permission level settings from ConfigKeys. Return sane PermissionLevel.

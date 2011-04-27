@@ -46,7 +46,7 @@ public class DBUpdateUtil
 {
 
     /** The sql_con. */
-    static Connection sql_con;
+    private static Connection sql_con;
 
     /**
      * Gets the count db files.
@@ -152,7 +152,7 @@ public class DBUpdateUtil
      *            the s
      * @return the array list
      */
-    public static ArrayList<String> readTextFromJar(final String s)
+    private static ArrayList<String> readTextFromJar(final String s)
     {
         InputStream is = null;
         BufferedReader br = null;

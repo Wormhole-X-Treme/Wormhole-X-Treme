@@ -24,7 +24,7 @@ import com.wormhole_xtreme.wormhole.model.StargateShape;
 /**
  * A factory for creating StargateShape objects.
  */
-public class StargateShapeFactory
+class StargateShapeFactory
 {
 
     /**
@@ -58,7 +58,7 @@ public class StargateShapeFactory
      *            the file lines
      * @return the stargate shape
      */
-    public static StargateShape createShapeFromFile(final String[] fileLines)
+    protected static StargateShape createShapeFromFile(final String[] fileLines)
     {
         for (final String line : fileLines)
         {

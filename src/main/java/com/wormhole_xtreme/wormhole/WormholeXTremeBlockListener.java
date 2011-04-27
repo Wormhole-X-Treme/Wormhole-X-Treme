@@ -44,7 +44,7 @@ import com.wormhole_xtreme.wormhole.utils.WorldUtils;
  * @author Ben Echols (Lologarithm)
  * @author Dean Bailey (alron)
  */
-public class WormholeXTremeBlockListener extends BlockListener
+class WormholeXTremeBlockListener extends BlockListener
 {
     /**
      * Handle block break.
@@ -123,7 +123,7 @@ public class WormholeXTremeBlockListener extends BlockListener
      *            the stargate
      * @return true, if successful
      */
-    public static boolean handleBlockDamage(final Player player, final Stargate stargate)
+    private static boolean handleBlockDamage(final Player player, final Stargate stargate)
     {
         final boolean allowed = WXPermissions.checkWXPermissions(player, stargate, PermissionType.DAMAGE);
         if (allowed)

@@ -25,7 +25,7 @@ import com.wormhole_xtreme.wormhole.permissions.PermissionsManager.PermissionLev
  * The Class DefaultSettings.
  * Based on class "SettingsList" from MinecartMania by Afforess.
  */
-public class DefaultSettings
+class DefaultSettings
 {
 
     /** The Constant config. */

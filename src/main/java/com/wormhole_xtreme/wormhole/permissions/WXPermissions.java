@@ -360,7 +360,7 @@ public class WXPermissions
      *            the permissiontype
      * @return true, if successful
      */
-    public static boolean checkWXPermissions(final Player player, final Stargate stargate, final String network, final PermissionType permissiontype)
+    private static boolean checkWXPermissions(final Player player, final Stargate stargate, final String network, final PermissionType permissiontype)
     {
         if (player == null)
         {

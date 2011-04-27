@@ -33,10 +33,10 @@ public class StargateMinecartTeleportEvent extends Event
     private static final long serialVersionUID = 1176071751488327352L;
 
     /** The old minecart. */
-    Minecart oldMinecart;
+    private final Minecart oldMinecart;
 
     /** The new minecart. */
-    Minecart newMinecart;
+    private final Minecart newMinecart;
 
     /**
      * Instantiates a new stargate minecart teleport event.

@@ -44,7 +44,8 @@ public class WorldUtils
      */
     public static Float getDegreesFromBlockFace(final BlockFace blockFace)
     {
-        switch (blockFace) {
+        switch (blockFace)
+        {
             case NORTH :
                 return (float) 90;
             case EAST :
@@ -55,7 +56,7 @@ public class WorldUtils
                 return (float) 0;
             default :
                 return (float) 0;
-        }  
+        }
     }
 
     /**

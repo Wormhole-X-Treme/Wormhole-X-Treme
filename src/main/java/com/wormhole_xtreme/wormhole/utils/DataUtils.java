@@ -83,19 +83,20 @@ public class DataUtils
         return bb.array();
     }
 
-    /**
-     * Byte array to int.
-     * 
-     * @param b
-     *            the b
-     * @param index
-     *            the index
-     * @return the int
-     */
-    public static final int byteArrayToInt(final byte[] b, final int index)
-    {
-        return (b[index] << 24) + ((b[index + 1] & 0xFF) << 16) + ((b[index + 2] & 0xFF) << 8) + (b[index + 3] & 0xFF);
-    }
+// TODO Remove unused code found by UCDetector
+//     /**
+//      * Byte array to int.
+//      * 
+//      * @param b
+//      *            the b
+//      * @param index
+//      *            the index
+//      * @return the int
+//      */
+//     public static final int byteArrayToInt(final byte[] b, final int index)
+//     {
+//         return (b[index] << 24) + ((b[index + 1] & 0xFF) << 16) + ((b[index + 2] & 0xFF) << 8) + (b[index + 3] & 0xFF);
+//     }
 
     /**
      * Byte to boolean.
@@ -116,17 +117,18 @@ public class DataUtils
         }
     }
 
-    /**
-     * Int to byte array.
-     * 
-     * @param value
-     *            the value
-     * @return the byte[]
-     */
-    public static final byte[] intToByteArray(final int value)
-    {
-        return new byte[]{(byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value};
-    }
+// TODO Remove unused code found by UCDetector
+//     /**
+//      * Int to byte array.
+//      * 
+//      * @param value
+//      *            the value
+//      * @return the byte[]
+//      */
+//     public static final byte[] intToByteArray(final int value)
+//     {
+//         return new byte[]{(byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value};
+//     }
 
     /**
      * Location from bytes.

@@ -26,58 +26,30 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class PermissionsSupport.
- *
+ * 
  * @author alron
  */
-public class PermissionsSupport {
-    
+public class PermissionsSupport
+{
+
     /**
-     * Setup permissions.
+     * Check permissions version.
+     * 
+     * @param version
+     *            the version
      */
-    public static void enablePermissions() 
+    private static void checkPermissionsVersion(final String version)
     {
-        if (!ConfigManager.getPermissionsSupportDisable())
+        final String v = version;
+        if ( !v.startsWith("2.5") && !v.startsWith("2.6") && !v.startsWith("2.7"))
         {
-            if(WormholeXTreme.getPermissions() == null) 
-            {
-                final Plugin test = WormholeXTreme.getThisPlugin().getServer().getPluginManager().getPlugin("Permissions");
-                if(test != null)
-                {
-                    final String v = test.getDescription().getVersion();
-                    checkPermissionsVersion(v);
-                    try
-                    {
-                        WormholeXTreme.setPermissions(((Permissions)test).getHandler());
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Attached to Permissions version " + v);
-                        if (ConfigManager.getSimplePermissions())
-                        {
-                            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Simple Permissions Enabled");
-                        }
-                        else
-                        {
-                            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Complex Permissions Enabled");
-                        }
-                    }
-                    catch ( ClassCastException e)
-                    {
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failed to get Permissions Handler. Defaulting to built-in permissions.");
-                    }
-                } 
-                else 
-                {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Permission Plugin not yet available. Defaulting to built-in permissions until Permissions is loaded.");
-                }
-            }
+            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Not a supported version of Permissions. Recommended is 2.7.x");
         }
-        else
-        {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Permission Plugin support disabled via settings.txt.");
-        }
+
     }
-    
+
     /**
      * Disable permissions.
      */
@@ -89,18 +61,48 @@ public class PermissionsSupport {
             WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Detached from Permissions plugin.");
         }
     }
+
     /**
-     * Check permissions version.
-     *
-     * @param version the version
+     * Setup permissions.
      */
-    private static void checkPermissionsVersion(String version)
+    public static void enablePermissions()
     {
-        final String v = version;
-        if ( !v.equals("2.4") && !v.startsWith("2.5") && !v.startsWith("2.6"))
+        if ( !ConfigManager.getPermissionsSupportDisable())
         {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Not a supported version of Permissions. Recommended is 2.6.x" );
+            if (WormholeXTreme.getPermissions() == null)
+            {
+                final Plugin test = WormholeXTreme.getThisPlugin().getServer().getPluginManager().getPlugin("Permissions");
+                if (test != null)
+                {
+                    final String v = test.getDescription().getVersion();
+                    checkPermissionsVersion(v);
+                    try
+                    {
+                        WormholeXTreme.setPermissions(((Permissions) test).getHandler());
+                        WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Attached to Permissions version " + v);
+                        if (ConfigManager.getSimplePermissions())
+                        {
+                            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Simple Permissions Enabled");
+                        }
+                        else
+                        {
+                            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Complex Permissions Enabled");
+                        }
+                    }
+                    catch (final ClassCastException e)
+                    {
+                        WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failed to get Permissions Handler. Defaulting to built-in permissions.");
+                    }
+                }
+                else
+                {
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Permission Plugin not yet available. Defaulting to built-in permissions until Permissions is loaded.");
+                }
+            }
         }
-       
+        else
+        {
+            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Permission Plugin support disabled via settings.txt.");
+        }
     }
 }

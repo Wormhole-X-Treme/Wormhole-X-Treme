@@ -18,7 +18,6 @@
  */
 package com.wormhole_xtreme.wormhole.logic;
 
-
 import java.util.logging.Level;
 
 import org.bukkit.entity.Player;
@@ -26,117 +25,119 @@ import org.bukkit.entity.Player;
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.model.Stargate;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * WormholeXtreme Runnable thread for updating stargates.
- *
+ * 
  * @author Ben Echols (Lologarithm)
- */ 
+ */
 public class StargateUpdateRunnable implements Runnable
 {
-	
-	/** The stargate. */
-	private Stargate stargate;
-	
-	/** The player. */
-	private Player player;
-	
-	/** The action. */
-	private ActionToTake action;
-	
-	/**
-	 * Instantiates a new stargate update runnable.
-	 *
-	 * @param s the s
-	 * @param act the act
-	 */
-	public StargateUpdateRunnable(Stargate s, ActionToTake act)
-	{
-		this.stargate = s;
-		this.action = act;
-	}
-	
-	/**
-	 * Instantiates a new stargate update runnable.
-	 *
-	 * @param s the s
-	 * @param p the p
-	 * @param act the act
-	 */
-	public StargateUpdateRunnable(Stargate s, Player p, ActionToTake act)
-	{
-		this(s, act);
-		this.player = p;
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Runnable#run()
-	 */
-	@Override
-	public void run()
-	{
-	    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Run Action \"" + this.action.toString() + "\" Stargate \"" + this.stargate.name + "\"");
-		if ( this.action == ActionToTake.SHUTDOWN )
-		{    
-			stargate.shutdownStargate();
-		}
-		else if ( this.action == ActionToTake.ANIMATE_OPENING )
-		{
-			stargate.animateOpening();
-		}
-		else if ( this.action == ActionToTake.DEACTIVATE )
-		{
-			stargate.timeoutStargate(player);
-		}
-		else if ( this.action == ActionToTake.AFTERSHUTDOWN )
-		{
-		    stargate.afterShutdownStargate();
-		}
-		else if (this.action == ActionToTake.SIGNCLICK)
-		{
-		    stargate.teleportSignClicked();
-		    if (player != null)
-		    {
-                if ( stargate.signTarget != null)
+
+    /**
+     * The Enum ActionToTake.
+     */
+    public enum ActionToTake
+    {
+
+        /** The SHUTDOWN task. */
+        SHUTDOWN,
+
+        /** The ANIMATE OPENING task. */
+        ANIMATE_WOOSH,
+
+        /** The DEACTIVATE task. */
+        DEACTIVATE,
+
+        /** The AFTERSHUTDOWN task. */
+        AFTERSHUTDOWN,
+
+        /** The SIGNCLICK. */
+        SIGNCLICK,
+
+        /** Action to iterate over lighting up blocks during activation. */
+        LIGHTUP
+    }
+
+    /** The stargate. */
+    private final Stargate stargate;
+
+    /** The player. */
+    private final Player player;
+
+    /** The action. */
+    private final ActionToTake action;
+
+    /**
+     * Instantiates a new stargate update runnable.
+     * 
+     * @param stargate
+     *            the s
+     * @param action
+     *            the act
+     */
+    public StargateUpdateRunnable(final Stargate stargate, final ActionToTake action)
+    {
+        this(stargate, null, action);
+    }
+
+    /**
+     * Instantiates a new stargate update runnable.
+     * 
+     * @param stargate
+     *            the s
+     * @param player
+     *            the p
+     * @param action
+     *            the act
+     */
+    public StargateUpdateRunnable(final Stargate stargate, final Player player, final ActionToTake action)
+    {
+        this.stargate = stargate;
+        this.action = action;
+        this.player = player;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Runnable#run()
+     */
+    @Override
+    public void run()
+    {
+        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Run Action \"" + action.toString() + "\" Stargate \"" + stargate.getGateName() + "\"");
+        switch (action)
+        {
+            case SHUTDOWN :
+                stargate.shutdownStargate();
+                break;
+            case ANIMATE_WOOSH :
+                stargate.animateOpening();
+                break;
+            case DEACTIVATE :
+                stargate.timeoutStargate(player);
+                break;
+            case AFTERSHUTDOWN :
+                stargate.stopAfterShutdownTimer();
+                break;
+            case SIGNCLICK :
+                stargate.teleportSignClicked();
+                if (player != null)
                 {
-                    final String target = stargate.signTarget.name;
-                    player.sendMessage("Dialer set to: " + target);
+                    if (stargate.getGateSignTarget() != null)
+                    {
+                        final String target = stargate.getGateSignTarget().getGateName();
+                        player.sendMessage("Dialer set to: " + target);
+                    }
+                    else
+                    {
+                        player.sendMessage("No available target to set dialer to.");
+                    }
                 }
-                else
-                {
-                    player.sendMessage("No available target to set dialer to.");
-                }
-		    }
-		}
-		else if ( this.action == ActionToTake.LIGHTUP )
-		{
-			stargate.lightStargate();
-		}
-	}
-	
-	/**
-	 * The Enum ActionToTake.
-	 */
-	public enum ActionToTake
-	{
-		
-		/** The SHUTDOWN task. */
-		SHUTDOWN,
-		
-		/** The ANIMATE OPENING task. */
-		ANIMATE_OPENING,
-		
-		/** The DEACTIVATE task. */
-		DEACTIVATE,
-		
-		/** The AFTERSHUTDOWN task. */
-		AFTERSHUTDOWN,
-		
-		SIGNCLICK,
-		
-		/** Action to iterate over lighting up blocks during activation */
-		LIGHTUP
-	}
-	
+                break;
+            case LIGHTUP :
+                stargate.lightStargate(true);
+                break;
+            default :
+                break;
+        }
+    }
 }

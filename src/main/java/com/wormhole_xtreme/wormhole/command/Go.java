@@ -32,48 +32,32 @@ import com.wormhole_xtreme.wormhole.utils.TeleportUtils;
 
 /**
  * The Class Go.
- *
+ * 
  * @author alron
  */
-public class Go implements CommandExecutor {
+public class Go implements CommandExecutor
+{
 
-    /* (non-Javadoc)
-     * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
-     */
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
-    {
-        if (CommandUtilities.playerCheck(sender))
-        {
-            final String[] arguments = CommandUtilities.commandEscaper(args);
-            if (arguments.length < 3 || arguments.length != 0 )
-            {
-                final Player player = (Player)sender;
-                return doGo(player, arguments);
-            }
-            return false;
-        }
-        return true;
-    }
-    
     /**
      * Do go.
-     *
-     * @param player the player
-     * @param args the args
+     * 
+     * @param player
+     *            the player
+     * @param args
+     *            the args
      * @return true, if successful
      */
-    private static boolean doGo(Player player, String[] args)
+    private static boolean doGo(final Player player, final String[] args)
     {
         final Player p = player;
         final String[] a = args;
         if (WXPermissions.checkWXPermissions(p, PermissionType.GO))
         {
-            if ( a.length == 1)
+            if (a.length == 1)
             {
                 final String goGate = a[0].trim().replace("\n", "").replace("\r", "");
                 final Stargate s = StargateManager.getStargate(goGate);
-                if ( s != null)
+                if (s != null)
                 {
                     p.teleport(TeleportUtils.findSafeTeleportFromStargate(s));
                 }
@@ -90,6 +74,25 @@ public class Go implements CommandExecutor {
         else
         {
             p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+        }
+        return true;
+    }
+
+    /* (non-Javadoc)
+     * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+     */
+    @Override
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
+    {
+        if (CommandUtilities.playerCheck(sender))
+        {
+            final String[] arguments = CommandUtilities.commandEscaper(args);
+            if ((arguments.length < 3) && (arguments.length > 0))
+            {
+                final Player player = (Player) sender;
+                return doGo(player, arguments);
+            }
+            return false;
         }
         return true;
     }

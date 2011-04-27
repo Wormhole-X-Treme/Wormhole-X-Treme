@@ -35,279 +35,252 @@ import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.config.ConfigManager.ConfigKeys;
 import com.wormhole_xtreme.wormhole.permissions.PermissionsManager.PermissionLevel;
 
-
-
-// TODO: Auto-generated Javadoc
-/*
- * This class is based on a class "Configuration.java" 
- * from MinecartMania written by Afforess from Bukkit.org
- */
 /**
  * The Class Configuration.
+ * Bssed on class "Configuration" from MinecartMania by Afforess.
  */
-public class Configuration 
+public class Configuration
 {
-	
-	/** The options. */
-	private static File options = null;
-	
-	
-	/**
-	 * Load configuration.
-	 *
-	 * @param desc the desc
-	 */
-	public static void loadConfiguration(PluginDescriptionFile desc) 
-	{
-		readFile(desc);
-	}
 
-	/**
-	 * Read file.
-	 *
-	 * @param desc the desc
-	 */
-	private static void readFile(PluginDescriptionFile desc) 
-	{	
-		File directory = new File("plugins" + File.separator + desc.getName() + File.separator);
-		if (!directory.exists()) {
-			try {
-				directory.mkdir();
-			} catch (Exception e) {
-				WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to make directory: " + e.getMessage());
-			}
-		}
-		String input = directory.getPath() + File.separator + "Settings.txt";
-		options = new File(input);
-		if (!options.exists() )
-		{
-			writeFile(options, desc, DefaultSettings.config);
-		}
-		/*else if (invalidFile(options)) {
-			updateFile(options);
-		}*/
-		try 
-		{
-			readFile(options, desc);
-		}
-		catch (IOException e) 
-		{
-			WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Failed to read fiele: " + e.getMessage() );
-		}
-		if( invalidFile(options, desc))
-		{
-			writeFile(desc);
-		}
-	}
+    /** The options. */
+    private static File options = null;
 
-	/**
-	 * Invalid file.
-	 *
-	 * @param file the file
-	 * @param desc the desc
-	 * @return true, if successful
-	 */
-	private static boolean invalidFile(File file, PluginDescriptionFile desc) 
-	{
-		BufferedReader bufferedreader = null;
-	    try 
-		{
-			bufferedreader = new BufferedReader(new FileReader(file));
-			for (String s = ""; (s = bufferedreader.readLine()) != null; ) 
-			{
-				if (s.indexOf(desc.getVersion()) > -1) 
-				{
-					return false;
-				}
-			}
-		}
-		catch (IOException exception)
-		{
-			return true;
-		}
-		finally 
-		{
-		    try 
-		    {
-		        if (bufferedreader != null)
-		        {
-		            bufferedreader.close();
-		        }
-		    }
-		    catch (IOException e) 
-		    { 
-		        WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failure to close stream: " + e.getMessage()); 
-		    }
-		}
-		return true;
-	}
+    /**
+     * Invalid file.
+     * 
+     * @param file
+     *            the file
+     * @param desc
+     *            the desc
+     * @return true, if successful
+     */
+    private static boolean invalidFile(final File file, final PluginDescriptionFile desc)
+    {
+        BufferedReader bufferedreader = null;
+        try
+        {
+            bufferedreader = new BufferedReader(new FileReader(file));
+            for (String s = ""; (s = bufferedreader.readLine()) != null;)
+            {
+                if (s.indexOf(desc.getVersion()) > -1)
+                {
+                    return false;
+                }
+            }
+        }
+        catch (final IOException exception)
+        {
+            return true;
+        }
+        finally
+        {
+            try
+            {
+                if (bufferedreader != null)
+                {
+                    bufferedreader.close();
+                }
+            }
+            catch (final IOException e)
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Failure to close stream: " + e.getMessage());
+            }
+        }
+        return true;
+    }
 
-	/*
-	@SuppressWarnings("unused")
-	private static void updateFile(File options, PluginDescriptionFile pdf) 
-	{
-		try 
-		{
-			ConfigurationFlatFile.updateVersionHeader(options, pdf.getName() + " " + pdf.getVersion();
-			for (int i = 0; i < SettingList.config.length; i++) 
-			{
-				ConfigurationFlatFile.updateSetting(
-						options,
-						SettingList.config[i].getName(),
-						SettingList.config[i].getDescription(),
-						//Attempt to read value, otherwise use default
-						MinecartManiaFlatFile.getValueFromSetting(options, SettingList.config[i].getName(), SettingList.config[i].getValue().toString()));
-			}
-		} catch (IOException e) {
-			MinecartManiaCore.log.severe("Failed to update Minecart Mania settings!");
-			e.printStackTrace();
-		}
-	}*/
+    /**
+     * Load configuration.
+     * 
+     * @param desc
+     *            the desc
+     */
+    protected static void loadConfiguration(final PluginDescriptionFile desc)
+    {
+        readFile(desc);
+    }
 
-	/**
-	 * Write file.
-	 *
-	 * @param desc the desc
-	 */
-	public static void writeFile(PluginDescriptionFile desc)
-	{
-		try 
-		{
-			try {
-				options.createNewFile();
-			} catch (Exception e) {
-				WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to create new file: " + e.getMessage());
-			}
-			BufferedWriter bufferedwriter = new BufferedWriter(new FileWriter(options));
+    /**
+     * Read file.
+     * 
+     * @param file
+     *            the file
+     * @param desc
+     *            the desc
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    private static void readFile(final File file, final PluginDescriptionFile desc) throws IOException
+    {
 
-			ConfigurationFlatFile.createNewHeader(
-					bufferedwriter,
-					desc.getName() + " " + desc.getVersion(),
-					desc.getName() + " Config Settings",
-					true);
+        for (final Setting element : DefaultSettings.config)
+        {
 
-			Set<ConfigKeys> keys = ConfigManager.configurations.keySet();
-			ArrayList<ConfigKeys> list = new ArrayList<ConfigKeys>(keys);
-			Collections.sort(list);
-			for ( ConfigKeys key : list ) 
-			{
-				Setting s = ConfigManager.configurations.get(key);
-				if (s != null)
-				{
-					ConfigurationFlatFile.createNewSetting(bufferedwriter, s.getName(), s.getValue().toString(),s.getDescription());
-				}
-				
-			}
-			bufferedwriter.close();
-		}
-		catch (Exception exception)
-		{
-			//MinecartManiaCore.log.severe("Failed to write " + desc.getName() +" settings!");
-			exception.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Write file.
-	 *
-	 * @param file the file
-	 * @param desc the desc
-	 * @param config the config
-	 */
-	private static void writeFile(File file, PluginDescriptionFile desc, Setting[] config)
-	{
-		try 
-		{
-			try {
-				file.createNewFile();
-			} catch (Exception e) {
-				WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE,false,"Unable to Create File: " + e.getMessage());
-			}
-			BufferedWriter bufferedwriter = new BufferedWriter(new FileWriter(file));
+            final String value = ConfigurationFlatFile.getValueFromSetting(file, element.getName(), element.getValue().toString());
 
-			ConfigurationFlatFile.createNewHeader(
-					bufferedwriter,
-					desc.getName() + " " + desc.getVersion(),
-					desc.getName() + " Config Settings",
-					true);
+            //Attempt to parse the value as boolean
+            if (value.toLowerCase().contains("true") || value.toLowerCase().contains("false"))
+            {
+                final Setting s = new Setting(element.getName(), Boolean.parseBoolean(value), element.getDescription(), "WormholeXTreme");
+                ConfigManager.configurations.put(s.getName(), s);
+            }
+            else
+            {
+                try
+                {
+                    // Check if this is a number
+                    Setting s = new Setting(element.getName(), Integer.parseInt(value), element.getDescription(), "WormholeXTreme");
+                    if ((s.getName() == ConfigKeys.ICONOMY_WORMHOLE_BUILD_COST) || (s.getName() == ConfigKeys.ICONOMY_WORMHOLE_USE_COST))
+                    {
+                        s = new Setting(element.getName(), Double.parseDouble(value + ".0"), element.getDescription(), "WormholeXTreme");
+                    }
+                    ConfigManager.configurations.put(s.getName(), s);
+                }
+                catch (final NumberFormatException e)
+                {
+                    Setting s = null;
+                    try
+                    {
+                        s = new Setting(element.getName(), Double.parseDouble(value), element.getDescription(), "WormholeXTreme");
+                    }
+                    catch (final NumberFormatException nfe)
+                    {
+                        // Probably an enum
+                        if (element.getName() == ConfigKeys.BUILT_IN_DEFAULT_PERMISSION_LEVEL)
+                        {
+                            s = new Setting(element.getName(), PermissionLevel.valueOf(value), element.getDescription(), "WormholeXTreme");
+                        }
+                        else
+                        {
+                            // I guess its a string
+                            s = new Setting(element.getName(), value, element.getDescription(), "WormholeXTreme");
+                        }
+                    }
 
-			for (int i = 0; i < config.length; i++) 
-			{
-				ConfigurationFlatFile.createNewSetting(
-						bufferedwriter,
-						config[i].getName(),
-						config[i].getValue().toString(),
-						config[i].getDescription());
-			}
-			bufferedwriter.close();
-		}
-		catch (Exception exception)
-		{
-			//MinecartManiaCore.log.severe("Failed to write " + desc.getName() +" settings!");
-			exception.printStackTrace();
-		}
-	}
+                    ConfigManager.configurations.put(s.getName(), s);
+                }
+            }
+        }
+    }
 
-	/**
-	 * Read file.
-	 *
-	 * @param file the file
-	 * @param desc the desc
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	private static void readFile(File file, PluginDescriptionFile desc) throws IOException
-	{
+    /**
+     * Read file.
+     * 
+     * @param desc
+     *            the desc
+     */
+    private static void readFile(final PluginDescriptionFile desc)
+    {
+        final File directory = new File("plugins" + File.separator + desc.getName() + File.separator);
+        if ( !directory.exists())
+        {
+            try
+            {
+                directory.mkdir();
+            }
+            catch (final Exception e)
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to make directory: " + e.getMessage());
+            }
+        }
+        final String input = directory.getPath() + File.separator + "Settings.txt";
+        options = new File(input);
+        if ( !options.exists())
+        {
+            writeFile(options, desc, DefaultSettings.config);
+        }
+        try
+        {
+            readFile(options, desc);
+        }
+        catch (final IOException e)
+        {
+            WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Failed to read fiele: " + e.getMessage());
+        }
+        if (invalidFile(options, desc))
+        {
+            writeFile(desc);
+        }
+    }
 
-		for (int i = 0; i < DefaultSettings.config.length; i++) 
-		{
-				
-			String value = ConfigurationFlatFile.getValueFromSetting( file, DefaultSettings.config[i].getName(),DefaultSettings.config[i].getValue().toString());
-			
-			//Attempt to parse the value as boolean
-			if (value.toLowerCase().contains("true") || value.toLowerCase().contains("false")) 
-			{
-				Setting s = new Setting(DefaultSettings.config[i].getName(), Boolean.parseBoolean(value), DefaultSettings.config[i].getDescription(), "WormholeXTreme");
-				ConfigManager.configurations.put(s.getName(), s);
-			}
-			else
-			{
-				try
-				{
-					// Check if this is a number
-					Setting s = new Setting(DefaultSettings.config[i].getName(), Integer.parseInt(value), DefaultSettings.config[i].getDescription(), "WormholeXTreme");
-					if (s.getName() == ConfigKeys.ICONOMY_WORMHOLE_BUILD_COST || s.getName() == ConfigKeys.ICONOMY_WORMHOLE_USE_COST)
-					{
-					    s = new Setting(DefaultSettings.config[i].getName(),  Double.parseDouble(value + ".0"), DefaultSettings.config[i].getDescription(), "WormholeXTreme");
-					}
-					ConfigManager.configurations.put(s.getName(), s);
-				}
-				catch ( NumberFormatException e)
-				{
-					Setting s = null;
-					try
-					{
-						s = new Setting(DefaultSettings.config[i].getName(), Double.parseDouble(value), DefaultSettings.config[i].getDescription(), "WormholeXTreme");
-					}
-					catch ( NumberFormatException nfe)
-					{						
-						// Probably an enum
-						if ( DefaultSettings.config[i].getName() == ConfigKeys.BUILT_IN_DEFAULT_PERMISSION_LEVEL )
-						{
-							s = new Setting(DefaultSettings.config[i].getName(), PermissionLevel.valueOf(value), DefaultSettings.config[i].getDescription(), "WormholeXTreme");
-						}
-						else
-						{
-							// I guess its a string
-							s = new Setting(DefaultSettings.config[i].getName(), value, DefaultSettings.config[i].getDescription(), "WormholeXTreme");
-						}
-					}
-						
-					ConfigManager.configurations.put(s.getName(), s);
-				}
-			}
-			
+    /**
+     * Write file.
+     * 
+     * @param file
+     *            the file
+     * @param desc
+     *            the desc
+     * @param config
+     *            the config
+     */
+    private static void writeFile(final File file, final PluginDescriptionFile desc, final Setting[] config)
+    {
+        try
+        {
+            try
+            {
+                file.createNewFile();
+            }
+            catch (final Exception e)
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to Create File: " + e.getMessage());
+            }
+            final BufferedWriter bufferedwriter = new BufferedWriter(new FileWriter(file));
 
-		}
-	}
+            ConfigurationFlatFile.createNewHeader(bufferedwriter, desc.getName() + " " + desc.getVersion(), desc.getName() + " Config Settings", true);
+
+            for (final Setting element : config)
+            {
+                ConfigurationFlatFile.createNewSetting(bufferedwriter, element.getName(), element.getValue().toString(), element.getDescription());
+            }
+            bufferedwriter.close();
+        }
+        catch (final Exception exception)
+        {
+            exception.printStackTrace();
+        }
+    }
+
+    /**
+     * Write file.
+     * 
+     * @param desc
+     *            the desc
+     */
+    public static void writeFile(final PluginDescriptionFile desc)
+    {
+        try
+        {
+            try
+            {
+                options.createNewFile();
+            }
+            catch (final Exception e)
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to create new file: " + e.getMessage());
+            }
+            final BufferedWriter bufferedwriter = new BufferedWriter(new FileWriter(options));
+
+            ConfigurationFlatFile.createNewHeader(bufferedwriter, desc.getName() + " " + desc.getVersion(), desc.getName() + " Config Settings", true);
+
+            final Set<ConfigKeys> keys = ConfigManager.configurations.keySet();
+            final ArrayList<ConfigKeys> list = new ArrayList<ConfigKeys>(keys);
+            Collections.sort(list);
+            for (final ConfigKeys key : list)
+            {
+                final Setting s = ConfigManager.configurations.get(key);
+                if (s != null)
+                {
+                    ConfigurationFlatFile.createNewSetting(bufferedwriter, s.getName(), s.getValue().toString(), s.getDescription());
+                }
+
+            }
+            bufferedwriter.close();
+        }
+        catch (final Exception exception)
+        {
+            exception.printStackTrace();
+        }
+    }
 
 }

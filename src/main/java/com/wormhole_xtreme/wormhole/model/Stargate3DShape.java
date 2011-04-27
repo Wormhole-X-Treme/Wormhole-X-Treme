@@ -1,3 +1,21 @@
+/*
+ *   Wormhole X-Treme Plugin for Bukkit
+ *   Copyright (C) 2011  Ben Echols
+ *                       Dean Bailey
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.wormhole_xtreme.wormhole.model;
 
 import java.util.ArrayList;
@@ -9,130 +27,216 @@ import org.bukkit.Material;
 
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
 
-public class Stargate3DShape extends StargateShape 
+/**
+ * The Class Stargate3DShape.
+ */
+public class Stargate3DShape extends StargateShape
 {
-	/**
-	 * Layers of the 3D shape. Layers go from 1 - 10
-	 */
-	public ArrayList<StargateShapeLayer> layers = new ArrayList<StargateShapeLayer>();
-	public int activation_layer = -1;
-	public int sign_layer = -1;
-	
-	public Stargate3DShape(String[] fileLines)
-	{
-		signPosition = null;
-		enterPosition = null;
-	
-		// 1. scan all lines for lines beginning with [  - that is the height of the gate
-		int height = 0;
-		int width = 0;
-		for ( int i = 0; i < fileLines.length; i++ )
-		{
-			String line = fileLines[i];
-			
-			if ( line.startsWith("#") )
-				continue;
-			
-			if ( line.contains("Name=") )
-			{
-				this.shapeName = line.split("=")[1];
-				WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Begin parsing shape: \"" + (String)this.shapeName + "\"");
-			}
-			else if ( line.equals("GateShape=") )
-			{
-				int index = i;
-				// Find start of first line
-				while ( !fileLines[index].startsWith("[") )
-				{
-					index++;
-				}
-				
-				while ( fileLines[index].startsWith("[") )
-				{
-					if ( width <= 0 )
-					{
-						Pattern p = Pattern.compile("(\\[.*?\\])");
-						Matcher m = p.matcher(fileLines[index]);
-						while ( m.find() )
-							width++;
-					}
-						
-					height++; index++;
-				}
-					
-				// At this point we should know the height and width
-				if ( height <= 0 || width <= 0)
-				{
-				    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to parse custom gate due to incorrect height or width: \"" + (String)this.shapeName + "\"");
-					throw new IllegalArgumentException("Unable to parse custom gate due to incorrect height or width: \"" + (String)this.shapeName + "\"");
-				}
-				else 
-				{
-				    WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG,false,"Shape: \"" + (String)this.shapeName + "\"" + " Height: \"" + Integer.toString((int)height) + "\"" + " Width: \"" + Integer.toString((int)width) + "\"" );
-				}
-			}
-			else if ( line.startsWith("Layer") )
-			{
-				// TODO : Add some debug output for each layer!
-				// 1. get layer #
-				int layer = Integer.valueOf(line.trim().split("[#=]")[1]);
-				
-				// 2. add each line that starts with [ to a new string[]
-				i++;
-				String[] layerLines = new String[height];
-				int line_index = 0;
-				while ( fileLines[i].startsWith("[") || fileLines[i].startsWith("#"))
-				{
-				    WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG,false,"Layer=" + layer + " i=" + i + " line_index=" + line_index + " Line=" + fileLines[i] );
-					layerLines[line_index] = fileLines[i];
-					i++;
+    /**
+     * Layers of the 3D shape. Layers go from 1 - 10
+     */
+    private ArrayList<StargateShapeLayer> shapeLayers = new ArrayList<StargateShapeLayer>();
 
-					if ( fileLines[i].startsWith("#") )
-					{
-						continue;
-					}
+    /** The activation_layer. */
+    private int shapeActivationLayer = -1;
 
-					line_index++;
-				}
-				
-				// 3. call constructor
-				StargateShapeLayer ssl = new StargateShapeLayer(layerLines, height, width);
-				// bad hack to make sure list is big enough :(
-//				while ( layers.size() < layer )
-//				{
-//					layers.add(null);
-//				}
-//				layers.set(layer, ssl);
-				
-				// bad hack to make sure layers start at 1 instead of 0. 
-				if (layer == 1)
-				{
-				    layers.add(null);
-				}
-				layers.add(ssl);
+    /** The sign_layer. */
+    private int shapeSignLayer = -1;
 
-				if ( ssl.activationPosition != null )
-					this.activation_layer = layer;
-				if ( ssl.dialerPosition != null )
-					this.sign_layer = layer;
-			}
-			else if ( line.contains("PORTAL_MATERIAL=") )
-			{
-				portalMaterial = Material.valueOf(line.split("=")[1]);
-			}
-			else if ( line.contains("IRIS_MATERIAL=") )
-			{
-				irisMaterial = Material.valueOf(line.split("=")[1]);
-			}
-			else if ( line.contains("STARGATE_MATERIAL=") )
-			{
-				stargateMaterial = Material.valueOf(line.split("=")[1]);
-			}
-			else if ( line.contains("ACTIVE_MATERIAL=") )
-			{
-				activeMaterial = Material.valueOf(line.split("=")[1]);
-			}
-		}
-		WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Finished parsing shape: \"" + (String)this.shapeName + "\"");
-	}
+    /**
+     * Instantiates a new stargate3 d shape.
+     * 
+     * @param fileLines
+     *            the file lines
+     */
+    public Stargate3DShape(final String[] fileLines)
+    {
+        setShapeSignPosition(new int[]{});
+        setShapeEnterPosition(new int[]{});
+
+        // 1. scan all lines for lines beginning with [  - that is the height of the gate
+        int height = 0;
+        int width = 0;
+        for (int i = 0; i < fileLines.length; i++)
+        {
+            final String line = fileLines[i];
+
+            if (line.startsWith("#"))
+            {
+                continue;
+            }
+
+            if (line.contains("Name="))
+            {
+                setShapeName(line.split("=")[1]);
+                WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Begin parsing shape: \"" + getShapeName() + "\"");
+            }
+            else if (line.equals("GateShape="))
+            {
+                int index = i;
+                // Find start of first line
+                while ( !fileLines[index].startsWith("["))
+                {
+                    index++;
+                }
+
+                while (fileLines[index].startsWith("["))
+                {
+                    if (width <= 0)
+                    {
+                        final Pattern p = Pattern.compile("(\\[.*?\\])");
+                        final Matcher m = p.matcher(fileLines[index]);
+                        while (m.find())
+                        {
+                            width++;
+                        }
+                    }
+
+                    height++;
+                    index++;
+                }
+
+                // At this point we should know the height and width
+                if ((height <= 0) || (width <= 0))
+                {
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to parse custom gate due to incorrect height or width: \"" + getShapeName() + "\"");
+                    throw new IllegalArgumentException("Unable to parse custom gate due to incorrect height or width: \"" + getShapeName() + "\"");
+                }
+                else
+                {
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Shape: \"" + getShapeName() + "\"" + " Height: \"" + Integer.toString(height) + "\"" + " Width: \"" + Integer.toString(width) + "\"");
+                }
+            }
+            else if (line.startsWith("Layer"))
+            {
+                // TODO : Add some debug output for each layer!
+                // 1. get layer #
+                final int layer = Integer.valueOf(line.trim().split("[#=]")[1]);
+
+                // 2. add each line that starts with [ to a new string[]
+                i++;
+                final String[] layerLines = new String[height];
+                int line_index = 0;
+                while (fileLines[i].startsWith("[") || fileLines[i].startsWith("#"))
+                {
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Layer=" + layer + " i=" + i + " line_index=" + line_index + " Line=" + fileLines[i]);
+                    layerLines[line_index] = fileLines[i];
+                    i++;
+
+                    if (fileLines[i].startsWith("#"))
+                    {
+                        continue;
+                    }
+
+                    line_index++;
+                }
+
+                // 3. call constructor
+                final StargateShapeLayer ssl = new StargateShapeLayer(layerLines, height, width);
+                // bad hack to make sure list is big enough :(
+                while (getShapeLayers().size() <= layer)
+                {
+                    getShapeLayers().add(null);
+                }
+                getShapeLayers().set(layer, ssl);
+
+                if (ssl.getLayerActivationPosition().length > 0)
+                {
+                    setShapeActivationLayer(layer);
+                }
+                if (ssl.getLayerDialerPosition().length > 0)
+                {
+                    setShapeSignLayer(layer);
+                }
+            }
+            else if (line.contains("PORTAL_MATERIAL="))
+            {
+                setShapePortalMaterial(Material.valueOf(line.split("=")[1]));
+            }
+            else if (line.contains("IRIS_MATERIAL="))
+            {
+                setShapeIrisMaterial(Material.valueOf(line.split("=")[1]));
+            }
+            else if (line.contains("STARGATE_MATERIAL="))
+            {
+                setShapeStructureMaterial(Material.valueOf(line.split("=")[1]));
+            }
+            else if (line.contains("ACTIVE_MATERIAL="))
+            {
+                setShapeActiveMaterial(Material.valueOf(line.split("=")[1]));
+            }
+            else if (line.contains("LIGHT_TICKS="))
+            {
+                setShapeLightTicks(Integer.valueOf(line.split("=")[1]));
+            }
+            else if (line.contains("WOOSH_TICKS="))
+            {
+                setShapeWooshTicks(Integer.valueOf(line.split("=")[1]));
+            }
+        }
+        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Finished parsing shape: \"" + getShapeName() + "\"");
+    }
+
+    /**
+     * Gets the shape activation layer.
+     * 
+     * @return the shape activation layer
+     */
+    public int getShapeActivationLayer()
+    {
+        return shapeActivationLayer;
+    }
+
+    /**
+     * Gets the shape layers.
+     * 
+     * @return the shape layers
+     */
+    public ArrayList<StargateShapeLayer> getShapeLayers()
+    {
+        return shapeLayers;
+    }
+
+    /**
+     * Gets the shape sign layer.
+     * 
+     * @return the shape sign layer
+     */
+    public int getShapeSignLayer()
+    {
+        return shapeSignLayer;
+    }
+
+    /**
+     * Sets the shape activation layer.
+     * 
+     * @param shapeActivationLayer
+     *            the new shape activation layer
+     */
+    public void setShapeActivationLayer(final int shapeActivationLayer)
+    {
+        this.shapeActivationLayer = shapeActivationLayer;
+    }
+
+    /**
+     * Sets the shape layers.
+     * 
+     * @param shapeLayers
+     *            the new shape layers
+     */
+    public void setShapeLayers(final ArrayList<StargateShapeLayer> shapeLayers)
+    {
+        this.shapeLayers = shapeLayers;
+    }
+
+    /**
+     * Sets the shape sign layer.
+     * 
+     * @param shapeSignLayer
+     *            the new shape sign layer
+     */
+    public void setShapeSignLayer(final int shapeSignLayer)
+    {
+        this.shapeSignLayer = shapeSignLayer;
+    }
 }

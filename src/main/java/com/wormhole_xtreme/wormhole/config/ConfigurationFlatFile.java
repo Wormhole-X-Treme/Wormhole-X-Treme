@@ -30,204 +30,154 @@ import java.util.logging.Level;
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.config.ConfigManager.ConfigKeys;
 
-
-
-
-// TODO: Auto-generated Javadoc
-/*
- * This class is based on a class "MinecartFlatFile.java" 
- * from MinecartMania written by Afforess from Bukkit.org
- */
 /**
  * The Class ConfigurationFlatFile.
+ * Based on class "MinecartFlatFile" from MinecartMania by Afforess.
  */
-public class ConfigurationFlatFile 
+class ConfigurationFlatFile
 {
-	
-	/**
-	 * Creates the new header.
-	 *
-	 * @param output the output
-	 * @param title the title
-	 * @param subtitle the subtitle
-	 * @param firstHeader the first header
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public static void createNewHeader(BufferedWriter output, String title, String subtitle, boolean firstHeader) throws IOException 
-	{
-		final String linebreak = "-------------------------------";
-		if (!firstHeader) {
-			output.write("---------------");
-			output.newLine();
-			output.newLine();
-			output.write(linebreak);
-			output.newLine();
-		}
-		output.write(title);
-		output.newLine();
-		output.write(subtitle);
-		output.newLine();
-		output.write(linebreak);
-		output.newLine();
-		output.newLine();
-	}
 
-	/**
-	 * Creates the new setting.
-	 *
-	 * @param output the output
-	 * @param name the name
-	 * @param value the value
-	 * @param description the description
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public static void createNewSetting(BufferedWriter output, ConfigKeys name, String value, String description) throws IOException 
-	{
-		final String linebreak = "---------------";
-		output.append(linebreak);
-		output.newLine();
-		output.write("Setting: " + name);
-		output.newLine();
-		output.write("Value: " + value);
-		output.newLine();
-		output.write("Description:");
+    /**
+     * Creates the new header.
+     * 
+     * @param output
+     *            the output
+     * @param title
+     *            the title
+     * @param subtitle
+     *            the subtitle
+     * @param firstHeader
+     *            the first header
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    protected static void createNewHeader(final BufferedWriter output, final String title, final String subtitle, final boolean firstHeader) throws IOException
+    {
+        final String linebreak = "-------------------------------";
+        if ( !firstHeader)
+        {
+            output.write("---------------");
+            output.newLine();
+            output.newLine();
+            output.write(linebreak);
+            output.newLine();
+        }
+        output.write(title);
+        output.newLine();
+        output.write(subtitle);
+        output.newLine();
+        output.write(linebreak);
+        output.newLine();
+        output.newLine();
+    }
 
-		ArrayList<String> desc = new ArrayList<String>();
-		desc.add(0, "");
-		final int maxLength = 80;
-		String[] words = description.split(" ");
-		int lineNumber = 0;
-		for (int i = 0; i < words.length; i++) {
-			if (desc.get(lineNumber).length() + words[i].length() < maxLength) {
-				desc.set(lineNumber, desc.get(lineNumber) + " " + words[i]);
-			}
-			else {
-				lineNumber++;
-				desc.add(lineNumber, "             " + words[i]);
-			}
-		}
-		for(String s : desc) {
-			output.write(s);
-			output.newLine();
-		}
-	}
+    /**
+     * Creates the new setting.
+     * 
+     * @param output
+     *            the output
+     * @param name
+     *            the name
+     * @param value
+     *            the value
+     * @param description
+     *            the description
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    protected static void createNewSetting(final BufferedWriter output, final ConfigKeys name, final String value, final String description) throws IOException
+    {
+        final String linebreak = "---------------";
+        output.append(linebreak);
+        output.newLine();
+        output.write("Setting: " + name);
+        output.newLine();
+        output.write("Value: " + value);
+        output.newLine();
+        output.write("Description:");
 
-	/**
-	 * Gets the value from setting.
-	 *
-	 * @param input the input
-	 * @param name the name
-	 * @param defaultVal the default val
-	 * @return the value from setting
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public static String getValueFromSetting(File input, ConfigKeys name, String defaultVal)  throws IOException
-	{
+        final ArrayList<String> desc = new ArrayList<String>();
+        desc.add(0, "");
+        final int maxLength = 80;
+        final String[] words = description.split(" ");
+        int lineNumber = 0;
+        for (final String word : words)
+        {
+            if (desc.get(lineNumber).length() + word.length() < maxLength)
+            {
+                desc.set(lineNumber, desc.get(lineNumber) + " " + word);
+            }
+            else
+            {
+                lineNumber++;
+                desc.add(lineNumber, "             " + word);
+            }
+        }
+        for (final String s : desc)
+        {
+            output.write(s);
+            output.newLine();
+        }
+    }
 
-	    BufferedReader bufferedReader = null;
-	    try 
-	    {
-	        bufferedReader = new BufferedReader(new FileReader(input));
-	        for (String s = ""; (s = bufferedReader.readLine()) != null; )
-	        {
-	            try
-	            {
-	                s = s.trim();
-	                if ( s.contains("Setting:") )
-	                {
-	                    String key[] = s.split(":");
-	                    key[1] = key[1].trim();
-	                    ConfigKeys key_value = ConfigKeys.valueOf(key[1]);
-	                    if ( key_value == name )
-	                    {
-	                        //Next line
-	                        if ((s = bufferedReader.readLine()) != null ) 
-	                        {
-	                            String val[] = s.split(":");
-	                            bufferedReader.close();
-	                            return val[1].trim();
-	                        }
-	                    }
-	                }
-	            }
-	            catch ( Exception e)
-	            {
-	                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE,false,"Error parsing setting enum:" + e.toString());
-	            }
-	        }
-	        bufferedReader.close();
+    /**
+     * Gets the value from setting.
+     * 
+     * @param input
+     *            the input
+     * @param name
+     *            the name
+     * @param defaultVal
+     *            the default val
+     * @return the value from setting
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    protected static String getValueFromSetting(final File input, final ConfigKeys name, final String defaultVal) throws IOException
+    {
 
-	    }
-	    catch (FileNotFoundException e)
-	    {
-	        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
-	    }
-	    finally
-	    {
-	        bufferedReader.close();
-	    }
-	    return defaultVal.trim();
-	}
+        BufferedReader bufferedReader = null;
+        try
+        {
+            bufferedReader = new BufferedReader(new FileReader(input));
+            for (String s = ""; (s = bufferedReader.readLine()) != null;)
+            {
+                try
+                {
+                    s = s.trim();
+                    if (s.contains("Setting:"))
+                    {
+                        final String key[] = s.split(":");
+                        key[1] = key[1].trim();
+                        final ConfigKeys key_value = ConfigKeys.valueOf(key[1]);
+                        if (key_value == name)
+                        {
+                            //Next line
+                            if ((s = bufferedReader.readLine()) != null)
+                            {
+                                final String val[] = s.split(":");
+                                bufferedReader.close();
+                                return val[1].trim();
+                            }
+                        }
+                    }
+                }
+                catch (final Exception e)
+                {
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Error parsing setting enum:" + e.toString());
+                }
+            }
+            bufferedReader.close();
 
-	/*public static void updateSetting(File input, ConfigKeys setting, String desc, String value)  throws IOException
-	{
-		BufferedReader bufferedreader = new BufferedReader(new FileReader(input));
-		BufferedWriter bufferedwriter = new BufferedWriter(new FileWriter(input));
-		boolean found = false;
-		for (String s = ""; (s = bufferedreader.readLine()) != null; )
-		{
-			try
-			{
-				if ( ConfigKeys.valueOf(s) == setting )
-				{
-					bufferedwriter.write(s);
-					found = true;
-					s = bufferedreader.readLine();
-					bufferedwriter.write("Value: " + value);
-				}
-			}
-			catch ( Exception e)
-			{
-			
-			}
-		}
-		bufferedreader.close();
-
-		if (!found) 
-		{
-			createNewSetting(bufferedwriter, setting, value, desc);
-		}
-
-		bufferedwriter.close();
-	}*/
-
-	/*public static String getNumber(String s)
-	{
-		String n = "";
-		for (int i = 0; i < s.length(); i++)
-		{
-			char c = s.charAt(i);
-			if (Character.isDigit(c) || c == '.' || c == '-')
-				n += c;
-		}
-		return n;
-	}*/
-
-	/*public static void updateVersionHeader(File input, String header) throws IOException {
-		BufferedReader bufferedreader = new BufferedReader(new FileReader(input));
-		BufferedWriter bufferedwriter = new BufferedWriter(new FileWriter(input));
-		boolean found = false;
-		for (String s = ""; (s = bufferedreader.readLine()) != null; )
-		{
-			if (!found) {
-				bufferedwriter.write(header);
-				found = true;
-			}
-			else {
-				bufferedwriter.write(s);
-			}
-		}
-		bufferedreader.close();
-		bufferedwriter.close();
-	}*/
+        }
+        catch (final FileNotFoundException e)
+        {
+            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
+        }
+        finally
+        {
+            bufferedReader.close();
+        }
+        return defaultVal.trim();
+    }
 }

@@ -21,59 +21,67 @@ package com.wormhole_xtreme.wormhole;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerListener;
+
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.plugin.HelpSupport;
 import com.wormhole_xtreme.wormhole.plugin.IConomySupport;
 import com.wormhole_xtreme.wormhole.plugin.PermissionsSupport;
+import com.wormhole_xtreme.wormhole.plugin.WormholeWorldsSupport;
 
 /**
  * WormholeXTreme Server Listener.
- *
+ * 
  * @author Ben Echols (Lologarithm)
  * @author Dean Bailey (alron)
  */
-public class WormholeXTremeServerListener extends ServerListener 
+class WormholeXTremeServerListener extends ServerListener
 {
-	
+
+    /* (non-Javadoc)
+     * @see org.bukkit.event.server.ServerListener#onPluginDisabled(org.bukkit.event.server.PluginEvent)
+     */
+    @Override
+    public void onPluginDisable(final PluginDisableEvent event)
+    {
+        if (event.getPlugin().getDescription().getName().equals("iConomy") && !ConfigManager.getIconomySupportDisable())
+        {
+            IConomySupport.disableIconomy();
+        }
+        if (event.getPlugin().getDescription().getName().equals("Permissions") && !ConfigManager.getPermissionsSupportDisable())
+        {
+            PermissionsSupport.disablePermissions();
+        }
+        if (event.getPlugin().getDescription().getName().equals("Help") && !ConfigManager.getHelpSupportDisable())
+        {
+            HelpSupport.disableHelp();
+        }
+        else if (event.getPlugin().getDescription().getName().equals("WormholeXTremeWorlds") && ConfigManager.isWormholeWorldsSupportEnabled())
+        {
+            WormholeWorldsSupport.disableWormholeWorlds();
+        }
+    }
+
     /* (non-Javadoc)
      * @see org.bukkit.event.server.ServerListener#onPluginEnabled(org.bukkit.event.server.PluginEvent)
      */
     @Override
-    public void onPluginEnable(PluginEnableEvent event) 
+    public void onPluginEnable(final PluginEnableEvent event)
     {
-        if(event.getPlugin().getDescription().getName().equals("iConomy") && !ConfigManager.getIconomySupportDisable()) 
+        if (event.getPlugin().getDescription().getName().equals("iConomy") && !ConfigManager.getIconomySupportDisable())
         {
             IConomySupport.enableIconomy();
         }
-        else if(event.getPlugin().getDescription().getName().equals("Permissions") && !ConfigManager.getPermissionsSupportDisable())
+        else if (event.getPlugin().getDescription().getName().equals("Permissions") && !ConfigManager.getPermissionsSupportDisable())
         {
-    		PermissionsSupport.enablePermissions();
+            PermissionsSupport.enablePermissions();
         }
         else if (event.getPlugin().getDescription().getName().equals("Help") && !ConfigManager.getHelpSupportDisable())
         {
             HelpSupport.enableHelp();
         }
-    }
-    
-
-    
-    /* (non-Javadoc)
-     * @see org.bukkit.event.server.ServerListener#onPluginDisabled(org.bukkit.event.server.PluginEvent)
-     */
-    @Override
-    public void onPluginDisable(PluginDisableEvent event)
-    {
-        if(event.getPlugin().getDescription().getName().equals("iConomy") && !ConfigManager.getIconomySupportDisable())
+        else if (event.getPlugin().getDescription().getName().equals("WormholeXTremeWorlds") && ConfigManager.isWormholeWorldsSupportEnabled())
         {
-            IConomySupport.disableIconomy();
-        }
-        if(event.getPlugin().getDescription().getName().equals("Permissions") && !ConfigManager.getPermissionsSupportDisable())
-        {
-            PermissionsSupport.disablePermissions();
-        }
-        if(event.getPlugin().getDescription().getName().equals("Help") && !ConfigManager.getHelpSupportDisable())
-        {
-            HelpSupport.disableHelp();
+            WormholeWorldsSupport.enableWormholeWorlds();
         }
     }
 }

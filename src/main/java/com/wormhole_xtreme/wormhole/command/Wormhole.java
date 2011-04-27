@@ -34,87 +34,296 @@ import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 import com.wormhole_xtreme.wormhole.plugin.HelpSupport;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Wormhole.
- *
+ * 
  * @author alron
  */
-public class Wormhole implements CommandExecutor 
+public class Wormhole implements CommandExecutor
 {
 
-    /* (non-Javadoc)
-     * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+    /**
+     * Do activate timeout.
+     * 
+     * @param sender
+     *            the sender
+     * @param args
+     *            the args
+     * @return true, if successful
      */
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
+    private static boolean doActivateTimeout(final CommandSender sender, final String[] args)
     {
-        Player player = null;
-        if (CommandUtilities.playerCheck(sender))
+        if (args.length == 2)
         {
-            player = (Player)sender;
-        }
-        if ((player != null && WXPermissions.checkWXPermissions(player, PermissionType.CONFIG)) || !CommandUtilities.playerCheck(sender))
-        {
-            args = CommandUtilities.commandEscaper(args);
-            if ((args.length > 4 ) || (args.length == 0)) 
+            try
             {
+                final int timeout = Integer.parseInt(args[1]);
+                if ((timeout >= 10) && (timeout <= 60))
+                {
+                    ConfigManager.setTimeoutActivate(timeout);
+                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "activate_timeout set to: " + ConfigManager.getTimeoutActivate());
+                }
+                else
+                {
+                    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid activate_timeout: " + args[1]);
+                    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid timeout is between 10 and 60 seconds.");
+                    return false;
+                }
+            }
+            catch (final NumberFormatException e)
+            {
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid activate_timeout: " + args[1]);
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid timeout is between 10 and 60 seconds.");
                 return false;
-            }
-            if ( args[0].equalsIgnoreCase("owner"))
-            {
-                return doOwner(sender,args);
-            }
-            else if ( args[0].equalsIgnoreCase("perm") || args[0].equalsIgnoreCase("perms"))
-            {
-                doPerms(sender,args);
-            }
-            else if ( args[0].equalsIgnoreCase("material") || args[0].equalsIgnoreCase("portalmaterial"))
-            {
-                return doPortalMaterial(sender,args);
-            }
-            else if ( args[0].equalsIgnoreCase("irismaterial") )
-            {
-                return doIrisMaterial(sender,args);
-            }
-            else if ( args[0].equalsIgnoreCase("timeout") || args[0].equalsIgnoreCase("shutdown_timeout") )
-            {
-                return doShutdownTimeout(sender,args);
-            }
-            else if ( args[0].equalsIgnoreCase("activate_timeout") )
-            {
-                return doActivateTimeout(sender,args);
-            }
-            else if (args[0].equalsIgnoreCase("simple"))
-            {
-                return doSimplePermissions(sender,args);
-            }
-            else if (args[0].equalsIgnoreCase("regenerate") || args[0].equalsIgnoreCase("regen"))
-            {
-                return doRegenerate(sender, args);
-            }
-            else 
-            {
-                sender.sendMessage(ConfigManager.MessageStrings.requestInvalid.toString() + ": " + args[0]);
-                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'shutdown_timeout', 'activate_timeout', 'simple' and 'regenerate'.");
             }
         }
         else
         {
-            sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Current activate_timeout is: " + ConfigManager.getTimeoutActivate());
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid timeout is between 10 and 60 seconds.");
         }
         return true;
     }
-    
-    
+
     /**
-     * Do simple permissions.
-     *
-     * @param sender the sender
-     * @param args the args
+     * Do iris material.
+     * 
+     * @param sender
+     *            the sender
+     * @param args
+     *            the args
      * @return true, if successful
      */
-    private static boolean doSimplePermissions(CommandSender sender, String[] args) {
+    private static boolean doIrisMaterial(final CommandSender sender, final String[] args)
+    {
+        /*if ( args.length == 2)
+        {
+            Material m = Material.STONE;
+            try
+            {
+                m = Material.valueOf(args[1]);
+            }
+            catch (Exception e)
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught Exception on iris material" + e.getMessage());
+            }
+
+            if ( m == Material.DIAMOND_BLOCK || m == Material.GLASS || m == Material.IRON_BLOCK || m == Material.BEDROCK || m == Material.STONE || m == Material.LAPIS_BLOCK )
+            {
+                ConfigManager.setIrisMaterial(m);
+                sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Iris material set to: " + ConfigManager.getIrisMaterial());
+            }
+            else 
+            {
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid Iris Material: " + args[1]);
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid materials are: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, and LAPIS_BLOCK");
+                return false;
+            }
+        }
+        else 
+        {
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Iris material is currently: " + ConfigManager.getIrisMaterial());
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid materials are: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, and LAPIS_BLOCK");
+        }
+        return true;*/
+        sender.sendMessage("This command is disabled. Material is now set in gate shape.");
+        return true;
+    }
+
+    /**
+     * Do owner.
+     * 
+     * @param sender
+     *            the sender
+     * @param args
+     *            the args
+     * @return true, if successful
+     */
+    private static boolean doOwner(final CommandSender sender, final String[] args)
+    {
+        if (args.length >= 2)
+        {
+            final Stargate s = StargateManager.getStargate(args[1]);
+            if (s != null)
+            {
+                if (args.length == 3)
+                {
+                    s.setGateOwner(args[2]);
+                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Gate: " + s.getGateName() + " Now owned by: " + s.getGateOwner());
+                }
+                else if (args.length == 2)
+                {
+                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Gate: " + s.getGateName() + " Owned by: " + s.getGateOwner());
+                }
+            }
+            else
+            {
+                sender.sendMessage(ConfigManager.MessageStrings.constructNameInvalid.toString() + "\"" + args[1] + "\"");
+            }
+        }
+        else
+        {
+            sender.sendMessage(ConfigManager.MessageStrings.gateNotSpecified.toString());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Do perms.
+     * 
+     * @param sender
+     *            the sender
+     * @param args
+     *            the args
+     */
+    private static void doPerms(final CommandSender sender, final String[] args)
+    {
+        if (CommandUtilities.playerCheck(sender))
+        {
+            final Player p = (Player) sender;
+            PermissionsManager.handlePermissionRequest(p, args);
+        }
+    }
+
+    /**
+     * Do Portal Material.
+     * 
+     * @param sender
+     *            the sender
+     * @param args
+     *            the args
+     * @return true, if successful
+     */
+    private static boolean doPortalMaterial(final CommandSender sender, final String[] args)
+    {
+        /* if ( args.length == 2)
+        {
+            Material m = Material.STONE;
+            try
+            {
+                m = Material.valueOf(args[1]);
+            }
+            catch (Exception e)
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught Exception on iris material" + e.getMessage());
+            }
+
+            if ( m == Material.STATIONARY_LAVA || m == Material.STATIONARY_WATER || m == Material.AIR || m == Material.PORTAL )
+            {
+                ConfigManager.setPortalMaterial(m);
+                sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Portal material set to: " + ConfigManager.getPortalMaterial());
+            }
+            else
+            {
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid Portal Material: " + args[1]);
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid materials are: STATIONARY_WATER, STATIONARY_LAVA, AIR, PORTAL");
+                return false;
+            }
+        }
+        else
+        {
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Portal material is currently: " + ConfigManager.getPortalMaterial());
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid materials are: STATIONARY_WATER, STATIONARY_LAVA, AIR, PORTAL");
+        }
+        return true;*/
+        sender.sendMessage("This command is disabled. Material is now set in gate shape.");
+        return true;
+    }
+
+    /**
+     * Do regenerate.
+     * 
+     * @param sender
+     *            the sender
+     * @param args
+     *            the args
+     * @return true, if successful
+     */
+    private static boolean doRegenerate(final CommandSender sender, final String[] args)
+    {
+        final CommandSender cs = sender;
+        final String[] a = args;
+        if (a.length >= 2)
+        {
+            final Stargate s = StargateManager.getStargate(args[1]);
+            if (s != null)
+            {
+                s.dialButtonLeverState(true);
+                if ( !s.getGateIrisDeactivationCode().equals(""))
+                {
+                    s.setupIrisLever(false);
+                    s.setupIrisLever(true);
+                }
+                cs.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Regenerating Gate: " + s.getGateName());
+            }
+            else
+            {
+                cs.sendMessage(ConfigManager.MessageStrings.constructNameInvalid.toString() + "\"" + a[1] + "\"");
+            }
+        }
+        else
+        {
+            cs.sendMessage(ConfigManager.MessageStrings.gateNotSpecified.toString());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Do shutdown timeout.
+     * 
+     * @param sender
+     *            the sender
+     * @param args
+     *            the args
+     * @return true, if successful
+     */
+    private static boolean doShutdownTimeout(final CommandSender sender, final String[] args)
+    {
+        if (args.length == 2)
+        {
+            try
+            {
+                final int timeout = Integer.parseInt(args[1]);
+                if ((timeout > -1) && (timeout <= 60))
+                {
+                    ConfigManager.setTimeoutShutdown(timeout);
+                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "shutdown_timeout set to: " + ConfigManager.getTimeoutShutdown());
+                }
+                else
+                {
+                    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid shutdown_timeout: " + args[1]);
+                    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid timeout is between 0 and 60 seconds.");
+                    return false;
+                }
+            }
+            catch (final NumberFormatException e)
+            {
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid shutdown_timeout: " + args[1]);
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid timeout is between 0 and 60 seconds.");
+                return false;
+            }
+        }
+        else
+        {
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Current shutdown_timeout is: " + ConfigManager.getTimeoutShutdown());
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid timeout is between 0 and 60 seconds.");
+        }
+        return true;
+    }
+
+    /**
+     * Do simple permissions.
+     * 
+     * @param sender
+     *            the sender
+     * @param args
+     *            the args
+     * @return true, if successful
+     */
+    private static boolean doSimplePermissions(final CommandSender sender, final String[] args)
+    {
         if (args.length == 2)
         {
             Player player = null;
@@ -133,16 +342,16 @@ public class Wormhole implements CommandExecutor
                 sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid options: true/yes, false/no");
                 return false;
             }
-            if (WormholeXTreme.getPermissions() != null && CommandUtilities.playerCheck(sender))
+            if ((WormholeXTreme.getPermissions() != null) && CommandUtilities.playerCheck(sender))
             {
-                player = (Player)sender;
+                player = (Player) sender;
                 if (simple && !WormholeXTreme.getPermissions().has(player, "wormhole.simple.config"))
                 {
                     sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "You currently do not have the 'wormhole.simple.config' permission.");
                     sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Please make sure you have this permission before running this command again.");
                     return true;
                 }
-                else if (!simple && !WormholeXTreme.getPermissions().has(player, "wormhole.config"))
+                else if ( !simple && !WormholeXTreme.getPermissions().has(player, "wormhole.config"))
                 {
                     sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "You currently do not have the 'wormhole.config' permission.");
                     sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Please make sure you have this permission before running this command again.");
@@ -151,7 +360,7 @@ public class Wormhole implements CommandExecutor
             }
             ConfigManager.setSimplePermissions(simple);
             sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Simple Permissions set to: " + ConfigManager.getSimplePermissions());
-            if (!ConfigManager.getHelpSupportDisable())
+            if ( !ConfigManager.getHelpSupportDisable())
             {
                 HelpSupport.registerHelpCommands();
             }
@@ -168,254 +377,62 @@ public class Wormhole implements CommandExecutor
         return true;
     }
 
-    /**
-     * Do Portal Material.
-     *
-     * @param sender the sender
-     * @param args the args
-     * @return true, if successful
+    /* (non-Javadoc)
+     * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
      */
-	private static boolean doPortalMaterial(CommandSender sender, String[] args)
-	{
-		/*if ( args.length == 2)
-		{
-			Material m = Material.STONE;
-			try
-			{
-				m = Material.valueOf(args[1]);
-			}
-			catch (Exception e)
-			{
-			    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught Exception on iris material" + e.getMessage());
-			}
-			
-			if ( m == Material.STATIONARY_LAVA || m == Material.STATIONARY_WATER || m == Material.AIR || m == Material.PORTAL )
-			{
-				ConfigManager.setPortalMaterial(m);
-				sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Portal material set to: " + ConfigManager.getPortalMaterial());
-			}
-			else
-			{
-			    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid Portal Material: " + args[1]);
-			    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid materials are: STATIONARY_WATER, STATIONARY_LAVA, AIR, PORTAL");
-			    return false;
-			}
-		}
-		else
-		{
-		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Portal material is currently: " + ConfigManager.getPortalMaterial());
-		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid materials are: STATIONARY_WATER, STATIONARY_LAVA, AIR, PORTAL");
-		}
-		return true;*/
-		sender.sendMessage("This command is disabled. Material is now set in gate shape.");
-		return true;
-	}
-	
-	/**
-	 * Do iris material.
-	 *
-	 * @param sender the sender
-	 * @param args the args
-	 * @return true, if successful
-	 */
-	private static boolean doIrisMaterial(CommandSender sender, String[] args)
-	{
-		/*if ( args.length == 2)
-		{
-			Material m = Material.STONE;
-			try
-			{
-				m = Material.valueOf(args[1]);
-			}
-			catch (Exception e)
-			{
-			    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught Exception on iris material" + e.getMessage());
-			}
-			
-			if ( m == Material.DIAMOND_BLOCK || m == Material.GLASS || m == Material.IRON_BLOCK || m == Material.BEDROCK || m == Material.STONE || m == Material.LAPIS_BLOCK )
-			{
-				ConfigManager.setIrisMaterial(m);
-				sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Iris material set to: " + ConfigManager.getIrisMaterial());
-			}
-			else 
-			{
-			    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid Iris Material: " + args[1]);
-			    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid materials are: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, and LAPIS_BLOCK");
-			    return false;
-			}
-		}
-		else 
-		{
-		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Iris material is currently: " + ConfigManager.getIrisMaterial());
-		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid materials are: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, and LAPIS_BLOCK");
-		}
-		return true;*/
-		sender.sendMessage("This command is disabled. Material is now set in gate shape.");
-		return true;
-	}
-	
-	/**
-	 * Do shutdown timeout.
-	 *
-	 * @param sender the sender
-	 * @param args the args
-	 * @return true, if successful
-	 */
-	private static boolean doShutdownTimeout(CommandSender sender, String[] args)
-	{
-		if ( args.length == 2)
-		{
-			try
-			{
-				int timeout = Integer.parseInt(args[1]);
-				if (  timeout > -1 && timeout <= 60)
-				{
-					ConfigManager.setTimeoutShutdown(timeout);
-					sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "shutdown_timeout set to: " + ConfigManager.getTimeoutShutdown());
-				}
-				else
-				{
-				    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid shutdown_timeout: " + args[1]);
-					sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid timeout is between 0 and 60 seconds.");
-					return false;
-				}
-			}
-			catch (NumberFormatException e)
-			{
-			    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid shutdown_timeout: " + args[1]);
-				sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid timeout is between 0 and 60 seconds.");
-				return false;
-			}
-		}
-		else
-		{
-		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Current shutdown_timeout is: " + ConfigManager.getTimeoutShutdown() );
-		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid timeout is between 0 and 60 seconds.");
-		}
-		return true;
-	}
-	
-	/**
-	 * Do activate timeout.
-	 *
-	 * @param sender the sender
-	 * @param args the args
-	 * @return true, if successful
-	 */
-	private static boolean doActivateTimeout(CommandSender sender, String[] args)
-	{
-		if ( args.length == 2)
-		{
-			try
-			{
-				int timeout = Integer.parseInt(args[1]);
-				if (  timeout >= 10 && timeout <= 60)
-				{
-					ConfigManager.setTimeoutActivate(timeout);
-					sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "activate_timeout set to: " + ConfigManager.getTimeoutActivate() );
-				}
-				else 
-				{
-				    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid activate_timeout: " + args[1]);
-					sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid timeout is between 10 and 60 seconds.");
-					return false;
-				}
-			}
-			catch (NumberFormatException e)
-			{
-			    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid activate_timeout: " + args[1]);
-				sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid timeout is between 10 and 60 seconds.");
-				return false;
-			}
-		}
-		else
-		{
-		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Current activate_timeout is: " + ConfigManager.getTimeoutActivate() );
-		    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid timeout is between 10 and 60 seconds.");
-		}
-		return true;
-	}
-	
-	/**
-	 * Do owner.
-	 *
-	 * @param sender the sender
-	 * @param args the args
-	 * @return true, if successful
-	 */
-	private static boolean doOwner(CommandSender sender, String[] args)
-	{
-		if ( args.length >= 2 )
-		{
-			Stargate s = StargateManager.getStargate(args[1]);
-			if (s != null )
-			{
-				if ( args.length == 3)
-				{
-					s.owner = args[2];
-					sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Gate: " + s.name + " Now owned by: " + s.owner);
-				}
-				else if ( args.length == 2)
-				{
-				    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Gate: " + s.name + " Owned by: " + s.owner);
-				}
-			}
-			else
-			{
-				sender.sendMessage(ConfigManager.MessageStrings.constructNameInvalid.toString() + "\"" + args[1] + "\"");
-			}
-		}
-		else
-		{
-		    sender.sendMessage(ConfigManager.MessageStrings.gateNotSpecified.toString());
-		    return false;
-		}
-		return true;
-	}
-	
-
-	/**
-	 * Do perms.
-	 *
-	 * @param sender the sender
-	 * @param args the args
-	 */
-	private static void doPerms(CommandSender sender, String[] args)
-	{
-		if (CommandUtilities.playerCheck(sender))
-		{
-			Player p = (Player) sender;
-			PermissionsManager.handlePermissionRequest(p, args);
-		}
-	}
-    
-	private static boolean doRegenerate(CommandSender sender, String[] args)
-	{
-	    final CommandSender cs = sender;
-	    final String[] a = args;
-	    if ( a.length >= 2 )
-	    {
-	        final Stargate s = StargateManager.getStargate(args[1]);
-	        if (s != null)
-	        {
-	            s.dialButtonLeverState(true);
-	            if (!s.irisDeactivationCode.equals(""))
-	            {
-	                s.setupIrisLever(false);
-	                s.setupIrisLever(true);
-	            }
-	            cs.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Regenerating Gate: " + s.name );
-	        }
-	        else
-	        {
-	            cs.sendMessage(ConfigManager.MessageStrings.constructNameInvalid.toString() + "\"" + a[1] + "\"");
-	        }
-	    }
-	    else
-	    {
-	        cs.sendMessage(ConfigManager.MessageStrings.gateNotSpecified.toString());
-	        return false;
-	    }
-	    return true;
-	}
+    @Override
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
+    {
+        final Player player = CommandUtilities.playerCheck(sender) ? (Player) sender : null;
+        if (((player != null) && WXPermissions.checkWXPermissions(player, PermissionType.CONFIG)) || !CommandUtilities.playerCheck(sender))
+        {
+            final String[] a = CommandUtilities.commandEscaper(args);
+            if ((a.length > 4) || (a.length == 0))
+            {
+                return false;
+            }
+            if (a[0].equalsIgnoreCase("owner"))
+            {
+                return doOwner(sender, a);
+            }
+            else if (a[0].equalsIgnoreCase("perm") || a[0].equalsIgnoreCase("perms"))
+            {
+                doPerms(sender, a);
+            }
+            else if (a[0].equalsIgnoreCase("material") || a[0].equalsIgnoreCase("portalmaterial"))
+            {
+                return doPortalMaterial(sender, a);
+            }
+            else if (a[0].equalsIgnoreCase("irismaterial"))
+            {
+                return doIrisMaterial(sender, a);
+            }
+            else if (a[0].equalsIgnoreCase("timeout") || a[0].equalsIgnoreCase("shutdown_timeout"))
+            {
+                return doShutdownTimeout(sender, a);
+            }
+            else if (a[0].equalsIgnoreCase("activate_timeout"))
+            {
+                return doActivateTimeout(sender, a);
+            }
+            else if (a[0].equalsIgnoreCase("simple"))
+            {
+                return doSimplePermissions(sender, a);
+            }
+            else if (a[0].equalsIgnoreCase("regenerate") || a[0].equalsIgnoreCase("regen"))
+            {
+                return doRegenerate(sender, a);
+            }
+            else
+            {
+                sender.sendMessage(ConfigManager.MessageStrings.requestInvalid.toString() + ": " + a[0]);
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'shutdown_timeout', 'activate_timeout', 'simple' and 'regenerate'.");
+            }
+        }
+        else
+        {
+            sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+        }
+        return true;
+    }
 }

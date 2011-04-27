@@ -33,20 +33,21 @@ import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Force.
- *
+ * 
  * @author alron
  */
-public class Force implements CommandExecutor {
+public class Force implements CommandExecutor
+{
 
     /* (non-Javadoc)
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
      */
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length >= 1 && args.length <= 2)
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
+    {
+        if ((args.length >= 1) && (args.length <= 2))
         {
             boolean allowed = false;
             Player player = null;
@@ -55,7 +56,7 @@ public class Force implements CommandExecutor {
                 player = (Player) sender;
                 allowed = WXPermissions.checkWXPermissions(player, PermissionType.CONFIG);
             }
-            else 
+            else
             {
                 allowed = true;
             }
@@ -85,16 +86,25 @@ public class Force implements CommandExecutor {
                 final ArrayList<Stargate> gates = StargateManager.getAllGates();
                 final ArrayList<String> activelist = new ArrayList<String>();
                 final ArrayList<String> droplist = new ArrayList<String>();
-                for ( Stargate gate : gates )
+                for (final Stargate gate : gates)
                 {
-                    if (gate.active && close)
+                    if (gate.isGateActive() && close)
                     {
-                        activelist.add(gate.name);
+                        activelist.add(gate.getGateName());
                         gate.shutdownStargate();
+                        if (gate.isGateActive())
+                        {
+                            gate.setGateActive(false);
+                        }
                     }
-                    if (gate.irisActive && drop)
+                    if (gate.isGateLit() && close)
                     {
-                        droplist.add(gate.name);
+                        gate.lightStargate(false);
+                        gate.stopActivationTimer();
+                    }
+                    if (gate.isGateIrisActive() && drop)
+                    {
+                        droplist.add(gate.getGateName());
                         gate.toggleIrisActive();
                     }
                 }
@@ -102,10 +112,10 @@ public class Force implements CommandExecutor {
                 {
                     StringBuilder deactivated = new StringBuilder();
                     sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Forced Closed Gate(s)\u00A73::");
-                    for ( int i = 0; i < activelist.size(); i++)
+                    for (int i = 0; i < activelist.size(); i++)
                     {
-                        deactivated.append("\u00A77" + activelist.get(i) );
-                        if ( i != activelist.size() - 1 )
+                        deactivated.append("\u00A77" + activelist.get(i));
+                        if (i != activelist.size() - 1)
                         {
                             deactivated.append("\u00A78, ");
                         }
@@ -115,19 +125,20 @@ public class Force implements CommandExecutor {
                             deactivated = new StringBuilder();
                         }
                     }
-                    if (!deactivated.toString().equals("")) {
+                    if ( !deactivated.toString().equals(""))
+                    {
                         sender.sendMessage(deactivated.toString());
                     }
                 }
-                
+
                 if (drop && !droplist.isEmpty())
                 {
                     StringBuilder dropped = new StringBuilder();
                     sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Forced Dropped Iris(es)\u00A73::");
-                    for ( int i = 0; i < droplist.size(); i++)
+                    for (int i = 0; i < droplist.size(); i++)
                     {
-                        dropped.append("\u00A77" + droplist.get(i) );
-                        if ( i != droplist.size() - 1 )
+                        dropped.append("\u00A77" + droplist.get(i));
+                        if (i != droplist.size() - 1)
                         {
                             dropped.append("\u00A78, ");
                         }
@@ -137,26 +148,26 @@ public class Force implements CommandExecutor {
                             dropped = new StringBuilder();
                         }
                     }
-                    if (!dropped.toString().equals("")) {
+                    if ( !dropped.toString().equals(""))
+                    {
                         sender.sendMessage(dropped.toString());
                     }
                 }
                 if (player != null)
                 {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Player: \"" + player.getName() + "\" ran wxforce close=\"" + close + "\" drop=\"" + drop + "\"" );
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Player: \"" + player.getName() + "\" ran wxforce close=\"" + close + "\" drop=\"" + drop + "\"");
                 }
             }
-            else 
+            else
             {
                 sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
             }
             return true;
         }
-        else 
+        else
         {
             return false;
         }
     }
-
 
 }

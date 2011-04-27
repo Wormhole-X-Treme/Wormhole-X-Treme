@@ -31,51 +31,53 @@ import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 
 /**
  * The Class WXRemove.
- *
+ * 
  * @author alron
  */
-public class WXRemove implements CommandExecutor {
+public class WXRemove implements CommandExecutor
+{
 
     /* (non-Javadoc)
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
      */
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        args = CommandUtilities.commandEscaper(args);
-        if (args.length >=1 && args.length <= 2)
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
+    {
+        final String[] a = CommandUtilities.commandEscaper(args);
+        if ((a.length >= 1) && (a.length <= 2))
         {
-            if (args[0].equals("-all"))
+            if (a[0].equals("-all"))
             {
                 return false;
             }
-            Stargate s = StargateManager.getStargate(args[0]);
-            
-            if ( s != null )
+            final Stargate s = StargateManager.getStargate(a[0]);
+
+            if (s != null)
             {
                 Player player = null;
                 if (CommandUtilities.playerCheck(sender))
                 {
                     player = (Player) sender;
                 }
-                if ( !CommandUtilities.playerCheck(sender) || (player != null && WXPermissions.checkWXPermissions(player, s, PermissionType.REMOVE)))
+                if ( !CommandUtilities.playerCheck(sender) || ((player != null) && WXPermissions.checkWXPermissions(player, s, PermissionType.REMOVE)))
                 {
                     boolean destroy = false;
-                    if (args.length == 2 && args[1].equalsIgnoreCase("-all"))
+                    if ((a.length == 2) && a[1].equalsIgnoreCase("-all"))
                     {
                         destroy = true;
                     }
-                    CommandUtilities.gateRemove(s,destroy);
-                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole Removed: " + s.name);
+                    CommandUtilities.gateRemove(s, destroy);
+                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole Removed: " + s.getGateName());
                 }
                 else
                 {
                     sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
                 }
-                    
+
             }
             else
             {
-                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Gate does not exist: " + args[0] + ". Remember proper capitalization.");
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Gate does not exist: " + a[0] + ". Remember proper capitalization.");
             }
         }
         else

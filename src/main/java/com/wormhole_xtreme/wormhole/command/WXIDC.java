@@ -31,50 +31,52 @@ import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 
 /**
  * The Class WXIDC.
- *
+ * 
  * @author alron
  */
-public class WXIDC implements CommandExecutor {
+public class WXIDC implements CommandExecutor
+{
 
     /* (non-Javadoc)
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
      */
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        args = CommandUtilities.commandEscaper(args);  
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
+    {
+        final String[] a = CommandUtilities.commandEscaper(args);
         Player p = null;
-        if ( CommandUtilities.playerCheck(sender) )
+        if (CommandUtilities.playerCheck(sender))
         {
             p = (Player) sender;
         }
-        if ( args.length >= 1 )
+        if (a.length >= 1)
         {
-            Stargate s = StargateManager.getStargate(args[0]);
-            if ( s != null )
+            final Stargate s = StargateManager.getStargate(a[0]);
+            if (s != null)
             {
-                if ((p != null && (WXPermissions.checkWXPermissions(p, PermissionType.CONFIG) || (s.owner != null && s.owner.equals(p.getName())))) || !CommandUtilities.playerCheck(sender))
+                if (((p != null) && (WXPermissions.checkWXPermissions(p, PermissionType.CONFIG) || ((s.getGateOwner() != null) && s.getGateOwner().equals(p.getName())))) || !CommandUtilities.playerCheck(sender))
                 {
                     // 2. if args other than name - do a set                
-                    if ( args.length >= 2 )
+                    if (a.length >= 2)
                     {
-                        if ( args[1].equals("-clear") )
+                        if (a[1].equals("-clear"))
                         {
                             // Remove from big list of all blocks
-                            StargateManager.removeBlockIndex(s.irisActivationBlock);
+                            StargateManager.removeBlockIndex(s.getGateIrisActivationBlock());
                             // Set code to "" and then remove it from stargates block list
                             s.setIrisDeactivationCode("");
                         }
                         else
                         {
                             // Set code
-                            s.setIrisDeactivationCode(args[1]);
+                            s.setIrisDeactivationCode(a[1]);
                             // Make sure that block is in index
-                            StargateManager.addBlockIndex(s.irisActivationBlock, s);
+                            StargateManager.addBlockIndex(s.getGateIrisActivationBlock(), s);
                         }
                     }
-                        
+
                     // 3. always display current value at end.
-                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "IDC for gate: " + s.name + " is:" + s.irisDeactivationCode);
+                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "IDC for gate: " + s.getGateName() + " is:" + s.getGateIrisDeactivationCode());
                 }
                 else
                 {
@@ -83,7 +85,7 @@ public class WXIDC implements CommandExecutor {
             }
             else
             {
-                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid Stargate: " + args[0]);
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid Stargate: " + a[0]);
 
             }
             return true;

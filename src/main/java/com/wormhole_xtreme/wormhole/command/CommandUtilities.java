@@ -28,97 +28,105 @@ import com.wormhole_xtreme.wormhole.model.StargateManager;
 
 /**
  * WormholeXTreme Commands and command specific methods.
- *
+ * 
  * @author Dean Bailey (alron)
  * @author Ben Echols (Lologarithm)
  */
-class CommandUtilities {
+class CommandUtilities
+{
 
-
-	/**
-	 * Player check.
-	 *
-	 * @param sender the sender
-	 * @return true, if successful
-	 */
-	static boolean playerCheck(CommandSender sender) {
-		if (sender instanceof Player)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	
-	/**
-	 * Command escaper.
-	 * Checks for " and escapes it.
-	 *
-	 * @param args The String[] argument list to escape quotes on.
-	 * @return String[] with properly escaped quotes.
-	 */
-	static String[] commandEscaper(String[] args)
-	{
-		StringBuilder tempString = new StringBuilder();
-		boolean startQuoteFound = false;
-		boolean endQuoteFound = false;
-		
-		final ArrayList<String> argsPartsList = new ArrayList<String>();
-		
-		for(String part : args)
-		{
-			// First check to see if we have a starting or stopping quote
-			if ( part.contains("\"") && !startQuoteFound)
-			{
-				// Two quotes in same string = no spaces in quoted text;
-				if ( !part.replaceFirst("\"", "").contains("\"") )
-				{
-					startQuoteFound = true;
-				}
-			}
-			else if ( part.contains("\"") && startQuoteFound)
-			{
-				endQuoteFound = true;
-			}
-
-			// If no quotes yet, we just append to list
-			if ( !startQuoteFound )
-				argsPartsList.add(part);
-			
-			// If we have quotes we should make sure to append the values
-			// if we found the last quote we should stop adding.
-			if ( startQuoteFound)
-			{
-				tempString.append(part.replace("\"", ""));
-				if ( endQuoteFound )
-				{
-					argsPartsList.add(tempString.toString());
-					startQuoteFound = false;
-					endQuoteFound = false;
-					tempString = new StringBuilder();
-				}
-				else
-					tempString.append(" ");
-			}
-		}
-		return argsPartsList.toArray(new String[argsPartsList.size()]);
-	}
-	
-	/**
-	 * Gate remove.
-	 *
-	 * @param stargate the stargate
-	 * @param destroy true to destroy gate blocks
-	 */
-	static void gateRemove(Stargate stargate, boolean destroy)
-	{
-	    stargate.setupGateSign(false);
-        stargate.resetTeleportSign();
-        if (!stargate.irisDeactivationCode.equals(""))
+    /**
+     * Close gate.
+     * 
+     * @param stargate
+     *            the stargate
+     * @param player
+     *            the player
+     */
+    static final void closeGate(final Stargate stargate)
+    {
+        if (stargate != null)
         {
-            if (stargate.irisActive)
+            stargate.stopActivationTimer();
+            stargate.setGateActive(false);
+            stargate.lightStargate(false);
+        }
+    }
+
+    /**
+     * Command escaper.
+     * Checks for " and escapes it.
+     * 
+     * @param args
+     *            The String[] argument list to escape quotes on.
+     * @return String[] with properly escaped quotes.
+     */
+    static String[] commandEscaper(final String[] args)
+    {
+        StringBuilder tempString = new StringBuilder();
+        boolean startQuoteFound = false;
+        boolean endQuoteFound = false;
+
+        final ArrayList<String> argsPartsList = new ArrayList<String>();
+
+        for (final String part : args)
+        {
+            // First check to see if we have a starting or stopping quote
+            if (part.contains("\"") && !startQuoteFound)
+            {
+                // Two quotes in same string = no spaces in quoted text;
+                if ( !part.replaceFirst("\"", "").contains("\""))
+                {
+                    startQuoteFound = true;
+                }
+            }
+            else if (part.contains("\"") && startQuoteFound)
+            {
+                endQuoteFound = true;
+            }
+
+            // If no quotes yet, we just append to list
+            if ( !startQuoteFound)
+            {
+                argsPartsList.add(part);
+            }
+
+            // If we have quotes we should make sure to append the values
+            // if we found the last quote we should stop adding.
+            if (startQuoteFound)
+            {
+                tempString.append(part.replace("\"", ""));
+                if (endQuoteFound)
+                {
+                    argsPartsList.add(tempString.toString());
+                    startQuoteFound = false;
+                    endQuoteFound = false;
+                    tempString = new StringBuilder();
+                }
+                else
+                {
+                    tempString.append(" ");
+                }
+            }
+        }
+        return argsPartsList.toArray(new String[argsPartsList.size()]);
+    }
+
+    /**
+     * Gate remove.
+     * 
+     * @param stargate
+     *            the stargate
+     * @param destroy
+     *            true to destroy gate blocks
+     */
+    static void gateRemove(final Stargate stargate, final boolean destroy)
+    {
+        stargate.setupGateSign(false);
+        stargate.resetTeleportSign();
+        if ( !stargate.getGateIrisDeactivationCode().equals(""))
+        {
+            if (stargate.isGateIrisActive())
             {
                 stargate.toggleIrisActive();
             }
@@ -131,41 +139,43 @@ class CommandUtilities {
             stargate.deleteTeleportSign();
         }
         StargateManager.removeStargate(stargate);
-	}
-	
-	/**
-	 * Gets the gate network.
-	 *
-	 * @param stargate the stargate
-	 * @return the gate network
-	 */
-	static String getGateNetwork(Stargate stargate)
-	{
-	    if (stargate != null)
-	    {
-	        if (stargate.network != null)
-	        {
-	            return stargate.network.netName;
-	        }
-	    }
-	    return "Public";
-	}
-	
-	/**
-	 * Close gate.
-	 *
-	 * @param stargate the stargate
-	 * @param player the player
-	 */
-	static final void closeGate(Stargate stargate, Player player)
-	{
-	    if (stargate != null && player != null)
-	    {
-	        final Stargate gate = stargate;
-	        final Player p = player;
-            gate.stopActivationTimer(p);
-            gate.deActivateStargate();
-            gate.unLightStargate();
-	    }
-	}
+    }
+
+    /**
+     * Gets the gate network.
+     * 
+     * @param stargate
+     *            the stargate
+     * @return the gate network
+     */
+    static String getGateNetwork(final Stargate stargate)
+    {
+        if (stargate != null)
+        {
+            if (stargate.getGateNetwork() != null)
+            {
+                return stargate.getGateNetwork().getNetworkName();
+            }
+        }
+        return "Public";
+    }
+
+    /**
+     * Player check.
+     * 
+     * @param sender
+     *            the sender
+     * @return true, if successful
+     */
+    static boolean playerCheck(final CommandSender sender)
+    {
+        if (sender instanceof Player)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

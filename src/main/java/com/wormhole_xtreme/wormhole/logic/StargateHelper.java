@@ -61,7 +61,7 @@ public class StargateHelper
     private static final ConcurrentHashMap<String, StargateShape> shapes = new ConcurrentHashMap<String, StargateShape>();
 
     /** The Constant StargateSaveVersion. */
-    private static final byte StargateSaveVersion = 6;
+    private static final byte StargateSaveVersion = 7;
 
     /** The Empty block. */
     private final static byte[] emptyBlock = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -822,82 +822,7 @@ public class StargateHelper
         s.setLoadedVersion(byteBuff.get());
         s.setGateWorld(w);
 
-        if (s.getLoadedVersion() == 2)
-        {
-            final byte[] locArray = new byte[32];
-            final byte[] blocArray = new byte[12];
-            // version_byte|ActivationBlock|IrisActivationBlock|NameBlockHolder|TeleportLocation|IsSignPowered|TeleportSign|
-            //  facing_len|facing_string|idc_len|idc|IrisActive|num_blocks|Blocks|num_water_blocks|WaterBlocks
-
-            byteBuff.get(blocArray);
-            s.setGateActivationBlock(DataUtils.blockFromBytes(blocArray, w));
-            // WorldUtils.checkChunkLoad(s.activationBlock);
-
-            byteBuff.get(blocArray);
-            s.setGateIrisActivationBlock(DataUtils.blockFromBytes(blocArray, w));
-
-            byteBuff.get(blocArray);
-            s.setGateNameBlockHolder(DataUtils.blockFromBytes(blocArray, w));
-
-            byteBuff.get(locArray);
-            s.setGatePlayerTeleportLocation(DataUtils.locationFromBytes(locArray, w));
-
-            s.setGateSignPowered(DataUtils.byteToBoolean(byteBuff.get()));
-
-            byteBuff.get(blocArray);
-            if (s.isGateSignPowered())
-            {
-                s.setGateTeleportSignBlock(DataUtils.blockFromBytes(blocArray, w));
-
-                if (w.isChunkLoaded(s.getGateTeleportSignBlock().getChunk()))
-                {
-                    try
-                    {
-                        s.setGateTeleportSign((Sign) s.getGateTeleportSignBlock().getState());
-                        s.tryClickTeleportSign(s.getGateTeleportSignBlock());
-                    }
-                    catch (final Exception e)
-                    {
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to dial out.");
-                    }
-                }
-            }
-
-            final int facingSize = byteBuff.getInt();
-            final byte[] strBytes = new byte[facingSize];
-            byteBuff.get(strBytes);
-            final String faceStr = new String(strBytes);
-            s.setGateFacing(BlockFace.valueOf(faceStr));
-
-            s.getGatePlayerTeleportLocation().setYaw(WorldUtils.getDegreesFromBlockFace(s.getGateFacing()));
-            s.getGatePlayerTeleportLocation().setPitch(0);
-
-            final int idcLen = byteBuff.getInt();
-            final byte[] idcBytes = new byte[idcLen];
-            byteBuff.get(idcBytes);
-            s.setGateIrisDeactivationCode(new String(idcBytes));
-
-            s.setGateIrisActive(DataUtils.byteToBoolean(byteBuff.get())); // index++;
-
-            int numBlocks = byteBuff.getInt(); //DataUtils.byteArrayToInt(gate_data, index); index += 4;
-            for (int i = 0; i < numBlocks; i++)
-            {
-                byteBuff.get(blocArray);
-                final Block bl = DataUtils.blockFromBytes(blocArray, w);
-                s.getGateStructureBlocks().add(bl.getLocation());
-            }
-
-            numBlocks = byteBuff.getInt(); //DataUtils.byteArrayToInt(gate_data, index); index += 4;
-            for (int i = 0; i < numBlocks; i++)
-            {
-                byteBuff.get(blocArray);
-                final Block bl = DataUtils.blockFromBytes(blocArray, w);
-                s.getGatePortalBlocks().add(bl.getLocation());
-            }
-
-            return s;
-        }
-        else if (s.getLoadedVersion() == 3)
+        if (s.getLoadedVersion() == 3)
         {
             final byte[] locArray = new byte[32];
             final byte[] blocArray = new byte[12];
@@ -1286,6 +1211,142 @@ public class StargateHelper
 
             return s;
         }
+        else if (s.getLoadedVersion() == 7)
+        {
+            final byte[] locArray = new byte[32];
+            final byte[] blocArray = new byte[12];
+            // version_byte|ActivationBlock|IrisActivationBlock|NameBlockHolder|TeleportLocation|IsSignPowered|TeleportSign|
+            //  facing_len|facing_string|idc_len|idc|IrisActive|num_blocks|Blocks|num_water_blocks|WaterBlocks
+
+            byteBuff.get(blocArray);
+            s.setGateActivationBlock(DataUtils.blockFromBytes(blocArray, w));
+            // WorldUtils.checkChunkLoad(s.activationBlock);
+
+            byteBuff.get(blocArray);
+            s.setGateIrisActivationBlock(DataUtils.blockFromBytes(blocArray, w));
+
+            byteBuff.get(blocArray);
+            s.setGateNameBlockHolder(DataUtils.blockFromBytes(blocArray, w));
+
+            byteBuff.get(locArray);
+            s.setGatePlayerTeleportLocation(DataUtils.locationFromBytes(locArray, w));
+            
+            byteBuff.get(locArray);
+            s.setGateMinecartTeleportLocation(DataUtils.locationFromBytes(locArray, w));
+
+            s.setGateSignPowered(DataUtils.byteToBoolean(byteBuff.get()));
+
+            byteBuff.get(blocArray);
+            s.setGateSignIndex(byteBuff.getInt());
+            s.setGateTempSignTarget(byteBuff.getLong());
+            if (s.isGateSignPowered())
+            {
+                s.setGateTeleportSignBlock(DataUtils.blockFromBytes(blocArray, w));
+
+                if (w.isChunkLoaded(s.getGateTeleportSignBlock().getChunk()))
+                {
+                    try
+                    {
+                        s.setGateTeleportSign((Sign) s.getGateTeleportSignBlock().getState());
+                        s.tryClickTeleportSign(s.getGateTeleportSignBlock());
+                    }
+                    catch (final Exception e)
+                    {
+                        WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Unable to get sign for stargate: " + s.getGateName() + " and will be unable to change dial target.");
+                    }
+                }
+            }
+
+            s.setGateActive(DataUtils.byteToBoolean(byteBuff.get()));
+            s.setGateTempTargetId(byteBuff.getLong());
+
+            final int facingSize = byteBuff.getInt();
+            final byte[] strBytes = new byte[facingSize];
+            byteBuff.get(strBytes);
+            final String faceStr = new String(strBytes);
+            s.setGateFacing(BlockFace.valueOf(faceStr));
+
+            final int idcLen = byteBuff.getInt();
+            final byte[] idcBytes = new byte[idcLen];
+            byteBuff.get(idcBytes);
+            s.setGateIrisDeactivationCode(new String(idcBytes));
+
+            s.setGateIrisActive(DataUtils.byteToBoolean(byteBuff.get()));
+            s.setGateIrisDefaultActive(s.isGateIrisActive());
+            s.setGateLit(DataUtils.byteToBoolean(byteBuff.get()));
+
+            boolean isRedstone = DataUtils.byteToBoolean(byteBuff.get());
+            byteBuff.get(blocArray);
+            if (isRedstone)
+            {
+                s.setGateRedstoneActivationBlock(DataUtils.blockFromBytes(blocArray, w));
+            }
+
+            isRedstone = DataUtils.byteToBoolean(byteBuff.get());
+            byteBuff.get(blocArray);
+            if (isRedstone)
+            {
+                s.setGateRedstoneDialChangeBlock(DataUtils.blockFromBytes(blocArray, w));
+            }
+
+            int numBlocks = byteBuff.getInt();
+            for (int i = 0; i < numBlocks; i++)
+            {
+                byteBuff.get(blocArray);
+                final Block bl = DataUtils.blockFromBytes(blocArray, w);
+                s.getGateStructureBlocks().add(bl.getLocation());
+            }
+
+            numBlocks = byteBuff.getInt();
+            for (int i = 0; i < numBlocks; i++)
+            {
+                byteBuff.get(blocArray);
+                final Block bl = DataUtils.blockFromBytes(blocArray, w);
+                s.getGatePortalBlocks().add(bl.getLocation());
+            }
+
+            int numLayers = byteBuff.getInt();
+
+            while (s.getGateLightBlocks().size() < numLayers)
+            {
+                s.getGateLightBlocks().add(new ArrayList<Location>());
+            }
+            for (int i = 0; i < numLayers; i++)
+            {
+                numBlocks = byteBuff.getInt();
+                for (int j = 0; j < numBlocks; j++)
+                {
+                    byteBuff.get(blocArray);
+                    final Block bl = DataUtils.blockFromBytes(blocArray, w);
+                    s.getGateLightBlocks().get(i).add(bl.getLocation());
+                }
+            }
+
+            numLayers = byteBuff.getInt();
+
+            while (s.getGateWooshBlocks().size() < numLayers)
+            {
+                s.getGateWooshBlocks().add(new ArrayList<Location>());
+            }
+            for (int i = 0; i < numLayers; i++)
+            {
+                numBlocks = byteBuff.getInt();
+                for (int j = 0; j < numBlocks; j++)
+                {
+                    byteBuff.get(blocArray);
+                    final Block bl = DataUtils.blockFromBytes(blocArray, w);
+                    s.getGateWooshBlocks().get(i).add(bl.getLocation());
+                }
+            }
+
+            if (byteBuff.remaining() > 0)
+            {
+                WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "While loading gate, not all byte data was read. This could be bad: " + byteBuff.remaining());
+            }
+
+            return s;
+        }
+        
         return null;
     }
 
@@ -1346,8 +1407,8 @@ public class StargateHelper
 
         // IrisActivation, Dialer, NameSign, Activation, redstoneAct, redstoneDial,
         final int numBlocks = 6;
-        // Enter location
-        final int numLocations = 1;
+        // Enter location, Minecart enter location
+        final int numLocations = 2;
         final int locationSize = 32;
         final int blockSize = 12;
         // Version, isSignPowered, Active, IrisActive, LitGate
@@ -1413,6 +1474,7 @@ public class StargateHelper
         }
 
         dataArr.put(DataUtils.locationToBytes(s.getGatePlayerTeleportLocation()));
+        dataArr.put(DataUtils.locationToBytes(s.getGateMinecartTeleportLocation()));
 
         if (s.isGateSignPowered())
         {

@@ -1130,7 +1130,10 @@ public class StargateHelper
             byteBuff.get(strBytes);
             final String faceStr = new String(strBytes);
             s.setGateFacing(BlockFace.valueOf(faceStr));
-
+            
+            s.getGatePlayerTeleportLocation().setYaw(WorldUtils.getDegreesFromBlockFace(s.getGateFacing()));
+            s.getGatePlayerTeleportLocation().setPitch(0);
+            
             final int idcLen = byteBuff.getInt();
             final byte[] idcBytes = new byte[idcLen];
             byteBuff.get(idcBytes);
@@ -1230,7 +1233,7 @@ public class StargateHelper
 
             byteBuff.get(locArray);
             s.setGatePlayerTeleportLocation(DataUtils.locationFromBytes(locArray, w));
-            
+
             byteBuff.get(locArray);
             s.setGateMinecartTeleportLocation(DataUtils.locationFromBytes(locArray, w));
 
@@ -1265,7 +1268,9 @@ public class StargateHelper
             byteBuff.get(strBytes);
             final String faceStr = new String(strBytes);
             s.setGateFacing(BlockFace.valueOf(faceStr));
-
+            s.getGatePlayerTeleportLocation().setYaw(WorldUtils.getDegreesFromBlockFace(s.getGateFacing()));
+            s.getGatePlayerTeleportLocation().setPitch(0);
+            
             final int idcLen = byteBuff.getInt();
             final byte[] idcBytes = new byte[idcLen];
             byteBuff.get(idcBytes);
@@ -1346,7 +1351,7 @@ public class StargateHelper
 
             return s;
         }
-        
+
         return null;
     }
 
@@ -1474,8 +1479,15 @@ public class StargateHelper
         }
 
         dataArr.put(DataUtils.locationToBytes(s.getGatePlayerTeleportLocation()));
-        dataArr.put(DataUtils.locationToBytes(s.getGateMinecartTeleportLocation()));
-
+        if (s.getGateMinecartTeleportLocation() != null)
+        {
+            dataArr.put(DataUtils.locationToBytes(s.getGateMinecartTeleportLocation()));
+        }
+        else 
+        {
+            dataArr.put(DataUtils.locationToBytes(s.getGatePlayerTeleportLocation()));
+        }
+        
         if (s.isGateSignPowered())
         {
             dataArr.put((byte) 1);

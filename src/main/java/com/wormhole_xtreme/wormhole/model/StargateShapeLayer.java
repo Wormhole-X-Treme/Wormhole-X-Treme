@@ -38,8 +38,11 @@ public class StargateShapeLayer
     /** The sign position. */
     private int[] layerSignPosition = null;
 
-    /** The enter position. */
-    private int[] layerEnterPosition = null;
+    /** The exit position. */
+    private int[] layerPlayerExitPosition = null;
+
+    /** The minecart exit position. */
+    private int[] layerMinecartExitPosition = null;
 
     /** The activation position. */
     private int[] layerActivationPosition = null;
@@ -97,7 +100,7 @@ public class StargateShapeLayer
                     {
                         getLayerPortalPositions().add(point);
                     }
-                    else if (mod.equalsIgnoreCase("N") || mod.equalsIgnoreCase("E") || mod.equalsIgnoreCase("A") || mod.equalsIgnoreCase("D") || mod.equalsIgnoreCase("IA"))
+                    else if (mod.equalsIgnoreCase("N") || mod.equalsIgnoreCase("EP") || mod.equalsIgnoreCase("EM") || mod.equalsIgnoreCase("A") || mod.equalsIgnoreCase("D") || mod.equalsIgnoreCase("IA"))
                     {
                         final int[] pointI = new int[3];
                         for (int k = 0; k < 3; k++)
@@ -109,9 +112,13 @@ public class StargateShapeLayer
                         {
                             setLayerSignPosition(pointI);
                         }
-                        if (mod.equalsIgnoreCase("E"))
+                        if (mod.equalsIgnoreCase("EP"))
                         {
-                            setLayerEnterPosition(pointI);
+                            setLayerPlayerExitPosition(pointI);
+                        }
+                        if (mod.equalsIgnoreCase("EM"))
+                        {
+                            setLayerMinecartExitPosition(pointI);
                         }
                         if (mod.equalsIgnoreCase("A"))
                         {
@@ -179,7 +186,8 @@ public class StargateShapeLayer
         //TODO: debug printout for the materials the gate uses.
         //TODO: debug printout for the redstone_activated
         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Sign Position: \"" + Arrays.toString(getLayerSignPosition()) + "\"");
-        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Enter Position: \"" + Arrays.toString(getLayerEnterPosition()) + "\"");
+        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Player Exit Position: \"" + Arrays.toString(getLayerPlayerExitPosition()) + "\"");
+        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Minecart Exit Position: \"" + Arrays.toString(getLayerMinecartExitPosition()) + "\"");
         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Activation Position: \"" + Arrays.toString(getLayerActivationPosition()) + "\"");
         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Iris Activation Position: \"" + Arrays.toString(getLayerIrisActivationPosition()) + "\"");
         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Dialer Position: \"" + Arrays.toString(getLayerDialerPosition()) + "\"");
@@ -220,16 +228,6 @@ public class StargateShapeLayer
     }
 
     /**
-     * Gets the layer enter position.
-     * 
-     * @return the layer enter position
-     */
-    public int[] getLayerEnterPosition()
-    {
-        return layerEnterPosition != null ? layerEnterPosition.clone() : new int[]{};
-    }
-
-    /**
      * Gets the layer iris activation position.
      * 
      * @return the layer iris activation position
@@ -247,6 +245,26 @@ public class StargateShapeLayer
     public ArrayList<ArrayList<Integer[]>> getLayerLightPositions()
     {
         return layerLightPositions;
+    }
+
+    /**
+     * Gets the layer minecart exit position.
+     * 
+     * @return the layer minecart exit position
+     */
+    public int[] getLayerMinecartExitPosition()
+    {
+        return layerMinecartExitPosition != null ? layerMinecartExitPosition.clone() : new int[]{};
+    }
+
+    /**
+     * Gets the layer enter position.
+     * 
+     * @return the layer enter position
+     */
+    public int[] getLayerPlayerExitPosition()
+    {
+        return layerPlayerExitPosition != null ? layerPlayerExitPosition.clone() : new int[]{};
     }
 
     /**
@@ -334,17 +352,6 @@ public class StargateShapeLayer
     }
 
     /**
-     * Sets the layer enter position.
-     * 
-     * @param layerEnterPosition
-     *            the new layer enter position
-     */
-    public void setLayerEnterPosition(final int[] layerEnterPosition)
-    {
-        this.layerEnterPosition = layerEnterPosition.clone();
-    }
-
-    /**
      * Sets the layer iris activation position.
      * 
      * @param layerIrisActivationPosition
@@ -364,6 +371,28 @@ public class StargateShapeLayer
     public void setLayerLightPositions(final ArrayList<ArrayList<Integer[]>> layerLightPositions)
     {
         this.layerLightPositions = layerLightPositions;
+    }
+
+    /**
+     * Sets the layer minecart exit position.
+     * 
+     * @param layerMinecartExitPosition
+     *            the new layer minecart exit position
+     */
+    public void setLayerMinecartExitPosition(final int[] layerMinecartExitPosition)
+    {
+        this.layerMinecartExitPosition = layerMinecartExitPosition.clone();
+    }
+
+    /**
+     * Sets the layer exit position.
+     * 
+     * @param layerEnterPosition
+     *            the new layer enter position
+     */
+    public void setLayerPlayerExitPosition(final int[] layerPlayerExitPosition)
+    {
+        this.layerPlayerExitPosition = layerPlayerExitPosition.clone();
     }
 
     /**

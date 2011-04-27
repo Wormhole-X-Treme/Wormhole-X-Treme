@@ -52,7 +52,7 @@ public class Compass implements CommandExecutor
             final Stargate closest = StargateManager.findClosestStargate(p.getLocation());
             if (closest != null)
             {
-                p.setCompassTarget(closest.getGateTeleportLocation());
+                p.setCompassTarget(closest.getGatePlayerTeleportLocation());
                 p.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Compass set to wormhole: " + closest.getGateName());
             }
             else

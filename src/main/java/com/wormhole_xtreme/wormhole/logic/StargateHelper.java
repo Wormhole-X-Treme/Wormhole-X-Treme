@@ -288,7 +288,7 @@ public class StargateHelper
             teleLoc.setX(teleLoc.getX() + 0.5);
             teleLoc.setY(teleLoc.getY() + 0.66);
             teleLoc.setZ(teleLoc.getZ() + 0.5);
-            tempGate.setGateTeleportLocation(teleLoc);
+            tempGate.setGatePlayerTeleportLocation(teleLoc);
 
             for (final int[] bVect : shape.getShapeWaterPositions())
             {
@@ -479,10 +479,10 @@ public class StargateHelper
             }
         }
 
-        // Now set teleport in location
-        if (layer.getLayerEnterPosition().length > 0)
+        // Now set player teleport in location
+        if (layer.getLayerPlayerExitPosition().length > 0)
         {
-            final Block teleBlock = StargateHelper.getBlockFromVector(layer.getLayerEnterPosition(), directionVector, lowerCorner, w);
+            final Block teleBlock = StargateHelper.getBlockFromVector(layer.getLayerPlayerExitPosition(), directionVector, lowerCorner, w);
 
             // First go forward one
             Block bLoc = teleBlock.getRelative(tempGate.getGateFacing());
@@ -500,9 +500,33 @@ public class StargateHelper
             teleLoc.setX(teleLoc.getX() + 0.5);
             teleLoc.setY(teleLoc.getY() + 0.66);
             teleLoc.setZ(teleLoc.getZ() + 0.5);
-            tempGate.setGateTeleportLocation(teleLoc);
+            tempGate.setGatePlayerTeleportLocation(teleLoc);
         }
 
+        // Now set minecart teleport in location
+        if (layer.getLayerMinecartExitPosition().length > 0)
+        {
+            final Block teleBlock = StargateHelper.getBlockFromVector(layer.getLayerMinecartExitPosition(), directionVector, lowerCorner, w);
+
+            // First go forward one
+            Block bLoc = teleBlock.getRelative(tempGate.getGateFacing());
+            // Now go up until we hit air or water.
+            while ((bLoc.getType() != Material.AIR) && (bLoc.getType() != Material.WATER))
+            {
+                bLoc = bLoc.getRelative(BlockFace.UP);
+            }
+            final Location teleLoc = bLoc.getLocation();
+            // Make sure the guy faces the right way out of the portal.
+            teleLoc.setYaw(WorldUtils.getDegreesFromBlockFace(tempGate.getGateFacing()));
+            teleLoc.setPitch(0);
+            // Put him in the middle of the block instead of a corner.
+            // Players are 1.65 blocks tall, so we go up .66 more up :-p
+            teleLoc.setX(teleLoc.getX() + 0.5);
+            teleLoc.setY(teleLoc.getY() + 0.66);
+            teleLoc.setZ(teleLoc.getZ() + 0.5);
+            tempGate.setGateMinecartTeleportLocation(teleLoc);
+        }
+        
         for (int i = 0; i < layer.getLayerWooshPositions().size(); i++)
         {
             if (tempGate.getGateWooshBlocks().size() < i + 1)
@@ -816,7 +840,7 @@ public class StargateHelper
             s.setGateNameBlockHolder(DataUtils.blockFromBytes(blocArray, w));
 
             byteBuff.get(locArray);
-            s.setGateTeleportLocation(DataUtils.locationFromBytes(locArray, w));
+            s.setGatePlayerTeleportLocation(DataUtils.locationFromBytes(locArray, w));
 
             s.setGateSignPowered(DataUtils.byteToBoolean(byteBuff.get()));
 
@@ -845,8 +869,8 @@ public class StargateHelper
             final String faceStr = new String(strBytes);
             s.setGateFacing(BlockFace.valueOf(faceStr));
 
-            s.getGateTeleportLocation().setYaw(WorldUtils.getDegreesFromBlockFace(s.getGateFacing()));
-            s.getGateTeleportLocation().setPitch(0);
+            s.getGatePlayerTeleportLocation().setYaw(WorldUtils.getDegreesFromBlockFace(s.getGateFacing()));
+            s.getGatePlayerTeleportLocation().setPitch(0);
 
             final int idcLen = byteBuff.getInt();
             final byte[] idcBytes = new byte[idcLen];
@@ -891,7 +915,7 @@ public class StargateHelper
             s.setGateNameBlockHolder(DataUtils.blockFromBytes(blocArray, w));
 
             byteBuff.get(locArray);
-            s.setGateTeleportLocation(DataUtils.locationFromBytes(locArray, w));
+            s.setGatePlayerTeleportLocation(DataUtils.locationFromBytes(locArray, w));
 
             s.setGateSignPowered(DataUtils.byteToBoolean(byteBuff.get()));
 
@@ -925,8 +949,8 @@ public class StargateHelper
             final String faceStr = new String(strBytes);
             s.setGateFacing(BlockFace.valueOf(faceStr));
 
-            s.getGateTeleportLocation().setYaw(WorldUtils.getDegreesFromBlockFace(s.getGateFacing()));
-            s.getGateTeleportLocation().setPitch(0);
+            s.getGatePlayerTeleportLocation().setYaw(WorldUtils.getDegreesFromBlockFace(s.getGateFacing()));
+            s.getGatePlayerTeleportLocation().setPitch(0);
 
             final int idcLen = byteBuff.getInt();
             final byte[] idcBytes = new byte[idcLen];
@@ -971,7 +995,7 @@ public class StargateHelper
             s.setGateNameBlockHolder(DataUtils.blockFromBytes(blocArray, w));
 
             byteBuff.get(locArray);
-            s.setGateTeleportLocation(DataUtils.locationFromBytes(locArray, w));
+            s.setGatePlayerTeleportLocation(DataUtils.locationFromBytes(locArray, w));
 
             s.setGateSignPowered(DataUtils.byteToBoolean(byteBuff.get()));
 
@@ -1005,8 +1029,8 @@ public class StargateHelper
             final String faceStr = new String(strBytes);
             s.setGateFacing(BlockFace.valueOf(faceStr));
 
-            s.getGateTeleportLocation().setYaw(WorldUtils.getDegreesFromBlockFace(s.getGateFacing()));
-            s.getGateTeleportLocation().setPitch(0);
+            s.getGatePlayerTeleportLocation().setYaw(WorldUtils.getDegreesFromBlockFace(s.getGateFacing()));
+            s.getGatePlayerTeleportLocation().setPitch(0);
 
             final int idcLen = byteBuff.getInt();
             final byte[] idcBytes = new byte[idcLen];
@@ -1051,7 +1075,7 @@ public class StargateHelper
             s.setGateNameBlockHolder(DataUtils.blockFromBytes(blocArray, w));
 
             byteBuff.get(locArray);
-            s.setGateTeleportLocation(DataUtils.locationFromBytes(locArray, w));
+            s.setGatePlayerTeleportLocation(DataUtils.locationFromBytes(locArray, w));
 
             s.setGateSignPowered(DataUtils.byteToBoolean(byteBuff.get()));
 
@@ -1085,8 +1109,8 @@ public class StargateHelper
             final String faceStr = new String(strBytes);
             s.setGateFacing(BlockFace.valueOf(faceStr));
 
-            s.getGateTeleportLocation().setYaw(WorldUtils.getDegreesFromBlockFace(s.getGateFacing()));
-            s.getGateTeleportLocation().setPitch(0);
+            s.getGatePlayerTeleportLocation().setYaw(WorldUtils.getDegreesFromBlockFace(s.getGateFacing()));
+            s.getGatePlayerTeleportLocation().setPitch(0);
 
             final int idcLen = byteBuff.getInt();
             final byte[] idcBytes = new byte[idcLen];
@@ -1148,7 +1172,7 @@ public class StargateHelper
             s.setGateNameBlockHolder(DataUtils.blockFromBytes(blocArray, w));
 
             byteBuff.get(locArray);
-            s.setGateTeleportLocation(DataUtils.locationFromBytes(locArray, w));
+            s.setGatePlayerTeleportLocation(DataUtils.locationFromBytes(locArray, w));
 
             s.setGateSignPowered(DataUtils.byteToBoolean(byteBuff.get()));
 
@@ -1388,7 +1412,7 @@ public class StargateHelper
             dataArr.put(emptyBlock);
         }
 
-        dataArr.put(DataUtils.locationToBytes(s.getGateTeleportLocation()));
+        dataArr.put(DataUtils.locationToBytes(s.getGatePlayerTeleportLocation()));
 
         if (s.isGateSignPowered())
         {

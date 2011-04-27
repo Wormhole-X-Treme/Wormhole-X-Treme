@@ -274,9 +274,9 @@ public class TeleportUtils
     public static Location findSafeTeleportFromStargate(final Stargate stargate)
     {
         final Stargate s = stargate;
-        Location location = s.getGateTeleportLocation();
+        Location location = s.getGatePlayerTeleportLocation();
         WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Unsafe location: " + location);
-        final double tlyaxis = Math.floor(s.getGateTeleportLocation().getY());
+        final double tlyaxis = Math.floor(s.getGatePlayerTeleportLocation().getY());
         final double abyaxis = Math.floor(s.getGateActivationBlock().getY());
         if ((tlyaxis != abyaxis) && ((tlyaxis <= abyaxis - 6.0) || (tlyaxis >= abyaxis + 6.0)))
         {
@@ -289,20 +289,20 @@ public class TeleportUtils
 
         location = findSafe(location, 3, 3, s);
 
-        if ((location != s.getGateTeleportLocation()) && (Math.floor(location.getX()) == Math.floor(s.getGateTeleportLocation().getX())) && (Math.floor(location.getZ()) == Math.floor(s.getGateTeleportLocation().getZ())))
+        if ((location != s.getGatePlayerTeleportLocation()) && (Math.floor(location.getX()) == Math.floor(s.getGatePlayerTeleportLocation().getX())) && (Math.floor(location.getZ()) == Math.floor(s.getGatePlayerTeleportLocation().getZ())))
         {
             WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Unclean safe location: " + location);
-            location.setPitch(s.getGateTeleportLocation().getPitch());
-            location.setYaw(s.getGateTeleportLocation().getYaw());
-            location.setX(s.getGateTeleportLocation().getX());
-            location.setZ(s.getGateTeleportLocation().getZ());
+            location.setPitch(s.getGatePlayerTeleportLocation().getPitch());
+            location.setYaw(s.getGatePlayerTeleportLocation().getYaw());
+            location.setX(s.getGatePlayerTeleportLocation().getX());
+            location.setZ(s.getGatePlayerTeleportLocation().getZ());
             WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Cleaned safe location: " + location);
         }
         else
         {
             WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Unclean fallback location: " + location);
-            location.setPitch(s.getGateTeleportLocation().getPitch());
-            location.setYaw(s.getGateTeleportLocation().getYaw());
+            location.setPitch(s.getGatePlayerTeleportLocation().getPitch());
+            location.setYaw(s.getGatePlayerTeleportLocation().getYaw());
             location.setX(Math.floor(location.getX()));
             location.setZ(Math.floor(location.getZ()));
             WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Cleaned fallback location: " + location);

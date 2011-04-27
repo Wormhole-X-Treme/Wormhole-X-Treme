@@ -38,30 +38,24 @@ public class WorldUtils
     /**
      * Gets the degrees from block face.
      * 
-     * @param bf
-     *            the bf
+     * @param blockFace
+     *            the block face
      * @return the degrees from block face
      */
-    public static Float getDegreesFromBlockFace(final BlockFace bf)
+    public static Float getDegreesFromBlockFace(final BlockFace blockFace)
     {
-        if (bf == BlockFace.NORTH)
-        {
-            return (float) 90;
-        }
-        else if (bf == BlockFace.EAST)
-        {
-            return (float) 180;
-        }
-        else if (bf == BlockFace.SOUTH)
-        {
-            return (float) 270;
-        }
-        else if (bf == BlockFace.WEST)
-        {
-            return (float) 0;
-        }
-
-        return (float) 0;
+        switch (blockFace) {
+            case NORTH :
+                return (float) 90;
+            case EAST :
+                return (float) 180;
+            case SOUTH :
+                return (float) 270;
+            case WEST :
+                return (float) 0;
+            default :
+                return (float) 0;
+        }  
     }
 
     /**

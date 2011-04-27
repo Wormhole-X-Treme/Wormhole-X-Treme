@@ -85,7 +85,6 @@ public class Stargate
     private long gateTempSignTarget = -1;
     /** The network index the sign is pointing at. */
     private int gateSignIndex = 0;
-
     /** The temporary target stargate id. */
     private long gateTempTargetId = -1;
     /** The Iris deactivation code. */
@@ -94,16 +93,22 @@ public class Stargate
     private boolean gateIrisActive = false;
     /** The iris default setting. */
     private boolean gateIrisDefaultActive = false;
-    /** The Teleport sign block. */
-    private Block gateTeleportSignBlock;
     /** The Teleport sign, used for selection of stargate target. */
     private Sign gateTeleportSign;
-    /** The location to teleport to. */
-    private Location gateTeleportLocation;
+    /** The location to teleport players to. */
+    private Location gatePlayerTeleportLocation;
+    /** The location to teleport minecarts to. */
+    private Location gateMinecartTeleportLocation;
     /** Location of the Button/Lever that activates this gate. */
     private Block gateActivationBlock;
     /** Location of the Button/Lever that activates the iris. */
     private Block gateIrisActivationBlock;
+    /** The Teleport sign block. */
+    private Block gateTeleportSignBlock;
+    /** Block that toggle the activation state of the gate if nearby redstone is activated. */
+    private Block gateRedstoneActivationBlock;
+    /** Block that will toggle sign target when redstone nearby is activated. */
+    private Block gateRedstoneDialChangeBlock;
     /** The Name block holder. Where we place the stargate name sign. */
     private Block gateNameBlockHolder;
     /** The gate activate scheduler task id. */
@@ -118,16 +123,6 @@ public class Stargate
     private boolean gateAnimationRemoving = false;
     /** The current_lighting_iteration. */
     private int gateLightingCurrentIteration = 0;
-    /**
-     * Block that toggle the activation state of the gate
-     * if nearby redstone is activated.
-     */
-    private Block gateRedstoneActivationBlock;
-    /**
-     * Block that will toggle sign target when redstone nearby
-     * is activated.
-     */
-    private Block gateRedstoneDialChangeBlock;
     /** List of all blocks contained in this stargate, including buttons and levers. */
     private ArrayList<Location> gateStructureBlocks = new ArrayList<Location>();
     /** List of all blocks that that are part of the "portal". */
@@ -359,7 +354,7 @@ public class Stargate
     {
         if (WormholeXTreme.getWorldHandler() != null)
         {
-            WormholeXTreme.getWorldHandler().addStickyChunk(getGateTeleportLocation().getBlock().getChunk(), "WormholeXTreme");
+            WormholeXTreme.getWorldHandler().addStickyChunk(getGatePlayerTeleportLocation().getBlock().getChunk(), "WormholeXTreme");
         }
         if (getGateShutdownTaskId() > 0)
         {
@@ -729,9 +724,9 @@ public class Stargate
      * 
      * @return the gate teleport location
      */
-    public Location getGateTeleportLocation()
+    public Location getGatePlayerTeleportLocation()
     {
-        return gateTeleportLocation;
+        return gatePlayerTeleportLocation;
     }
 
     /**
@@ -1319,9 +1314,9 @@ public class Stargate
      * @param gateTeleportLocation
      *            the new gate teleport location
      */
-    public void setGateTeleportLocation(final Location gateTeleportLocation)
+    public void setGatePlayerTeleportLocation(final Location gatePlayerTeleportLocation)
     {
-        this.gateTeleportLocation = gateTeleportLocation;
+        this.gatePlayerTeleportLocation = gatePlayerTeleportLocation;
     }
 
     /**
@@ -1581,7 +1576,7 @@ public class Stargate
         {
             startAfterShutdownTimer();
         }
-        WorldUtils.scheduleChunkUnload(getGateTeleportLocation().getBlock());
+        WorldUtils.scheduleChunkUnload(getGatePlayerTeleportLocation().getBlock());
     }
 
     /**
@@ -1916,5 +1911,15 @@ public class Stargate
         }
 
         return false;
+    }
+
+    public void setGateMinecartTeleportLocation(Location gateMinecartTeleportLocation)
+    {
+        this.gateMinecartTeleportLocation = gateMinecartTeleportLocation;
+    }
+
+    public Location getGateMinecartTeleportLocation()
+    {
+        return gateMinecartTeleportLocation;
     }
 }

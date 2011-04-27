@@ -15,7 +15,8 @@ Version=2
 #    Extra parameters:
 #	--- These parameters are 1 of each per gate ---
 #    :N = Block where the name sign will be created. This is optional.
-#    :E = Block where you teleport in at. The players feet will be on this block.
+#    :EP = Block where players teleport in at. The players feet will be on this block.
+#    :EM = Block where minecarts teleport in at. Minecart wheels will be on this block.
 #    :A = Block where the activation switch is attached to. 1 per gate!
 #			The only restriction is that the block that faces it must be "I" (so nothing is in the way)
 #			The switch will face in the positive layer direction.
@@ -59,7 +60,7 @@ Layer#2=
 [I][I:W#1][I:W#1][I:W#1][I:W#1][I:W#1][I]
 [I][I:W#1][I:W#1][I:W#1][I:W#1][I:W#1][I]
 [I][I][I:W#1][I:W#1][I:W#1][I][I]
-[I][I][I][I:E][I][I][I]
+[I][I][I][I:EP][I][I][I]
 
 Layer#3=
 [I][I][I][I][I][I][I]

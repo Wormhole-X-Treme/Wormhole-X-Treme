@@ -369,13 +369,13 @@ public class WormholeXTremePlayerListener extends PlayerListener
             {
                 player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Remote Iris is locked!");
                 player.setNoDamageTicks(5);
-                event.setFrom(stargate.getGateTeleportLocation());
-                event.setTo(stargate.getGateTeleportLocation());
-                player.teleport(stargate.getGateTeleportLocation());
+                event.setFrom(stargate.getGatePlayerTeleportLocation());
+                event.setTo(stargate.getGatePlayerTeleportLocation());
+                player.teleport(stargate.getGatePlayerTeleportLocation());
                 return true;
             }
 
-            Location target = stargate.getGateTarget().getGateTeleportLocation();
+            Location target = stargate.getGateTarget().getGatePlayerTeleportLocation();
             if (WormholeXTreme.getIconomy() != null)
             {
                 final double cost = ConfigManager.getIconomyWormholeUseCost();
@@ -411,11 +411,11 @@ public class WormholeXTremePlayerListener extends PlayerListener
                     {
                         player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Not enough " + currency + "! - Requires: \u00A72" + cost + " \u00A77- Available: \u00A74" + playerAccount.getBalance() + " \u00A77" + currency);
                         //p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
-                        target = stargate.getGateTeleportLocation();
+                        target = stargate.getGatePlayerTeleportLocation();
                     }
                 }
             }
-            if (target != stargate.getGateTeleportLocation())
+            if (target != stargate.getGatePlayerTeleportLocation())
             {
                 target = TeleportUtils.findSafeTeleportFromStargate(stargate.getGateTarget());
                 // WorldUtils.checkChunkLoad(target.getBlock());
@@ -424,7 +424,7 @@ public class WormholeXTremePlayerListener extends PlayerListener
             event.setFrom(target);
             event.setTo(target);
             player.teleport(target);
-            if (target != stargate.getGateTeleportLocation())
+            if (target != stargate.getGatePlayerTeleportLocation())
             {
                 WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, player.getName() + " used wormhole: " + stargate.getGateName() + " to go to: " + stargate.getGateTarget().getGateName());
             }

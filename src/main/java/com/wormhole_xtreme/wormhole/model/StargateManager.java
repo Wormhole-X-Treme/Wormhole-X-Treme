@@ -347,7 +347,7 @@ public class StargateManager
             double man = Double.MAX_VALUE;
             for (final Stargate s : gates)
             {
-                final Location t = s.getGateTeleportLocation();
+                final Location t = s.getGatePlayerTeleportLocation();
                 final double distance = getSquaredDistance(self, t);
                 if (distance < man)
                 {

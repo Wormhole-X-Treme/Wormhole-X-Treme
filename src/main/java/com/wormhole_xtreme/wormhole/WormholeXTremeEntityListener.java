@@ -57,7 +57,7 @@ public class WormholeXTremeEntityListener extends EntityListener
             if (StargateManager.isBlockInGate(eb.get(i)))
             {
                 final Stargate s = StargateManager.getGateFromBlock(eb.get(i));
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Blocked Creeper Explosion on Stargate: \"" + s.name + "\"");
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Blocked Creeper Explosion on Stargate: \"" + s.getGateName() + "\"");
                 return true;
             }
         }
@@ -76,12 +76,12 @@ public class WormholeXTremeEntityListener extends EntityListener
         final Player p = (Player) event.getEntity();
         final Location current = p.getLocation();
         final Stargate closest = StargateManager.findClosestStargate(current);
-        if ((closest != null) && ((closest.gateShape.portalMaterial == Material.STATIONARY_LAVA) || ((closest.target != null) && (closest.target.gateShape.portalMaterial == Material.STATIONARY_LAVA))))
+        if ((closest != null) && ((closest.getGateShape().getShapePortalMaterial() == Material.STATIONARY_LAVA) || ((closest.getGateTarget() != null) && (closest.getGateTarget().getGateShape().getShapePortalMaterial() == Material.STATIONARY_LAVA))))
         {
             final double blockDistanceSquared = StargateManager.distanceSquaredToClosestGateBlock(current, closest);
-            if ((closest.active || closest.recentActive) && (((blockDistanceSquared <= closest.gateShape.wooshDepthSquared) && (closest.gateShape.wooshDepth != 0)) || (blockDistanceSquared <= 16)))
+            if ((closest.isGateActive() || closest.isGateRecentlyActive()) && (((blockDistanceSquared <= closest.getGateShape().getShapeWooshDepthSquared()) && (closest.getGateShape().getShapeWooshDepth() != 0)) || (blockDistanceSquared <= 16)))
             {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.name + "\" Proximity Event: \"" + event.getCause().toString() + "\" On: \"" + p.getName() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.getGateName() + "\" Proximity Event: \"" + event.getCause().toString() + "\" On: \"" + p.getName() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
                 p.setFireTicks(0);
                 return true;
             }

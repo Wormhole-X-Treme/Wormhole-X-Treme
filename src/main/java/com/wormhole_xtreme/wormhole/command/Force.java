@@ -88,23 +88,23 @@ public class Force implements CommandExecutor
                 final ArrayList<String> droplist = new ArrayList<String>();
                 for (final Stargate gate : gates)
                 {
-                    if (gate.active && close)
+                    if (gate.isGateActive() && close)
                     {
-                        activelist.add(gate.name);
+                        activelist.add(gate.getGateName());
                         gate.shutdownStargate();
-                        if (gate.active)
+                        if (gate.isGateActive())
                         {
-                            gate.deActivateStargate();
+                            gate.setGateActive(false);
                         }
                     }
-                    if (gate.litGate && close)
+                    if (gate.isGateLit() && close)
                     {
-                        gate.unLightStargate();
+                        gate.lightStargate(false);
                         gate.stopActivationTimer();
                     }
-                    if (gate.irisActive && drop)
+                    if (gate.isGateIrisActive() && drop)
                     {
-                        droplist.add(gate.name);
+                        droplist.add(gate.getGateName());
                         gate.toggleIrisActive();
                     }
                 }

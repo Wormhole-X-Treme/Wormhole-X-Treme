@@ -20,18 +20,16 @@ package com.wormhole_xtreme.wormhole.config;
 
 import java.util.logging.Level;
 
-
 import org.bukkit.Material;
 
 import com.wormhole_xtreme.wormhole.config.ConfigManager.ConfigKeys;
 import com.wormhole_xtreme.wormhole.permissions.PermissionsManager.PermissionLevel;
 
-
 /**
  * The Class Setting.
  * Based on class "Setting" from MinecartMania by Afforess.
  */
-public class Setting 
+public class Setting
 {
 
     /** The name. */
@@ -48,15 +46,20 @@ public class Setting
 
     /**
      * Instantiates a new setting.
-     *
-     * @param name the name
-     * @param value the value
-     * @param desc the desc
-     * @param plugin the plugin
+     * 
+     * @param name
+     *            the name
+     * @param value
+     *            the value
+     * @param desc
+     *            the desc
+     * @param plugin
+     *            the plugin
      */
-    public Setting(ConfigKeys name, Object value, String desc, String plugin) 
+    public Setting(final ConfigKeys name, final Object value, final String desc, final String plugin)
     {
-        if (name != null && desc != null && value != null && plugin != null ) {
+        if ((name != null) && (desc != null) && (value != null) && (plugin != null))
+        {
             this.name = name;
             this.desc = desc;
             this.value = value;
@@ -65,120 +68,123 @@ public class Setting
     }
 
     /**
+     * Gets the boolean value.
+     * 
+     * @return the boolean value
+     */
+    public boolean getBooleanValue()
+    {
+        return ((Boolean) value).booleanValue();
+    }
+
+    /**
+     * Gets the description.
+     * 
+     * @return the description
+     */
+    public String getDescription()
+    {
+        return desc;
+    }
+
+    /**
+     * Gets the double value.
+     * 
+     * @return the double value
+     */
+    public double getDoubleValue()
+    {
+        return ((Double) value).doubleValue();
+    }
+
+    /**
+     * Gets the int value.
+     * 
+     * @return the int value
+     */
+    public int getIntValue()
+    {
+        return ((Integer) value).intValue();
+    }
+
+    /**
+     * Gets the level.
+     * 
+     * @return the level
+     */
+    public Level getLevel()
+    {
+        return Level.parse((String) value);
+    }
+
+    /**
+     * Gets the material value.
+     * 
+     * @return the material value
+     */
+    public Material getMaterialValue()
+    {
+        return (Material) value;
+    }
+
+    /**
      * Gets the name.
-     *
+     * 
      * @return the name
      */
-    public ConfigKeys getName() 
+    public ConfigKeys getName()
     {
         return name;
     }
 
     /**
-     * Gets the description.
-     *
-     * @return the description
+     * Gets the permission level.
+     * 
+     * @return the permission level
      */
-    public String getDescription() {
-        return desc;
-    }
-
-    /**
-     * Gets the value.
-     *
-     * @return the value
-     */
-    public Object getValue() {
-        return value;
-    }
-
-    /**
-     * Gets the boolean value.
-     *
-     * @return the boolean value
-     */
-    public boolean getBooleanValue()
+    public PermissionLevel getPermissionLevel()
     {
-        return ((Boolean)value).booleanValue();
-    }
-
-    /**
-     * Gets the int value.
-     *
-     * @return the int value
-     */
-    public int getIntValue()
-    {
-        return ((Integer)value).intValue();
-    }
-
-    /**
-     * Gets the double value.
-     *
-     * @return the double value
-     */
-    public double getDoubleValue()
-    {
-        return ((Double)value).doubleValue();
-    }
-
-    /**
-     * Gets the string value.
-     *
-     * @return the string value
-     */
-    public String getStringValue()
-    {
-        return (String)value;
-    }
-
-    /**
-     * Gets the material value.
-     *
-     * @return the material value
-     */
-    public Material getMaterialValue()
-    {
-        return (Material)value;
+        return (PermissionLevel) value;
     }
 
     /**
      * Gets the plugin name.
-     *
+     * 
      * @return the plugin name
      */
-    public String getPluginName() 
+    public String getPluginName()
     {
         return plugin;
     }
 
     /**
-     * Gets the permission level.
-     *
-     * @return the permission level
+     * Gets the string value.
+     * 
+     * @return the string value
      */
-    public PermissionLevel getPermissionLevel()
+    public String getStringValue()
     {
-        return (PermissionLevel)value;
+        return (String) value;
+    }
+
+    /**
+     * Gets the value.
+     * 
+     * @return the value
+     */
+    public Object getValue()
+    {
+        return value;
     }
 
     /**
      * Sets the value.
-     *
-     * @param value the new value
+     * 
+     * @param value
+     *            the new value
      */
-    public void setValue(Object value)
+    public void setValue(final Object value)
     {
         this.value = value;
-    }
-
-    /**
-     * Gets the level.
-     *
-     * @return the level
-     */
-    public Level getLevel()
-    {
-        return Level.parse((String)value);
     }
 }

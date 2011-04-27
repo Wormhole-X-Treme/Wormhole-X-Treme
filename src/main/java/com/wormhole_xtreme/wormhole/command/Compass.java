@@ -31,50 +31,52 @@ import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 
 /**
  * The Class Compass.
- *
+ * 
  * @author alron
  */
-public class Compass implements CommandExecutor {
-
-    /* (non-Javadoc)
-     * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
-     */
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
-    {
-        if (CommandUtilities.playerCheck(sender))
-        {
-            final Player player = (Player)sender;
-            return doCompass(player);
-        }
-        return true;
-    }
+public class Compass implements CommandExecutor
+{
 
     /**
      * Do compass.
-     *
-     * @param player the player
+     * 
+     * @param player
+     *            the player
      * @return true, if successful
      */
-    private static boolean doCompass(Player player)
-    {   
+    private static boolean doCompass(final Player player)
+    {
         final Player p = player;
         if (WXPermissions.checkWXPermissions(p, PermissionType.COMPASS))
         {
             final Stargate closest = StargateManager.findClosestStargate(p.getLocation());
-            if(closest != null)
+            if (closest != null)
             {
-                p.setCompassTarget(closest.teleportLocation);
-                p.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Compass set to wormhole: " + closest.name);
+                p.setCompassTarget(closest.getGateTeleportLocation());
+                p.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Compass set to wormhole: " + closest.getGateName());
             }
             else
             {
                 p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "No wormholes to track!");
             }
         }
-        else 
+        else
         {
-            p.sendMessage( ConfigManager.MessageStrings.permissionNo.toString());
+            p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+        }
+        return true;
+    }
+
+    /* (non-Javadoc)
+     * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
+     */
+    @Override
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
+    {
+        if (CommandUtilities.playerCheck(sender))
+        {
+            final Player player = (Player) sender;
+            return doCompass(player);
         }
         return true;
     }

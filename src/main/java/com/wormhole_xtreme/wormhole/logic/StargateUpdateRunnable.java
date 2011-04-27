@@ -62,7 +62,7 @@ public class StargateUpdateRunnable implements Runnable
     private final Stargate stargate;
 
     /** The player. */
-    private Player player;
+    private final Player player;
 
     /** The action. */
     private final ActionToTake action;
@@ -70,31 +70,31 @@ public class StargateUpdateRunnable implements Runnable
     /**
      * Instantiates a new stargate update runnable.
      * 
-     * @param s
+     * @param stargate
      *            the s
-     * @param act
+     * @param action
      *            the act
      */
-    public StargateUpdateRunnable(final Stargate s, final ActionToTake act)
+    public StargateUpdateRunnable(final Stargate stargate, final ActionToTake action)
     {
-        stargate = s;
-        action = act;
+        this(stargate, null, action);
     }
 
     /**
      * Instantiates a new stargate update runnable.
      * 
-     * @param s
+     * @param stargate
      *            the s
-     * @param p
+     * @param player
      *            the p
-     * @param act
+     * @param action
      *            the act
      */
-    public StargateUpdateRunnable(final Stargate s, final Player p, final ActionToTake act)
+    public StargateUpdateRunnable(final Stargate stargate, final Player player, final ActionToTake action)
     {
-        this(s, act);
-        player = p;
+        this.stargate = stargate;
+        this.action = action;
+        this.player = player;
     }
 
     /* (non-Javadoc)
@@ -103,43 +103,41 @@ public class StargateUpdateRunnable implements Runnable
     @Override
     public void run()
     {
-        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Run Action \"" + action.toString() + "\" Stargate \"" + stargate.name + "\"");
-        if (action == ActionToTake.SHUTDOWN)
+        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Run Action \"" + action.toString() + "\" Stargate \"" + stargate.getGateName() + "\"");
+        switch (action)
         {
-            stargate.shutdownStargate();
-        }
-        else if (action == ActionToTake.ANIMATE_WOOSH)
-        {
-            stargate.animateOpening();
-        }
-        else if (action == ActionToTake.DEACTIVATE)
-        {
-            stargate.timeoutStargate(player);
-        }
-        else if (action == ActionToTake.AFTERSHUTDOWN)
-        {
-            stargate.afterShutdownStargate();
-        }
-        else if (action == ActionToTake.SIGNCLICK)
-        {
-            stargate.teleportSignClicked();
-            if (player != null)
-            {
-                if (stargate.signTarget != null)
+            case SHUTDOWN :
+                stargate.shutdownStargate();
+                break;
+            case ANIMATE_WOOSH :
+                stargate.animateOpening();
+                break;
+            case DEACTIVATE :
+                stargate.timeoutStargate(player);
+                break;
+            case AFTERSHUTDOWN :
+                stargate.stopAfterShutdownTimer();
+                break;
+            case SIGNCLICK :
+                stargate.teleportSignClicked();
+                if (player != null)
                 {
-                    final String target = stargate.signTarget.name;
-                    player.sendMessage("Dialer set to: " + target);
+                    if (stargate.getGateSignTarget() != null)
+                    {
+                        final String target = stargate.getGateSignTarget().getGateName();
+                        player.sendMessage("Dialer set to: " + target);
+                    }
+                    else
+                    {
+                        player.sendMessage("No available target to set dialer to.");
+                    }
                 }
-                else
-                {
-                    player.sendMessage("No available target to set dialer to.");
-                }
-            }
-        }
-        else if (action == ActionToTake.LIGHTUP)
-        {
-            stargate.lightStargate();
+                break;
+            case LIGHTUP :
+                stargate.lightStargate(true);
+                break;
+            default :
+                break;
         }
     }
-
 }

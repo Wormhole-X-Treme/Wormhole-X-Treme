@@ -29,10 +29,10 @@ import org.bukkit.event.block.BlockRedstoneEvent;
  * component's <code>addWormholeXTremeRedstoneListener<code> method. When
  * the wormholeXTremeRedstone event occurs, that object's appropriate
  * method is invoked.
- *
+ * 
  * @see WormholeXTremeRedstoneEvent
  */
-public class WormholeXTremeRedstoneListener extends BlockListener 
+public class WormholeXTremeRedstoneListener extends BlockListener
 {
 
     /**
@@ -46,10 +46,10 @@ public class WormholeXTremeRedstoneListener extends BlockListener
      * @see org.bukkit.event.block.BlockListener#onBlockRedstoneChange(org.bukkit.event.block.BlockRedstoneEvent)
      */
     @Override
-    public void onBlockRedstoneChange(BlockRedstoneEvent event)
+    public void onBlockRedstoneChange(final BlockRedstoneEvent event)
     {
         // new current arrived
-        if ( event.getOldCurrent() == 0 && event.getNewCurrent() > 0 )
+        if ((event.getOldCurrent() == 0) && (event.getNewCurrent() > 0))
         {
             //Block b = event.getBlock();
 

@@ -115,12 +115,12 @@ public class StargateManager
         StargateNetwork net;
         if ((net = stargateNetworks.get(network)) != null)
         {
-            synchronized (net.gateLock)
+            synchronized (net.getNetworkGateLock())
             {
-                net.gateList.add(gate);
-                if (gate.isSignPowered)
+                net.getNetworkGateList().add(gate);
+                if (gate.isGateSignPowered())
                 {
-                    net.signGateList.add(gate);
+                    net.getNetworkSignGateList().add(gate);
                 }
             }
         }
@@ -160,12 +160,12 @@ public class StargateManager
      */
     public static void addStargate(final Stargate s)
     {
-        stargateList.put(s.name, s);
-        for (final Location b : s.stargateBlocks)
+        stargateList.put(s.getGateName(), s);
+        for (final Location b : s.getGateStructureBlocks())
         {
             allGateBlocks.put(b, s);
         }
-        for (final Location b : s.portalBlocks)
+        for (final Location b : s.getGatePortalBlocks())
         {
             allGateBlocks.put(b, s);
         }
@@ -184,7 +184,7 @@ public class StargateManager
         if ( !stargateNetworks.containsKey(name))
         {
             final StargateNetwork sn = new StargateNetwork();
-            sn.netName = name;
+            sn.setNetworkName(name);
             stargateNetworks.put(name, sn);
             return sn;
         }
@@ -205,7 +205,7 @@ public class StargateManager
      */
     public static boolean completeStargate(final Player p, final Stargate s)
     {
-        final Stargate posDupe = StargateManager.getStargate(s.name);
+        final Stargate posDupe = StargateManager.getStargate(s.getGateName());
         if (posDupe == null)
         {
             if (WormholeXTreme.getIconomy() != null)
@@ -230,9 +230,9 @@ public class StargateManager
                 }
             }
 
-            s.owner = p.getName();
-            s.completeGate(s.name, "");
-            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Player: " + p.getName() + " completed a wormhole: " + s.name);
+            s.setGateOwner(p.getName());
+            s.completeGate(s.getGateName(), "");
+            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Player: " + p.getName() + " completed a wormhole: " + s.getGateName());
             addStargate(s);
             StargateDBManager.stargateToSQL(s);
             return true;
@@ -290,12 +290,12 @@ public class StargateManager
                     net = StargateManager.addStargateNetwork(network);
                 }
                 StargateManager.addGateToNetwork(complete, network);
-                complete.network = net;
+                complete.setGateNetwork(net);
             }
 
-            complete.owner = p.getName();
+            complete.setGateOwner(p.getName());
             complete.completeGate(name, idc);
-            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Player: " + p.getName() + " completed a wormhole: " + complete.name);
+            WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Player: " + p.getName() + " completed a wormhole: " + complete.getGateName());
             addStargate(complete);
             StargateDBManager.stargateToSQL(complete);
             return true;
@@ -318,7 +318,7 @@ public class StargateManager
         double distance = Double.MAX_VALUE;
         if ((stargate != null) && (self != null))
         {
-            final ArrayList<Location> gateblocks = stargate.stargateBlocks;
+            final ArrayList<Location> gateblocks = stargate.getGateStructureBlocks();
             for (final Location l : gateblocks)
             {
                 final double blockdistance = getSquaredDistance(self, l);
@@ -347,7 +347,7 @@ public class StargateManager
             double man = Double.MAX_VALUE;
             for (final Stargate s : gates)
             {
-                final Location t = s.teleportLocation;
+                final Location t = s.getGateTeleportLocation();
                 final double distance = getSquaredDistance(self, t);
                 if (distance < man)
                 {
@@ -550,26 +550,26 @@ public class StargateManager
      */
     public static void removeStargate(final Stargate s)
     {
-        stargateList.remove(s.name);
+        stargateList.remove(s.getGateName());
         StargateDBManager.removeStargateFromSQL(s);
-        if (s.network != null)
+        if (s.getGateNetwork() != null)
         {
-            synchronized (s.network.gateLock)
+            synchronized (s.getGateNetwork().getNetworkGateLock())
             {
-                s.network.gateList.remove(s);
-                if (s.isSignPowered)
+                s.getGateNetwork().getNetworkGateList().remove(s);
+                if (s.isGateSignPowered())
                 {
-                    s.network.signGateList.remove(s);
+                    s.getGateNetwork().getNetworkSignGateList().remove(s);
                 }
 
-                for (final Stargate s2 : s.network.signGateList)
+                for (final Stargate s2 : s.getGateNetwork().getNetworkSignGateList())
                 {
-                    if ((s2.signTarget != null) && (s2.signTarget.gateId == s.gateId) && s2.isSignPowered)
+                    if ((s2.getGateSignTarget() != null) && (s2.getGateSignTarget().getGateId() == s.getGateId()) && s2.isGateSignPowered())
                     {
-                        s2.signTarget = null;
-                        if (s.network.signGateList.size() > 1)
+                        s2.setGateSignTarget(null);
+                        if (s.getGateNetwork().getNetworkSignGateList().size() > 1)
                         {
-                            s2.signIndex = 0;
+                            s2.setGateSignIndex(0);
                             WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(s2, ActionToTake.SIGNCLICK));
                             // s2.teleportSignClicked();
                         }
@@ -578,12 +578,12 @@ public class StargateManager
             }
         }
 
-        for (final Location b : s.stargateBlocks)
+        for (final Location b : s.getGateStructureBlocks())
         {
             allGateBlocks.remove(b);
         }
 
-        for (final Location b : s.portalBlocks)
+        for (final Location b : s.getGatePortalBlocks())
         {
             allGateBlocks.remove(b);
         }

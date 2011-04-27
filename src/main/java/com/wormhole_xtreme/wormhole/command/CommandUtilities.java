@@ -48,8 +48,8 @@ class CommandUtilities
         if (stargate != null)
         {
             stargate.stopActivationTimer();
-            stargate.deActivateStargate();
-            stargate.unLightStargate();
+            stargate.setGateActive(false);
+            stargate.lightStargate(false);
         }
     }
 
@@ -124,9 +124,9 @@ class CommandUtilities
     {
         stargate.setupGateSign(false);
         stargate.resetTeleportSign();
-        if ( !stargate.irisDeactivationCode.equals(""))
+        if ( !stargate.getGateIrisDeactivationCode().equals(""))
         {
-            if (stargate.irisActive)
+            if (stargate.isGateIrisActive())
             {
                 stargate.toggleIrisActive();
             }
@@ -152,9 +152,9 @@ class CommandUtilities
     {
         if (stargate != null)
         {
-            if (stargate.network != null)
+            if (stargate.getGateNetwork() != null)
             {
-                return stargate.network.netName;
+                return stargate.getGateNetwork().getNetworkName();
             }
         }
         return "Public";

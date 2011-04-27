@@ -58,7 +58,7 @@ public class Dial implements CommandExecutor
             if (WXPermissions.checkWXPermissions(player, start, PermissionType.DIALER))
             {
                 final String startnetwork = CommandUtilities.getGateNetwork(start);
-                if ( !start.name.equals(arguments[0]))
+                if ( !start.getGateName().equals(arguments[0]))
                 {
                     final Stargate target = StargateManager.getStargate(arguments[0]);
                     // No target
@@ -69,7 +69,7 @@ public class Dial implements CommandExecutor
                         return true;
                     }
                     final String targetnetwork = CommandUtilities.getGateNetwork(target);
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Dial Target - Gate: \"" + target.name + "\" Network: \"" + targetnetwork + "\"");
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Dial Target - Gate: \"" + target.getGateName() + "\" Network: \"" + targetnetwork + "\"");
                     // Not on same network
                     if ( !startnetwork.equals(targetnetwork))
                     {
@@ -77,15 +77,15 @@ public class Dial implements CommandExecutor
                         player.sendMessage(ConfigManager.MessageStrings.targetInvalid.toString() + " Not on same network.");
                         return true;
                     }
-                    if (start.irisActive)
+                    if (start.isGateIrisActive())
                     {
                         start.toggleIrisActive();
                     }
-                    if ( !target.irisDeactivationCode.equals("") && target.irisActive)
+                    if ( !target.getGateIrisDeactivationCode().equals("") && target.isGateIrisActive())
                     {
-                        if ((arguments.length >= 2) && target.irisDeactivationCode.equals(arguments[1]))
+                        if ((arguments.length >= 2) && target.getGateIrisDeactivationCode().equals(arguments[1]))
                         {
-                            if (target.irisActive)
+                            if (target.isGateIrisActive())
                             {
                                 target.toggleIrisActive();
                                 player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "IDC accepted. Iris has been deactivated.");
@@ -93,7 +93,7 @@ public class Dial implements CommandExecutor
                         }
                     }
 
-                    if (start.dialStargate(target))
+                    if (start.dialStargate(target, false))
                     {
                         player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Stargates connected!");
                     }

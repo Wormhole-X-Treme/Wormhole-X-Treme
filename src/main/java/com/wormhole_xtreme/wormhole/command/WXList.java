@@ -59,7 +59,7 @@ public class WXList implements CommandExecutor
             // TODO: Add checks for complex permissions enabled users running this command and only display what they have access to use.
             for (int i = 0; i < gates.size(); i++)
             {
-                sb.append("\u00A77" + gates.get(i).name);
+                sb.append("\u00A77" + gates.get(i).getGateName());
                 if (i != gates.size() - 1)
                 {
                     sb.append("\u00A78, ");

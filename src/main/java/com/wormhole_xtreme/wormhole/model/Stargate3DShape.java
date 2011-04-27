@@ -35,13 +35,13 @@ public class Stargate3DShape extends StargateShape
     /**
      * Layers of the 3D shape. Layers go from 1 - 10
      */
-    public ArrayList<StargateShapeLayer> layers = new ArrayList<StargateShapeLayer>();
+    private ArrayList<StargateShapeLayer> shapeLayers = new ArrayList<StargateShapeLayer>();
 
     /** The activation_layer. */
-    public int activation_layer = -1;
+    private int shapeActivationLayer = -1;
 
     /** The sign_layer. */
-    public int sign_layer = -1;
+    private int shapeSignLayer = -1;
 
     /**
      * Instantiates a new stargate3 d shape.
@@ -51,8 +51,8 @@ public class Stargate3DShape extends StargateShape
      */
     public Stargate3DShape(final String[] fileLines)
     {
-        signPosition = null;
-        enterPosition = null;
+        setShapeSignPosition(new int[]{});
+        setShapeEnterPosition(new int[]{});
 
         // 1. scan all lines for lines beginning with [  - that is the height of the gate
         int height = 0;
@@ -68,8 +68,8 @@ public class Stargate3DShape extends StargateShape
 
             if (line.contains("Name="))
             {
-                shapeName = line.split("=")[1];
-                WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Begin parsing shape: \"" + shapeName + "\"");
+                setShapeName(line.split("=")[1]);
+                WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Begin parsing shape: \"" + getShapeName() + "\"");
             }
             else if (line.equals("GateShape="))
             {
@@ -99,12 +99,12 @@ public class Stargate3DShape extends StargateShape
                 // At this point we should know the height and width
                 if ((height <= 0) || (width <= 0))
                 {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to parse custom gate due to incorrect height or width: \"" + shapeName + "\"");
-                    throw new IllegalArgumentException("Unable to parse custom gate due to incorrect height or width: \"" + shapeName + "\"");
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to parse custom gate due to incorrect height or width: \"" + getShapeName() + "\"");
+                    throw new IllegalArgumentException("Unable to parse custom gate due to incorrect height or width: \"" + getShapeName() + "\"");
                 }
                 else
                 {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Shape: \"" + shapeName + "\"" + " Height: \"" + Integer.toString(height) + "\"" + " Width: \"" + Integer.toString(width) + "\"");
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Shape: \"" + getShapeName() + "\"" + " Height: \"" + Integer.toString(height) + "\"" + " Width: \"" + Integer.toString(width) + "\"");
                 }
             }
             else if (line.startsWith("Layer"))
@@ -134,46 +134,109 @@ public class Stargate3DShape extends StargateShape
                 // 3. call constructor
                 final StargateShapeLayer ssl = new StargateShapeLayer(layerLines, height, width);
                 // bad hack to make sure list is big enough :(
-                while (layers.size() <= layer)
+                while (getShapeLayers().size() <= layer)
                 {
-                    layers.add(null);
+                    getShapeLayers().add(null);
                 }
-                layers.set(layer, ssl);
+                getShapeLayers().set(layer, ssl);
 
-                if (ssl.activationPosition != null)
+                if (ssl.getLayerActivationPosition().length > 0)
                 {
-                    activation_layer = layer;
+                    setShapeActivationLayer(layer);
                 }
-                if (ssl.dialerPosition != null)
+                if (ssl.getLayerDialerPosition().length > 0)
                 {
-                    sign_layer = layer;
+                    setShapeSignLayer(layer);
                 }
             }
             else if (line.contains("PORTAL_MATERIAL="))
             {
-                portalMaterial = Material.valueOf(line.split("=")[1]);
+                setShapePortalMaterial(Material.valueOf(line.split("=")[1]));
             }
             else if (line.contains("IRIS_MATERIAL="))
             {
-                irisMaterial = Material.valueOf(line.split("=")[1]);
+                setShapeIrisMaterial(Material.valueOf(line.split("=")[1]));
             }
             else if (line.contains("STARGATE_MATERIAL="))
             {
-                stargateMaterial = Material.valueOf(line.split("=")[1]);
+                setShapeStructureMaterial(Material.valueOf(line.split("=")[1]));
             }
             else if (line.contains("ACTIVE_MATERIAL="))
             {
-                activeMaterial = Material.valueOf(line.split("=")[1]);
+                setShapeActiveMaterial(Material.valueOf(line.split("=")[1]));
             }
             else if (line.contains("LIGHT_TICKS="))
             {
-                lightTicks = Integer.valueOf(line.split("=")[1]);
+                setShapeLightTicks(Integer.valueOf(line.split("=")[1]));
             }
             else if (line.contains("WOOSH_TICKS="))
             {
-                wooshTicks = Integer.valueOf(line.split("=")[1]);
+                setShapeWooshTicks(Integer.valueOf(line.split("=")[1]));
             }
         }
-        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Finished parsing shape: \"" + shapeName + "\"");
+        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Finished parsing shape: \"" + getShapeName() + "\"");
+    }
+
+    /**
+     * Gets the shape activation layer.
+     * 
+     * @return the shape activation layer
+     */
+    public int getShapeActivationLayer()
+    {
+        return shapeActivationLayer;
+    }
+
+    /**
+     * Gets the shape layers.
+     * 
+     * @return the shape layers
+     */
+    public ArrayList<StargateShapeLayer> getShapeLayers()
+    {
+        return shapeLayers;
+    }
+
+    /**
+     * Gets the shape sign layer.
+     * 
+     * @return the shape sign layer
+     */
+    public int getShapeSignLayer()
+    {
+        return shapeSignLayer;
+    }
+
+    /**
+     * Sets the shape activation layer.
+     * 
+     * @param shapeActivationLayer
+     *            the new shape activation layer
+     */
+    public void setShapeActivationLayer(final int shapeActivationLayer)
+    {
+        this.shapeActivationLayer = shapeActivationLayer;
+    }
+
+    /**
+     * Sets the shape layers.
+     * 
+     * @param shapeLayers
+     *            the new shape layers
+     */
+    public void setShapeLayers(final ArrayList<StargateShapeLayer> shapeLayers)
+    {
+        this.shapeLayers = shapeLayers;
+    }
+
+    /**
+     * Sets the shape sign layer.
+     * 
+     * @param shapeSignLayer
+     *            the new shape sign layer
+     */
+    public void setShapeSignLayer(final int shapeSignLayer)
+    {
+        this.shapeSignLayer = shapeSignLayer;
     }
 }

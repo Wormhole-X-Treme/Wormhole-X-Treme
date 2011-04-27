@@ -54,7 +54,7 @@ public class WXIDC implements CommandExecutor
             final Stargate s = StargateManager.getStargate(a[0]);
             if (s != null)
             {
-                if (((p != null) && (WXPermissions.checkWXPermissions(p, PermissionType.CONFIG) || ((s.owner != null) && s.owner.equals(p.getName())))) || !CommandUtilities.playerCheck(sender))
+                if (((p != null) && (WXPermissions.checkWXPermissions(p, PermissionType.CONFIG) || ((s.getGateOwner() != null) && s.getGateOwner().equals(p.getName())))) || !CommandUtilities.playerCheck(sender))
                 {
                     // 2. if args other than name - do a set                
                     if (a.length >= 2)
@@ -62,7 +62,7 @@ public class WXIDC implements CommandExecutor
                         if (a[1].equals("-clear"))
                         {
                             // Remove from big list of all blocks
-                            StargateManager.removeBlockIndex(s.irisActivationBlock);
+                            StargateManager.removeBlockIndex(s.getGateIrisActivationBlock());
                             // Set code to "" and then remove it from stargates block list
                             s.setIrisDeactivationCode("");
                         }
@@ -71,12 +71,12 @@ public class WXIDC implements CommandExecutor
                             // Set code
                             s.setIrisDeactivationCode(a[1]);
                             // Make sure that block is in index
-                            StargateManager.addBlockIndex(s.irisActivationBlock, s);
+                            StargateManager.addBlockIndex(s.getGateIrisActivationBlock(), s);
                         }
                     }
 
                     // 3. always display current value at end.
-                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "IDC for gate: " + s.name + " is:" + s.irisDeactivationCode);
+                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "IDC for gate: " + s.getGateName() + " is:" + s.getGateIrisDeactivationCode());
                 }
                 else
                 {

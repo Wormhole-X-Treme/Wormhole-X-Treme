@@ -30,27 +30,32 @@ import java.util.logging.Level;
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.config.ConfigManager.ConfigKeys;
 
-
 /**
  * The Class ConfigurationFlatFile.
  * Based on class "MinecartFlatFile" from MinecartMania by Afforess.
  */
-public class ConfigurationFlatFile 
+public class ConfigurationFlatFile
 {
 
     /**
      * Creates the new header.
-     *
-     * @param output the output
-     * @param title the title
-     * @param subtitle the subtitle
-     * @param firstHeader the first header
-     * @throws IOException Signals that an I/O exception has occurred.
+     * 
+     * @param output
+     *            the output
+     * @param title
+     *            the title
+     * @param subtitle
+     *            the subtitle
+     * @param firstHeader
+     *            the first header
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
-    public static void createNewHeader(BufferedWriter output, String title, String subtitle, boolean firstHeader) throws IOException 
+    public static void createNewHeader(final BufferedWriter output, final String title, final String subtitle, final boolean firstHeader) throws IOException
     {
         final String linebreak = "-------------------------------";
-        if (!firstHeader) {
+        if ( !firstHeader)
+        {
             output.write("---------------");
             output.newLine();
             output.newLine();
@@ -68,14 +73,19 @@ public class ConfigurationFlatFile
 
     /**
      * Creates the new setting.
-     *
-     * @param output the output
-     * @param name the name
-     * @param value the value
-     * @param description the description
-     * @throws IOException Signals that an I/O exception has occurred.
+     * 
+     * @param output
+     *            the output
+     * @param name
+     *            the name
+     * @param value
+     *            the value
+     * @param description
+     *            the description
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
-    public static void createNewSetting(BufferedWriter output, ConfigKeys name, String value, String description) throws IOException 
+    public static void createNewSetting(final BufferedWriter output, final ConfigKeys name, final String value, final String description) throws IOException
     {
         final String linebreak = "---------------";
         output.append(linebreak);
@@ -86,21 +96,25 @@ public class ConfigurationFlatFile
         output.newLine();
         output.write("Description:");
 
-        ArrayList<String> desc = new ArrayList<String>();
+        final ArrayList<String> desc = new ArrayList<String>();
         desc.add(0, "");
         final int maxLength = 80;
-        String[] words = description.split(" ");
+        final String[] words = description.split(" ");
         int lineNumber = 0;
-        for (int i = 0; i < words.length; i++) {
-            if (desc.get(lineNumber).length() + words[i].length() < maxLength) {
-                desc.set(lineNumber, desc.get(lineNumber) + " " + words[i]);
+        for (final String word : words)
+        {
+            if (desc.get(lineNumber).length() + word.length() < maxLength)
+            {
+                desc.set(lineNumber, desc.get(lineNumber) + " " + word);
             }
-            else {
+            else
+            {
                 lineNumber++;
-                desc.add(lineNumber, "             " + words[i]);
+                desc.add(lineNumber, "             " + word);
             }
         }
-        for(String s : desc) {
+        for (final String s : desc)
+        {
             output.write(s);
             output.newLine();
         }
@@ -108,51 +122,55 @@ public class ConfigurationFlatFile
 
     /**
      * Gets the value from setting.
-     *
-     * @param input the input
-     * @param name the name
-     * @param defaultVal the default val
+     * 
+     * @param input
+     *            the input
+     * @param name
+     *            the name
+     * @param defaultVal
+     *            the default val
      * @return the value from setting
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
-    public static String getValueFromSetting(File input, ConfigKeys name, String defaultVal)  throws IOException
+    public static String getValueFromSetting(final File input, final ConfigKeys name, final String defaultVal) throws IOException
     {
 
         BufferedReader bufferedReader = null;
-        try 
+        try
         {
             bufferedReader = new BufferedReader(new FileReader(input));
-            for (String s = ""; (s = bufferedReader.readLine()) != null; )
+            for (String s = ""; (s = bufferedReader.readLine()) != null;)
             {
                 try
                 {
                     s = s.trim();
-                    if ( s.contains("Setting:") )
+                    if (s.contains("Setting:"))
                     {
-                        String key[] = s.split(":");
+                        final String key[] = s.split(":");
                         key[1] = key[1].trim();
-                        ConfigKeys key_value = ConfigKeys.valueOf(key[1]);
-                        if ( key_value == name )
+                        final ConfigKeys key_value = ConfigKeys.valueOf(key[1]);
+                        if (key_value == name)
                         {
                             //Next line
-                            if ((s = bufferedReader.readLine()) != null ) 
+                            if ((s = bufferedReader.readLine()) != null)
                             {
-                                String val[] = s.split(":");
+                                final String val[] = s.split(":");
                                 bufferedReader.close();
                                 return val[1].trim();
                             }
                         }
                     }
                 }
-                catch ( Exception e)
+                catch (final Exception e)
                 {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE,false,"Error parsing setting enum:" + e.toString());
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Error parsing setting enum:" + e.toString());
                 }
             }
             bufferedReader.close();
 
         }
-        catch (FileNotFoundException e)
+        catch (final FileNotFoundException e)
         {
             WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, e.getMessage());
         }

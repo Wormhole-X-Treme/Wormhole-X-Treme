@@ -104,16 +104,12 @@ public class HelpSupport
     {
         if ((WormholeXTreme.getHelp() != null) && !ConfigManager.getHelpSupportDisable())
         {
-            final String[] cp = new String[]
-            {
-                "wormhole.use.sign", "wormhole.use.dialer", "wormhole.use.compass", "wormhole.remove.own",
-                "wormhole.remove.all", "wormhole.build", "wormhole.config", "wormhole.list", "wormhole.go"
-            };
+            final String[] cp = new String[]{"wormhole.use.sign", "wormhole.use.dialer", "wormhole.use.compass",
+                "wormhole.remove.own", "wormhole.remove.all", "wormhole.build", "wormhole.config", "wormhole.list",
+                "wormhole.go"};
 
-            final String[] sp = new String[]
-            {
-                "wormhole.simple.use", "wormhole.simple.build", "wormhole.simple.config", "wormhole.simple.remove"
-            };
+            final String[] sp = new String[]{"wormhole.simple.use", "wormhole.simple.build", "wormhole.simple.config",
+                "wormhole.simple.remove"};
 
             String dial;
             String wxidc;
@@ -131,20 +127,11 @@ public class HelpSupport
                 {
                     dial = sp[0];
                     wxidc = sp[2];
-                    wxforce = new String[]
-                    {
-                        sp[2], sp[3]
-                    };
+                    wxforce = new String[]{sp[2], sp[3]};
                     wxcompass = sp[0];
                     wxcomplete = sp[1];
-                    wxremove = new String[]
-                    {
-                        sp[3]
-                    };
-                    wxlist = new String[]
-                    {
-                        sp[0], sp[2]
-                    };
+                    wxremove = new String[]{sp[3]};
+                    wxlist = new String[]{sp[0], sp[2]};
                     wxgo = sp[2];
                     wxbuild = sp[2];
                     wormhole = sp[2];
@@ -153,20 +140,11 @@ public class HelpSupport
                 {
                     dial = cp[1];
                     wxidc = cp[6];
-                    wxforce = new String[]
-                    {
-                        cp[4], cp[6]
-                    };
+                    wxforce = new String[]{cp[4], cp[6]};
                     wxcompass = cp[2];
                     wxcomplete = cp[5];
-                    wxremove = new String[]
-                    {
-                        cp[3], cp[4]
-                    };
-                    wxlist = new String[]
-                    {
-                        cp[6], cp[7]
-                    };
+                    wxremove = new String[]{cp[3], cp[4]};
+                    wxlist = new String[]{cp[6], cp[7]};
                     wxgo = cp[8];
                     wxbuild = cp[6];
                     wormhole = cp[6];
@@ -176,20 +154,11 @@ public class HelpSupport
             {
                 dial = "";
                 wxidc = "OP";
-                wxforce = new String[]
-                {
-                    "OP"
-                };
+                wxforce = new String[]{"OP"};
                 wxcompass = "OP";
                 wxcomplete = "OP";
-                wxremove = new String[]
-                {
-                    ""
-                };
-                wxlist = new String[]
-                {
-                    "OP"
-                };
+                wxremove = new String[]{""};
+                wxlist = new String[]{"OP"};
                 wxgo = "OP";
                 wxbuild = "OP";
                 wormhole = "OP";

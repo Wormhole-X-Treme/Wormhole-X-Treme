@@ -65,18 +65,18 @@ public class WormholeXTremeVehicleListener extends VehicleListener
         final Location l = event.getTo();
         final Block ch = l.getWorld().getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
         final Stargate st = StargateManager.getGateFromBlock(ch);
-        if ((st != null) && st.active && (st.target != null) && (st.gateShape != null) && (ch.getType() == st.gateShape.portalMaterial))
+        if ((st != null) && st.isGateActive() && (st.getGateTarget() != null) && (st.getGateShape() != null) && (ch.getType() == st.getGateShape().getShapePortalMaterial()))
         {
             String gatenetwork;
-            if (st.network != null)
+            if (st.getGateNetwork() != null)
             {
-                gatenetwork = st.network.netName;
+                gatenetwork = st.getGateNetwork().getNetworkName();
             }
             else
             {
                 gatenetwork = "Public";
             }
-            Location target = st.target.teleportLocation;
+            Location target = st.getGateTarget().getGateTeleportLocation();
             final Minecart veh = (Minecart) event.getVehicle();
             final Vector v = veh.getVelocity();
             veh.setVelocity(nospeed);
@@ -86,16 +86,16 @@ public class WormholeXTremeVehicleListener extends VehicleListener
                 if (e instanceof Player)
                 {
                     final Player p = (Player) e;
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Minecart Player in gate:" + st.name + " gate Active: " + st.active + " Target Gate: " + st.target.name + " Network: " + gatenetwork);
-                    if (ConfigManager.getWormholeUseIsTeleport() && ((st.isSignPowered && !WXPermissions.checkWXPermissions(p, st, PermissionType.SIGN)) || ( !st.isSignPowered && !WXPermissions.checkWXPermissions(p, st, PermissionType.DIALER))))
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Minecart Player in gate:" + st.getGateName() + " gate Active: " + st.isGateActive() + " Target Gate: " + st.getGateTarget().getGateName() + " Network: " + gatenetwork);
+                    if (ConfigManager.getWormholeUseIsTeleport() && ((st.isGateSignPowered() && !WXPermissions.checkWXPermissions(p, st, PermissionType.SIGN)) || ( !st.isGateSignPowered() && !WXPermissions.checkWXPermissions(p, st, PermissionType.DIALER))))
                     {
                         p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
                         return false;
                     }
-                    if (st.target.irisActive)
+                    if (st.getGateTarget().isGateIrisActive())
                     {
                         p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Remote Iris is locked!");
-                        veh.teleport(st.teleportLocation);
+                        veh.teleport(st.getGateTeleportLocation());
                         if (ConfigManager.getTimeoutShutdown() == 0)
                         {
                             st.shutdownStargate();
@@ -106,7 +106,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener
                     {
                         final double cost = ConfigManager.getIconomyWormholeUseCost();
                         boolean charge = true;
-                        if ((ConfigManager.getIconomyOpsExcempt() && p.isOp()) || (ConfigManager.getIconomyOwnerExempt() && (st.owner != null) && st.owner.equals(p.getName())))
+                        if ((ConfigManager.getIconomyOpsExcempt() && p.isOp()) || (ConfigManager.getIconomyOwnerExempt() && (st.getGateOwner() != null) && st.getGateOwner().equals(p.getName())))
                         {
                             charge = false;
                         }
@@ -123,11 +123,11 @@ public class WormholeXTremeVehicleListener extends VehicleListener
                                 //p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
                                 final double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
 
-                                if ((owner_percent != 0.0) && (st.owner != null))
+                                if ((owner_percent != 0.0) && (st.getGateOwner() != null))
                                 {
-                                    if (iConomy.getBank().hasAccount(st.owner))
+                                    if (iConomy.getBank().hasAccount(st.getGateOwner()))
                                     {
-                                        final Account own_acc = iConomy.getBank().getAccount(st.owner);
+                                        final Account own_acc = iConomy.getBank().getAccount(st.getGateOwner());
                                         own_acc.add(cost * owner_percent);
                                         // own_acc.save();
                                     }
@@ -137,7 +137,7 @@ public class WormholeXTremeVehicleListener extends VehicleListener
                             {
                                 p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Not enough " + currency + "! - Requires: \u00A72" + cost + " \u00A77- Available: \u00A74" + player_account.getBalance() + " \u00A77" + currency);
                                 //p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
-                                target = st.teleportLocation;
+                                target = st.getGateTeleportLocation();
                             }
                         }
                     }
@@ -146,25 +146,25 @@ public class WormholeXTremeVehicleListener extends VehicleListener
 
             final double speed = v.length();
             final Vector new_speed = new Vector();
-            if (st.target.facing == BlockFace.NORTH)
+            if (st.getGateTarget().getGateFacing() == BlockFace.NORTH)
             {
                 new_speed.setX( -1);
             }
-            else if (st.target.facing == BlockFace.SOUTH)
+            else if (st.getGateTarget().getGateFacing() == BlockFace.SOUTH)
             {
                 new_speed.setX(1);
             }
-            else if (st.target.facing == BlockFace.EAST)
+            else if (st.getGateTarget().getGateFacing() == BlockFace.EAST)
             {
                 new_speed.setZ( -1);
             }
-            else if (st.target.facing == BlockFace.WEST)
+            else if (st.getGateTarget().getGateFacing() == BlockFace.WEST)
             {
                 new_speed.setZ(1);
             }
             // As we all know stargates accelerate matter.
             new_speed.multiply(speed * 5);
-            if (st.target.irisActive)
+            if (st.getGateTarget().isGateIrisActive())
             {
                 target = TeleportUtils.findSafeTeleportFromStargate(st);
                 veh.teleport(target);
@@ -172,9 +172,9 @@ public class WormholeXTremeVehicleListener extends VehicleListener
             }
             else
             {
-                if (target != st.teleportLocation)
+                if (target != st.getGateTeleportLocation())
                 {
-                    target = TeleportUtils.findSafeTeleportFromStargate(st.target);
+                    target = TeleportUtils.findSafeTeleportFromStargate(st.getGateTarget());
                     // WorldUtils.checkChunkLoad(target.getBlock());
                 }
                 if (e != null)

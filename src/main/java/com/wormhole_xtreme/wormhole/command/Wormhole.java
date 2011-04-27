@@ -148,12 +148,12 @@ public class Wormhole implements CommandExecutor
             {
                 if (args.length == 3)
                 {
-                    s.owner = args[2];
-                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Gate: " + s.name + " Now owned by: " + s.owner);
+                    s.setGateOwner(args[2]);
+                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Gate: " + s.getGateName() + " Now owned by: " + s.getGateOwner());
                 }
                 else if (args.length == 2)
                 {
-                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Gate: " + s.name + " Owned by: " + s.owner);
+                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Gate: " + s.getGateName() + " Owned by: " + s.getGateOwner());
                 }
             }
             else
@@ -250,12 +250,12 @@ public class Wormhole implements CommandExecutor
             if (s != null)
             {
                 s.dialButtonLeverState(true);
-                if ( !s.irisDeactivationCode.equals(""))
+                if ( !s.getGateIrisDeactivationCode().equals(""))
                 {
                     s.setupIrisLever(false);
                     s.setupIrisLever(true);
                 }
-                cs.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Regenerating Gate: " + s.name);
+                cs.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Regenerating Gate: " + s.getGateName());
             }
             else
             {

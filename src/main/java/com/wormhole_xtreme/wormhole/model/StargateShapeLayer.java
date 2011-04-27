@@ -33,35 +33,35 @@ public class StargateShapeLayer
 {
 
     /** The block positions. */
-    public ArrayList<Integer[]> blockPositions = new ArrayList<Integer[]>();
+    private ArrayList<Integer[]> layerBlockPositions = new ArrayList<Integer[]>();
 
     /** The sign position. */
-    public int[] signPosition = null;
+    private int[] layerSignPosition = null;
 
     /** The enter position. */
-    public int[] enterPosition = null;
+    private int[] layerEnterPosition = null;
 
     /** The activation position. */
-    public int[] activationPosition = null;
+    private int[] layerActivationPosition = null;
 
     /** The iris activation position. */
-    public int[] irisActivationPosition = null;
+    private int[] layerIrisActivationPosition = null;
 
     /** The dialer position. */
-    public int[] dialerPosition = null;
+    private int[] layerDialerPosition = null;
     /** Position of point that allows gate to be activated via redstone. */
-    public int[] redstoneActivationPosition = null;
+    private int[] layerRedstoneActivationPosition = null;
     /** Position of point that allows gate to cycle sign targets via redstone. */
-    public int[] redstoneDialerActivationPosition = null;
+    private int[] layerRedstoneDialerActivationPosition = null;
 
     /** The light_positions. */
-    public ArrayList<ArrayList<Integer[]>> lightPositions = new ArrayList<ArrayList<Integer[]>>();
+    private ArrayList<ArrayList<Integer[]>> layerLightPositions = new ArrayList<ArrayList<Integer[]>>();
 
     /** The positions of woosh. First array is the order to activate them. Inner array is list of points */
-    public ArrayList<ArrayList<Integer[]>> wooshPositions = new ArrayList<ArrayList<Integer[]>>();
+    private ArrayList<ArrayList<Integer[]>> layerWooshPositions = new ArrayList<ArrayList<Integer[]>>();
 
     /** The water_positions. */
-    public ArrayList<Integer[]> portalPositions = new ArrayList<Integer[]>();
+    private ArrayList<Integer[]> layerPortalPositions = new ArrayList<Integer[]>();
 
     /**
      * Instantiates a new stargate shape layer.
@@ -80,28 +80,22 @@ public class StargateShapeLayer
         // 1. scan all lines for lines beginning with [  - that is the height of the gate
         for (int i = 0; i < layerLines.length; i++)
         {
-            // final Pattern p = Pattern.compile("\\[(.+?)\\]");
             final Matcher m = Pattern.compile("\\[(.+?)\\]").matcher(layerLines[i]);
             int j = 0;
             while (m.find())
             {
-                //final String block = m.group(1);
-                final Integer[] point =
-                {
-                    0, (height - 1 - i), (width - 1 - j)
-                };
+                final Integer[] point = {0, (height - 1 - i), (width - 1 - j)};
 
-                //final String[] modifiers = block.split(":");
                 for (final String mod : m.group(1).split(":"))
                 {
                     if (mod.equalsIgnoreCase("S"))
                     {
                         numBlocks++;
-                        blockPositions.add(point);
+                        getLayerBlockPositions().add(point);
                     }
                     else if (mod.equalsIgnoreCase("P"))
                     {
-                        portalPositions.add(point);
+                        getLayerPortalPositions().add(point);
                     }
                     else if (mod.equalsIgnoreCase("N") || mod.equalsIgnoreCase("E") || mod.equalsIgnoreCase("A") || mod.equalsIgnoreCase("D") || mod.equalsIgnoreCase("IA"))
                     {
@@ -113,31 +107,31 @@ public class StargateShapeLayer
 
                         if (mod.equalsIgnoreCase("N"))
                         {
-                            signPosition = pointI;
+                            setLayerSignPosition(pointI);
                         }
                         if (mod.equalsIgnoreCase("E"))
                         {
-                            enterPosition = pointI;
+                            setLayerEnterPosition(pointI);
                         }
                         if (mod.equalsIgnoreCase("A"))
                         {
-                            activationPosition = pointI;
+                            setLayerActivationPosition(pointI);
                         }
                         if (mod.equalsIgnoreCase("D"))
                         {
-                            dialerPosition = pointI;
+                            setLayerDialerPosition(pointI);
                         }
                         if (mod.equalsIgnoreCase("IA"))
                         {
-                            irisActivationPosition = pointI;
+                            setLayerIrisActivationPosition(pointI);
                         }
                         if (mod.equalsIgnoreCase("RA"))
                         {
-                            redstoneActivationPosition = pointI;
+                            setLayerRedstoneActivationPosition(pointI);
                         }
                         if (mod.equalsIgnoreCase("RD"))
                         {
-                            redstoneDialerActivationPosition = pointI;
+                            setLayerRedstoneDialerActivationPosition(pointI);
                         }
                     }
                     else if (mod.contains("L") || mod.contains("l"))
@@ -145,18 +139,18 @@ public class StargateShapeLayer
                         final String[] light_parts = mod.split("#");
                         final int light_iteration = Integer.parseInt(light_parts[1]);
 
-                        while (lightPositions.size() <= light_iteration)
+                        while (getLayerLightPositions().size() <= light_iteration)
                         {
-                            lightPositions.add(null);
+                            getLayerLightPositions().add(null);
                         }
 
-                        if (lightPositions.get(light_iteration) == null)
+                        if (getLayerLightPositions().get(light_iteration) == null)
                         {
                             final ArrayList<Integer[]> new_it = new ArrayList<Integer[]>();
-                            lightPositions.set(light_iteration, new_it);
+                            getLayerLightPositions().set(light_iteration, new_it);
                         }
 
-                        lightPositions.get(light_iteration).add(point);
+                        getLayerLightPositions().get(light_iteration).add(point);
                         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Light Material Position (Order:" + light_parts[1] + " Position:" + Arrays.toString(point) + ")");
                     }
                     else if (mod.contains("W") || mod.contains("w"))
@@ -164,18 +158,18 @@ public class StargateShapeLayer
                         final String[] w_parts = mod.split("#");
                         final int w_iteration = Integer.parseInt(w_parts[1]);
 
-                        while (wooshPositions.size() <= w_iteration)
+                        while (getLayerWooshPositions().size() <= w_iteration)
                         {
-                            wooshPositions.add(null);
+                            getLayerWooshPositions().add(null);
                         }
 
-                        if (wooshPositions.get(w_iteration) == null)
+                        if (getLayerWooshPositions().get(w_iteration) == null)
                         {
                             final ArrayList<Integer[]> new_it = new ArrayList<Integer[]>();
-                            wooshPositions.set(w_iteration, new_it);
+                            getLayerWooshPositions().set(w_iteration, new_it);
                         }
 
-                        wooshPositions.get(w_iteration).add(point);
+                        getLayerWooshPositions().get(w_iteration).add(point);
                         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Woosh Position (Order:" + w_parts[1] + " Position:" + Arrays.toString(point) + ")");
                     }
                 }
@@ -184,14 +178,246 @@ public class StargateShapeLayer
         }
         //TODO: debug printout for the materials the gate uses.
         //TODO: debug printout for the redstone_activated
-        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Sign Position: \"" + Arrays.toString(signPosition) + "\"");
-        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Enter Position: \"" + Arrays.toString(enterPosition) + "\"");
-        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Activation Position: \"" + Arrays.toString(activationPosition) + "\"");
-        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Iris Activation Position: \"" + Arrays.toString(irisActivationPosition) + "\"");
-        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Dialer Position: \"" + Arrays.toString(dialerPosition) + "\"");
+        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Sign Position: \"" + Arrays.toString(getLayerSignPosition()) + "\"");
+        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Enter Position: \"" + Arrays.toString(getLayerEnterPosition()) + "\"");
+        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Activation Position: \"" + Arrays.toString(getLayerActivationPosition()) + "\"");
+        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Iris Activation Position: \"" + Arrays.toString(getLayerIrisActivationPosition()) + "\"");
+        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Dialer Position: \"" + Arrays.toString(getLayerDialerPosition()) + "\"");
         //WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Portal Positions: \"" + Arrays.deepToString((int[][])this.waterPositions) + "\"");
 
         // WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Light Material Positions: \"" + lightPositions.toString() + "\"");
         //WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Material Positions: \"" + Arrays.deepToString((int[][])this.stargatePositions) + "\"");
+    }
+
+    /**
+     * Gets the layer activation position.
+     * 
+     * @return the layer activation position
+     */
+    public int[] getLayerActivationPosition()
+    {
+        return layerActivationPosition != null ? layerActivationPosition.clone() : new int[]{};
+    }
+
+    /**
+     * Gets the layer block positions.
+     * 
+     * @return the layer block positions
+     */
+    public ArrayList<Integer[]> getLayerBlockPositions()
+    {
+        return layerBlockPositions;
+    }
+
+    /**
+     * Gets the layer dialer position.
+     * 
+     * @return the layer dialer position
+     */
+    public int[] getLayerDialerPosition()
+    {
+        return layerDialerPosition != null ? layerDialerPosition.clone() : new int[]{};
+    }
+
+    /**
+     * Gets the layer enter position.
+     * 
+     * @return the layer enter position
+     */
+    public int[] getLayerEnterPosition()
+    {
+        return layerEnterPosition != null ? layerEnterPosition.clone() : new int[]{};
+    }
+
+    /**
+     * Gets the layer iris activation position.
+     * 
+     * @return the layer iris activation position
+     */
+    public int[] getLayerIrisActivationPosition()
+    {
+        return layerIrisActivationPosition != null ? layerIrisActivationPosition.clone() : new int[]{};
+    }
+
+    /**
+     * Gets the layer light positions.
+     * 
+     * @return the layer light positions
+     */
+    public ArrayList<ArrayList<Integer[]>> getLayerLightPositions()
+    {
+        return layerLightPositions;
+    }
+
+    /**
+     * Gets the layer portal positions.
+     * 
+     * @return the layer portal positions
+     */
+    public ArrayList<Integer[]> getLayerPortalPositions()
+    {
+        return layerPortalPositions;
+    }
+
+    /**
+     * Gets the layer redstone activation position.
+     * 
+     * @return the layer redstone activation position
+     */
+    public int[] getLayerRedstoneActivationPosition()
+    {
+        return layerRedstoneActivationPosition != null ? layerRedstoneActivationPosition.clone() : new int[]{};
+    }
+
+    /**
+     * Gets the layer redstone dialer activation position.
+     * 
+     * @return the layer redstone dialer activation position
+     */
+    public int[] getLayerRedstoneDialerActivationPosition()
+    {
+        return layerRedstoneDialerActivationPosition != null ? layerRedstoneDialerActivationPosition.clone()
+            : new int[]{};
+    }
+
+    /**
+     * Gets the layer sign position.
+     * 
+     * @return the layer sign position
+     */
+    public int[] getLayerSignPosition()
+    {
+        return layerSignPosition != null ? layerSignPosition.clone() : new int[]{};
+    }
+
+    /**
+     * Gets the layer woosh positions.
+     * 
+     * @return the layer woosh positions
+     */
+    public ArrayList<ArrayList<Integer[]>> getLayerWooshPositions()
+    {
+        return layerWooshPositions;
+    }
+
+    /**
+     * Sets the layer activation position.
+     * 
+     * @param layerActivationPosition
+     *            the new layer activation position
+     */
+    public void setLayerActivationPosition(final int[] layerActivationPosition)
+    {
+        this.layerActivationPosition = layerActivationPosition.clone();
+    }
+
+    /**
+     * Sets the layer block positions.
+     * 
+     * @param layerBlockPositions
+     *            the new layer block positions
+     */
+    public void setLayerBlockPositions(final ArrayList<Integer[]> layerBlockPositions)
+    {
+        this.layerBlockPositions = layerBlockPositions;
+    }
+
+    /**
+     * Sets the layer dialer position.
+     * 
+     * @param layerDialerPosition
+     *            the new layer dialer position
+     */
+    public void setLayerDialerPosition(final int[] layerDialerPosition)
+    {
+        this.layerDialerPosition = layerDialerPosition.clone();
+    }
+
+    /**
+     * Sets the layer enter position.
+     * 
+     * @param layerEnterPosition
+     *            the new layer enter position
+     */
+    public void setLayerEnterPosition(final int[] layerEnterPosition)
+    {
+        this.layerEnterPosition = layerEnterPosition.clone();
+    }
+
+    /**
+     * Sets the layer iris activation position.
+     * 
+     * @param layerIrisActivationPosition
+     *            the new layer iris activation position
+     */
+    public void setLayerIrisActivationPosition(final int[] layerIrisActivationPosition)
+    {
+        this.layerIrisActivationPosition = layerIrisActivationPosition.clone();
+    }
+
+    /**
+     * Sets the layer light positions.
+     * 
+     * @param layerLightPositions
+     *            the new layer light positions
+     */
+    public void setLayerLightPositions(final ArrayList<ArrayList<Integer[]>> layerLightPositions)
+    {
+        this.layerLightPositions = layerLightPositions;
+    }
+
+    /**
+     * Sets the layer portal positions.
+     * 
+     * @param layerPortalPositions
+     *            the new layer portal positions
+     */
+    public void setLayerPortalPositions(final ArrayList<Integer[]> layerPortalPositions)
+    {
+        this.layerPortalPositions = layerPortalPositions;
+    }
+
+    /**
+     * Sets the layer redstone activation position.
+     * 
+     * @param layerRedstoneActivationPosition
+     *            the new layer redstone activation position
+     */
+    public void setLayerRedstoneActivationPosition(final int[] layerRedstoneActivationPosition)
+    {
+        this.layerRedstoneActivationPosition = layerRedstoneActivationPosition.clone();
+    }
+
+    /**
+     * Sets the layer redstone dialer activation position.
+     * 
+     * @param layerRedstoneDialerActivationPosition
+     *            the new layer redstone dialer activation position
+     */
+    public void setLayerRedstoneDialerActivationPosition(final int[] layerRedstoneDialerActivationPosition)
+    {
+        this.layerRedstoneDialerActivationPosition = layerRedstoneDialerActivationPosition.clone();
+    }
+
+    /**
+     * Sets the layer sign position.
+     * 
+     * @param layerSignPosition
+     *            the new layer sign position
+     */
+    public void setLayerSignPosition(final int[] layerSignPosition)
+    {
+        this.layerSignPosition = layerSignPosition.clone();
+    }
+
+    /**
+     * Sets the layer woosh positions.
+     * 
+     * @param layerWooshPositions
+     *            the new layer woosh positions
+     */
+    public void setLayerWooshPositions(final ArrayList<ArrayList<Integer[]>> layerWooshPositions)
+    {
+        this.layerWooshPositions = layerWooshPositions;
     }
 }

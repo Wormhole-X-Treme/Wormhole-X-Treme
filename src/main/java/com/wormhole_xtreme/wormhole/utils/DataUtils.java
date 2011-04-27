@@ -125,10 +125,7 @@ public class DataUtils
      */
     public static final byte[] intToByteArray(final int value)
     {
-        return new byte[]
-        {
-            (byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value
-        };
+        return new byte[]{(byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value};
     }
 
     /**

@@ -412,21 +412,21 @@ public class StargateDBManager
                 final Stargate s = StargateHelper.parseVersionedData(gatesData.getBytes("GateData"), w, gatesData.getString("Name"), sn);
                 if (s != null)
                 {
-                    s.gateId = gatesData.getInt("Id");
-                    s.owner = gatesData.getString("Owner");
+                    s.setGateId(gatesData.getInt("Id"));
+                    s.setGateOwner(gatesData.getString("Owner"));
                     String gateShapeName = gatesData.getString("GateShape");
                     if (gateShapeName == null)
                     {
                         gateShapeName = "Standard";
                     }
 
-                    s.gateShape = StargateHelper.getShape(gateShapeName);
+                    s.setGateShape(StargateHelper.getShape(gateShapeName));
                     if (sn != null)
                     {
-                        sn.gateList.add(s);
-                        if (s.isSignPowered)
+                        sn.getNetworkGateList().add(s);
+                        if (s.isGateSignPowered())
                         {
-                            sn.signGateList.add(s);
+                            sn.getNetworkSignGateList().add(s);
                         }
                     }
                     StargateManager.addStargate(s);
@@ -442,44 +442,44 @@ public class StargateDBManager
             final ArrayList<Stargate> gateList = StargateManager.getAllGates();
             for (final Stargate s : gateList)
             {
-                final World w = s.myWorld;
+                final World w = s.getGateWorld();
 
-                if (s.litGate && !s.active)
+                if (s.isGateLit() && !s.isGateActive())
                 {
-                    s.unLightStargate();
+                    s.lightStargate(false);
                 }
 
-                if (s.tempTargetId >= 0)
+                if (s.getGateTempTargetId() >= 0)
                 {
                     // I know this is bad, I am just trying to get this feature out asap.
                     for (final Stargate t : gateList)
                     {
-                        if (t.gateId == s.tempTargetId)
+                        if (t.getGateId() == s.getGateTempTargetId())
                         {
-                            s.forceDialStargate(t);
+                            s.dialStargate(t, true);
                             break;
                         }
                     }
                 }
 
-                if (s.tempSignTarget >= 0)
+                if (s.getGateTempSignTarget() >= 0)
                 {
                     // I know this is bad, I am just trying to get this feature out asap.
                     for (final Stargate t : gateList)
                     {
-                        if (t.gateId == s.tempSignTarget)
+                        if (t.getGateId() == s.getGateTempSignTarget())
                         {
-                            s.signTarget = t;
+                            s.setGateSignTarget(t);
                             break;
                         }
                     }
                 }
 
-                if (s.isSignPowered && (s.signTarget == null))
+                if (s.isGateSignPowered() && (s.getGateSignTarget() == null))
                 {
-                    if (w.isChunkLoaded(s.teleportSignBlock.getChunk()))
+                    if (w.isChunkLoaded(s.getGateTeleportSignBlock().getChunk()))
                     {
-                        s.tryClickTeleportSign(s.teleportSignBlock);
+                        s.tryClickTeleportSign(s.getGateTeleportSignBlock());
                     }
                 }
             }
@@ -536,7 +536,7 @@ public class StargateDBManager
                 removeStatement = wormholeSQLConnection.prepareStatement("DELETE FROM Stargates WHERE name = ?;");
             }
 
-            removeStatement.setString(1, s.name);
+            removeStatement.setString(1, s.getGateName());
             removeStatement.executeUpdate();
         }
         catch (final SQLException e)
@@ -603,7 +603,7 @@ public class StargateDBManager
             {
                 getGateStatement = wormholeSQLConnection.prepareStatement("SELECT * FROM Stargates WHERE Name = ?");
             }
-            getGateStatement.setString(1, s.name);
+            getGateStatement.setString(1, s.getGateName());
 
             gatesData = getGateStatement.executeQuery();
             if (gatesData.next())
@@ -614,28 +614,28 @@ public class StargateDBManager
                 }
 
                 updateGateStatement.setBytes(1, StargateHelper.stargatetoBinary(s));
-                if (s.network != null)
+                if (s.getGateNetwork() != null)
                 {
-                    updateGateStatement.setString(2, s.network.netName);
+                    updateGateStatement.setString(2, s.getGateNetwork().getNetworkName());
                 }
                 else
                 {
                     updateGateStatement.setString(2, "");
                 }
-                updateGateStatement.setLong(3, s.myWorld.getId());
-                updateGateStatement.setString(4, s.myWorld.getName());
-                updateGateStatement.setString(5, s.myWorld.getEnvironment().toString());
-                updateGateStatement.setString(6, s.owner);
-                if (s.gateShape == null)
+                updateGateStatement.setLong(3, s.getGateWorld().getId());
+                updateGateStatement.setString(4, s.getGateWorld().getName());
+                updateGateStatement.setString(5, s.getGateWorld().getEnvironment().toString());
+                updateGateStatement.setString(6, s.getGateOwner());
+                if (s.getGateShape() == null)
                 {
                     updateGateStatement.setString(7, "Standard");
                 }
                 else
                 {
-                    updateGateStatement.setString(7, s.gateShape.shapeName);
+                    updateGateStatement.setString(7, s.getGateShape().getShapeName());
                 }
 
-                updateGateStatement.setLong(8, s.gateId);
+                updateGateStatement.setLong(8, s.getGateId());
                 updateGateStatement.executeUpdate();
             }
             else
@@ -647,31 +647,31 @@ public class StargateDBManager
                     storeStatement = wormholeSQLConnection.prepareStatement("INSERT INTO Stargates(Name, GateData, Network, World, WorldName, WorldEnvironment, Owner, GateShape) VALUES ( ? , ? , ? , ? , ? , ?, ?, ? );");
                 }
 
-                storeStatement.setString(1, s.name);
+                storeStatement.setString(1, s.getGateName());
                 final byte[] data = StargateHelper.stargatetoBinary(s);
                 storeStatement.setBytes(2, data);
-                if (s.network != null)
+                if (s.getGateNetwork() != null)
                 {
-                    storeStatement.setString(3, s.network.netName);
+                    storeStatement.setString(3, s.getGateNetwork().getNetworkName());
                 }
                 else
                 {
                     storeStatement.setString(3, "");
                 }
 
-                storeStatement.setLong(4, s.myWorld.getId());
-                storeStatement.setString(5, s.myWorld.getName());
-                storeStatement.setString(6, s.myWorld.getEnvironment().toString());
-                storeStatement.setString(7, s.owner);
-                storeStatement.setString(8, s.gateShape.shapeName);
+                storeStatement.setLong(4, s.getGateWorld().getId());
+                storeStatement.setString(5, s.getGateWorld().getName());
+                storeStatement.setString(6, s.getGateWorld().getEnvironment().toString());
+                storeStatement.setString(7, s.getGateOwner());
+                storeStatement.setString(8, s.getGateShape().getShapeName());
 
                 storeStatement.executeUpdate();
 
-                getGateStatement.setString(1, s.name);
+                getGateStatement.setString(1, s.getGateName());
                 gatesData = getGateStatement.executeQuery();
                 if (gatesData.next())
                 {
-                    s.gateId = gatesData.getInt("Id");
+                    s.setGateId(gatesData.getInt("Id"));
                 }
             }
         }

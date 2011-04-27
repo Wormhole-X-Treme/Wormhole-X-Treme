@@ -90,9 +90,9 @@ public class WXPermissions
             String gatenet;
             if (stargate != null)
             {
-                if (stargate.network != null)
+                if (stargate.getGateNetwork() != null)
                 {
-                    gatenet = stargate.network.netName;
+                    gatenet = stargate.getGateNetwork().getNetworkName();
                 }
                 else
                 {
@@ -114,7 +114,7 @@ public class WXPermissions
             {
                 if (stargate != null)
                 {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " allowed build permission on: " + stargate.name);
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " allowed build permission on: " + stargate.getGateName());
                 }
                 else
                 {
@@ -126,7 +126,7 @@ public class WXPermissions
             {
                 if (stargate != null)
                 {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied config permission on: " + stargate.name);
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied config permission on: " + stargate.getGateName());
                 }
                 else
                 {
@@ -193,9 +193,9 @@ public class WXPermissions
         if (stargate != null)
         {
             String gatenet;
-            if (stargate.network != null)
+            if (stargate.getGateNetwork() != null)
             {
-                gatenet = stargate.network.netName;
+                gatenet = stargate.getGateNetwork().getNetworkName();
             }
             else
             {
@@ -203,12 +203,12 @@ public class WXPermissions
             }
             if (permSimpleUse(player) || (permComplexUseDialer(player) && (gatenet.equals("Public") || ( !gatenet.equals("Public") && permComplexNetworkUse(player, gatenet)))))
             {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " allowed dialer permission on: " + stargate.name);
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " allowed dialer permission on: " + stargate.getGateName());
                 return true;
             }
             else
             {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied dialer permission on: " + stargate.name);
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied dialer permission on: " + stargate.getGateName());
             }
         }
         return false;
@@ -269,14 +269,14 @@ public class WXPermissions
     {
         if (stargate != null)
         {
-            if (permComplexRemoveAll(player) || ((stargate.owner != null) && stargate.owner.equals(player.getName()) && permComplexRemoveOwn(player)) || permSimpleRemove(player))
+            if (permComplexRemoveAll(player) || ((stargate.getGateOwner() != null) && stargate.getGateOwner().equals(player.getName()) && permComplexRemoveOwn(player)) || permSimpleRemove(player))
             {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " allowed Remove on: " + stargate.name);
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " allowed Remove on: " + stargate.getGateName());
                 return true;
             }
             else
             {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied Remove on: " + stargate.name);
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied Remove on: " + stargate.getGateName());
             }
         }
         return false;
@@ -296,9 +296,9 @@ public class WXPermissions
         if (stargate != null)
         {
             String gatenet;
-            if (stargate.network != null)
+            if (stargate.getGateNetwork() != null)
             {
-                gatenet = stargate.network.netName;
+                gatenet = stargate.getGateNetwork().getNetworkName();
             }
             else
             {
@@ -306,12 +306,12 @@ public class WXPermissions
             }
             if (permSimpleUse(player) || (permComplexUseSign(player) && (gatenet.equals("Public") || ( !gatenet.equals("Public") && permComplexNetworkUse(player, gatenet)))))
             {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " allowed sign permission on: " + stargate.name);
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " allowed sign permission on: " + stargate.getGateName());
                 return true;
             }
             else
             {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied sign permission on: " + stargate.name);
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied sign permission on: " + stargate.getGateName());
             }
         }
         return false;

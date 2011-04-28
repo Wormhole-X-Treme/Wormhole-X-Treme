@@ -128,7 +128,7 @@ class CommandUtilities
         {
             if (stargate.isGateIrisActive())
             {
-                stargate.toggleIrisActive();
+                stargate.toggleIrisActive(false);
             }
             stargate.setupIrisLever(false);
         }

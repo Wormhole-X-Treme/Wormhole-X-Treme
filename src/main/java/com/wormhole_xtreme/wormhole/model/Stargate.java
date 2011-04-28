@@ -29,7 +29,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
-import org.bukkit.material.MaterialData;
 
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
@@ -277,74 +276,6 @@ public class Stargate
     }
 
     /**
-     * Set the dial button and lever block state based on gate activation status.
-     * 
-     * @param regenerate
-     *            true, to replace missing activation lever.
-     */
-    public void dialButtonLeverState(final boolean regenerate)
-    {
-        if (getGateActivationBlock() != null)
-        {
-            Material material = getGateActivationBlock().getType();
-            if (regenerate)
-            {
-                if ((material != Material.LEVER) && (material != Material.STONE_BUTTON))
-                {
-                    getGateActivationBlock().setType(Material.LEVER);
-                    switch (getGateFacing())
-                    {
-                        case SOUTH :
-                            getGateActivationBlock().setData((byte) 0x01);
-                            break;
-                        case NORTH :
-                            getGateActivationBlock().setData((byte) 0x02);
-                            break;
-                        case WEST :
-                            getGateActivationBlock().setData((byte) 0x03);
-                            break;
-                        case EAST :
-                            getGateActivationBlock().setData((byte) 0x04);
-                            break;
-                        default :
-                            break;
-                    }
-                }
-                material = getGateActivationBlock().getType();
-            }
-            if ((material == Material.LEVER) || (material == Material.STONE_BUTTON))
-            {
-                int state = getGateActivationBlock().getData();
-                if (material == Material.STONE_BUTTON)
-                {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Automaticially replaced Button on gate \"" + getGateName() + "\" with Lever.");
-                    getGateActivationBlock().setType(Material.LEVER);
-                    getGateActivationBlock().setData((byte) state);
-                }
-                if (isGateActive())
-                {
-                    if ((state <= 4) && (state != 0))
-                    {
-                        state = state + 8;
-                    }
-                }
-                else
-                {
-                    if ((state <= 12) && (state >= 9))
-                    {
-                        state = state - 8;
-                    }
-                }
-
-                getGateActivationBlock().setData((byte) state);
-                {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Dial Button Lever Gate: \"" + getGateName() + "\" Material: \"" + material.toString() + "\" State: \"" + state + "\"");
-                }
-            }
-        }
-    }
-
-    /**
      * This method activates the current stargate as if it had just been dialed.
      * This includes filling the event horizon, canceling any other shutdown events,
      * scheduling the shutdown time and scheduling the WOOSH if enabled.
@@ -372,7 +303,7 @@ public class Stargate
             WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Wormhole \"" + getGateName() + "\" ShutdownTaskID \"" + getGateShutdownTaskId() + "\" created.");
             if (getGateShutdownTaskId() == -1)
             {
-                shutdownStargate();
+                shutdownStargate(true);
                 WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Failed to schdule wormhole shutdown timeout: " + timeout + " Received task id of -1. Wormhole forced closed NOW.");
             }
         }
@@ -382,7 +313,7 @@ public class Stargate
             if ( !isGateActive())
             {
                 setGateActive(true);
-                dialButtonLeverState(false);
+                toggleDialLeverState(false);
                 setGateRecentlyActive(false);
             }
             if ( !isGateLit())
@@ -441,12 +372,12 @@ public class Stargate
             }
             else if ((isGateActive()) && ( !getGateTarget().isGateActive()))
             {
-                this.shutdownStargate();
+                shutdownStargate(true);
                 WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Far wormhole failed to open. Closing local wormhole for safety sake.");
             }
             else if (( !isGateActive()) && (getGateTarget().isGateActive()))
             {
-                target.shutdownStargate();
+                target.shutdownStargate(true);
                 WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Local wormhole failed to open. Closing far end wormhole for safety sake.");
             }
         }
@@ -890,7 +821,16 @@ public class Stargate
         if (on)
         {
             WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Lighting up Order: " + getGateLightingCurrentIteration());
-            setGateLit(true);
+            if (getGateLightingCurrentIteration() == 0)
+            {
+                setGateLit(true);
+            }
+            else if ( !isGateLit())
+            {
+                lightStargate(false);
+                setGateLightingCurrentIteration(0);
+                return;
+            }
             setGateLightingCurrentIteration(getGateLightingCurrentIteration() + 1);
             // Light up blocks
             if (getGateLightBlocks() != null)
@@ -1356,9 +1296,28 @@ public class Stargate
         }
         else
         {
-            toggleIrisActive(false);
+            setIrisState(false);
             setupIrisLever(false);
             setGateIrisDeactivationCode("");
+        }
+    }
+
+    /**
+     * This method sets the iris state and toggles the iris lever.
+     * Smart enough to know if the gate is active and set the proper
+     * material in its interior.
+     * 
+     * @param irisactive
+     *            true for iris on, false for off.
+     */
+    private void setIrisState(final boolean irisactive)
+    {
+        setGateIrisActive(irisactive);
+        fillGateInterior(isGateIrisActive() ? getGateShape().getShapeIrisMaterial() : isGateActive()
+            ? getGateShape().getShapePortalMaterial() : Material.AIR);
+        if ((getGateIrisActivationBlock() != null) && (getGateIrisActivationBlock().getType() == Material.LEVER))
+        {
+            getGateIrisActivationBlock().setData(WorldUtils.getLeverToggleByte(getGateIrisActivationBlock().getData(), isGateIrisActive()));
         }
     }
 
@@ -1387,24 +1346,8 @@ public class Stargate
             {
                 final Block nameSign = getGateNameBlockHolder().getFace(getGateFacing());
                 nameSign.setType(Material.WALL_SIGN);
-                switch (getGateFacing())
-                {
-                    case NORTH :
-                        nameSign.setData((byte) 0x04);
-                        break;
-                    case SOUTH :
-                        nameSign.setData((byte) 0x05);
-                        break;
-                    case EAST :
-                        nameSign.setData((byte) 0x02);
-                        break;
-                    case WEST :
-                        nameSign.setData((byte) 0x03);
-                        break;
-                    default :
-                        break;
-                }
-                nameSign.getState().setData(new MaterialData(Material.WALL_SIGN));
+                nameSign.setData(WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()));
+                // nameSign.getState().setData(new org.bukkit.material.Sign(Material.WALL_SIGN));
                 final Sign sign = (Sign) nameSign.getState();
                 sign.setLine(0, "-" + getGateName() + "-");
 
@@ -1449,23 +1392,7 @@ public class Stargate
             getGateStructureBlocks().add(getGateIrisActivationBlock().getLocation());
 
             getGateIrisActivationBlock().setType(Material.LEVER);
-            switch (getGateFacing())
-            {
-                case SOUTH :
-                    getGateIrisActivationBlock().setData((byte) 0x01);
-                    break;
-                case NORTH :
-                    getGateIrisActivationBlock().setData((byte) 0x02);
-                    break;
-                case WEST :
-                    getGateIrisActivationBlock().setData((byte) 0x03);
-                    break;
-                case EAST :
-                    getGateIrisActivationBlock().setData((byte) 0x04);
-                    break;
-                default :
-                    break;
-            }
+            getGateIrisActivationBlock().setData(WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()));
         }
         else
         {
@@ -1476,15 +1403,6 @@ public class Stargate
             }
         }
 
-    }
-
-    /**
-     * Shutdown stargate.
-     * This is the same as calling ShutdownStargate(false)
-     */
-    public void shutdownStargate()
-    {
-        this.shutdownStargate(true);
     }
 
     /**
@@ -1504,7 +1422,7 @@ public class Stargate
 
         if (getGateTarget() != null)
         {
-            getGateTarget().shutdownStargate();
+            getGateTarget().shutdownStargate(true);
         }
 
         setGateTarget(null);
@@ -1515,12 +1433,12 @@ public class Stargate
         setGateActive(false);
 
         lightStargate(false);
-        dialButtonLeverState(false);
+        toggleDialLeverState(false);
         // Only set back to air if iris isn't on.
         // If the iris should be on, we will make it that way.
         if (isGateIrisDefaultActive())
         {
-            toggleIrisActive(isGateIrisDefaultActive());
+            setIrisState(isGateIrisDefaultActive());
         }
         else if ( !isGateIrisActive())
         {
@@ -1617,6 +1535,7 @@ public class Stargate
                 getGateTeleportSign().setLine(1, "");
                 getGateTeleportSign().setLine(2, "No Other Gates");
                 getGateTeleportSign().setLine(3, "");
+                getGateTeleportSign().update();
                 setGateSignTarget(null);
                 return;
             }
@@ -1717,7 +1636,7 @@ public class Stargate
             }
         }
 
-        getGateTeleportSign().setData(getGateTeleportSign().getData());
+        // getGateTeleportSign().setData(getGateTeleportSign().getData());
         getGateTeleportSign().update(true);
     }
 
@@ -1751,7 +1670,7 @@ public class Stargate
             // Make sure to reset iris if it should be on.
             if (isGateIrisDefaultActive())
             {
-                toggleIrisActive(isGateIrisDefaultActive());
+                setIrisState(isGateIrisDefaultActive());
             }
             if (isGateLit())
             {
@@ -1766,64 +1685,55 @@ public class Stargate
     }
 
     /**
-     * Toggle the iris state.
+     * Set the dial button and lever block state based on gate activation status.
+     * 
+     * @param regenerate
+     *            true, to replace missing activation lever.
      */
-    public void toggleIrisActive()
+    public void toggleDialLeverState(final boolean regenerate)
+    {
+        if (getGateActivationBlock() != null)
+        {
+            Material material = getGateActivationBlock().getType();
+            if (regenerate)
+            {
+                getGateActivationBlock().setType(Material.LEVER);
+                getGateActivationBlock().setData(WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()));
+                material = getGateActivationBlock().getType();
+            }
+            final byte leverState = getGateActivationBlock().getData();
+            switch (material)
+            {
+                case STONE_BUTTON :
+                    getGateActivationBlock().setType(Material.LEVER);
+                    getGateActivationBlock().setData(leverState);
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Automaticially replaced Button on gate \"" + getGateName() + "\" with Lever.");
+                    getGateActivationBlock().setData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
+                    break;
+                case LEVER :
+                    getGateActivationBlock().setData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
+                    break;
+                default :
+                    break;
+            }
+            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Dial Button Lever Gate: \"" + getGateName() + "\" Material: \"" + material.toString() + "\" State: \"" + leverState + "\"");
+        }
+    }
+
+    /**
+     * Toggle the iris state.
+     * 
+     * @param setDefault
+     *            true to set the toggled state as the default state.
+     */
+    public void toggleIrisActive(final boolean setDefault)
     {
         setGateIrisActive( !isGateIrisActive());
-        this.toggleIrisActive(isGateIrisActive());
-
-    }
-
-    /**
-     * This method sets the iris state and toggles the iris lever.
-     * Smart enough to know if the gate is active and set the proper
-     * material in its interior.
-     * 
-     * @param irisactive
-     *            true for iris on, false for off.
-     */
-    private void toggleIrisActive(final boolean irisactive)
-    {
-        setGateIrisActive(irisactive);
-        int leverstate = getGateIrisActivationBlock().getData();
-        if (isGateIrisActive())
+        setIrisState(isGateIrisActive());
+        if (setDefault)
         {
-            if ((leverstate <= 4) && (leverstate != 0))
-            {
-                leverstate = leverstate + 8;
-            }
-            fillGateInterior(getGateShape().getShapeIrisMaterial());
+            setGateIrisDefaultActive(isGateIrisActive());
         }
-        else
-        {
-            if ((leverstate <= 12) && (leverstate >= 9))
-            {
-                leverstate = leverstate - 8;
-            }
-            if (isGateActive())
-            {
-                fillGateInterior(getGateShape().getShapePortalMaterial());
-            }
-            else
-            {
-                fillGateInterior(Material.AIR);
-            }
-        }
-        if ((getGateIrisActivationBlock() != null) && (getGateIrisActivationBlock().getType() == Material.LEVER))
-        {
-            getGateIrisActivationBlock().setData((byte) leverstate);
-        }
-    }
-
-    /**
-     * This method should only be called when the Iris lever is hit.
-     * This toggles the current state of the Iris and then sets that state to be the default.
-     */
-    public void toggleIrisDefault()
-    {
-        toggleIrisActive();
-        setGateIrisDefaultActive(isGateIrisActive());
     }
 
     /**

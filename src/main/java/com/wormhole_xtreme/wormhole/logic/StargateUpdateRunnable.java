@@ -107,7 +107,7 @@ public class StargateUpdateRunnable implements Runnable
         switch (action)
         {
             case SHUTDOWN :
-                stargate.shutdownStargate();
+                stargate.shutdownStargate(true);
                 break;
             case ANIMATE_WOOSH :
                 stargate.animateOpening();

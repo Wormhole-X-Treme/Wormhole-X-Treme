@@ -149,6 +149,7 @@ public class Wormhole implements CommandExecutor
                 if (args.length == 3)
                 {
                     s.setGateOwner(args[2]);
+                    s.setupGateSign(true);
                     sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Gate: " + s.getGateName() + " Now owned by: " + s.getGateOwner());
                 }
                 else if (args.length == 2)
@@ -249,7 +250,7 @@ public class Wormhole implements CommandExecutor
             final Stargate s = StargateManager.getStargate(args[1]);
             if (s != null)
             {
-                s.dialButtonLeverState(true);
+                s.toggleDialLeverState(true);
                 if ( !s.getGateIrisDeactivationCode().equals(""))
                 {
                     s.setupIrisLever(false);

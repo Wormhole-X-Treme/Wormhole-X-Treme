@@ -96,6 +96,45 @@ public class WorldUtils
     }
 
     /**
+     * Lever facing data from block face.
+     * 
+     * @param bf
+     *            the bf
+     * @return the byte
+     */
+    public static byte getLeverFacingByteFromBlockFace(final BlockFace blockFace)
+    {
+        switch (blockFace)
+        {
+            case SOUTH :
+                return (byte) 0x1;
+            case NORTH :
+                return (byte) 0x2;
+            case WEST :
+                return (byte) 0x3;
+            case EAST :
+                return (byte) 0x4;
+            default :
+                return (byte) 0x0;
+        }
+    }
+
+    /**
+     * Gets the lever toggle byte.
+     * 
+     * @param leverState
+     *            the lever state byte
+     * @param isActive
+     *            is this an active toggle?
+     * @return the lever toggle byte
+     */
+    public static byte getLeverToggleByte(final byte leverState, final boolean isActive)
+    {
+        return (byte) (isActive ? (leverState & 0x8) != 0x8 ? leverState ^ 0x8 : leverState : (leverState & 0x8) == 0x8
+            ? leverState ^ 0x8 : leverState);
+    }
+
+    /**
      * Gets the perpendicular right direction.
      * 
      * @param bf
@@ -126,6 +165,30 @@ public class WorldUtils
                 return BlockFace.SOUTH_WEST;
             default :
                 return bf;
+        }
+    }
+
+    /**
+     * Get the Sign facing byte data from block face.
+     * If no face is up or down we default to south (same as bukkit).
+     * 
+     * @param bf
+     *            the bf
+     * @return the byte
+     */
+    public static byte getSignFacingByteFromBlockFace(final BlockFace blockFace)
+    {
+        switch (blockFace)
+        {
+            case EAST :
+                return (byte) 0x2;
+            case WEST :
+                return (byte) 0x3;
+            case NORTH :
+                return (byte) 0x4;
+            case SOUTH :
+            default :
+                return (byte) 0x5;
         }
     }
 
@@ -173,52 +236,6 @@ public class WorldUtils
             }
         }
     }
-
-//    /**
-//     * Sign facing data from block face.
-//     *
-//     * @param bf the bf
-//     * @return the byte
-//     */
-//    public static byte signFacingDataFromBlockFace(BlockFace bf)
-//    {
-//        switch ( bf )
-//        {
-//            case NORTH:
-//                return (byte)4;
-//            case SOUTH:
-//                return (byte)5;
-//            case EAST:
-//                return (byte)2;
-//            case WEST:
-//                return (byte)3;
-//        }
-//
-//        return (byte)0;
-//    }
-//
-//    /**
-//     * Lever facing data from block face.
-//     *
-//     * @param bf the bf
-//     * @return the byte
-//     */
-//    public static byte leverFacingDataFromBlockFace(BlockFace bf)
-//    {
-//        switch ( bf )
-//        {
-//            case NORTH:
-//                return (byte)3;
-//            case SOUTH:
-//                return (byte)1;
-//            case EAST:
-//                return (byte)0;
-//            case WEST:
-//                return (byte)2;
-//        }
-//
-//        return (byte)0;
-//    }
 
     /**
      * Schedule chunk unload.

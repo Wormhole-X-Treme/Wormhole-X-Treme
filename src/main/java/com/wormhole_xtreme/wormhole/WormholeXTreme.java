@@ -365,6 +365,7 @@ public class WormholeXTreme extends JavaPlugin
         catch (final Exception e)
         {
             prettyLog(Level.WARNING, false, "Caught Exception while trying to load support plugins." + e.getMessage());
+            e.printStackTrace();
         }
         registerEvents(true);
         HelpSupport.registerHelpCommands();

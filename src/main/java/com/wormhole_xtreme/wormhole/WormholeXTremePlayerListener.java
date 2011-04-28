@@ -77,7 +77,7 @@ class WormholeXTremePlayerListener extends PlayerListener
                 }
                 else if (WorldUtils.isSameBlock(stargate.getGateIrisActivationBlock(), clickedBlock))
                 {
-                    stargate.toggleIrisDefault();
+                    stargate.toggleIrisActive(true);
                     if ((stargate.isGateActive()) && ( !stargate.isGateIrisActive()))
                     {
                         stargate.fillGateInterior(stargate.getGateShape().getShapePortalMaterial());
@@ -212,7 +212,7 @@ class WormholeXTremePlayerListener extends PlayerListener
             if (stargate.getGateTarget() != null)
             {
                 //Shutdown stargate
-                stargate.shutdownStargate();
+                stargate.shutdownStargate(true);
                 player.sendMessage(ConfigManager.MessageStrings.gateShutdown.toString());
                 return true;
             }
@@ -223,7 +223,7 @@ class WormholeXTremePlayerListener extends PlayerListener
                 {
                     stargate.stopActivationTimer();
                     stargate.setGateActive(false);
-                    stargate.dialButtonLeverState(false);
+                    stargate.toggleDialLeverState(false);
                     stargate.lightStargate(false);
                     player.sendMessage(ConfigManager.MessageStrings.gateDeactivated.toString());
                     return true;
@@ -430,7 +430,7 @@ class WormholeXTremePlayerListener extends PlayerListener
             }
             if (ConfigManager.getTimeoutShutdown() == 0)
             {
-                stargate.shutdownStargate();
+                stargate.shutdownStargate(true);
             }
             return true;
         }

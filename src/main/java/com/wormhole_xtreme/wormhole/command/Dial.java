@@ -79,7 +79,7 @@ public class Dial implements CommandExecutor
                     }
                     if (start.isGateIrisActive())
                     {
-                        start.toggleIrisActive();
+                        start.toggleIrisActive(false);
                     }
                     if ( !target.getGateIrisDeactivationCode().equals("") && target.isGateIrisActive())
                     {
@@ -87,7 +87,7 @@ public class Dial implements CommandExecutor
                         {
                             if (target.isGateIrisActive())
                             {
-                                target.toggleIrisActive();
+                                target.toggleIrisActive(false);
                                 player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "IDC accepted. Iris has been deactivated.");
                             }
                         }

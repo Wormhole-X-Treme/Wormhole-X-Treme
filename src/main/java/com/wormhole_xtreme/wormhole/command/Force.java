@@ -91,7 +91,7 @@ public class Force implements CommandExecutor
                     if (gate.isGateActive() && close)
                     {
                         activelist.add(gate.getGateName());
-                        gate.shutdownStargate();
+                        gate.shutdownStargate(true);
                         if (gate.isGateActive())
                         {
                             gate.setGateActive(false);
@@ -105,7 +105,7 @@ public class Force implements CommandExecutor
                     if (gate.isGateIrisActive() && drop)
                     {
                         droplist.add(gate.getGateName());
-                        gate.toggleIrisActive();
+                        gate.toggleIrisActive(false);
                     }
                 }
                 if (close && !activelist.isEmpty())

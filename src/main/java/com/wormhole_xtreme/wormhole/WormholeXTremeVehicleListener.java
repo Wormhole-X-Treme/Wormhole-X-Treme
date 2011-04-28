@@ -101,7 +101,7 @@ class WormholeXTremeVehicleListener extends VehicleListener
                             ? st.getGateMinecartTeleportLocation() : st.getGatePlayerTeleportLocation());
                         if (ConfigManager.getTimeoutShutdown() == 0)
                         {
-                            st.shutdownStargate();
+                            st.shutdownStargate(true);
                         }
                         return false;
                     }
@@ -212,7 +212,7 @@ class WormholeXTremeVehicleListener extends VehicleListener
 
             if (ConfigManager.getTimeoutShutdown() == 0)
             {
-                st.shutdownStargate();
+                st.shutdownStargate(true);
             }
             return true;
         }

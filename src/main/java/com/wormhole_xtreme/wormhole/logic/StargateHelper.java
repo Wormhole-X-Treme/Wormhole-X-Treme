@@ -721,7 +721,9 @@ public class StargateHelper
             {
                 try
                 {
-                    br.close();
+                    if (br != null) {
+                        br.close();
+                    }
                 }
                 catch (final IOException e)
                 {
@@ -729,7 +731,9 @@ public class StargateHelper
                 }
                 try
                 {
-                    bw.close();
+                    if (bw != null) {
+                        bw.close();
+                    }
                 }
                 catch (final IOException e)
                 {
@@ -1645,8 +1649,7 @@ public class StargateHelper
             tempGate.getGateStructureBlocks().add(signBlock.getLocation());
 
             final String name = tempGate.getGateTeleportSign().getLine(0);
-            final Stargate posDupe = StargateManager.getStargate(name);
-            if (posDupe != null)
+            if ( StargateManager.getStargate(name) != null)
             {
                 tempGate.setGateName("");
                 return false;

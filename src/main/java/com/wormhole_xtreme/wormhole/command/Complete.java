@@ -24,7 +24,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
-import com.wormhole_xtreme.wormhole.model.Stargate;
 import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
@@ -54,8 +53,6 @@ public class Complete implements CommandExecutor
 
         if (name.length() < 12)
         {
-            final Stargate dupName = StargateManager.getStargate(name);
-
             String idc = "";
             String network = "Public";
 
@@ -73,7 +70,7 @@ public class Complete implements CommandExecutor
             }
             if (WXPermissions.checkWXPermissions(p, network, PermissionType.BUILD))
             {
-                if (dupName == null)
+                if (StargateManager.getStargate(name) == null)
                 {
                     final boolean success = StargateManager.completeStargate(p, name, idc, network);
 

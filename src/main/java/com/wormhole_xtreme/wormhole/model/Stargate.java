@@ -900,7 +900,6 @@ public class Stargate
             }
             getGateTeleportSign().setLine(2, "");
             getGateTeleportSign().setLine(3, "");
-            getGateTeleportSign().setData(getGateTeleportSign().getData());
             getGateTeleportSign().update();
         }
 

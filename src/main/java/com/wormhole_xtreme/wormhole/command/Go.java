@@ -28,7 +28,6 @@ import com.wormhole_xtreme.wormhole.model.Stargate;
 import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
-import com.wormhole_xtreme.wormhole.utils.TeleportUtils;
 
 /**
  * The Class Go.
@@ -59,7 +58,7 @@ public class Go implements CommandExecutor
                 final Stargate s = StargateManager.getStargate(goGate);
                 if (s != null)
                 {
-                    p.teleport(TeleportUtils.findSafeTeleportFromStargate(s));
+                    p.teleport(s.getGatePlayerTeleportLocation());
                 }
                 else
                 {

@@ -485,7 +485,7 @@ public class StargateManager
      */
     public static boolean isBlockInGate(final Block b)
     {
-        return allGateBlocks.containsKey(b.getLocation()) || openingAnimationBlocks.containsKey(b.getLocation());  
+        return allGateBlocks.containsKey(b.getLocation()) || openingAnimationBlocks.containsKey(b.getLocation());
     }
 
     /**

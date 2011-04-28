@@ -40,7 +40,6 @@ import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.model.StargateShape;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
-import com.wormhole_xtreme.wormhole.utils.TeleportUtils;
 import com.wormhole_xtreme.wormhole.utils.WorldUtils;
 
 /**
@@ -414,11 +413,6 @@ class WormholeXTremePlayerListener extends PlayerListener
                         target = stargate.getGatePlayerTeleportLocation();
                     }
                 }
-            }
-            if (target != stargate.getGatePlayerTeleportLocation())
-            {
-                target = TeleportUtils.findSafeTeleportFromStargate(stargate.getGateTarget());
-                // WorldUtils.checkChunkLoad(target.getBlock());
             }
             player.setNoDamageTicks(5);
             event.setFrom(target);

@@ -482,23 +482,23 @@ public class StargateHelper
         // Now set player teleport in location
         if (layer.getLayerPlayerExitPosition().length > 0)
         {
-            final Block teleBlock = StargateHelper.getBlockFromVector(layer.getLayerPlayerExitPosition(), directionVector, lowerCorner, w);
+            Block teleBlock = StargateHelper.getBlockFromVector(layer.getLayerPlayerExitPosition(), directionVector, lowerCorner, w);
 
             // First go forward one
-            Block bLoc = teleBlock.getRelative(tempGate.getGateFacing());
+            // Block bLoc = teleBlock.getRelative(tempGate.getGateFacing());
             // Now go up until we hit air or water.
-            while ((bLoc.getType() != Material.AIR) && (bLoc.getType() != Material.WATER))
+            while ((teleBlock.getType() != Material.AIR) && (teleBlock.getType() != Material.WATER))
             {
-                bLoc = bLoc.getRelative(BlockFace.UP);
+                teleBlock = teleBlock.getRelative(BlockFace.UP);
             }
-            final Location teleLoc = bLoc.getLocation();
+            final Location teleLoc = teleBlock.getLocation();
             // Make sure the guy faces the right way out of the portal.
             teleLoc.setYaw(WorldUtils.getDegreesFromBlockFace(tempGate.getGateFacing()));
             teleLoc.setPitch(0);
             // Put him in the middle of the block instead of a corner.
             // Players are 1.65 blocks tall, so we go up .66 more up :-p
             teleLoc.setX(teleLoc.getX() + 0.5);
-            teleLoc.setY(teleLoc.getY() + 0.66);
+            //teleLoc.setY(teleLoc.getY() + 0.66);
             teleLoc.setZ(teleLoc.getZ() + 0.5);
             tempGate.setGatePlayerTeleportLocation(teleLoc);
         }
@@ -506,23 +506,23 @@ public class StargateHelper
         // Now set minecart teleport in location
         if (layer.getLayerMinecartExitPosition().length > 0)
         {
-            final Block teleBlock = StargateHelper.getBlockFromVector(layer.getLayerMinecartExitPosition(), directionVector, lowerCorner, w);
+            Block teleBlock = StargateHelper.getBlockFromVector(layer.getLayerMinecartExitPosition(), directionVector, lowerCorner, w);
 
             // First go forward one
-            Block bLoc = teleBlock.getRelative(tempGate.getGateFacing());
+            //Block bLoc = teleBlock.getRelative(tempGate.getGateFacing());
             // Now go up until we hit air or water.
-            while ((bLoc.getType() != Material.AIR) && (bLoc.getType() != Material.WATER))
+            while ((teleBlock.getType() != Material.AIR) && (teleBlock.getType() != Material.WATER))
             {
-                bLoc = bLoc.getRelative(BlockFace.UP);
+                teleBlock = teleBlock.getRelative(BlockFace.UP);
             }
-            final Location teleLoc = bLoc.getLocation();
+            final Location teleLoc = teleBlock.getLocation();
             // Make sure the guy faces the right way out of the portal.
             teleLoc.setYaw(WorldUtils.getDegreesFromBlockFace(tempGate.getGateFacing()));
             teleLoc.setPitch(0);
             // Put him in the middle of the block instead of a corner.
             // Players are 1.65 blocks tall, so we go up .66 more up :-p
             teleLoc.setX(teleLoc.getX() + 0.5);
-            teleLoc.setY(teleLoc.getY() + 0.66);
+            //teleLoc.setY(teleLoc.getY() + 0.66);
             teleLoc.setZ(teleLoc.getZ() + 0.5);
             tempGate.setGateMinecartTeleportLocation(teleLoc);
         }
@@ -721,7 +721,8 @@ public class StargateHelper
             {
                 try
                 {
-                    if (br != null) {
+                    if (br != null)
+                    {
                         br.close();
                     }
                 }
@@ -731,7 +732,8 @@ public class StargateHelper
                 }
                 try
                 {
-                    if (bw != null) {
+                    if (bw != null)
+                    {
                         bw.close();
                     }
                 }
@@ -1134,10 +1136,10 @@ public class StargateHelper
             byteBuff.get(strBytes);
             final String faceStr = new String(strBytes);
             s.setGateFacing(BlockFace.valueOf(faceStr));
-            
+
             s.getGatePlayerTeleportLocation().setYaw(WorldUtils.getDegreesFromBlockFace(s.getGateFacing()));
             s.getGatePlayerTeleportLocation().setPitch(0);
-            
+
             final int idcLen = byteBuff.getInt();
             final byte[] idcBytes = new byte[idcLen];
             byteBuff.get(idcBytes);
@@ -1274,7 +1276,7 @@ public class StargateHelper
             s.setGateFacing(BlockFace.valueOf(faceStr));
             s.getGatePlayerTeleportLocation().setYaw(WorldUtils.getDegreesFromBlockFace(s.getGateFacing()));
             s.getGatePlayerTeleportLocation().setPitch(0);
-            
+
             final int idcLen = byteBuff.getInt();
             final byte[] idcBytes = new byte[idcLen];
             byteBuff.get(idcBytes);
@@ -1487,11 +1489,11 @@ public class StargateHelper
         {
             dataArr.put(DataUtils.locationToBytes(s.getGateMinecartTeleportLocation()));
         }
-        else 
+        else
         {
             dataArr.put(DataUtils.locationToBytes(s.getGatePlayerTeleportLocation()));
         }
-        
+
         if (s.isGateSignPowered())
         {
             dataArr.put((byte) 1);
@@ -1649,7 +1651,7 @@ public class StargateHelper
             tempGate.getGateStructureBlocks().add(signBlock.getLocation());
 
             final String name = tempGate.getGateTeleportSign().getLine(0);
-            if ( StargateManager.getStargate(name) != null)
+            if (StargateManager.getStargate(name) != null)
             {
                 tempGate.setGateName("");
                 return false;

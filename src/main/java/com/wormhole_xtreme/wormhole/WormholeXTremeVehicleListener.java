@@ -39,7 +39,6 @@ import com.wormhole_xtreme.wormhole.model.Stargate;
 import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
-import com.wormhole_xtreme.wormhole.utils.TeleportUtils;
 
 /**
  * WormholeXtreme Vehicle Listener.
@@ -170,18 +169,13 @@ class WormholeXTremeVehicleListener extends VehicleListener
             new_speed.multiply(speed * 5);
             if (st.getGateTarget().isGateIrisActive())
             {
-                target = TeleportUtils.findSafeTeleportFromStargate(st);
+                target = st.getGateMinecartTeleportLocation() != null ? st.getGateMinecartTeleportLocation()
+                    : st.getGatePlayerTeleportLocation();
                 veh.teleport(target);
                 veh.setVelocity(new_speed);
             }
             else
             {
-                if (target != (st.getGateMinecartTeleportLocation() != null ? st.getGateMinecartTeleportLocation()
-                    : st.getGatePlayerTeleportLocation()))
-                {
-                    target = TeleportUtils.findSafeTeleportFromStargate(st.getGateTarget());
-                    // WorldUtils.checkChunkLoad(target.getBlock());
-                }
                 if (e != null)
                 {
                     WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Removing player from cart and doing some teleport hackery");

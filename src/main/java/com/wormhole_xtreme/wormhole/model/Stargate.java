@@ -889,6 +889,9 @@ public class Stargate
     {
         if ((getGateTeleportSignBlock() != null) && (getGateTeleportSign() != null))
         {
+            getGateTeleportSignBlock().setType(Material.WALL_SIGN);
+            getGateTeleportSignBlock().setData(WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()));
+            setGateTeleportSign((Sign) getGateTeleportSignBlock().getState());
             getGateTeleportSign().setLine(0, getGateName());
             if (getGateNetwork() != null)
             {
@@ -900,7 +903,7 @@ public class Stargate
             }
             getGateTeleportSign().setLine(2, "");
             getGateTeleportSign().setLine(3, "");
-            getGateTeleportSign().update();
+            getGateTeleportSign().update(true);
         }
 
     }

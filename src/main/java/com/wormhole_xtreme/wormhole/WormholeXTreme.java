@@ -360,7 +360,9 @@ public class WormholeXTreme extends JavaPlugin
             PermissionsSupport.enablePermissions();
             IConomySupport.enableIconomy();
             HelpSupport.enableHelp();
-            WormholeWorldsSupport.enableWormholeWorlds();
+            if (ConfigManager.isWormholeWorldsSupportEnabled()) {
+                WormholeWorldsSupport.enableWormholeWorlds();
+            }
         }
         catch (final Exception e)
         {

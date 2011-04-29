@@ -33,6 +33,7 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
+import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.logic.StargateHelper;
 import com.wormhole_xtreme.wormhole.permissions.PermissionsManager.PermissionLevel;
 
@@ -380,11 +381,11 @@ public class StargateDBManager
                 }
                 // Is this the best way to retrieve a world?
                 final long worldId = gatesData.getLong("World");
-                final String worldname = gatesData.getString("WorldName");
+                final String worldName = gatesData.getString("WorldName");
                 final String worldEnvironment = gatesData.getString("WorldEnvironment");
 
                 World w = null;
-                if (worldname.equals(""))
+                if (worldName.equals(""))
                 {
                     for (final World possW : worlds)
                     {
@@ -397,13 +398,21 @@ public class StargateDBManager
                 }
                 else
                 {
-                    w = server.getWorld(worldname);
+                    w = server.getWorld(worldName);
                 }
 
-                if ((w == null) && !worldname.equals(""))
+                if ((w == null) && !worldName.equals(""))
                 {
-                    server.createWorld(worldname, Environment.valueOf(worldEnvironment));
-                    w = server.getWorld(worldname);
+                    if (ConfigManager.isWormholeWorldsSupportEnabled()) {
+                        if (WormholeXTreme.getWorldHandler() != null && !WormholeXTreme.getWorldHandler().loadWorld(worldName)) {
+                            server.createWorld(worldName, Environment.valueOf(worldEnvironment));
+                            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, true, "World: " + worldName + " is not a Wormhole World, the suggested action is to add it as one. Otherwise disregard this warning.");
+                        }
+                    }
+                    else {
+                        server.createWorld(worldName, Environment.valueOf(worldEnvironment));
+                    }
+                    w = server.getWorld(worldName);
                 }
                 else if (w == null)
                 {

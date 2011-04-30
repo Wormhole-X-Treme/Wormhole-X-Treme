@@ -182,13 +182,13 @@ public class Stargate
                 // remove in reverse order, if block is not a portal block!
                 if (wooshBlockStep != null)
                 {
-
                     for (final Location l : wooshBlockStep)
                     {
                         final Block b = getGateWorld().getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
                         StargateManager.openingAnimationBlocks.remove(l, b);
                         getGateAnimatedBlocks().remove(b);
-                        b.setType(Material.AIR);
+                        if ( !StargateManager.isBlockInGate(b) )
+                        	b.setType(Material.AIR);
                     }
                     WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, getGateName() + " Woosh Removing: " + getGateAnimationStep() + " Woosh Block Size: " + wooshBlockStep.size());
                 }
@@ -1451,6 +1451,7 @@ public class Stargate
         {
             startAfterShutdownTimer();
         }
+        
         WorldUtils.scheduleChunkUnload(getGatePlayerTeleportLocation().getBlock());
     }
 

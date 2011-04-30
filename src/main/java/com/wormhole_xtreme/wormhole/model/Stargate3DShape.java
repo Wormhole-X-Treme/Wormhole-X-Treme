@@ -148,6 +148,11 @@ public class Stargate3DShape extends StargateShape
                 {
                     setShapeSignLayer(layer);
                 }
+                if (ssl.getLayerPlayerExitPosition() != null && ssl.getLayerPlayerExitPosition().length == 3 )
+                {
+                	// This is only so we know it has been set or not and can warn players
+                	this.setShapeEnterPosition(ssl.getLayerPlayerExitPosition());
+                }
             }
             else if (line.contains("PORTAL_MATERIAL="))
             {
@@ -174,6 +179,10 @@ public class Stargate3DShape extends StargateShape
                 setShapeWooshTicks(Integer.valueOf(line.split("=")[1]));
             }
         }
+
+        if ( this.getShapeEnterPosition().length != 3 )
+        	WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Shape: \"" + getShapeName() + "\" does not have an enterance point for players to teleport in. This will cause errors.");
+        
         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Finished parsing shape: \"" + getShapeName() + "\"");
     }
 

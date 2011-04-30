@@ -127,6 +127,7 @@ class WormholeXTremePlayerListener extends PlayerListener
             }
             else
             {
+            	WormholeXTreme.getThisPlugin().prettyLog(Level.FINEST, false, "Attempting to find any gate shapes!");
                 newGate = StargateHelper.checkStargate(clickedBlock, direction);
             }
 

@@ -97,7 +97,12 @@ public class StargateHelper
             }
             if (s != null)
             {
+            	WormholeXTreme.getThisPlugin().prettyLog(Level.FINEST, false, "Shape: " + shape.getShapeName() + " is found!");
                 return s;
+            }
+            else
+            {
+            	WormholeXTreme.getThisPlugin().prettyLog(Level.FINEST, false, "Shape: " + shape.getShapeName() + " is not found.");
             }
         }
 

@@ -333,7 +333,9 @@ public class WormholeXTreme extends JavaPlugin
             // Store all our gates
             for (final Stargate gate : gates)
             {
-                gate.shutdownStargate(false);
+                if (gate.isGateActive() || gate.isGateLit()) {
+                    gate.shutdownStargate(false);
+                }
                 StargateDBManager.stargateToSQL(gate);
             }
 

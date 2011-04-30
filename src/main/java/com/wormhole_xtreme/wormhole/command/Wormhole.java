@@ -384,8 +384,8 @@ public class Wormhole implements CommandExecutor
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
     {
-        final Player player = CommandUtilities.playerCheck(sender) ? (Player) sender : null;
-        if (((player != null) && WXPermissions.checkWXPermissions(player, PermissionType.CONFIG)) || !CommandUtilities.playerCheck(sender))
+        if (CommandUtilities.playerCheck(sender)
+            ? WXPermissions.checkWXPermissions((Player) sender, PermissionType.CONFIG) : true)
         {
             final String[] a = CommandUtilities.commandEscaper(args);
             if ((a.length > 4) || (a.length == 0))

@@ -489,6 +489,18 @@ public class StargateManager
     }
 
     /**
+     * Checks if is stargate.
+     * 
+     * @param name
+     *            the name
+     * @return true, if is stargate
+     */
+    public static boolean isStargate(final String name)
+    {
+        return stargateList.containsKey(name);
+    }
+
+    /**
      * Returns the stargate that has been activated by that player.
      * Returns null if that player has not activated a gate.
      * 

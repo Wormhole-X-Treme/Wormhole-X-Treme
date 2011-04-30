@@ -64,7 +64,7 @@ public class Dial implements CommandExecutor
                     // No target
                     if (target == null)
                     {
-                        CommandUtilities.closeGate(start);
+                        CommandUtilities.closeGate(start, false);
                         player.sendMessage(ConfigManager.MessageStrings.targetInvalid.toString());
                         return true;
                     }
@@ -73,7 +73,7 @@ public class Dial implements CommandExecutor
                     // Not on same network
                     if ( !startnetwork.equals(targetnetwork))
                     {
-                        CommandUtilities.closeGate(start);
+                        CommandUtilities.closeGate(start, false);
                         player.sendMessage(ConfigManager.MessageStrings.targetInvalid.toString() + " Not on same network.");
                         return true;
                     }
@@ -99,13 +99,13 @@ public class Dial implements CommandExecutor
                     }
                     else
                     {
-                        CommandUtilities.closeGate(start);
+                        CommandUtilities.closeGate(start, false);
                         player.sendMessage(ConfigManager.MessageStrings.targetIsActive.toString());
                     }
                 }
                 else
                 {
-                    CommandUtilities.closeGate(start);
+                    CommandUtilities.closeGate(start, false);
                     player.sendMessage(ConfigManager.MessageStrings.targetIsSelf.toString());
                 }
             }
@@ -132,8 +132,7 @@ public class Dial implements CommandExecutor
             final String[] arguments = CommandUtilities.commandEscaper(args);
             if ((arguments.length < 3) && (arguments.length > 0))
             {
-                final Player player = (Player) sender;
-                return doDial(player, arguments);
+                return doDial((Player) sender, arguments);
             }
             return false;
         }

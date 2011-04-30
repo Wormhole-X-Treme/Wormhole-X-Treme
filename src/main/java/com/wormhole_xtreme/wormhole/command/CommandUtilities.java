@@ -40,16 +40,30 @@ class CommandUtilities
      * 
      * @param stargate
      *            the stargate
-     * @param player
-     *            the player
+     * @param iris
+     *            the iris
      */
-    static final void closeGate(final Stargate stargate)
+    static final void closeGate(final Stargate stargate, final boolean iris)
     {
         if (stargate != null)
         {
-            stargate.stopActivationTimer();
-            stargate.setGateActive(false);
-            stargate.lightStargate(false);
+            if (stargate.isGateActive())
+            {
+                stargate.shutdownStargate(true);
+                if (stargate.isGateActive())
+                {
+                    stargate.setGateActive(false);
+                }
+            }
+            if (stargate.isGateLit())
+            {
+                stargate.lightStargate(false);
+                stargate.stopActivationTimer();
+            }
+            if (iris && stargate.isGateIrisActive())
+            {
+                stargate.toggleIrisActive(false);
+            }
         }
     }
 

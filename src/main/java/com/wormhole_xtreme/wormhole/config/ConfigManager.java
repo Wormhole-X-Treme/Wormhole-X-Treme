@@ -104,7 +104,7 @@ public class ConfigManager
         targetIsSelf(errorHeader + "Can't dial own gate without solar flare"),
 
         /** The target invalid. */
-        targetInvalid(errorHeader + "Invalid remote gate target."),
+        targetInvalid(errorHeader + "Invalid gate target."),
 
         /** The target is active. */
         targetIsActive(errorHeader + "Target gate is currently active."),

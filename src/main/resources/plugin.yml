@@ -61,9 +61,9 @@ commands:
             set -clear to remove the IDC
 
    wxforce:
-     description: Forcefully shut down all gates and/or open all iris
+     description: Forcefully shut down, darken, and open the iris of either a single or all gates.
      usage: |
-            /<command> <close|drop>
+            /<command> <gateName|-all>
 
    wxgo:
      description: Teleport to specified wormhole.

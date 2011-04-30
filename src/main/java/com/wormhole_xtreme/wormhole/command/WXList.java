@@ -45,13 +45,8 @@ public class WXList implements CommandExecutor
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
     {
-        Player player = null;
-
-        if (CommandUtilities.playerCheck(sender))
-        {
-            player = (Player) sender;
-        }
-        if ( !CommandUtilities.playerCheck(sender) || ((player != null) && WXPermissions.checkWXPermissions(player, PermissionType.LIST)))
+        if (CommandUtilities.playerCheck(sender)
+            ? WXPermissions.checkWXPermissions((Player) sender, PermissionType.LIST) : true)
         {
             final ArrayList<Stargate> gates = StargateManager.getAllGates();
             sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Available gates \u00A73::");

@@ -13,39 +13,36 @@ Version=2
 #    [S] = Stargate Material
 #    [P] = Air blocks that will turn into the portal material when activated.
 #    Extra parameters:
-#
-#	--- These parameters are 1 of each per gate ---
+#   --- These parameters are 1 of each per gate ---
 #    :N = Block where the name sign will be created. This is optional.
 #    :EP = Block where players teleport in at. The players feet will be on this block.
-#    :EM = Block where minecarts teleport in at. Minecart wheels will be on this block.
+#    :EM = Block where minecarts teleport in at. The minecart wheels will be on this block.
 #    :A = Block where the activation switch is attached to. 1 per gate!
-#			The only restriction is that the block that faces it must be "I" (so nothing is in the way)
-#			The switch will face in the positive layer direction.
-#			In this example the switch will face towards where layer 5 would be (if there was a 5th layer) 
+#           The only restriction is that the block that faces it must be "I" (so nothing is in the way)
+#           The switch will face in the positive layer direction.
+#           In this example the switch will face towards where layer 3 would be (if there was a 3rd layer) 
 #    :D = Block the sign dialer hangs from. Only 1 per gate!
-#			The only restriction is that the block that faces it must be "I" (so nothing is in the way)
-#			This block is not required, so shapes with this block can be either type. (sign or dial)
-#			Without this block a gateshape can only be /dial gate.
-#    :RA = Redstone activation block. A redstone charge next to this block will activate the gate.
-#			This block requires a :D block for targetting.
-#			Not recommended to be on the :A or :IA blocks (due to redstone being activated )
-#    :RD = Redstone sign dialer cycle block. 
-#			A redstone charge next to this block will cycle sign targets.
-#			This block requires a :D block for targetting.
-#			Not recommended to be on the :A or :IA blocks (due to redstone being activated )
+#           The only restriction is that the block that faces it must be "I" (so nothing is in the way)
+#           This block is not required, so shapes with this block can be either type. (sign or dial)
+#           Without this block a gateshape can only be /dial gate.
+#    :RD = Redstone dial activation block. A redstone charge next to this block will activate the gate.
+#           This block requires a :D block for targetting.
+#    :RS = Redstone sign dialer cycle block. 
+#           A redstone charge next to this block will cycle sign targets.
+#           This block requires a :D block for targetting.
+#    :RA = Redstone gate Activated block. This block will provide redstone charge when the gate is activated.
 #    :IA = Iris Activation Switch - Not required unless you want to be able to place an Iris on the gate.
-#		IA, D, N, and A cannot be the same block, and none of those can contain W
 #
-#	--- There can be many of these per gate -- (Currently no restriction)
+#    RD, RS, RA, IA, D, N, and A cannot be the same block, and none of those can contain W
+#   --- There can be many of these per gate -- (Currently no restriction)
 #    :L = Blocks that will light when gate is activated
-#		Optionally you may add a #number after L to indicate the order it lights.
-#		Defaults to 1 if there is no #
-#		This modifier can only be attached to [S] blocks currently.
+#       Optionally you may add a #number after L to indicate the order it lights.
+#       Defaults to 1 if there is no #
 #    :W = Blocks that will woosh when gate is activated
-#		Optionally you may add a #number after W to indicate the order it wooshes in.
-#		Defaults to 1 if there is no # and the wait between numbers is configurable below. 
-#		After all #s are active it removes them in reverse order but 
-#		if a block is [P:W]	the block will stay as portal material until gate is shutdown. 
+#       Optionally you may add a #number after W to indicate the order it wooshes in.
+#       Defaults to 1 if there is no # and the wait between numbers is configurable below. 
+#       After all #s are active it removes them in reverse order but 
+#       if a block is [P:W] the block will stay as portal material until gate is shutdown. 
 
 GateShape=
 
@@ -56,7 +53,7 @@ Layer#1=
 [S:L#3][P][P][P][P][P][S:L#3]
 [S:N][P][P][P][P][P][S]
 [I][S:L#4][P][P][P][S:L#4][I]
-[I][I][S][S:L#5][S][I][I]
+[I][I][S][S:L#5:EP][S][I][I]
 
 Layer#2=
 [I][I][I][I][I][I][I]
@@ -65,7 +62,7 @@ Layer#2=
 [I][I:W#1][I:W#1][I:W#1][I:W#1][I:W#1][I]
 [I][I:W#1][I:W#1][I:W#1][I:W#1][I:W#1][I]
 [I][I][I:W#1][I:W#1][I:W#1][I][I]
-[I][I][I][I:EP][I][I][I]
+[I][I][I][I:EM][I][I][I]
 
 Layer#3=
 [I][I][I][I][I][I][I]
@@ -107,5 +104,5 @@ STARGATE_MATERIAL=OBSIDIAN
 # Suggested Values are as follows: GLOWSTONE and GLOWING_REDSTONE_ORE
 ACTIVE_MATERIAL=GLOWSTONE
 
-# Redstone activated is the parameter to allow redstone to the DHD lever to activate the gate.
+# Redstone activated is the parameter to allow redstone to/from redstone locations.
 REDSTONE_ACTIVATED=FALSE

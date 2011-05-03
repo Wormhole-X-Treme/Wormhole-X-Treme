@@ -36,7 +36,7 @@ public class StargateShapeLayer
     private ArrayList<Integer[]> layerBlockPositions = new ArrayList<Integer[]>();
 
     /** The sign position. */
-    private int[] layerSignPosition = null;
+    private int[] layerNameSignPosition = null;
 
     /** The exit position. */
     private int[] layerPlayerExitPosition = null;
@@ -51,11 +51,14 @@ public class StargateShapeLayer
     private int[] layerIrisActivationPosition = null;
 
     /** The dialer position. */
-    private int[] layerDialerPosition = null;
+    private int[] layerDialSignPosition = null;
     /** Position of point that allows gate to be activated via redstone. */
-    private int[] layerRedstoneActivationPosition = null;
+    private int[] layerRedstoneDialActivationPosition = null;
     /** Position of point that allows gate to cycle sign targets via redstone. */
-    private int[] layerRedstoneDialerActivationPosition = null;
+    private int[] layerRedstoneSignActivationPosition = null;
+
+    /** The layer redstone activation position. */
+    private int[] layerRedstoneGateActivatedPosition = null;
 
     /** The light_positions. */
     private ArrayList<ArrayList<Integer[]>> layerLightPositions = new ArrayList<ArrayList<Integer[]>>();
@@ -100,7 +103,7 @@ public class StargateShapeLayer
                     {
                         getLayerPortalPositions().add(point);
                     }
-                    else if (mod.equalsIgnoreCase("N") || mod.equalsIgnoreCase("EP") || mod.equalsIgnoreCase("EM") || mod.equalsIgnoreCase("A") || mod.equalsIgnoreCase("D") || mod.equalsIgnoreCase("IA"))
+                    else if (mod.equalsIgnoreCase("N") || mod.equalsIgnoreCase("EP") || mod.equalsIgnoreCase("EM") || mod.equalsIgnoreCase("A") || mod.equalsIgnoreCase("D") || mod.equalsIgnoreCase("IA") || mod.equalsIgnoreCase("RA") || mod.equalsIgnoreCase("RD") || mod.equalsIgnoreCase("RS"))
                     {
                         final int[] pointI = new int[3];
                         for (int k = 0; k < 3; k++)
@@ -110,7 +113,7 @@ public class StargateShapeLayer
 
                         if (mod.equalsIgnoreCase("N"))
                         {
-                            setLayerSignPosition(pointI);
+                            setLayerNameSignPosition(pointI);
                         }
                         if (mod.equalsIgnoreCase("EP"))
                         {
@@ -126,7 +129,7 @@ public class StargateShapeLayer
                         }
                         if (mod.equalsIgnoreCase("D"))
                         {
-                            setLayerDialerPosition(pointI);
+                            setLayerDialSignPosition(pointI);
                         }
                         if (mod.equalsIgnoreCase("IA"))
                         {
@@ -134,11 +137,15 @@ public class StargateShapeLayer
                         }
                         if (mod.equalsIgnoreCase("RA"))
                         {
-                            setLayerRedstoneActivationPosition(pointI);
+                            setLayerRedstoneGateActivatedPosition(pointI);
                         }
                         if (mod.equalsIgnoreCase("RD"))
                         {
-                            setLayerRedstoneDialerActivationPosition(pointI);
+                            setLayerRedstoneDialActivationPosition(pointI);
+                        }
+                        if (mod.equalsIgnoreCase("RS"))
+                        {
+                            setLayerRedstoneSignActivationPosition(pointI);
                         }
                     }
                     else if (mod.contains("L") || mod.contains("l"))
@@ -185,12 +192,15 @@ public class StargateShapeLayer
         }
         //TODO: debug printout for the materials the gate uses.
         //TODO: debug printout for the redstone_activated
-        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Sign Position: \"" + Arrays.toString(getLayerSignPosition()) + "\"");
+        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Sign Position: \"" + Arrays.toString(getLayerNameSignPosition()) + "\"");
         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Player Exit Position: \"" + Arrays.toString(getLayerPlayerExitPosition()) + "\"");
         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Minecart Exit Position: \"" + Arrays.toString(getLayerMinecartExitPosition()) + "\"");
         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Activation Position: \"" + Arrays.toString(getLayerActivationPosition()) + "\"");
         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Iris Activation Position: \"" + Arrays.toString(getLayerIrisActivationPosition()) + "\"");
-        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Dialer Position: \"" + Arrays.toString(getLayerDialerPosition()) + "\"");
+        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Dial Sign Position: \"" + Arrays.toString(getLayerDialSignPosition()) + "\"");
+        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Redstone Dial Activation Position: \"" + Arrays.toString(getLayerRedstoneDialActivationPosition()) + "\"");
+        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Redstone Sign Activation Position: \"" + Arrays.toString(getLayerRedstoneSignActivationPosition()) + "\"");
+        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Redstone Gate Activated Position: \"" + Arrays.toString(getLayerRedstoneGateActivatedPosition()) + "\"");
         //WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Portal Positions: \"" + Arrays.deepToString((int[][])this.waterPositions) + "\"");
 
         // WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Light Material Positions: \"" + lightPositions.toString() + "\"");
@@ -222,9 +232,9 @@ public class StargateShapeLayer
      * 
      * @return the layer dialer position
      */
-    public int[] getLayerDialerPosition()
+    public int[] getLayerDialSignPosition()
     {
-        return layerDialerPosition != null ? layerDialerPosition.clone() : new int[]{};
+        return layerDialSignPosition != null ? layerDialSignPosition.clone() : new int[]{};
     }
 
     /**
@@ -258,6 +268,16 @@ public class StargateShapeLayer
     }
 
     /**
+     * Gets the layer sign position.
+     * 
+     * @return the layer sign position
+     */
+    public int[] getLayerNameSignPosition()
+    {
+        return layerNameSignPosition != null ? layerNameSignPosition.clone() : new int[]{};
+    }
+
+    /**
      * Gets the layer enter position.
      * 
      * @return the layer enter position
@@ -282,9 +302,19 @@ public class StargateShapeLayer
      * 
      * @return the layer redstone activation position
      */
-    public int[] getLayerRedstoneActivationPosition()
+    public int[] getLayerRedstoneDialActivationPosition()
     {
-        return layerRedstoneActivationPosition != null ? layerRedstoneActivationPosition.clone() : new int[]{};
+        return layerRedstoneDialActivationPosition != null ? layerRedstoneDialActivationPosition.clone() : new int[]{};
+    }
+
+    /**
+     * Gets the layer redstone activation position.
+     * 
+     * @return the layer redstone activation position
+     */
+    public int[] getLayerRedstoneGateActivatedPosition()
+    {
+        return layerRedstoneGateActivatedPosition != null ? layerRedstoneGateActivatedPosition.clone() : new int[]{};
     }
 
     /**
@@ -292,20 +322,9 @@ public class StargateShapeLayer
      * 
      * @return the layer redstone dialer activation position
      */
-    public int[] getLayerRedstoneDialerActivationPosition()
+    public int[] getLayerRedstoneSignActivationPosition()
     {
-        return layerRedstoneDialerActivationPosition != null ? layerRedstoneDialerActivationPosition.clone()
-            : new int[]{};
-    }
-
-    /**
-     * Gets the layer sign position.
-     * 
-     * @return the layer sign position
-     */
-    public int[] getLayerSignPosition()
-    {
-        return layerSignPosition != null ? layerSignPosition.clone() : new int[]{};
+        return layerRedstoneSignActivationPosition != null ? layerRedstoneSignActivationPosition.clone() : new int[]{};
     }
 
     /**
@@ -346,9 +365,9 @@ public class StargateShapeLayer
      * @param layerDialerPosition
      *            the new layer dialer position
      */
-    public void setLayerDialerPosition(final int[] layerDialerPosition)
+    public void setLayerDialSignPosition(final int[] layerDialSignPosition)
     {
-        this.layerDialerPosition = layerDialerPosition.clone();
+        this.layerDialSignPosition = layerDialSignPosition.clone();
     }
 
     /**
@@ -385,10 +404,21 @@ public class StargateShapeLayer
     }
 
     /**
+     * Sets the layer sign position.
+     * 
+     * @param layerSignPosition
+     *            the new layer sign position
+     */
+    public void setLayerNameSignPosition(final int[] layerNameSignPosition)
+    {
+        this.layerNameSignPosition = layerNameSignPosition.clone();
+    }
+
+    /**
      * Sets the layer exit position.
      * 
-     * @param layerEnterPosition
-     *            the new layer enter position
+     * @param layerPlayerExitPosition
+     *            the new layer player exit position
      */
     public void setLayerPlayerExitPosition(final int[] layerPlayerExitPosition)
     {
@@ -409,34 +439,34 @@ public class StargateShapeLayer
     /**
      * Sets the layer redstone activation position.
      * 
+     * @param layerRedstoneDialActivationPosition
+     *            the new layer redstone dial activation position
+     */
+    public void setLayerRedstoneDialActivationPosition(final int[] layerRedstoneDialActivationPosition)
+    {
+        this.layerRedstoneDialActivationPosition = layerRedstoneDialActivationPosition.clone();
+    }
+
+    /**
+     * Sets the layer redstone activation position.
+     * 
      * @param layerRedstoneActivationPosition
      *            the new layer redstone activation position
      */
-    public void setLayerRedstoneActivationPosition(final int[] layerRedstoneActivationPosition)
+    public void setLayerRedstoneGateActivatedPosition(final int[] layerRedstoneGateActivatedPosition)
     {
-        this.layerRedstoneActivationPosition = layerRedstoneActivationPosition.clone();
+        this.layerRedstoneGateActivatedPosition = layerRedstoneGateActivatedPosition.clone();
     }
 
     /**
      * Sets the layer redstone dialer activation position.
      * 
-     * @param layerRedstoneDialerActivationPosition
-     *            the new layer redstone dialer activation position
+     * @param layerRedstoneSignActivationPosition
+     *            the new layer redstone sign activation position
      */
-    public void setLayerRedstoneDialerActivationPosition(final int[] layerRedstoneDialerActivationPosition)
+    public void setLayerRedstoneSignActivationPosition(final int[] layerRedstoneSignActivationPosition)
     {
-        this.layerRedstoneDialerActivationPosition = layerRedstoneDialerActivationPosition.clone();
-    }
-
-    /**
-     * Sets the layer sign position.
-     * 
-     * @param layerSignPosition
-     *            the new layer sign position
-     */
-    public void setLayerSignPosition(final int[] layerSignPosition)
-    {
-        this.layerSignPosition = layerSignPosition.clone();
+        this.layerRedstoneSignActivationPosition = layerRedstoneSignActivationPosition.clone();
     }
 
     /**

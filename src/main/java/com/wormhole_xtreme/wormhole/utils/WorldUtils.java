@@ -120,6 +120,29 @@ public class WorldUtils
     }
 
     /**
+     * Gets the torch facing byte from block face.
+     *
+     * @param blockFace the block face
+     * @return the torch facing byte from block face
+     */
+    public static byte getTorchFacingByteFromBlockFace(final BlockFace blockFace)
+    {
+        switch (blockFace)
+        {
+            case SOUTH :
+                return (byte) 0x1;
+            case NORTH :
+                return (byte) 0x2;
+            case WEST :
+                return (byte) 0x3;
+            case EAST :
+                return (byte) 0x4;
+            default :
+                return (byte) 0x5; //Floor
+        }
+    }
+    
+    /**
      * Gets the lever toggle byte.
      * 
      * @param leverState

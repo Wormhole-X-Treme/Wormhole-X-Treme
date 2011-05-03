@@ -455,7 +455,7 @@ public class StargateDBManager
             {
                 final World w = s.getGateWorld();
 
-                if (s.isGateLit() && !s.isGateActive())
+                if (s.isGateLightsActive() && !s.isGateActive())
                 {
                     s.lightStargate(false);
                 }
@@ -480,17 +480,17 @@ public class StargateDBManager
                     {
                         if (t.getGateId() == s.getGateTempSignTarget())
                         {
-                            s.setGateSignTarget(t);
+                            s.setGateDialSignTarget(t);
                             break;
                         }
                     }
                 }
 
-                if (s.isGateSignPowered() && (s.getGateSignTarget() == null))
+                if (s.isGateSignPowered() && (s.getGateDialSignTarget() == null))
                 {
-                    if (w.isChunkLoaded(s.getGateTeleportSignBlock().getChunk()))
+                    if (w.isChunkLoaded(s.getGateDialSignBlock().getChunk()))
                     {
-                        s.tryClickTeleportSign(s.getGateTeleportSignBlock());
+                        s.tryClickTeleportSign(s.getGateDialSignBlock());
                     }
                 }
             }

@@ -218,9 +218,7 @@ public class WormholeXTreme extends JavaPlugin
             pm.registerEvent(Event.Type.PLAYER_BUCKET_FILL, playerListener, Priority.High, tp);
             pm.registerEvent(Event.Type.PLAYER_BUCKET_EMPTY, playerListener, Priority.High, tp);
 
-            pm.registerEvent(Event.Type.REDSTONE_CHANGE, redstoneListener, Priority.Normal, tp);
-            // Handle removing player data
-            // pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Priority.Normal, this);
+            pm.registerEvent(Event.Type.REDSTONE_CHANGE, redstoneListener, Priority.High, tp);
             // Handle minecarts going through portal
             pm.registerEvent(Event.Type.VEHICLE_MOVE, vehicleListener, Priority.High, tp);
             pm.registerEvent(Event.Type.VEHICLE_DAMAGE, vehicleListener, Priority.High, tp);
@@ -333,7 +331,7 @@ public class WormholeXTreme extends JavaPlugin
             // Store all our gates
             for (final Stargate gate : gates)
             {
-                if (gate.isGateActive() || gate.isGateLit()) {
+                if (gate.isGateActive() || gate.isGateLightsActive()) {
                     gate.shutdownStargate(false);
                 }
                 StargateDBManager.stargateToSQL(gate);

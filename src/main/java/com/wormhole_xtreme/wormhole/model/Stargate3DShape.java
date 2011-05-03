@@ -35,13 +35,15 @@ public class Stargate3DShape extends StargateShape
     /**
      * Layers of the 3D shape. Layers go from 1 - 10
      */
-    private ArrayList<StargateShapeLayer> shapeLayers = new ArrayList<StargateShapeLayer>();
+    private final ArrayList<StargateShapeLayer> shapeLayers = new ArrayList<StargateShapeLayer>();
 
     /** The activation_layer. */
     private int shapeActivationLayer = -1;
 
     /** The sign_layer. */
     private int shapeSignLayer = -1;
+
+    private boolean shapeRedstoneActivated = false;
 
     /**
      * Instantiates a new stargate3 d shape.
@@ -144,45 +146,51 @@ public class Stargate3DShape extends StargateShape
                 {
                     setShapeActivationLayer(layer);
                 }
-                if (ssl.getLayerDialerPosition().length > 0)
+                if (ssl.getLayerDialSignPosition().length > 0)
                 {
                     setShapeSignLayer(layer);
                 }
-                if (ssl.getLayerPlayerExitPosition() != null && ssl.getLayerPlayerExitPosition().length == 3 )
+                if ((ssl.getLayerPlayerExitPosition() != null) && (ssl.getLayerPlayerExitPosition().length == 3))
                 {
-                	// This is only so we know it has been set or not and can warn players
-                	this.setShapeEnterPosition(ssl.getLayerPlayerExitPosition());
+                    // This is only so we know it has been set or not and can warn players
+                    setShapeEnterPosition(ssl.getLayerPlayerExitPosition());
                 }
             }
-            else if (line.contains("PORTAL_MATERIAL="))
+            else if (line.contains("PORTAL_MATERIAL=") && (line.split("=").length > 1))
             {
                 setShapePortalMaterial(Material.valueOf(line.split("=")[1]));
             }
-            else if (line.contains("IRIS_MATERIAL="))
+            else if (line.contains("IRIS_MATERIAL=") && (line.split("=").length > 1))
             {
                 setShapeIrisMaterial(Material.valueOf(line.split("=")[1]));
             }
-            else if (line.contains("STARGATE_MATERIAL="))
+            else if (line.contains("STARGATE_MATERIAL=") && (line.split("=").length > 1))
             {
                 setShapeStructureMaterial(Material.valueOf(line.split("=")[1]));
             }
-            else if (line.contains("ACTIVE_MATERIAL="))
+            else if (line.contains("ACTIVE_MATERIAL=") && (line.split("=").length > 1))
             {
                 setShapeActiveMaterial(Material.valueOf(line.split("=")[1]));
             }
-            else if (line.contains("LIGHT_TICKS="))
+            else if (line.contains("LIGHT_TICKS=") && (line.split("=").length > 1))
             {
                 setShapeLightTicks(Integer.valueOf(line.split("=")[1]));
             }
-            else if (line.contains("WOOSH_TICKS="))
+            else if (line.contains("WOOSH_TICKS=") && (line.split("=").length > 1))
             {
                 setShapeWooshTicks(Integer.valueOf(line.split("=")[1]));
             }
+            else if (line.startsWith("REDSTONE_ACTIVATED=") && (line.split("=").length > 1))
+            {
+                setShapeRedstoneActivated(Boolean.valueOf(line.split("=")[1]));
+            }
         }
 
-        if ( this.getShapeEnterPosition().length != 3 )
-        	WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Shape: \"" + getShapeName() + "\" does not have an enterance point for players to teleport in. This will cause errors.");
-        
+        if (getShapeEnterPosition().length != 3)
+        {
+            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Shape: \"" + getShapeName() + "\" does not have an enterance point for players to teleport in. This will cause errors.");
+        }
+
         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Finished parsing shape: \"" + getShapeName() + "\"");
     }
 
@@ -217,25 +225,35 @@ public class Stargate3DShape extends StargateShape
     }
 
     /**
+     * Checks if is shape redstone activated.
+     * 
+     * @return true, if is shape redstone activated
+     */
+    public boolean isShapeRedstoneActivated()
+    {
+        return shapeRedstoneActivated;
+    }
+
+    /**
      * Sets the shape activation layer.
      * 
      * @param shapeActivationLayer
      *            the new shape activation layer
      */
-    public void setShapeActivationLayer(final int shapeActivationLayer)
+    private void setShapeActivationLayer(final int shapeActivationLayer)
     {
         this.shapeActivationLayer = shapeActivationLayer;
     }
 
     /**
-     * Sets the shape layers.
+     * Sets the shape redstone activated.
      * 
-     * @param shapeLayers
-     *            the new shape layers
+     * @param shapeRedstoneActivated
+     *            the new shape redstone activated
      */
-    public void setShapeLayers(final ArrayList<StargateShapeLayer> shapeLayers)
+    private void setShapeRedstoneActivated(final boolean shapeRedstoneActivated)
     {
-        this.shapeLayers = shapeLayers;
+        this.shapeRedstoneActivated = shapeRedstoneActivated;
     }
 
     /**
@@ -244,7 +262,7 @@ public class Stargate3DShape extends StargateShape
      * @param shapeSignLayer
      *            the new shape sign layer
      */
-    public void setShapeSignLayer(final int shapeSignLayer)
+    private void setShapeSignLayer(final int shapeSignLayer)
     {
         this.shapeSignLayer = shapeSignLayer;
     }

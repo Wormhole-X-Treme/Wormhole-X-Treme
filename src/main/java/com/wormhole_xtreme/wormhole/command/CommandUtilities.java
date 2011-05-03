@@ -55,7 +55,7 @@ class CommandUtilities
                     stargate.setGateActive(false);
                 }
             }
-            if (stargate.isGateLit())
+            if (stargate.isGateLightsActive())
             {
                 stargate.lightStargate(false);
                 stargate.stopActivationTimer();

@@ -73,17 +73,19 @@ public class Stargate
     private BlockFace gateFacing;
 
     /** Is the stargate already lit up?. */
-    private boolean gateLit = false;
+    private boolean gateLightsActive = false;
     /** Is activated through sign destination?. */
     private boolean gateSignPowered;
+    /** The gate redstone powered. */
+    private boolean gateRedstonePowered;
     /** The stargate that is being targeted by this gate. */
     private Stargate gateTarget = null;
     /** The current target on the sign, only used if gateSignPowered is true. */
-    private Stargate gateSignTarget;
+    private Stargate gateDialSignTarget;
     /** Temp target id to store when loading gates. */
     private long gateTempSignTarget = -1;
     /** The network index the sign is pointing at. */
-    private int gateSignIndex = 0;
+    private int gateDialSignIndex = 0;
     /** The temporary target stargate id. */
     private long gateTempTargetId = -1;
     /** The Iris deactivation code. */
@@ -93,21 +95,23 @@ public class Stargate
     /** The iris default setting. */
     private boolean gateIrisDefaultActive = false;
     /** The Teleport sign, used for selection of stargate target. */
-    private Sign gateTeleportSign;
+    private Sign gateDialSign;
     /** The location to teleport players to. */
     private Location gatePlayerTeleportLocation;
     /** The location to teleport minecarts to. */
     private Location gateMinecartTeleportLocation;
     /** Location of the Button/Lever that activates this gate. */
-    private Block gateActivationBlock;
+    private Block gateDialLeverBlock;
     /** Location of the Button/Lever that activates the iris. */
-    private Block gateIrisActivationBlock;
+    private Block gateIrisLeverBlock;
     /** The Teleport sign block. */
-    private Block gateTeleportSignBlock;
+    private Block gateDialSignBlock;
     /** Block that toggle the activation state of the gate if nearby redstone is activated. */
-    private Block gateRedstoneActivationBlock;
+    private Block gateRedstoneDialActivationBlock;
     /** Block that will toggle sign target when redstone nearby is activated. */
-    private Block gateRedstoneDialChangeBlock;
+    private Block gateRedstoneSignActivationBlock;
+    /** The gate redstone gate activated block. */
+    private Block gateRedstoneGateActivatedBlock;
     /** The Name block holder. Where we place the stargate name sign. */
     private Block gateNameBlockHolder;
     /** The gate activate scheduler task id. */
@@ -187,8 +191,10 @@ public class Stargate
                         final Block b = getGateWorld().getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
                         StargateManager.openingAnimationBlocks.remove(l, b);
                         getGateAnimatedBlocks().remove(b);
-                        if ( !StargateManager.isBlockInGate(b) )
-                        	b.setType(Material.AIR);
+                        if ( !StargateManager.isBlockInGate(b))
+                        {
+                            b.setType(Material.AIR);
+                        }
                     }
                     WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, getGateName() + " Woosh Removing: " + getGateAnimationStep() + " Woosh Block Size: " + wooshBlockStep.size());
                 }
@@ -197,7 +203,7 @@ public class Stargate
                 if (getGateAnimationStep() == 1)
                 {
                     setGateAnimationRemoving(false);
-                    if (isGateLit() && isGateActive())
+                    if (isGateLightsActive() && isGateActive())
                     {
                         fillGateInterior(getGateShape().getShapePortalMaterial());
                     }
@@ -237,6 +243,16 @@ public class Stargate
         }
         // 2. Set up Iris stuff
         setIrisDeactivationCode(idc);
+
+        if (isGateRedstonePowered())
+        {
+            setupRedstoneGateActivatedWire(true);
+            if (isGateSignPowered())
+            {
+                setupRedstoneDialWire(true);
+                setupRedstoneSignDialWire(true);
+            }
+        }
     }
 
     /**
@@ -268,9 +284,9 @@ public class Stargate
      */
     public void deleteTeleportSign()
     {
-        if ((getGateTeleportSignBlock() != null) && (getGateTeleportSign() != null))
+        if ((getGateDialSignBlock() != null) && (getGateDialSign() != null))
         {
-            final Block teleportSign = getGateTeleportSignBlock().getFace(getGateFacing());
+            final Block teleportSign = getGateDialSignBlock().getFace(getGateFacing());
             teleportSign.setType(Material.AIR);
         }
     }
@@ -316,7 +332,7 @@ public class Stargate
                 toggleDialLeverState(false);
                 setGateRecentlyActive(false);
             }
-            if ( !isGateLit())
+            if ( !isGateLightsActive())
             {
                 // This function lights, wooshes, and then adds portal material
                 lightStargate(true);
@@ -360,9 +376,9 @@ public class Stargate
             WormholeXTreme.getScheduler().cancelTask(getGateActivateTaskId());
         }
 
-        if ( !target.isGateLit() || force)
+        if ( !target.isGateLightsActive() || force)
         {
-            WorldUtils.scheduleChunkLoad(target.getGateActivationBlock());
+            WorldUtils.scheduleChunkLoad(target.getGateDialLeverBlock());
             setGateTarget(target);
             dialStargate();
             getGateTarget().dialStargate();
@@ -411,16 +427,6 @@ public class Stargate
     }
 
     /**
-     * Gets the gate activation block.
-     * 
-     * @return the gate activation block
-     */
-    public Block getGateActivationBlock()
-    {
-        return gateActivationBlock;
-    }
-
-    /**
      * Gets the gate after shutdown task id.
      * 
      * @return the gate after shutdown task id
@@ -451,6 +457,56 @@ public class Stargate
     }
 
     /**
+     * Gets the gate activation block.
+     * 
+     * @return the gate activation block
+     */
+    public Block getGateDialLeverBlock()
+    {
+        return gateDialLeverBlock;
+    }
+
+    /**
+     * Gets the gate teleport sign.
+     * 
+     * @return the gate teleport sign
+     */
+    public Sign getGateDialSign()
+    {
+        return gateDialSign;
+    }
+
+    /**
+     * Gets the gate teleport sign block.
+     * 
+     * @return the gate teleport sign block
+     */
+    public Block getGateDialSignBlock()
+    {
+        return gateDialSignBlock;
+    }
+
+    /**
+     * Gets the gate sign index.
+     * 
+     * @return the gate sign index
+     */
+    public int getGateDialSignIndex()
+    {
+        return gateDialSignIndex;
+    }
+
+    /**
+     * Gets the gate sign target.
+     * 
+     * @return the gate sign target
+     */
+    public Stargate getGateDialSignTarget()
+    {
+        return gateDialSignTarget;
+    }
+
+    /**
      * Gets the gate facing.
      * 
      * @return the gate facing
@@ -471,16 +527,6 @@ public class Stargate
     }
 
     /**
-     * Gets the gate iris activation block.
-     * 
-     * @return the gate iris activation block
-     */
-    public Block getGateIrisActivationBlock()
-    {
-        return gateIrisActivationBlock;
-    }
-
-    /**
      * Gets the gate iris deactivation code.
      * 
      * @return the gate iris deactivation code
@@ -488,6 +534,16 @@ public class Stargate
     public String getGateIrisDeactivationCode()
     {
         return gateIrisDeactivationCode;
+    }
+
+    /**
+     * Gets the gate iris activation block.
+     * 
+     * @return the gate iris activation block
+     */
+    public Block getGateIrisLeverBlock()
+    {
+        return gateIrisLeverBlock;
     }
 
     /**
@@ -585,9 +641,19 @@ public class Stargate
      * 
      * @return the gate redstone activation block
      */
-    public Block getGateRedstoneActivationBlock()
+    public Block getGateRedstoneDialActivationBlock()
     {
-        return gateRedstoneActivationBlock;
+        return gateRedstoneDialActivationBlock;
+    }
+
+    /**
+     * Gets the gate redstone gate activated block.
+     * 
+     * @return the gate redstone gate activated block
+     */
+    public Block getGateRedstoneGateActivatedBlock()
+    {
+        return gateRedstoneGateActivatedBlock;
     }
 
     /**
@@ -595,9 +661,9 @@ public class Stargate
      * 
      * @return the gate redstone dial change block
      */
-    public Block getGateRedstoneDialChangeBlock()
+    public Block getGateRedstoneSignActivationBlock()
     {
-        return gateRedstoneDialChangeBlock;
+        return gateRedstoneSignActivationBlock;
     }
 
     /**
@@ -621,16 +687,6 @@ public class Stargate
     }
 
     /**
-     * Gets the gate sign index.
-     * 
-     * @return the gate sign index
-     */
-    public int getGateSignIndex()
-    {
-        return gateSignIndex;
-    }
-
-    /**
      * Gets the gate sign order.
      * 
      * @return the gate sign order
@@ -638,16 +694,6 @@ public class Stargate
     private HashMap<Integer, Stargate> getGateSignOrder()
     {
         return gateSignOrder;
-    }
-
-    /**
-     * Gets the gate sign target.
-     * 
-     * @return the gate sign target
-     */
-    public Stargate getGateSignTarget()
-    {
-        return gateSignTarget;
     }
 
     /**
@@ -668,26 +714,6 @@ public class Stargate
     public Stargate getGateTarget()
     {
         return gateTarget;
-    }
-
-    /**
-     * Gets the gate teleport sign.
-     * 
-     * @return the gate teleport sign
-     */
-    public Sign getGateTeleportSign()
-    {
-        return gateTeleportSign;
-    }
-
-    /**
-     * Gets the gate teleport sign block.
-     * 
-     * @return the gate teleport sign block
-     */
-    public Block getGateTeleportSignBlock()
-    {
-        return gateTeleportSignBlock;
     }
 
     /**
@@ -785,9 +811,9 @@ public class Stargate
      * 
      * @return true, if is gate lit
      */
-    public boolean isGateLit()
+    public boolean isGateLightsActive()
     {
-        return gateLit;
+        return gateLightsActive;
     }
 
     /**
@@ -798,6 +824,16 @@ public class Stargate
     public boolean isGateRecentlyActive()
     {
         return gateRecentlyActive;
+    }
+
+    /**
+     * Checks if is gate redstone powered.
+     * 
+     * @return true, if is gate redstone powered
+     */
+    public boolean isGateRedstonePowered()
+    {
+        return gateRedstonePowered;
     }
 
     /**
@@ -823,9 +859,9 @@ public class Stargate
             WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Lighting up Order: " + getGateLightingCurrentIteration());
             if (getGateLightingCurrentIteration() == 0)
             {
-                setGateLit(true);
+                setGateLightsActive(true);
             }
-            else if ( !isGateLit())
+            else if ( !isGateLightsActive())
             {
                 lightStargate(false);
                 setGateLightingCurrentIteration(0);
@@ -863,7 +899,7 @@ public class Stargate
         }
         else
         {
-            setGateLit(false);
+            setGateLightsActive(false);
             // Remove Light Up Blocks
             if (getGateLightBlocks() != null)
             {
@@ -887,23 +923,23 @@ public class Stargate
      */
     public void resetTeleportSign()
     {
-        if ((getGateTeleportSignBlock() != null) && (getGateTeleportSign() != null))
+        if ((getGateDialSignBlock() != null) && (getGateDialSign() != null))
         {
-            getGateTeleportSignBlock().setType(Material.WALL_SIGN);
-            getGateTeleportSignBlock().setData(WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()));
-            setGateTeleportSign((Sign) getGateTeleportSignBlock().getState());
-            getGateTeleportSign().setLine(0, getGateName());
+            getGateDialSignBlock().setType(Material.WALL_SIGN);
+            getGateDialSignBlock().setData(WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()));
+            setGateDialSign((Sign) getGateDialSignBlock().getState());
+            getGateDialSign().setLine(0, getGateName());
             if (getGateNetwork() != null)
             {
-                getGateTeleportSign().setLine(1, getGateNetwork().getNetworkName());
+                getGateDialSign().setLine(1, getGateNetwork().getNetworkName());
             }
             else
             {
-                getGateTeleportSign().setLine(1, "");
+                getGateDialSign().setLine(1, "");
             }
-            getGateTeleportSign().setLine(2, "");
-            getGateTeleportSign().setLine(3, "");
-            getGateTeleportSign().update(true);
+            getGateDialSign().setLine(2, "");
+            getGateDialSign().setLine(3, "");
+            getGateDialSign().update(true);
         }
 
     }
@@ -917,17 +953,6 @@ public class Stargate
     private void setGateActivateTaskId(final int gateActivateTaskId)
     {
         this.gateActivateTaskId = gateActivateTaskId;
-    }
-
-    /**
-     * Sets the gate activation block.
-     * 
-     * @param gateActivationBlock
-     *            the new gate activation block
-     */
-    public void setGateActivationBlock(final Block gateActivationBlock)
-    {
-        this.gateActivationBlock = gateActivationBlock;
     }
 
     /**
@@ -975,6 +1000,61 @@ public class Stargate
     }
 
     /**
+     * Sets the gate activation block.
+     * 
+     * @param gateActivationBlock
+     *            the new gate activation block
+     */
+    public void setGateDialLeverBlock(final Block gateDialLeverBlock)
+    {
+        this.gateDialLeverBlock = gateDialLeverBlock;
+    }
+
+    /**
+     * Sets the gate teleport sign.
+     * 
+     * @param gateTeleportSign
+     *            the new gate teleport sign
+     */
+    public void setGateDialSign(final Sign gateDialSign)
+    {
+        this.gateDialSign = gateDialSign;
+    }
+
+    /**
+     * Sets the gate teleport sign block.
+     * 
+     * @param gateTeleportSignBlock
+     *            the new gate teleport sign block
+     */
+    public void setGateDialSignBlock(final Block gateDialSignBlock)
+    {
+        this.gateDialSignBlock = gateDialSignBlock;
+    }
+
+    /**
+     * Sets the gate sign index.
+     * 
+     * @param gateSignIndex
+     *            the new gate sign index
+     */
+    public void setGateDialSignIndex(final int gateDialSignIndex)
+    {
+        this.gateDialSignIndex = gateDialSignIndex;
+    }
+
+    /**
+     * Sets the gate sign target.
+     * 
+     * @param gateSignTarget
+     *            the new gate sign target
+     */
+    protected void setGateDialSignTarget(final Stargate gateDialSignTarget)
+    {
+        this.gateDialSignTarget = gateDialSignTarget;
+    }
+
+    /**
      * Sets the gate facing.
      * 
      * @param gateFacing
@@ -994,17 +1074,6 @@ public class Stargate
     void setGateId(final long gateId)
     {
         this.gateId = gateId;
-    }
-
-    /**
-     * Sets the gate iris activation block.
-     * 
-     * @param gateIrisActivationBlock
-     *            the new gate iris activation block
-     */
-    public void setGateIrisActivationBlock(final Block gateIrisActivationBlock)
-    {
-        this.gateIrisActivationBlock = gateIrisActivationBlock;
     }
 
     /**
@@ -1041,6 +1110,17 @@ public class Stargate
     }
 
     /**
+     * Sets the gate iris activation block.
+     * 
+     * @param gateIrisActivationBlock
+     *            the new gate iris activation block
+     */
+    public void setGateIrisLeverBlock(final Block gateIrisLeverBlock)
+    {
+        this.gateIrisLeverBlock = gateIrisLeverBlock;
+    }
+
+    /**
      * Sets the gate lighting current iteration.
      * 
      * @param gateLightingCurrentIteration
@@ -1057,9 +1137,9 @@ public class Stargate
      * @param gateLit
      *            the new gate lit
      */
-    public void setGateLit(final boolean gateLit)
+    public void setGateLightsActive(final boolean gateLightsActive)
     {
-        this.gateLit = gateLit;
+        this.gateLightsActive = gateLightsActive;
     }
 
     /**
@@ -1142,23 +1222,45 @@ public class Stargate
     /**
      * Sets the gate redstone activation block.
      * 
-     * @param gateRedstoneActivationBlock
-     *            the new gate redstone activation block
+     * @param gateRedstoneDialActivationBlock
+     *            the new gate redstone dial activation block
      */
-    public void setGateRedstoneActivationBlock(final Block gateRedstoneActivationBlock)
+    public void setGateRedstoneDialActivationBlock(final Block gateRedstoneDialActivationBlock)
     {
-        this.gateRedstoneActivationBlock = gateRedstoneActivationBlock;
+        this.gateRedstoneDialActivationBlock = gateRedstoneDialActivationBlock;
+    }
+
+    /**
+     * Sets the gate redstone gate activated block.
+     * 
+     * @param gateRedstoneGateActivatedBlock
+     *            the new gate redstone gate activated block
+     */
+    public void setGateRedstoneGateActivatedBlock(final Block gateRedstoneGateActivatedBlock)
+    {
+        this.gateRedstoneGateActivatedBlock = gateRedstoneGateActivatedBlock;
+    }
+
+    /**
+     * Sets the gate redstone powered.
+     * 
+     * @param gateRedstonePowered
+     *            the new gate redstone powered
+     */
+    public void setGateRedstonePowered(final boolean gateRedstonePowered)
+    {
+        this.gateRedstonePowered = gateRedstonePowered;
     }
 
     /**
      * Sets the gate redstone dial change block.
      * 
-     * @param gateRedstoneDialChangeBlock
-     *            the new gate redstone dial change block
+     * @param gateRedstoneSignActivationBlock
+     *            the new gate redstone sign activation block
      */
-    public void setGateRedstoneDialChangeBlock(final Block gateRedstoneDialChangeBlock)
+    public void setGateRedstoneSignActivationBlock(final Block gateRedstoneSignActivationBlock)
     {
-        this.gateRedstoneDialChangeBlock = gateRedstoneDialChangeBlock;
+        this.gateRedstoneSignActivationBlock = gateRedstoneSignActivationBlock;
     }
 
     /**
@@ -1184,17 +1286,6 @@ public class Stargate
     }
 
     /**
-     * Sets the gate sign index.
-     * 
-     * @param gateSignIndex
-     *            the new gate sign index
-     */
-    public void setGateSignIndex(final int gateSignIndex)
-    {
-        this.gateSignIndex = gateSignIndex;
-    }
-
-    /**
      * Sets the gate sign powered.
      * 
      * @param gateSignPowered
@@ -1206,17 +1297,6 @@ public class Stargate
     }
 
     /**
-     * Sets the gate sign target.
-     * 
-     * @param gateSignTarget
-     *            the new gate sign target
-     */
-    protected void setGateSignTarget(final Stargate gateSignTarget)
-    {
-        this.gateSignTarget = gateSignTarget;
-    }
-
-    /**
      * Sets the gate target.
      * 
      * @param gateTarget
@@ -1225,28 +1305,6 @@ public class Stargate
     private void setGateTarget(final Stargate gateTarget)
     {
         this.gateTarget = gateTarget;
-    }
-
-    /**
-     * Sets the gate teleport sign.
-     * 
-     * @param gateTeleportSign
-     *            the new gate teleport sign
-     */
-    public void setGateTeleportSign(final Sign gateTeleportSign)
-    {
-        this.gateTeleportSign = gateTeleportSign;
-    }
-
-    /**
-     * Sets the gate teleport sign block.
-     * 
-     * @param gateTeleportSignBlock
-     *            the new gate teleport sign block
-     */
-    public void setGateTeleportSignBlock(final Block gateTeleportSignBlock)
-    {
-        this.gateTeleportSignBlock = gateTeleportSignBlock;
     }
 
     /**
@@ -1317,9 +1375,9 @@ public class Stargate
         setGateIrisActive(irisactive);
         fillGateInterior(isGateIrisActive() ? getGateShape().getShapeIrisMaterial() : isGateActive()
             ? getGateShape().getShapePortalMaterial() : Material.AIR);
-        if ((getGateIrisActivationBlock() != null) && (getGateIrisActivationBlock().getType() == Material.LEVER))
+        if ((getGateIrisLeverBlock() != null) && (getGateIrisLeverBlock().getType() == Material.LEVER))
         {
-            getGateIrisActivationBlock().setData(WorldUtils.getLeverToggleByte(getGateIrisActivationBlock().getData(), isGateIrisActive()));
+            getGateIrisLeverBlock().setData(WorldUtils.getLeverToggleByte(getGateIrisLeverBlock().getData(), isGateIrisActive()));
         }
     }
 
@@ -1385,26 +1443,86 @@ public class Stargate
     {
         if (create)
         {
-            Block iris_block = getGateIrisActivationBlock();
-            if (iris_block == null)
+            Block irisLeverBlock = getGateIrisLeverBlock();
+            if (irisLeverBlock == null)
             {
-                iris_block = getGateActivationBlock().getFace(BlockFace.DOWN);
-                setGateIrisActivationBlock(iris_block);
+                irisLeverBlock = getGateDialLeverBlock().getFace(BlockFace.DOWN);
+                setGateIrisLeverBlock(irisLeverBlock);
             }
-            getGateStructureBlocks().add(getGateIrisActivationBlock().getLocation());
+            getGateStructureBlocks().add(getGateIrisLeverBlock().getLocation());
 
-            getGateIrisActivationBlock().setType(Material.LEVER);
-            getGateIrisActivationBlock().setData(WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()));
+            getGateIrisLeverBlock().setType(Material.LEVER);
+            getGateIrisLeverBlock().setData(WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()));
         }
         else
         {
-            if (getGateIrisActivationBlock() != null)
+            if (getGateIrisLeverBlock() != null)
             {
-                getGateStructureBlocks().remove(getGateIrisActivationBlock().getLocation());
-                getGateIrisActivationBlock().setType(Material.AIR);
+                getGateStructureBlocks().remove(getGateIrisLeverBlock().getLocation());
+                getGateIrisLeverBlock().setType(Material.AIR);
             }
         }
 
+    }
+
+    /**
+     * Sets the up redstone dial torch.
+     * 
+     * @param create
+     *            the new up redstone dial torch
+     */
+    public void setupRedstoneDialWire(final boolean create)
+    {
+        if (create && (getGateRedstoneDialActivationBlock() != null))
+        {
+            getGateStructureBlocks().add(getGateRedstoneDialActivationBlock().getLocation());
+            getGateRedstoneDialActivationBlock().setTypeId(55);
+        }
+        else
+        {
+            getGateStructureBlocks().remove(getGateRedstoneDialActivationBlock().getLocation());
+            getGateRedstoneDialActivationBlock().setTypeId(0);
+        }
+    }
+
+    /**
+     * Sets the up redstone gate activated torch.
+     * 
+     * @param create
+     *            the new up redstone gate activated torch
+     */
+    public void setupRedstoneGateActivatedWire(final boolean create)
+    {
+        if (create && (getGateRedstoneGateActivatedBlock() != null))
+        {
+            getGateStructureBlocks().add(getGateRedstoneGateActivatedBlock().getLocation());
+            getGateRedstoneGateActivatedBlock().setTypeId(55);
+        }
+        else
+        {
+            getGateStructureBlocks().remove(getGateRedstoneGateActivatedBlock().getLocation());
+            getGateRedstoneGateActivatedBlock().setTypeId(0);
+        }
+    }
+
+    /**
+     * Sets the up redstone sign dial torch.
+     * 
+     * @param create
+     *            the new up redstone sign dial torch
+     */
+    public void setupRedstoneSignDialWire(final boolean create)
+    {
+        if (create && (getGateRedstoneSignActivationBlock() != null))
+        {
+            getGateStructureBlocks().add(getGateRedstoneSignActivationBlock().getLocation());
+            getGateRedstoneSignActivationBlock().setTypeId(55);
+        }
+        else
+        {
+            getGateStructureBlocks().remove(getGateRedstoneSignActivationBlock().getLocation());
+            getGateRedstoneSignActivationBlock().setTypeId(0);
+        }
     }
 
     /**
@@ -1451,7 +1569,7 @@ public class Stargate
         {
             startAfterShutdownTimer();
         }
-        
+
         WorldUtils.scheduleChunkUnload(getGatePlayerTeleportLocation().getBlock());
     }
 
@@ -1528,44 +1646,44 @@ public class Stargate
     {
         synchronized (getGateNetwork().getNetworkGateLock())
         {
-            if (getGateSignIndex() == -1)
+            if (getGateDialSignIndex() == -1)
             {
-                getGateTeleportSign().setLine(0, "-" + getGateName() + "-");
-                setGateSignIndex(getGateSignIndex() + 1);
+                getGateDialSign().setLine(0, "-" + getGateName() + "-");
+                setGateDialSignIndex(getGateDialSignIndex() + 1);
             }
             if ((getGateNetwork().getNetworkSignGateList().size() == 0) || (getGateNetwork().getNetworkSignGateList().size() == 1))
             {
-                getGateTeleportSign().setLine(1, "");
-                getGateTeleportSign().setLine(2, "No Other Gates");
-                getGateTeleportSign().setLine(3, "");
-                getGateTeleportSign().update();
-                setGateSignTarget(null);
+                getGateDialSign().setLine(1, "");
+                getGateDialSign().setLine(2, "No Other Gates");
+                getGateDialSign().setLine(3, "");
+                getGateDialSign().update();
+                setGateDialSignTarget(null);
                 return;
             }
 
-            if (getGateSignIndex() >= getGateNetwork().getNetworkSignGateList().size())
+            if (getGateDialSignIndex() >= getGateNetwork().getNetworkSignGateList().size())
             {
-                setGateSignIndex(0);
+                setGateDialSignIndex(0);
             }
 
-            if (getGateNetwork().getNetworkSignGateList().get(getGateSignIndex()).getGateName().equals(getGateName()))
+            if (getGateNetwork().getNetworkSignGateList().get(getGateDialSignIndex()).getGateName().equals(getGateName()))
             {
-                setGateSignIndex(getGateSignIndex() + 1);
-                if (getGateSignIndex() == getGateNetwork().getNetworkSignGateList().size())
+                setGateDialSignIndex(getGateDialSignIndex() + 1);
+                if (getGateDialSignIndex() == getGateNetwork().getNetworkSignGateList().size())
                 {
-                    setGateSignIndex(0);
+                    setGateDialSignIndex(0);
                 }
             }
 
             if (getGateNetwork().getNetworkSignGateList().size() == 2)
             {
                 getGateSignOrder().clear();
-                getGateSignOrder().put(Integer.valueOf(2), getGateNetwork().getNetworkSignGateList().get(getGateSignIndex()));
+                getGateSignOrder().put(Integer.valueOf(2), getGateNetwork().getNetworkSignGateList().get(getGateDialSignIndex()));
 
-                getGateTeleportSign().setLine(1, "");
-                getGateTeleportSign().setLine(2, ">" + getGateSignOrder().get(Integer.valueOf(2)).getGateName() + "<");
-                getGateTeleportSign().setLine(3, "");
-                setGateSignTarget(getGateNetwork().getNetworkSignGateList().get(getGateSignIndex()));
+                getGateDialSign().setLine(1, "");
+                getGateDialSign().setLine(2, ">" + getGateSignOrder().get(Integer.valueOf(2)).getGateName() + "<");
+                getGateDialSign().setLine(3, "");
+                setGateDialSignTarget(getGateNetwork().getNetworkSignGateList().get(getGateDialSignIndex()));
             }
             else if (getGateNetwork().getNetworkSignGateList().size() == 3)
             {
@@ -1574,35 +1692,35 @@ public class Stargate
                 //SignIndex++;
                 while (getGateSignOrder().size() < 2)
                 {
-                    if (getGateSignIndex() >= getGateNetwork().getNetworkSignGateList().size())
+                    if (getGateDialSignIndex() >= getGateNetwork().getNetworkSignGateList().size())
                     {
-                        setGateSignIndex(0);
+                        setGateDialSignIndex(0);
                     }
 
-                    if (getGateNetwork().getNetworkSignGateList().get(getGateSignIndex()).getGateName().equals(getGateName()))
+                    if (getGateNetwork().getNetworkSignGateList().get(getGateDialSignIndex()).getGateName().equals(getGateName()))
                     {
-                        setGateSignIndex(getGateSignIndex() + 1);
-                        if (getGateSignIndex() == getGateNetwork().getNetworkSignGateList().size())
+                        setGateDialSignIndex(getGateDialSignIndex() + 1);
+                        if (getGateDialSignIndex() == getGateNetwork().getNetworkSignGateList().size())
                         {
-                            setGateSignIndex(0);
+                            setGateDialSignIndex(0);
                         }
                     }
 
-                    getGateSignOrder().put(Integer.valueOf(orderIndex), getGateNetwork().getNetworkSignGateList().get(getGateSignIndex()));
+                    getGateSignOrder().put(Integer.valueOf(orderIndex), getGateNetwork().getNetworkSignGateList().get(getGateDialSignIndex()));
                     orderIndex++;
                     if (orderIndex == 4)
                     {
                         orderIndex = 1;
                     }
-                    setGateSignIndex(getGateSignIndex() + 1);
+                    setGateDialSignIndex(getGateDialSignIndex() + 1);
                 }
 
-                getGateTeleportSign().setLine(1, getGateSignOrder().get(Integer.valueOf(1)).getGateName());
-                getGateTeleportSign().setLine(2, ">" + getGateSignOrder().get(Integer.valueOf(2)).getGateName() + "<");
-                getGateTeleportSign().setLine(3, "");
+                getGateDialSign().setLine(1, getGateSignOrder().get(Integer.valueOf(1)).getGateName());
+                getGateDialSign().setLine(2, ">" + getGateSignOrder().get(Integer.valueOf(2)).getGateName() + "<");
+                getGateDialSign().setLine(3, "");
 
-                setGateSignTarget(getGateSignOrder().get(Integer.valueOf(2)));
-                setGateSignIndex(getGateNetwork().getNetworkSignGateList().indexOf(getGateSignOrder().get(Integer.valueOf(2))));
+                setGateDialSignTarget(getGateSignOrder().get(Integer.valueOf(2)));
+                setGateDialSignIndex(getGateNetwork().getNetworkSignGateList().indexOf(getGateSignOrder().get(Integer.valueOf(2))));
             }
             else
             {
@@ -1610,37 +1728,37 @@ public class Stargate
                 int orderIndex = 1;
                 while (getGateSignOrder().size() < 3)
                 {
-                    if (getGateSignIndex() == getGateNetwork().getNetworkSignGateList().size())
+                    if (getGateDialSignIndex() == getGateNetwork().getNetworkSignGateList().size())
                     {
-                        setGateSignIndex(0);
+                        setGateDialSignIndex(0);
                     }
 
-                    if (getGateNetwork().getNetworkSignGateList().get(getGateSignIndex()).getGateName().equals(getGateName()))
+                    if (getGateNetwork().getNetworkSignGateList().get(getGateDialSignIndex()).getGateName().equals(getGateName()))
                     {
-                        setGateSignIndex(getGateSignIndex() + 1);
-                        if (getGateSignIndex() == getGateNetwork().getNetworkSignGateList().size())
+                        setGateDialSignIndex(getGateDialSignIndex() + 1);
+                        if (getGateDialSignIndex() == getGateNetwork().getNetworkSignGateList().size())
                         {
-                            setGateSignIndex(0);
+                            setGateDialSignIndex(0);
                         }
                     }
 
-                    getGateSignOrder().put(Integer.valueOf(orderIndex), getGateNetwork().getNetworkSignGateList().get(getGateSignIndex()));
+                    getGateSignOrder().put(Integer.valueOf(orderIndex), getGateNetwork().getNetworkSignGateList().get(getGateDialSignIndex()));
                     orderIndex++;
 
-                    setGateSignIndex(getGateSignIndex() + 1);
+                    setGateDialSignIndex(getGateDialSignIndex() + 1);
                 }
 
-                getGateTeleportSign().setLine(1, getGateSignOrder().get(Integer.valueOf(3)).getGateName());
-                getGateTeleportSign().setLine(2, ">" + getGateSignOrder().get(Integer.valueOf(2)).getGateName() + "<");
-                getGateTeleportSign().setLine(3, getGateSignOrder().get(Integer.valueOf(1)).getGateName());
+                getGateDialSign().setLine(1, getGateSignOrder().get(Integer.valueOf(3)).getGateName());
+                getGateDialSign().setLine(2, ">" + getGateSignOrder().get(Integer.valueOf(2)).getGateName() + "<");
+                getGateDialSign().setLine(3, getGateSignOrder().get(Integer.valueOf(1)).getGateName());
 
-                setGateSignTarget(getGateSignOrder().get(Integer.valueOf(2)));
-                setGateSignIndex(getGateNetwork().getNetworkSignGateList().indexOf(getGateSignOrder().get(Integer.valueOf(2))));
+                setGateDialSignTarget(getGateSignOrder().get(Integer.valueOf(2)));
+                setGateDialSignIndex(getGateNetwork().getNetworkSignGateList().indexOf(getGateSignOrder().get(Integer.valueOf(2))));
             }
         }
 
         // getGateTeleportSign().setData(getGateTeleportSign().getData());
-        getGateTeleportSign().update(true);
+        getGateDialSign().update(true);
     }
 
     /**
@@ -1675,7 +1793,7 @@ public class Stargate
             {
                 setIrisState(isGateIrisDefaultActive());
             }
-            if (isGateLit())
+            if (isGateLightsActive())
             {
                 s.lightStargate(false);
             }
@@ -1695,26 +1813,26 @@ public class Stargate
      */
     public void toggleDialLeverState(final boolean regenerate)
     {
-        if (getGateActivationBlock() != null)
+        if (getGateDialLeverBlock() != null)
         {
-            Material material = getGateActivationBlock().getType();
+            Material material = getGateDialLeverBlock().getType();
             if (regenerate)
             {
-                getGateActivationBlock().setType(Material.LEVER);
-                getGateActivationBlock().setData(WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()));
-                material = getGateActivationBlock().getType();
+                getGateDialLeverBlock().setType(Material.LEVER);
+                getGateDialLeverBlock().setData(WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()));
+                material = getGateDialLeverBlock().getType();
             }
-            final byte leverState = getGateActivationBlock().getData();
+            final byte leverState = getGateDialLeverBlock().getData();
             switch (material)
             {
                 case STONE_BUTTON :
-                    getGateActivationBlock().setType(Material.LEVER);
-                    getGateActivationBlock().setData(leverState);
+                    getGateDialLeverBlock().setType(Material.LEVER);
+                    getGateDialLeverBlock().setData(leverState);
                     WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Automaticially replaced Button on gate \"" + getGateName() + "\" with Lever.");
-                    getGateActivationBlock().setData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
+                    getGateDialLeverBlock().setData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
                     break;
                 case LEVER :
-                    getGateActivationBlock().setData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
+                    getGateDialLeverBlock().setData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
                     break;
                 default :
                     break;
@@ -1763,16 +1881,16 @@ public class Stargate
      */
     public boolean tryClickTeleportSign(final Block clicked, final Player player)
     {
-        if ((getGateTeleportSign() == null) && (getGateTeleportSignBlock() != null))
+        if ((getGateDialSign() == null) && (getGateDialSignBlock() != null))
         {
-            if (getGateTeleportSignBlock().getType() == Material.WALL_SIGN)
+            if (getGateDialSignBlock().getType() == Material.WALL_SIGN)
             {
-                setGateSignIndex( -1);
-                setGateTeleportSign((Sign) getGateTeleportSignBlock().getState());
+                setGateDialSignIndex( -1);
+                setGateDialSign((Sign) getGateDialSignBlock().getState());
                 WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, player, ActionToTake.SIGNCLICK));
             }
         }
-        else if (WorldUtils.isSameBlock(clicked, getGateTeleportSignBlock()))
+        else if (WorldUtils.isSameBlock(clicked, getGateDialSignBlock()))
         {
             WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, player, ActionToTake.SIGNCLICK));
             return true;

@@ -59,7 +59,7 @@ public class WXIDC implements CommandExecutor
                         if (a[1].equals("-clear"))
                         {
                             // Remove from big list of all blocks
-                            StargateManager.removeBlockIndex(s.getGateIrisActivationBlock());
+                            StargateManager.removeBlockIndex(s.getGateIrisLeverBlock());
                             // Set code to "" and then remove it from stargates block list
                             s.setIrisDeactivationCode("");
                         }
@@ -68,7 +68,7 @@ public class WXIDC implements CommandExecutor
                             // Set code
                             s.setIrisDeactivationCode(a[1]);
                             // Make sure that block is in index
-                            StargateManager.addBlockIndex(s.getGateIrisActivationBlock(), s);
+                            StargateManager.addBlockIndex(s.getGateIrisLeverBlock(), s);
                         }
                     }
 

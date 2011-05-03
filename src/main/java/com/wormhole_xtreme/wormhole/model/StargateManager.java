@@ -566,12 +566,12 @@ public class StargateManager
 
                 for (final Stargate s2 : s.getGateNetwork().getNetworkSignGateList())
                 {
-                    if ((s2.getGateSignTarget() != null) && (s2.getGateSignTarget().getGateId() == s.getGateId()) && s2.isGateSignPowered())
+                    if ((s2.getGateDialSignTarget() != null) && (s2.getGateDialSignTarget().getGateId() == s.getGateId()) && s2.isGateSignPowered())
                     {
-                        s2.setGateSignTarget(null);
+                        s2.setGateDialSignTarget(null);
                         if (s.getGateNetwork().getNetworkSignGateList().size() > 1)
                         {
-                            s2.setGateSignIndex(0);
+                            s2.setGateDialSignIndex(0);
                             WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(s2, ActionToTake.SIGNCLICK));
                             // s2.teleportSignClicked();
                         }

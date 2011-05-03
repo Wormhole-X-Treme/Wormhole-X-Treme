@@ -122,9 +122,9 @@ public class StargateUpdateRunnable implements Runnable
                 stargate.teleportSignClicked();
                 if (player != null)
                 {
-                    if (stargate.getGateSignTarget() != null)
+                    if (stargate.getGateDialSignTarget() != null)
                     {
-                        final String target = stargate.getGateSignTarget().getGateName();
+                        final String target = stargate.getGateDialSignTarget().getGateName();
                         player.sendMessage("Dialer set to: " + target);
                     }
                     else

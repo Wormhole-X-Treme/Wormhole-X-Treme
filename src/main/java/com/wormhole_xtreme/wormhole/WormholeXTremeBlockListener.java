@@ -62,13 +62,13 @@ class WormholeXTremeBlockListener extends BlockListener
         final boolean allowed = WXPermissions.checkWXPermissions(player, stargate, PermissionType.DAMAGE);
         if (allowed)
         {
-            if ( !WorldUtils.isSameBlock(stargate.getGateActivationBlock(), block))
+            if ( !WorldUtils.isSameBlock(stargate.getGateDialLeverBlock(), block))
             {
-                if ((stargate.getGateTeleportSignBlock() != null) && WorldUtils.isSameBlock(stargate.getGateTeleportSignBlock(), block))
+                if ((stargate.getGateDialSignBlock() != null) && WorldUtils.isSameBlock(stargate.getGateDialSignBlock(), block))
                 {
                     player.sendMessage("Destroyed DHD Sign. You will be unable to change dialing target from this gate.");
                     player.sendMessage("You can rebuild it later.");
-                    stargate.setGateTeleportSign(null);
+                    stargate.setGateDialSign(null);
                 }
                 else if (block.getType().equals(stargate.getGateShape().getShapeIrisMaterial()))
                 {
@@ -81,7 +81,7 @@ class WormholeXTremeBlockListener extends BlockListener
                         stargate.setGateActive(false);
                         stargate.fillGateInterior(Material.AIR);
                     }
-                    if (stargate.isGateLit())
+                    if (stargate.isGateLightsActive())
                     {
                         stargate.lightStargate(false);
                         stargate.stopActivationTimer();
@@ -250,7 +250,7 @@ class WormholeXTremeBlockListener extends BlockListener
         if ( !event.isCancelled())
         {
             final Block block = event.getBlock();
-            if (StargateManager.isBlockInGate(block))
+            if (StargateManager.isBlockInGate(block) && (block.getTypeId() != 55))
             {
                 event.setCancelled(true);
             }

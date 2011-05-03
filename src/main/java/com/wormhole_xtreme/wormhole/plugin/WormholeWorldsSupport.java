@@ -44,7 +44,7 @@ public class WormholeWorldsSupport
      */
     private static boolean checkWorldsVersion(final String version)
     {
-        if ( !version.startsWith("0.4") && !version.startsWith("0.5"))
+        if (!version.startsWith("0.5"))
         {
             WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Not a supported version of Wormhole Worlds. Recommended is 0.5");
             return false;

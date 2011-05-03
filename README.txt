@@ -83,7 +83,7 @@ To Build:
  3.1 (example commands) 'mvn install:install-file -Dfile=Help.jar -DgroupId=me.taylorkelly -DartifactId=Help \
      -Dversion=0.2 -Dpackaging=jar -DgeneratePom=true'
  
- 3.2 Help location: http://forums.bukkit.org/threads/6536/
+ 3.2 Help location: http://forums.bukkit.org/threads/13601/
  
  4. Run a 'mvn install' in the directory you ran the git clone into (or unpacked the source zip).
   

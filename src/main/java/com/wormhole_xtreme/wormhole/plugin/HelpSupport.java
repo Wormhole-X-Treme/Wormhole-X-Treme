@@ -45,7 +45,7 @@ public class HelpSupport
     {
         if ( !version.startsWith("0.2"))
         {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Not a supported version of Help. Recommended is 0.2");
+            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Not a supported version of Help. Recommended is 0.2.x");
         }
     }
 
@@ -166,7 +166,7 @@ public class HelpSupport
 
             WormholeXTreme.getHelp().registerCommand("dial [stargate] <idc>", "Dial [stargate] and optionally unlock <idc>", WormholeXTreme.getThisPlugin(), true, dial);
             WormholeXTreme.getHelp().registerCommand("wxidc [stargate] <idc|-clear>", "Display [stargate] idc, optionally set <idc> or <-clear> idc", WormholeXTreme.getThisPlugin(), wxidc);
-            WormholeXTreme.getHelp().registerCommand("wxforce [close|drop]", "Forcefully [close] all gates or [drop] all iris", WormholeXTreme.getThisPlugin(), wxforce);
+            WormholeXTreme.getHelp().registerCommand("wxforce [stargate|-all]", "Forcefully close and drop iris on either [-all] or just one [stargate]", WormholeXTreme.getThisPlugin(), wxforce);
             WormholeXTreme.getHelp().registerCommand("wxcompass", "Point compass at nearest Stargate", WormholeXTreme.getThisPlugin(), wxcompass);
             WormholeXTreme.getHelp().registerCommand("wxcomplete [stargate] <idc=[idc]> <net=[net]>", "Complete [stargate] construction, optional [idc] and [net]", WormholeXTreme.getThisPlugin(), true, wxcomplete);
             WormholeXTreme.getHelp().registerCommand("wxremove [stargate] <-all>", "Remove a [stargate], optionally destroy <-all> its blocks", WormholeXTreme.getThisPlugin(), wxremove);

@@ -12,6 +12,7 @@ Version=2
 #    [I] = Ignored
 #    [S] = Stargate Material
 #    [P] = Air blocks that will turn into the portal material when activated.
+
 #    Extra parameters:
 #   --- These parameters are 1 of each per gate ---
 #    :N = Block where the name sign will be created. This is optional.
@@ -25,15 +26,10 @@ Version=2
 #           The only restriction is that the block that faces it must be "I" (so nothing is in the way)
 #           This block is not required, so shapes with this block can be either type. (sign or dial)
 #           Without this block a gateshape can only be /dial gate.
-#    :RD = Redstone dial activation block. A redstone charge next to this block will activate the gate.
-#           This block requires a :D block for targetting.
-#    :RS = Redstone sign dialer cycle block. 
-#           A redstone charge next to this block will cycle sign targets.
-#           This block requires a :D block for targetting.
-#    :RA = Redstone gate Activated block. This block will provide redstone charge when the gate is activated.
 #    :IA = Iris Activation Switch - Not required unless you want to be able to place an Iris on the gate.
 #
-#    RD, RS, RA, IA, D, N, and A cannot be the same block, and none of those can contain W
+#    IA, D, N, and A cannot be the same block, and none of those can contain W
+#
 #   --- There can be many of these per gate -- (Currently no restriction)
 #    :L = Blocks that will light when gate is activated
 #       Optionally you may add a #number after L to indicate the order it lights.
@@ -43,6 +39,15 @@ Version=2
 #       Defaults to 1 if there is no # and the wait between numbers is configurable below. 
 #       After all #s are active it removes them in reverse order but 
 #       if a block is [P:W] the block will stay as portal material until gate is shutdown. 
+#
+#    Redstone Blocks: 
+#   --- There can only be 1 of each of these per gate, and they can-not occupy the same block as anything else ---
+#    [RD] = Redstone activation block. A redstone charge next to this block will activate the gate.
+#           This block requires a :D block for targetting. This block should be on top of a [S] block.
+#    [RS] = Redstone sign dialer cycle block. A redstone charge next to this block will cycle sign targets.
+#           This block requires a :D block for targetting. This block should be on top of a [S] block.
+#    [RA] = Redstone gate Activated block. This block will provide redstone charge when the gate is activated.
+#           This block should be on top of a [S] block.
 
 GateShape=
 

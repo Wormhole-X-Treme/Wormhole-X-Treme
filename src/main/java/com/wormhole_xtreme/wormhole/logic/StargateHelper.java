@@ -1387,7 +1387,9 @@ public class StargateHelper
              * gateDialSignBlock, gateActive, gateTarget, gateFacingLength, gateFacing,
              * gateIrisDeactivationCodeLength, gateIrisDeactivationCode, gateIrisActive, gateLightsActive,
              * redstoneDA, gateRedstoneDialActivationBlock, redstoneSA, gateRedstoneSignActivationBlock,
-             * redstoneGA, gateRedstoneGateActivatedBlock, gateRedstonePowered, numStructureBlocks, gateStructureBlocks,
+             * redstoneGA, gateRedstoneGateActivatedBlock, gateRedstonePowered, gateCustom, gateCustomStructureMaterial,
+             * gateCustomPortalMaterial, gateCustomLightMaterial, gateCustomIrisMaterial, gateCustomWooshTicks,
+             * gateCustomLightTicks, gateCustomWooshDepth, numStructureBlocks, gateStructureBlocks,
              * numPortalBlocks, gatePortalBlocks, numLightLayers, gateLightBlocks, numWooshLayers,
              * gateWooshBlocks
              */
@@ -1474,6 +1476,25 @@ public class StargateHelper
             }
 
             s.setGateRedstonePowered(DataUtils.byteToBoolean(byteBuff.get()));
+
+            s.setGateCustom(DataUtils.byteToBoolean(byteBuff.get()));
+            final int gateCustomStructureMaterial = byteBuff.getInt();
+            s.setGateCustomStructureMaterial(gateCustomStructureMaterial != -1
+                ? Material.getMaterial(gateCustomStructureMaterial) : null);
+            final int gateCustomPortalMaterial = byteBuff.getInt();
+            s.setGateCustomPortalMaterial(gateCustomPortalMaterial != -1
+                ? Material.getMaterial(gateCustomPortalMaterial) : null);
+            final int gateCustomLightMaterial = byteBuff.getInt();
+            s.setGateCustomLightMaterial(gateCustomLightMaterial != -1 ? Material.getMaterial(gateCustomLightMaterial)
+                : null);
+            final int gateCustomIrisMaterial = byteBuff.getInt();
+            s.setGateCustomIrisMaterial(gateCustomIrisMaterial != -1 ? Material.getMaterial(gateCustomIrisMaterial)
+                : null);
+            s.setGateCustomWooshTicks(byteBuff.getInt());
+            s.setGateCustomLightTicks(byteBuff.getInt());
+            s.setGateCustomWooshDepth(byteBuff.getInt());
+            s.setGateCustomWooshDepthSquared(s.getGateCustomWooshDepth() > 0
+                ? (int) Math.pow(s.getGateCustomWooshDepth(), 2) : -1);
 
             final int numStructureBlocks = byteBuff.getInt();
             for (int i = 0; i < numStructureBlocks; i++)
@@ -1592,24 +1613,41 @@ public class StargateHelper
         }
 
         /**
+         * numBlocks:
+         * 
          * gateDialLeverBlock, gateIrisLeverBlock, gateNameBlockHolder, gateDialSignBlock,
          * gateRedstoneDialActivationBlock, gateRedstoneSignActivationBlock, gateRedstoneGateActivatedBlock
-         * */
-
+         */
         final int numBlocks = 7;
-        // Enter location, Minecart enter location
+        /**
+         * numLocations:
+         * 
+         * gatePlayerTeleportLocation, gateMinecartTeleportLocation
+         */
         final int numLocations = 2;
         final int locationSize = 32;
         final int blockSize = 12;
         /**
+         * numBytesWithVersion:
+         * 
          * saveVersion, gateSignPowered, gateActive, gateIrisActive, gateLightsActive,
-         * gateRedstoneDialActivation, gateRedstoneSignActivation, gateRedstoneGateActivated, gateRedstonePowered
-         * */
-        final int numBytesWithVersion = 9;
-        // string size ints 2 + block count ints 2 + sign index int = 5 ints
-        // Extra ints are added while calculating size of light and woosh block structures
-        final int numInts = 5;
-        // Target IDs (sign & target)
+         * gateRedstoneDialActivation, gateRedstoneSignActivation, gateRedstoneGateActivated, gateRedstonePowered,
+         * gateCustom
+         */
+        final int numBytesWithVersion = 10;
+        /**
+         * numInts:
+         * 
+         * gateDialSignIndex, utfFaceBytesLength, utfIdcBytesLength, gateCustomStructureMaterial,
+         * gateCustomPortalMaterial, gateCustomLightMaterial, gateCustomIrisMaterial, gateCustomWooshTicks,
+         * gateCustomLightTicks, gateCustomWooshDepth ,gateStructureBlocksSize, gatePortalBlocksSize
+         * 
+         * Extra ints are added while calculating size of light and woosh block structures
+         */
+        final int numInts = 12;
+        /**
+         * gateDialSignTarget, gateTarget
+         */
         final int numLongs = 2;
 
         // Size of all the basic sizes we know
@@ -1617,7 +1655,7 @@ public class StargateHelper
         // Size of the gate blocks
         size += (s.getGateStructureBlocks().size() * blockSize) + (s.getGatePortalBlocks().size() * blockSize);
         // Start with numbers for lightBlocks and wooshBlocks
-        int other_ints = 2;
+        int numIntsOther = 2;
         // Add all the blocks of the lights
         for (int i = 0; i < s.getGateLightBlocks().size(); i++)
         {
@@ -1626,7 +1664,7 @@ public class StargateHelper
                 size += s.getGateLightBlocks().get(i).size() * blockSize;
             }
             // increment number of total ints
-            other_ints++;
+            numIntsOther++;
         }
         // Add all the blocks of the woosh
         for (int i = 0; i < s.getGateWooshBlocks().size(); i++)
@@ -1636,11 +1674,11 @@ public class StargateHelper
                 size += s.getGateWooshBlocks().get(i).size() * blockSize;
             }
             // increment number of total ints
-            other_ints++;
+            numIntsOther++;
         }
         // Size of the strings.
         size += utfFaceBytes.length + utfIdcBytes.length;
-        size += other_ints * 4;
+        size += numIntsOther * 4;
 
         final ByteBuffer dataArr = ByteBuffer.allocate(size);
 
@@ -1698,10 +1736,10 @@ public class StargateHelper
             dataArr.putLong( -1);
         }
 
-        /** utfFaceBytes - int 2 */
+        /** utfFaceBytesLength - int 2 */
         dataArr.putInt(utfFaceBytes.length);
         dataArr.put(utfFaceBytes);
-        /** utfIdcBytes - int 3 */
+        /** utfIdcBytesLength - int 3 */
         dataArr.putInt(utfIdcBytes.length);
         dataArr.put(utfIdcBytes);
         /** gateIrisActive - byte 4 */
@@ -1756,18 +1794,44 @@ public class StargateHelper
         /** gateRedstonePowered - byte 9 */
         dataArr.put(s.isGateRedstonePowered() ? (byte) 1 : (byte) 0);
 
+        /** gateCustom - byte 10 */
+        dataArr.put(s.isGateCustom() ? (byte) 1 : (byte) 0);
+
+        /** gateCustomStructureMaterial - int 4 */
+        dataArr.putInt(s.getGateCustomStructureMaterial() != null ? s.getGateCustomStructureMaterial().getId() : -1);
+
+        /** gateCustomPortalMaterial - int 5 */
+        dataArr.putInt(s.getGateCustomPortalMaterial() != null ? s.getGateCustomPortalMaterial().getId() : -1);
+
+        /** gateCustomLightMaterial - int 6 */
+        dataArr.putInt(s.getGateCustomLightMaterial() != null ? s.getGateCustomLightMaterial().getId() : -1);
+
+        /** gateCustomIrisMaterial - int 7 */
+        dataArr.putInt(s.getGateCustomIrisMaterial() != null ? s.getGateCustomIrisMaterial().getId() : -1);
+
+        /** gateCustomWooshTicks - int 8 */
+        dataArr.putInt(s.getGateCustomWooshTicks());
+
+        /** gateCustomLightTicks - int 9 */
+        dataArr.putInt(s.getGateCustomLightTicks());
+
+        /** gateCustomWooshDepth - int 10 */
+        dataArr.putInt(s.getGateCustomWooshDepth());
+
+        /** gateStructureBlocksSize - int 11 */
         dataArr.putInt(s.getGateStructureBlocks().size());
         for (int i = 0; i < s.getGateStructureBlocks().size(); i++)
         {
             dataArr.put(DataUtils.blockLocationToBytes(s.getGateStructureBlocks().get(i)));
         }
-
+        /** gatePortalBlocksSize - int 12 */
         dataArr.putInt(s.getGatePortalBlocks().size());
         for (int i = 0; i < s.getGatePortalBlocks().size(); i++)
         {
             dataArr.put(DataUtils.blockLocationToBytes(s.getGatePortalBlocks().get(i)));
         }
 
+        /** gateLightBlocksSize - intOther 1 */
         dataArr.putInt(s.getGateLightBlocks().size());
         for (int i = 0; i < s.getGateLightBlocks().size(); i++)
         {
@@ -1785,6 +1849,7 @@ public class StargateHelper
             }
         }
 
+        /** gateWooshBlocksSize - intOther 2 */
         dataArr.putInt(s.getGateWooshBlocks().size());
         for (int i = 0; i < s.getGateWooshBlocks().size(); i++)
         {

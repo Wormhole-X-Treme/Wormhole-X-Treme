@@ -92,23 +92,17 @@ class WormholeXTremeRedstoneListener extends BlockListener
                     stargate.tryClickTeleportSign(stargate.getGateDialSignBlock());
                     WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught redstone sign event on gate: " + stargate.getGateName() + " block: " + block.toString());
                 }
-                else if ((stargate.getGateRedstoneDialActivationBlock() != null) && block.equals(stargate.getGateRedstoneDialActivationBlock()))
+                else if ((stargate.getGateRedstoneDialActivationBlock() != null) && block.equals(stargate.getGateRedstoneDialActivationBlock()) && isCurrentOn(event.getOldCurrent(), event.getNewCurrent()))
                 {
-                    if ( !isCurrentOn(event.getOldCurrent(), event.getNewCurrent()))
+                    if (stargate.isGateActive() && (stargate.getGateTarget() != null))
                     {
-                        if (stargate.isGateActive() && (stargate.getGateTarget() != null))
-                        {
-                            stargate.shutdownStargate(true);
-                            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught redstone shutdown event on gate: " + stargate.getGateName() + " block: " + block.toString());
-                        }
+                        stargate.shutdownStargate(true);
+                        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught redstone shutdown event on gate: " + stargate.getGateName() + " block: " + block.toString());
                     }
-                    else
+                    if ( !stargate.isGateActive() && (stargate.getGateDialSignTarget() != null) && !stargate.isGateRecentlyActive())
                     {
-                        if ( !stargate.isGateActive() && (stargate.getGateDialSignTarget() != null))
-                        {
-                            stargate.dialStargate(stargate.getGateDialSignTarget(), false);
-                            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught redstone dial event on gate: " + stargate.getGateName() + " block: " + block.toString());
-                        }
+                        stargate.dialStargate(stargate.getGateDialSignTarget(), false);
+                        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught redstone dial event on gate: " + stargate.getGateName() + " block: " + block.toString());
                     }
                 }
             }

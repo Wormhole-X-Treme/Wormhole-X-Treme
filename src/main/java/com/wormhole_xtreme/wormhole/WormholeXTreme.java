@@ -331,7 +331,8 @@ public class WormholeXTreme extends JavaPlugin
             // Store all our gates
             for (final Stargate gate : gates)
             {
-                if (gate.isGateActive() || gate.isGateLightsActive()) {
+                if (gate.isGateActive() || gate.isGateLightsActive())
+                {
                     gate.shutdownStargate(false);
                 }
                 StargateDBManager.stargateToSQL(gate);
@@ -360,7 +361,8 @@ public class WormholeXTreme extends JavaPlugin
             PermissionsSupport.enablePermissions();
             IConomySupport.enableIconomy();
             HelpSupport.enableHelp();
-            if (ConfigManager.isWormholeWorldsSupportEnabled()) {
+            if (ConfigManager.isWormholeWorldsSupportEnabled())
+            {
                 WormholeWorldsSupport.enableWormholeWorlds();
             }
         }

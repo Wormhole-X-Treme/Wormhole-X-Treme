@@ -175,8 +175,11 @@ public class HelpSupport
             WormholeXTreme.getHelp().registerCommand("wxbuild [gateshape]", "Automaticially build a stargate in the specified [gateshape]", WormholeXTreme.getThisPlugin(), wxbuild);
             WormholeXTreme.getHelp().registerCommand("wormhole", "Wormhole administration and configuration command", WormholeXTreme.getThisPlugin(), true, wormhole);
             WormholeXTreme.getHelp().registerCommand("wormhole owner [stargate] <owner>", "Display owner of [stargate], optionally change <owner>", WormholeXTreme.getThisPlugin(), wormhole);
-            WormholeXTreme.getHelp().registerCommand("wormhole portalmaterial <material>", "Display portal material, optionally change <material>", WormholeXTreme.getThisPlugin(), wormhole);
-            WormholeXTreme.getHelp().registerCommand("wormhole irismaterial <material>", "Display iris material, optionally change <material>", WormholeXTreme.getThisPlugin(), wormhole);
+            WormholeXTreme.getHelp().registerCommand("wormhole portalmaterial [stargate] <material>", "Display portalmaterial on [stargate], optionally change <material>", WormholeXTreme.getThisPlugin(), wormhole);
+            WormholeXTreme.getHelp().registerCommand("wormhole irismaterial [stargate] <material>", "Display irismaterial on [stargate], optionally change <material>", WormholeXTreme.getThisPlugin(), wormhole);
+            WormholeXTreme.getHelp().registerCommand("wormhole lightmaterial [stargate] <material>", "Display lightmaterial on [stargate], optionally change <material>", WormholeXTreme.getThisPlugin(), wormhole);
+            WormholeXTreme.getHelp().registerCommand("wormhole redstone [stargate] <boolean>", "Display redstone status on [stargate], optionally change via <boolean>", WormholeXTreme.getThisPlugin(), wormhole);
+            WormholeXTreme.getHelp().registerCommand("wormhole custom [stargate] <boolean>", "Display custom status on [stargate], optionally change via <boolean>", WormholeXTreme.getThisPlugin(), wormhole);
             WormholeXTreme.getHelp().registerCommand("wormhole shutdown_timeout <timeout>", "Display shutdown timeout, optionally change <timeout>", WormholeXTreme.getThisPlugin(), wormhole);
             WormholeXTreme.getHelp().registerCommand("wormhole activate_timeout <timeout>", "Display activation timeout, optionally change <timeout>", WormholeXTreme.getThisPlugin(), wormhole);
             WormholeXTreme.getHelp().registerCommand("wormhole simple <boolean>", "Display simple permissions, optionally change via <boolean>", WormholeXTreme.getThisPlugin(), wormhole);

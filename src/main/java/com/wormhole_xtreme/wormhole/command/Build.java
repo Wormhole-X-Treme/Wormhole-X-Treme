@@ -26,7 +26,6 @@ import org.bukkit.entity.Player;
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.logic.StargateHelper;
 import com.wormhole_xtreme.wormhole.model.StargateManager;
-import com.wormhole_xtreme.wormhole.model.StargateShape;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 
@@ -49,33 +48,28 @@ public class Build implements CommandExecutor
      */
     private static boolean doBuild(final Player player, final String[] args)
     {
-        final Player p = player;
-        final String[] a = args;
-        if (a.length == 1)
+        if (args.length == 1)
         {
-            if (WXPermissions.checkWXPermissions(p, PermissionType.CONFIG))
+            if (WXPermissions.checkWXPermissions(player, PermissionType.CONFIG))
             {
-                final StargateShape shape = StargateHelper.getShape(a[0]);
-                if (shape != null)
+
+                if (StargateHelper.isStargateShape(args[0]))
                 {
-                    StargateManager.addPlayerBuilderShape(p, shape);
-                    p.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Press Activation button on new DHD to autobuild Stargate in the shape of: " + a[0]);
+                    StargateManager.addPlayerBuilderShape(player, StargateHelper.getStargateShape(args[0]));
+                    player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Press Activation button on new DHD to autobuild Stargate in the shape of: " + args[0]);
                 }
                 else
                 {
-                    p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid shape: " + a[0]);
+                    player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid shape: " + args[0]);
                 }
             }
             else
             {
-                p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+                player.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
             }
+            return true;
         }
-        else
-        {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     /* (non-Javadoc)

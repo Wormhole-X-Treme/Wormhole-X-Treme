@@ -47,8 +47,6 @@ public class Complete implements CommandExecutor
      */
     private static boolean doComplete(final Player player, final String[] args)
     {
-        final Player p = player;
-        final String[] a = args;
         final String name = args[0].trim().replace("\n", "").replace("\r", "");
 
         if (name.length() < 12)
@@ -56,9 +54,9 @@ public class Complete implements CommandExecutor
             String idc = "";
             String network = "Public";
 
-            for (int i = 1; i < a.length; i++)
+            for (int i = 1; i < args.length; i++)
             {
-                final String[] key_value_string = a[i].split("=");
+                final String[] key_value_string = args[i].split("=");
                 if (key_value_string[0].equals("idc"))
                 {
                     idc = key_value_string[1];
@@ -68,34 +66,32 @@ public class Complete implements CommandExecutor
                     network = key_value_string[1];
                 }
             }
-            if (WXPermissions.checkWXPermissions(p, network, PermissionType.BUILD))
+            if (WXPermissions.checkWXPermissions(player, network, PermissionType.BUILD))
             {
                 if (StargateManager.getStargate(name) == null)
                 {
-                    final boolean success = StargateManager.completeStargate(p, name, idc, network);
-
-                    if (success)
+                    if (StargateManager.completeStargate(player, name, idc, network))
                     {
-                        p.sendMessage(ConfigManager.MessageStrings.constructSuccess.toString());
+                        player.sendMessage(ConfigManager.MessageStrings.constructSuccess.toString());
                     }
                     else
                     {
-                        p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Construction Failed!?");
+                        player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Construction Failed!?");
                     }
                 }
                 else
                 {
-                    p.sendMessage(ConfigManager.MessageStrings.constructNameTaken.toString() + "\"" + name + "\"");
+                    player.sendMessage(ConfigManager.MessageStrings.constructNameTaken.toString() + "\"" + name + "\"");
                 }
             }
             else
             {
-                p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+                player.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
             }
         }
         else
         {
-            p.sendMessage(ConfigManager.MessageStrings.constructNameTooLong.toString() + "\"" + name + "\"");
+            player.sendMessage(ConfigManager.MessageStrings.constructNameTooLong.toString() + "\"" + name + "\"");
         }
         return true;
     }
@@ -106,17 +102,12 @@ public class Complete implements CommandExecutor
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
     {
-        if (CommandUtilities.playerCheck(sender))
+        final String[] arguments = CommandUtilities.commandEscaper(args);
+        if ((arguments.length <= 3) && (arguments.length > 0))
         {
-            final String[] arguments = CommandUtilities.commandEscaper(args);
-            if ((arguments.length <= 3) && (arguments.length > 0))
-            {
-                final Player player = (Player) sender;
-                return doComplete(player, arguments);
-            }
-            return false;
+            return CommandUtilities.playerCheck(sender) ? doComplete((Player) sender, arguments) : true;
         }
-        return true;
+        return false;
     }
 
 }

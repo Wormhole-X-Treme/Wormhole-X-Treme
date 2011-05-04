@@ -77,10 +77,6 @@ class WormholeXTremePlayerListener extends PlayerListener
                 else if (WorldUtils.isSameBlock(stargate.getGateIrisLeverBlock(), clickedBlock))
                 {
                     stargate.toggleIrisActive(true);
-                    if ((stargate.isGateActive()) && ( !stargate.isGateIrisActive()))
-                    {
-                        stargate.fillGateInterior(stargate.getGateShape().getShapePortalMaterial());
-                    }
                 }
             }
             else
@@ -127,7 +123,7 @@ class WormholeXTremePlayerListener extends PlayerListener
             }
             else
             {
-            	WormholeXTreme.getThisPlugin().prettyLog(Level.FINEST, false, "Attempting to find any gate shapes!");
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINEST, false, "Attempting to find any gate shapes!");
                 newGate = StargateHelper.checkStargate(clickedBlock, direction);
             }
 
@@ -347,7 +343,8 @@ class WormholeXTremePlayerListener extends PlayerListener
         final Block gateBlockFinal = toLocFinal.getWorld().getBlockAt(toLocFinal.getBlockX(), toLocFinal.getBlockY(), toLocFinal.getBlockZ());
         final Stargate stargate = StargateManager.getGateFromBlock(gateBlockFinal);
 
-        if ((stargate != null) && stargate.isGateActive() && (stargate.getGateTarget() != null) && (stargate.getGateShape() != null) && (gateBlockFinal.getType() == stargate.getGateShape().getShapePortalMaterial()))
+        if ((stargate != null) && stargate.isGateActive() && (stargate.getGateTarget() != null) && (stargate.getGateShape() != null) && (gateBlockFinal.getType() == (stargate.isGateCustom()
+            ? stargate.getGateCustomPortalMaterial() : stargate.getGateShape().getShapePortalMaterial())))
         {
             String gatenetwork;
             if (stargate.getGateNetwork() != null)

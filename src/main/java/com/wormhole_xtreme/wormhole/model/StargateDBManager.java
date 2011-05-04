@@ -403,13 +403,16 @@ public class StargateDBManager
 
                 if ((w == null) && !worldName.equals(""))
                 {
-                    if (ConfigManager.isWormholeWorldsSupportEnabled()) {
-                        if (WormholeXTreme.getWorldHandler() != null && !WormholeXTreme.getWorldHandler().loadWorld(worldName)) {
+                    if (ConfigManager.isWormholeWorldsSupportEnabled())
+                    {
+                        if ((WormholeXTreme.getWorldHandler() != null) && !WormholeXTreme.getWorldHandler().loadWorld(worldName))
+                        {
                             server.createWorld(worldName, Environment.valueOf(worldEnvironment));
                             WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, true, "World: " + worldName + " is not a Wormhole World, the suggested action is to add it as one. Otherwise disregard this warning.");
                         }
                     }
-                    else {
+                    else
+                    {
                         server.createWorld(worldName, Environment.valueOf(worldEnvironment));
                     }
                     w = server.getWorld(worldName);
@@ -431,7 +434,7 @@ public class StargateDBManager
                         gateShapeName = "Standard";
                     }
 
-                    s.setGateShape(StargateHelper.getShape(gateShapeName));
+                    s.setGateShape(StargateHelper.getStargateShape(gateShapeName));
                     if (sn != null)
                     {
                         sn.getNetworkGateList().add(s);

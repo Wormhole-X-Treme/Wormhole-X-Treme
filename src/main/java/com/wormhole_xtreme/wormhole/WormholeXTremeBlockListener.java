@@ -70,7 +70,8 @@ class WormholeXTremeBlockListener extends BlockListener
                     player.sendMessage("You can rebuild it later.");
                     stargate.setGateDialSign(null);
                 }
-                else if (block.getType().equals(stargate.getGateShape().getShapeIrisMaterial()))
+                else if (block.getType().equals(stargate.isGateCustom() ? stargate.getGateCustomIrisMaterial()
+                    : stargate.getGateShape().getShapeIrisMaterial()))
                 {
                     return true;
                 }
@@ -93,10 +94,9 @@ class WormholeXTremeBlockListener extends BlockListener
                     {
                         stargate.setupIrisLever(false);
                     }
-                    if (stargate.isGateRedstonePowered()) {
-                        stargate.setupRedstoneDialWire(false);
-                        stargate.setupRedstoneGateActivatedLever(false);
-                        stargate.setupRedstoneSignDialWire(false);
+                    if (stargate.isGateRedstonePowered())
+                    {
+                        stargate.setupRedstone(false);
                     }
                     StargateManager.removeStargate(stargate);
                     player.sendMessage("Stargate Destroyed: " + stargate.getGateName());
@@ -118,8 +118,6 @@ class WormholeXTremeBlockListener extends BlockListener
         }
         return true;
     }
-
-
 
     /* (non-Javadoc)
      * @see org.bukkit.event.block.BlockListener#onBlockBreak(org.bukkit.event.block.BlockBreakEvent)
@@ -150,10 +148,13 @@ class WormholeXTremeBlockListener extends BlockListener
             final Location current = event.getBlock().getLocation();
             final Stargate closest = StargateManager.findClosestStargate(current);
             //TODO This is bad, very bad for performance!
-            if ((closest != null) && (closest.isGateActive() || closest.isGateRecentlyActive()) && (closest.getGateShape().getShapePortalMaterial() == Material.STATIONARY_LAVA))
+            if ((closest != null) && (closest.isGateActive() || closest.isGateRecentlyActive()) && ((closest.isGateCustom()
+                ? closest.getGateCustomPortalMaterial() : closest.getGateShape().getShapePortalMaterial()) == Material.STATIONARY_LAVA))
             {
                 final double blockDistanceSquared = StargateManager.distanceSquaredToClosestGateBlock(current, closest);
-                if (((blockDistanceSquared <= closest.getGateShape().getShapeWooshDepthSquared()) && (closest.getGateShape().getShapeWooshDepth() != 0)) || (blockDistanceSquared <= 25))
+                if (((blockDistanceSquared <= (closest.isGateCustom() ? closest.getGateCustomWooshDepthSquared()
+                    : closest.getGateShape().getShapeWooshDepthSquared())) && ((closest.isGateCustom()
+                    ? closest.getGateCustomWooshDepth() : closest.getGateShape().getShapeWooshDepth()) != 0)) || (blockDistanceSquared <= 25))
                 {
                     WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.getGateName() + "\" Proximity Block Burn Distance Squared: \"" + blockDistanceSquared + "\"");
                     event.setCancelled(true);
@@ -179,8 +180,7 @@ class WormholeXTremeBlockListener extends BlockListener
             }
         }
     }
-    
-    
+
     /* (non-Javadoc)
      * @see org.bukkit.event.block.BlockListener#onBlockFlow(org.bukkit.event.block.BlockFromToEvent)
      */
@@ -206,10 +206,13 @@ class WormholeXTremeBlockListener extends BlockListener
         {
             final Location current = event.getBlock().getLocation();
             final Stargate closest = StargateManager.findClosestStargate(current);
-            if ((closest != null) && (closest.isGateActive() || closest.isGateRecentlyActive()) && (closest.getGateShape().getShapePortalMaterial() == Material.STATIONARY_LAVA))
+            if ((closest != null) && (closest.isGateActive() || closest.isGateRecentlyActive()) && ((closest.isGateCustom()
+                ? closest.getGateCustomPortalMaterial() : closest.getGateShape().getShapePortalMaterial()) == Material.STATIONARY_LAVA))
             {
                 final double blockDistanceSquared = StargateManager.distanceSquaredToClosestGateBlock(current, closest);
-                if (((blockDistanceSquared <= closest.getGateShape().getShapeWooshDepthSquared()) && (closest.getGateShape().getShapeWooshDepth() != 0)) || (blockDistanceSquared <= 25))
+                if (((blockDistanceSquared <= (closest.isGateCustom() ? closest.getGateCustomWooshDepthSquared()
+                    : closest.getGateShape().getShapeWooshDepthSquared())) && ((closest.isGateCustom()
+                    ? closest.getGateCustomWooshDepth() : closest.getGateShape().getShapeWooshDepth()) != 0)) || (blockDistanceSquared <= 25))
                 {
                     WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.getGateName() + "\" Block Type: \"" + event.getBlock().getType().toString() + "\" Proximity Block Ignite: \"" + event.getCause().toString() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
                     event.setCancelled(true);

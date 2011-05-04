@@ -48,21 +48,19 @@ public class Go implements CommandExecutor
      */
     private static boolean doGo(final Player player, final String[] args)
     {
-        final Player p = player;
-        final String[] a = args;
-        if (WXPermissions.checkWXPermissions(p, PermissionType.GO))
+        if (WXPermissions.checkWXPermissions(player, PermissionType.GO))
         {
-            if (a.length == 1)
+            if (args.length == 1)
             {
-                final String goGate = a[0].trim().replace("\n", "").replace("\r", "");
+                final String goGate = args[0].trim().replace("\n", "").replace("\r", "");
                 final Stargate s = StargateManager.getStargate(goGate);
                 if (s != null)
                 {
-                    p.teleport(s.getGatePlayerTeleportLocation());
+                    player.teleport(s.getGatePlayerTeleportLocation());
                 }
                 else
                 {
-                    p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Gate does not exist: " + a[0]);
+                    player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Gate does not exist: " + args[0]);
                 }
             }
             else
@@ -72,7 +70,7 @@ public class Go implements CommandExecutor
         }
         else
         {
-            p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+            player.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
         }
         return true;
     }
@@ -83,17 +81,12 @@ public class Go implements CommandExecutor
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
     {
-        if (CommandUtilities.playerCheck(sender))
+        final String[] arguments = CommandUtilities.commandEscaper(args);
+        if ((arguments.length < 3) && (arguments.length > 0))
         {
-            final String[] arguments = CommandUtilities.commandEscaper(args);
-            if ((arguments.length < 3) && (arguments.length > 0))
-            {
-                final Player player = (Player) sender;
-                return doGo(player, arguments);
-            }
-            return false;
+            return CommandUtilities.playerCheck(sender) ? doGo((Player) sender, arguments) : true;
         }
-        return true;
+        return false;
     }
 
 }

@@ -46,23 +46,22 @@ public class Compass implements CommandExecutor
      */
     private static boolean doCompass(final Player player)
     {
-        final Player p = player;
-        if (WXPermissions.checkWXPermissions(p, PermissionType.COMPASS))
+        if (WXPermissions.checkWXPermissions(player, PermissionType.COMPASS))
         {
-            final Stargate closest = StargateManager.findClosestStargate(p.getLocation());
+            final Stargate closest = StargateManager.findClosestStargate(player.getLocation());
             if (closest != null)
             {
-                p.setCompassTarget(closest.getGatePlayerTeleportLocation());
-                p.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Compass set to wormhole: " + closest.getGateName());
+                player.setCompassTarget(closest.getGatePlayerTeleportLocation());
+                player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Compass set to wormhole: " + closest.getGateName());
             }
             else
             {
-                p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "No wormholes to track!");
+                player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "No wormholes to track!");
             }
         }
         else
         {
-            p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+            player.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
         }
         return true;
     }
@@ -73,12 +72,7 @@ public class Compass implements CommandExecutor
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
     {
-        if (CommandUtilities.playerCheck(sender))
-        {
-            final Player player = (Player) sender;
-            return doCompass(player);
-        }
-        return true;
+        return CommandUtilities.playerCheck(sender) ? doCompass((Player) sender) : true;
     }
 
 }

@@ -119,8 +119,6 @@ public class WorldUtils
         }
     }
 
-    
-    
     /**
      * Gets the lever toggle byte.
      * 

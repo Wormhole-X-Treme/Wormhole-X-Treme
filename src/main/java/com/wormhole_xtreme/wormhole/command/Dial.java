@@ -52,15 +52,14 @@ public class Dial implements CommandExecutor
     private static boolean doDial(final Player player, final String[] args)
     {
         final Stargate start = StargateManager.removeActivatedStargate(player);
-        final String[] arguments = args;
         if (start != null)
         {
             if (WXPermissions.checkWXPermissions(player, start, PermissionType.DIALER))
             {
                 final String startnetwork = CommandUtilities.getGateNetwork(start);
-                if ( !start.getGateName().equals(arguments[0]))
+                if ( !start.getGateName().equals(args[0]))
                 {
-                    final Stargate target = StargateManager.getStargate(arguments[0]);
+                    final Stargate target = StargateManager.getStargate(args[0]);
                     // No target
                     if (target == null)
                     {
@@ -83,7 +82,7 @@ public class Dial implements CommandExecutor
                     }
                     if ( !target.getGateIrisDeactivationCode().equals("") && target.isGateIrisActive())
                     {
-                        if ((arguments.length >= 2) && target.getGateIrisDeactivationCode().equals(arguments[1]))
+                        if ((args.length >= 2) && target.getGateIrisDeactivationCode().equals(args[1]))
                         {
                             if (target.isGateIrisActive())
                             {
@@ -127,16 +126,12 @@ public class Dial implements CommandExecutor
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
     {
-        if (CommandUtilities.playerCheck(sender))
+        final String[] arguments = CommandUtilities.commandEscaper(args);
+        if ((arguments.length < 3) && (arguments.length > 0))
         {
-            final String[] arguments = CommandUtilities.commandEscaper(args);
-            if ((arguments.length < 3) && (arguments.length > 0))
-            {
-                return doDial((Player) sender, arguments);
-            }
-            return false;
+            return CommandUtilities.playerCheck(sender) ? doDial((Player) sender, arguments) : true;
         }
-        return true;
+        return false;
     }
 
 }

@@ -76,10 +76,15 @@ class WormholeXTremeEntityListener extends EntityListener
         final Player p = (Player) event.getEntity();
         final Location current = p.getLocation();
         final Stargate closest = StargateManager.findClosestStargate(current);
-        if ((closest != null) && ((closest.getGateShape().getShapePortalMaterial() == Material.STATIONARY_LAVA) || ((closest.getGateTarget() != null) && (closest.getGateTarget().getGateShape().getShapePortalMaterial() == Material.STATIONARY_LAVA))))
+        if ((closest != null) && (((closest.isGateCustom() ? closest.getGateCustomPortalMaterial()
+            : closest.getGateShape().getShapePortalMaterial()) == Material.STATIONARY_LAVA) || ((closest.getGateTarget() != null) && ((closest.getGateTarget().isGateCustom()
+            ? closest.getGateTarget().getGateCustomPortalMaterial()
+            : closest.getGateTarget().getGateShape().getShapePortalMaterial()) == Material.STATIONARY_LAVA))))
         {
             final double blockDistanceSquared = StargateManager.distanceSquaredToClosestGateBlock(current, closest);
-            if ((closest.isGateActive() || closest.isGateRecentlyActive()) && (((blockDistanceSquared <= closest.getGateShape().getShapeWooshDepthSquared()) && (closest.getGateShape().getShapeWooshDepth() != 0)) || (blockDistanceSquared <= 16)))
+            if ((closest.isGateActive() || closest.isGateRecentlyActive()) && (((blockDistanceSquared <= (closest.isGateCustom()
+                ? closest.getGateCustomWooshDepthSquared() : closest.getGateShape().getShapeWooshDepthSquared())) && ((closest.isGateCustom()
+                ? closest.getGateCustomWooshDepth() : closest.getGateShape().getShapeWooshDepth()) != 0)) || (blockDistanceSquared <= 16)))
             {
                 WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.getGateName() + "\" Proximity Event: \"" + event.getCause().toString() + "\" On: \"" + p.getName() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
                 p.setFireTicks(0);

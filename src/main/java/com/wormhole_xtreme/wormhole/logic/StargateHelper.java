@@ -57,13 +57,13 @@ public class StargateHelper
 {
 
     /** The Constant shapes. */
-    private static final ConcurrentHashMap<String, StargateShape> shapes = new ConcurrentHashMap<String, StargateShape>();
+    private static final ConcurrentHashMap<String, StargateShape> stargateShapes = new ConcurrentHashMap<String, StargateShape>();
 
     /** The Constant StargateSaveVersion. */
     private static final byte StargateSaveVersion = 8;
 
     /** The Empty block. */
-    private final static byte[] emptyBlock = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private static final byte[] emptyBlock = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     /**
      * * This method takes in a button/lever and a facing and returns a completed stargate.
@@ -78,9 +78,9 @@ public class StargateHelper
     public static Stargate checkStargate(final Block buttonBlock, final BlockFace facing)
     {
         Stargate s = null;
-        for (final String key : shapes.keySet())
+        for (final String key : getStargateShapes().keySet())
         {
-            final StargateShape shape = shapes.get(key);
+            final StargateShape shape = getStargateShapes().get(key);
             if (shape != null)
             {
                 s = shape instanceof Stargate3DShape
@@ -652,14 +652,24 @@ public class StargateHelper
      *            Name of stargate shape
      * @return The shape associated with that name. Null if not in list.
      */
-    public static StargateShape getShape(final String name)
+    public static StargateShape getStargateShape(final String name)
     {
-        if (shapes.containsKey(name))
+        if (getStargateShapes().containsKey(name))
         {
-            return shapes.get(name);
+            return getStargateShapes().get(name);
         }
 
         return null;
+    }
+
+    /**
+     * Gets the shapes.
+     * 
+     * @return the shapes
+     */
+    public static ConcurrentHashMap<String, StargateShape> getStargateShapes()
+    {
+        return stargateShapes;
     }
 
     /**
@@ -674,6 +684,11 @@ public class StargateHelper
     private static boolean isStargateMaterial(final Block b, final StargateShape s)
     {
         return b.getType() == s.getShapeStructureMaterial();
+    }
+
+    public static boolean isStargateShape(final String name)
+    {
+        return getStargateShapes().containsKey(name);
     }
 
     /**
@@ -766,13 +781,13 @@ public class StargateHelper
 
                     final StargateShape shape = StargateShapeFactory.createShapeFromFile(fileLines.toArray(new String[fileLines.size()]));
 
-                    if (shapes.containsKey(shape.getShapeName()))
+                    if (getStargateShapes().containsKey(shape.getShapeName()))
                     {
                         WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Shape File: " + fi.getName() + " contains shape name: " + shape.getShapeName() + " which already exists. This shape will be unavailable.");
                     }
                     else
                     {
-                        shapes.put(shape.getShapeName(), shape);
+                        getStargateShapes().put(shape.getShapeName(), shape);
                     }
                 }
                 catch (final FileNotFoundException e)
@@ -801,9 +816,9 @@ public class StargateHelper
             }
         }
 
-        if (shapes.size() == 0)
+        if (getStargateShapes().size() == 0)
         {
-            shapes.put("Standard", new StargateShape());
+            getStargateShapes().put("Standard", new StargateShape());
         }
     }
 

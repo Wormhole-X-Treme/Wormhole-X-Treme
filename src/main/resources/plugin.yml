@@ -19,7 +19,7 @@ commands:
      description: Wormhole administration and configuration commands.
      usage: |
             /<command> <commandtype> [ARG1] [ARG2]
-            Valid Commands - owner, perms, portalmaterial, irismaterial, shutdown_timeout, activate_timeout, and simple.
+            Valid Commandtypes - owner, perms, portalmaterial, irismaterial, lightmaterial, shutdown_timeout, activate_timeout, simple, regenerate, redstone, and custom.
 
    wxlist:
      description: List all Stargates.

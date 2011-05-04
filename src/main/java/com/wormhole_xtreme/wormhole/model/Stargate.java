@@ -472,7 +472,7 @@ public class Stargate
      * 
      * @return the gate teleport sign
      */
-    public Sign getGateDialSign()
+    public synchronized Sign getGateDialSign()
     {
         return gateDialSign;
     }
@@ -482,7 +482,7 @@ public class Stargate
      * 
      * @return the gate teleport sign block
      */
-    public Block getGateDialSignBlock()
+    public synchronized Block getGateDialSignBlock()
     {
         return gateDialSignBlock;
     }
@@ -492,7 +492,7 @@ public class Stargate
      * 
      * @return the gate sign index
      */
-    public int getGateDialSignIndex()
+    public synchronized int getGateDialSignIndex()
     {
         return gateDialSignIndex;
     }
@@ -926,8 +926,7 @@ public class Stargate
     {
         if ((getGateDialSignBlock() != null) && (getGateDialSign() != null))
         {
-            getGateDialSignBlock().setType(Material.WALL_SIGN);
-            getGateDialSignBlock().setData(WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()));
+            getGateDialSignBlock().setTypeIdAndData(68,WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()),false);
             setGateDialSign((Sign) getGateDialSignBlock().getState());
             getGateDialSign().setLine(0, getGateName());
             if (getGateNetwork() != null)
@@ -1017,7 +1016,7 @@ public class Stargate
      * @param gateTeleportSign
      *            the new gate teleport sign
      */
-    public void setGateDialSign(final Sign gateDialSign)
+    public synchronized void setGateDialSign(final Sign gateDialSign)
     {
         this.gateDialSign = gateDialSign;
     }
@@ -1028,7 +1027,7 @@ public class Stargate
      * @param gateTeleportSignBlock
      *            the new gate teleport sign block
      */
-    public void setGateDialSignBlock(final Block gateDialSignBlock)
+    public synchronized void setGateDialSignBlock(final Block gateDialSignBlock)
     {
         this.gateDialSignBlock = gateDialSignBlock;
     }
@@ -1039,7 +1038,7 @@ public class Stargate
      * @param gateSignIndex
      *            the new gate sign index
      */
-    public void setGateDialSignIndex(final int gateDialSignIndex)
+    public synchronized void setGateDialSignIndex(final int gateDialSignIndex)
     {
         this.gateDialSignIndex = gateDialSignIndex;
     }
@@ -1406,8 +1405,7 @@ public class Stargate
             if (create)
             {
                 final Block nameSign = getGateNameBlockHolder().getFace(getGateFacing());
-                nameSign.setType(Material.WALL_SIGN);
-                nameSign.setData(WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()));
+                nameSign.setTypeIdAndData(68, WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()),false);
                 // nameSign.getState().setData(new org.bukkit.material.Sign(Material.WALL_SIGN));
                 final Sign sign = (Sign) nameSign.getState();
                 sign.setLine(0, "-" + getGateName() + "-");
@@ -1421,14 +1419,14 @@ public class Stargate
                 {
                     sign.setLine(2, "O:" + getGateOwner());
                 }
-                sign.update();
+                sign.update(true);
             }
             else
             {
                 Block nameSign;
                 if ((nameSign = getGateNameBlockHolder().getFace(getGateFacing())) != null)
                 {
-                    nameSign.setType(Material.AIR);
+                    nameSign.setTypeId(0);
                 }
             }
         }
@@ -1775,10 +1773,11 @@ public class Stargate
                 setGateDialSignTarget(getGateSignOrder().get(Integer.valueOf(2)));
                 setGateDialSignIndex(getGateNetwork().getNetworkSignGateList().indexOf(getGateSignOrder().get(Integer.valueOf(2))));
             }
+            getGateDialSign().update(true);
         }
 
         // getGateTeleportSign().setData(getGateTeleportSign().getData());
-        getGateDialSign().update(true);
+        
     }
 
     /**
@@ -1880,7 +1879,7 @@ public class Stargate
     /**
      * Toggle redstone gate activated power.
      */
-    public void toggleRedstoneGateActivatedPower()
+    private void toggleRedstoneGateActivatedPower()
     {
         if (isGateRedstonePowered() && (getGateRedstoneGateActivatedBlock() != null) && (getGateRedstoneGateActivatedBlock().getTypeId() == 69))
         {

@@ -51,9 +51,9 @@ public class StargateShape
     private int[] shapeLightPositions = {3, 4, 11, 12};
 
     /** The water_positions. */
-    private int[][] shapeWaterPositions = {{0, 2, 1}, {0, 3, 1}, {0, 4, 1}, {0, 1, 2}, {0, 2, 2}, {0, 3, 2}, {0, 4, 2},
-        {0, 5, 2}, {0, 1, 3}, {0, 2, 3}, {0, 3, 3}, {0, 4, 3}, {0, 5, 3}, {0, 1, 4}, {0, 2, 4}, {0, 3, 4}, {0, 4, 4},
-        {0, 5, 4}, {0, 2, 5}, {0, 3, 5}, {0, 4, 5}};
+    private int[][] shapePortalPositions = {{0, 2, 1}, {0, 3, 1}, {0, 4, 1}, {0, 1, 2}, {0, 2, 2}, {0, 3, 2},
+        {0, 4, 2}, {0, 5, 2}, {0, 1, 3}, {0, 2, 3}, {0, 3, 3}, {0, 4, 3}, {0, 5, 3}, {0, 1, 4}, {0, 2, 4}, {0, 3, 4},
+        {0, 4, 4}, {0, 5, 4}, {0, 2, 5}, {0, 3, 5}, {0, 4, 5}};
 
     /** The reference_vector, this vector always points up for calculating cross product. */
     private int[] shapeReferenceVector = {0, 1, 0};
@@ -77,7 +77,7 @@ public class StargateShape
     private Material shapeStructureMaterial = Material.OBSIDIAN;
 
     /** The active material. */
-    private Material shapeActiveMaterial = Material.GLOWSTONE;
+    private Material shapeLightMaterial = Material.GLOWSTONE;
 
     /** The shape woosh ticks. */
     private int shapeWooshTicks = 3;
@@ -234,7 +234,7 @@ public class StargateShape
             }
             else if (line.contains("ACTIVE_MATERIAL"))
             {
-                setShapeActiveMaterial(Material.valueOf(line.split("=")[1]));
+                setShapeLightMaterial(Material.valueOf(line.split("=")[1]));
             }
         }
         //TODO: debug printout for the materials the gate uses.
@@ -243,7 +243,7 @@ public class StargateShape
         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Enter Position: \"" + Arrays.toString(getShapeEnterPosition()) + "\"");
         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Button Position [Left/Right,Up/Down,Forward/Back]: \"" + Arrays.toString(getShapeToGateCorner()) + "\"");
 
-        final int[][] tempWaterPositions = new int[portalPositions.size()][3];
+        final int[][] tempPortalPositions = new int[portalPositions.size()][3];
         for (int i = 0; i < portalPositions.size(); i++)
         {
             final int[] point = new int[3];
@@ -251,10 +251,10 @@ public class StargateShape
             {
                 point[j] = portalPositions.get(i)[j];
             }
-            tempWaterPositions[i] = point;
+            tempPortalPositions[i] = point;
         }
-        setShapeWaterPositions(tempWaterPositions);
-        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Portal Positions: \"" + Arrays.deepToString(getShapeWaterPositions()) + "\"");
+        setShapePortalPositions(tempPortalPositions);
+        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Stargate Portal Positions: \"" + Arrays.deepToString(getShapePortalPositions()) + "\"");
 
         final int[] tempLightPositions = new int[lightPositions.size()];
         for (int i = 0; i < lightPositions.size(); i++)
@@ -283,16 +283,6 @@ public class StargateShape
     }
 
     /**
-     * Gets the shape active material.
-     * 
-     * @return the shape active material
-     */
-    public Material getShapeActiveMaterial()
-    {
-        return shapeActiveMaterial;
-    }
-
-    /**
      * Gets the shape enter position.
      * 
      * @return the shape enter position
@@ -310,6 +300,16 @@ public class StargateShape
     public Material getShapeIrisMaterial()
     {
         return shapeIrisMaterial;
+    }
+
+    /**
+     * Gets the shape active material.
+     * 
+     * @return the shape active material
+     */
+    public Material getShapeLightMaterial()
+    {
+        return shapeLightMaterial;
     }
 
     /**
@@ -350,6 +350,16 @@ public class StargateShape
     public Material getShapePortalMaterial()
     {
         return shapePortalMaterial;
+    }
+
+    /**
+     * Gets the shape water positions.
+     * 
+     * @return the shape water positions
+     */
+    public int[][] getShapePortalPositions()
+    {
+        return shapePortalPositions.clone();
     }
 
     /**
@@ -403,16 +413,6 @@ public class StargateShape
     }
 
     /**
-     * Gets the shape water positions.
-     * 
-     * @return the shape water positions
-     */
-    public int[][] getShapeWaterPositions()
-    {
-        return shapeWaterPositions.clone();
-    }
-
-    /**
      * Gets the shape woosh depth.
      * 
      * @return the shape woosh depth
@@ -443,17 +443,6 @@ public class StargateShape
     }
 
     /**
-     * Sets the shape active material.
-     * 
-     * @param shapeActiveMaterial
-     *            the new shape active material
-     */
-    public void setShapeActiveMaterial(final Material shapeActiveMaterial)
-    {
-        this.shapeActiveMaterial = shapeActiveMaterial;
-    }
-
-    /**
      * Sets the shape enter position.
      * 
      * @param shapeEnterPosition
@@ -473,6 +462,17 @@ public class StargateShape
     public void setShapeIrisMaterial(final Material shapeIrisMaterial)
     {
         this.shapeIrisMaterial = shapeIrisMaterial;
+    }
+
+    /**
+     * Sets the shape active material.
+     * 
+     * @param shapeLightMaterial
+     *            the new shape light material
+     */
+    public void setShapeLightMaterial(final Material shapeLightMaterial)
+    {
+        this.shapeLightMaterial = shapeLightMaterial;
     }
 
     /**
@@ -517,6 +517,17 @@ public class StargateShape
     public void setShapePortalMaterial(final Material shapePortalMaterial)
     {
         this.shapePortalMaterial = shapePortalMaterial;
+    }
+
+    /**
+     * Sets the shape water positions.
+     * 
+     * @param shapePortalPositions
+     *            the new shape portal positions
+     */
+    public void setShapePortalPositions(final int[][] shapePortalPositions)
+    {
+        this.shapePortalPositions = shapePortalPositions.clone();
     }
 
     /**
@@ -572,17 +583,6 @@ public class StargateShape
     public void setShapeToGateCorner(final int[] shapeToGateCorner)
     {
         this.shapeToGateCorner = shapeToGateCorner.clone();
-    }
-
-    /**
-     * Sets the shape water positions.
-     * 
-     * @param shapeWaterPositions
-     *            the new shape water positions
-     */
-    public void setShapeWaterPositions(final int[][] shapeWaterPositions)
-    {
-        this.shapeWaterPositions = shapeWaterPositions.clone();
     }
 
     /**

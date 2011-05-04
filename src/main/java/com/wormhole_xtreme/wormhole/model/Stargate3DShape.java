@@ -59,6 +59,7 @@ public class Stargate3DShape extends StargateShape
         // 1. scan all lines for lines beginning with [  - that is the height of the gate
         int height = 0;
         int width = 0;
+        int wooshDepth = 0;
         for (int i = 0; i < fileLines.length; i++)
         {
             final String line = fileLines[i];
@@ -155,6 +156,10 @@ public class Stargate3DShape extends StargateShape
                     // This is only so we know it has been set or not and can warn players
                     setShapeEnterPosition(ssl.getLayerPlayerExitPosition());
                 }
+                if (ssl.getLayerWooshPositions().size() > 0)
+                {
+                    wooshDepth++;
+                }
             }
             else if (line.contains("PORTAL_MATERIAL=") && (line.split("=").length > 1))
             {
@@ -170,7 +175,7 @@ public class Stargate3DShape extends StargateShape
             }
             else if (line.contains("ACTIVE_MATERIAL=") && (line.split("=").length > 1))
             {
-                setShapeActiveMaterial(Material.valueOf(line.split("=")[1]));
+                setShapeLightMaterial(Material.valueOf(line.split("=")[1]));
             }
             else if (line.contains("LIGHT_TICKS=") && (line.split("=").length > 1))
             {
@@ -185,6 +190,9 @@ public class Stargate3DShape extends StargateShape
                 setShapeRedstoneActivated(Boolean.valueOf(line.split("=")[1]));
             }
         }
+
+        setShapeWooshDepth(wooshDepth > 0 ? wooshDepth : 0);
+        setShapeWooshDepthSquared(getShapeWooshDepth() * getShapeWooshDepth());
 
         if (getShapeEnterPosition().length != 3)
         {

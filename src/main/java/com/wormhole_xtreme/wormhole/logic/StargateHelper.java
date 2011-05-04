@@ -282,7 +282,7 @@ public class StargateHelper
             teleLoc.setZ(teleLoc.getZ() + 0.5);
             tempGate.setGatePlayerTeleportLocation(teleLoc);
 
-            for (final int[] bVect : shape.getShapeWaterPositions())
+            for (final int[] bVect : shape.getShapePortalPositions())
             {
                 final int[] blockLocation = {bVect[2] * directionVector[0] * -1, bVect[1],
                     bVect[2] * directionVector[2] * -1};
@@ -1493,8 +1493,8 @@ public class StargateHelper
             s.setGateCustomWooshTicks(byteBuff.getInt());
             s.setGateCustomLightTicks(byteBuff.getInt());
             s.setGateCustomWooshDepth(byteBuff.getInt());
-            s.setGateCustomWooshDepthSquared(s.getGateCustomWooshDepth() > 0
-                ? (int) Math.pow(s.getGateCustomWooshDepth(), 2) : -1);
+            s.setGateCustomWooshDepthSquared(s.getGateCustomWooshDepth() >= 0
+                ? s.getGateCustomWooshDepth() * s.getGateCustomWooshDepth() : -1);
 
             final int numStructureBlocks = byteBuff.getInt();
             for (int i = 0; i < numStructureBlocks; i++)

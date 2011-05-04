@@ -1007,7 +1007,7 @@ public class Stargate
                     {
                         final Block b = getGateWorld().getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
                         b.setType(isGateCustom() ? getGateCustomLightMaterial()
-                            : getGateShape().getShapeActiveMaterial());
+                            : getGateShape().getShapeLightMaterial());
                     }
                 }
 

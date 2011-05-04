@@ -116,7 +116,7 @@ public class Wormhole implements CommandExecutor
                             }
                             if (stargate.getGateCustomLightMaterial() == null)
                             {
-                                stargate.setGateCustomLightMaterial(stargate.getGateShape().getShapeActiveMaterial());
+                                stargate.setGateCustomLightMaterial(stargate.getGateShape().getShapeLightMaterial());
                             }
                             if (stargate.getGateCustomPortalMaterial() == null)
                             {

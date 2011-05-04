@@ -79,14 +79,12 @@ class WormholeXTremeRedstoneListener extends BlockListener
     public void onBlockRedstoneChange(final BlockRedstoneEvent event)
     {
         final Block block = event.getBlock();
-        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Caught redstone event on block: " + block.toString() + " oldCurrent: " + event.getOldCurrent() + " newCurrent: " + event.getNewCurrent());
+        WormholeXTreme.getThisPlugin().prettyLog(Level.FINEST, false, "Caught redstone event on block: " + block.toString() + " oldCurrent: " + event.getOldCurrent() + " newCurrent: " + event.getNewCurrent());
         if (StargateManager.isBlockInGate(block))
         {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Redstone in gate");
             final Stargate stargate = StargateManager.getGateFromBlock(event.getBlock());
             if (stargate.isGateSignPowered() && stargate.isGateRedstonePowered() && (block.getTypeId() == 55) && isCurrentNew(event.getOldCurrent(), event.getNewCurrent()))
             {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Redstone in Sign powered gate");
                 if ((stargate.getGateRedstoneSignActivationBlock() != null) && block.equals(stargate.getGateRedstoneSignActivationBlock()) && isCurrentOn(event.getOldCurrent(), event.getNewCurrent()))
                 {
                     stargate.tryClickTeleportSign(stargate.getGateDialSignBlock());

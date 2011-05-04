@@ -78,7 +78,6 @@ public class StargateHelper
     public static Stargate checkStargate(final Block buttonBlock, final BlockFace facing)
     {
         Stargate s = null;
-
         for (final String key : shapes.keySet())
         {
             final StargateShape shape = shapes.get(key);
@@ -89,10 +88,10 @@ public class StargateHelper
                     : checkStargate(buttonBlock, facing, shape, false);
                 if (s != null)
                 {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINEST, false, "Shape: " + shape.getShapeName() + " is found!");
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Shape: " + shape.getShapeName() + " is found!");
+                    break;
                 }
             }
-
         }
         return s;
     }
@@ -411,7 +410,8 @@ public class StargateHelper
             s.setGateNameBlockHolder(nameBlock);
         }
         /** Set the gate as redstone powered as needed */
-        if (shape.isShapeRedstoneActivated()) {
+        if (shape.isShapeRedstoneActivated())
+        {
             s.setGateRedstonePowered(true);
         }
         setupSignGateNetwork(s);
@@ -1366,9 +1366,9 @@ public class StargateHelper
             final byte[] blocArray = new byte[12];
             // version_byte|ActivationBlock|IrisActivationBlock|NameBlockHolder|TeleportLocation|IsSignPowered|TeleportSign|
             //  facing_len|facing_string|idc_len|idc|IrisActive|num_blocks|Blocks|num_water_blocks|WaterBlocks
-            /** 
+            /**
              * version, gateDialLeverBlock, gateIrisLeverBlock, gateNameBlockHolder, gatePlayerTeleportLocation,
-             * gateMinecartTeleportLocation, gateSignPowered, gateDialSignIndex, gateDialSignTarget, 
+             * gateMinecartTeleportLocation, gateSignPowered, gateDialSignIndex, gateDialSignTarget,
              * gateDialSignBlock, gateActive, gateTarget, gateFacingLength, gateFacing,
              * gateIrisDeactivationCodeLength, gateIrisDeactivationCode, gateIrisActive, gateLightsActive,
              * redstoneDA, gateRedstoneDialActivationBlock, redstoneSA, gateRedstoneSignActivationBlock,
@@ -1457,9 +1457,9 @@ public class StargateHelper
             {
                 s.setGateRedstoneGateActivatedBlock(DataUtils.blockFromBytes(blocArray, w));
             }
-            
+
             s.setGateRedstonePowered(DataUtils.byteToBoolean(byteBuff.get()));
-            
+
             final int numStructureBlocks = byteBuff.getInt();
             for (int i = 0; i < numStructureBlocks; i++)
             {
@@ -1482,7 +1482,7 @@ public class StargateHelper
             {
                 s.getGateLightBlocks().add(new ArrayList<Location>());
             }
-            
+
             for (int i = 0; i < numLightLayers; i++)
             {
                 final int numLightBlocks = byteBuff.getInt();
@@ -1576,19 +1576,19 @@ public class StargateHelper
             return b;
         }
 
-        /** 
-         * gateDialLeverBlock, gateIrisLeverBlock, gateNameBlockHolder, gateDialSignBlock, 
-         * gateRedstoneDialActivationBlock, gateRedstoneSignActivationBlock, gateRedstoneGateActivatedBlock 
+        /**
+         * gateDialLeverBlock, gateIrisLeverBlock, gateNameBlockHolder, gateDialSignBlock,
+         * gateRedstoneDialActivationBlock, gateRedstoneSignActivationBlock, gateRedstoneGateActivatedBlock
          * */
-        
+
         final int numBlocks = 7;
         // Enter location, Minecart enter location
         final int numLocations = 2;
         final int locationSize = 32;
         final int blockSize = 12;
-        /** 
-         * saveVersion, gateSignPowered, gateActive, gateIrisActive, gateLightsActive, 
-         * gateRedstoneDialActivation, gateRedstoneSignActivation, gateRedstoneGateActivated, gateRedstonePowered 
+        /**
+         * saveVersion, gateSignPowered, gateActive, gateIrisActive, gateLightsActive,
+         * gateRedstoneDialActivation, gateRedstoneSignActivation, gateRedstoneGateActivated, gateRedstonePowered
          * */
         final int numBytesWithVersion = 9;
         // string size ints 2 + block count ints 2 + sign index int = 5 ints
@@ -1629,57 +1629,60 @@ public class StargateHelper
 
         final ByteBuffer dataArr = ByteBuffer.allocate(size);
 
-        /** saveVersion - byte 1*/
+        /** saveVersion - byte 1 */
         dataArr.put(StargateSaveVersion);
-        /** gateDialLeverBlock - block 1*/
+        /** gateDialLeverBlock - block 1 */
         dataArr.put(DataUtils.blockToBytes(s.getGateDialLeverBlock()));
-        /** gateIrisLeverBlock - block 2*/
+        /** gateIrisLeverBlock - block 2 */
         dataArr.put(s.getGateIrisLeverBlock() != null ? DataUtils.blockToBytes(s.getGateIrisLeverBlock()) : emptyBlock);
-        /** gateNameBlockHolder - block 3*/
-        dataArr.put(s.getGateNameBlockHolder() != null ? DataUtils.blockToBytes(s.getGateNameBlockHolder()) : emptyBlock);
-        /** gatePlayerTeleportLocation - location 1*/
+        /** gateNameBlockHolder - block 3 */
+        dataArr.put(s.getGateNameBlockHolder() != null ? DataUtils.blockToBytes(s.getGateNameBlockHolder())
+            : emptyBlock);
+        /** gatePlayerTeleportLocation - location 1 */
         dataArr.put(DataUtils.locationToBytes(s.getGatePlayerTeleportLocation()));
-        /** gateMinecartTeleportLocation - location 2*/
-        dataArr.put(s.getGateMinecartTeleportLocation() != null ? DataUtils.locationToBytes(s.getGateMinecartTeleportLocation()) : DataUtils.locationToBytes(s.getGatePlayerTeleportLocation()));
+        /** gateMinecartTeleportLocation - location 2 */
+        dataArr.put(s.getGateMinecartTeleportLocation() != null
+            ? DataUtils.locationToBytes(s.getGateMinecartTeleportLocation())
+            : DataUtils.locationToBytes(s.getGatePlayerTeleportLocation()));
 
         if (s.isGateSignPowered())
         {
-            /** gateSignPowered - byte 2*/
+            /** gateSignPowered - byte 2 */
             dataArr.put((byte) 1);
-            /** gateDialSignBlock - block 4*/
+            /** gateDialSignBlock - block 4 */
             dataArr.put(DataUtils.blockToBytes(s.getGateDialSignBlock()));
-            /** gateDialSignIndex - int 1*/
+            /** gateDialSignIndex - int 1 */
             dataArr.putInt(s.getGateDialSignIndex());
-            /** gateDialSignTarget - long 1*/
+            /** gateDialSignTarget - long 1 */
             dataArr.putLong(s.getGateDialSignTarget() != null ? s.getGateDialSignTarget().getGateId() : -1);
         }
         else
         {
-            /** gateSignPowered - byte 2*/
+            /** gateSignPowered - byte 2 */
             dataArr.put((byte) 0);
-            /** gateDialSignBlock - block 4*/
+            /** gateDialSignBlock - block 4 */
             dataArr.put(emptyBlock);
-            /** gateDialSignIndex - int 1*/
+            /** gateDialSignIndex - int 1 */
             dataArr.putInt( -1);
-            /** gateDialSignTarget - long 1*/
+            /** gateDialSignTarget - long 1 */
             dataArr.putLong( -1);
         }
 
         if (s.isGateActive() && (s.getGateTarget() != null))
         {
-            /** gateActive - byte 3*/
+            /** gateActive - byte 3 */
             dataArr.put((byte) 1);
-            /** gateTarget - long 2*/
+            /** gateTarget - long 2 */
             dataArr.putLong(s.getGateTarget().getGateId());
         }
         else
         {
-            /** gateActive - byte 3*/
+            /** gateActive - byte 3 */
             dataArr.put((byte) 0);
-            /** gateTarget - long 2*/
+            /** gateTarget - long 2 */
             dataArr.putLong( -1);
         }
-        
+
         /** utfFaceBytes - int 2 */
         dataArr.putInt(utfFaceBytes.length);
         dataArr.put(utfFaceBytes);
@@ -1710,34 +1713,34 @@ public class StargateHelper
         {
             /** gateRedstoneSignActivation - byte 7 */
             dataArr.put((byte) 1);
-            /** gateRedstoneSignActivationBlock - block 6*/
+            /** gateRedstoneSignActivationBlock - block 6 */
             dataArr.put(DataUtils.blockToBytes(s.getGateRedstoneSignActivationBlock()));
         }
         else
         {
             /** gateRedstoneSignActivation - byte 7 */
             dataArr.put((byte) 0);
-            /** gateRedstoneSignActivationBlock - block 6*/
+            /** gateRedstoneSignActivationBlock - block 6 */
             dataArr.put(emptyBlock);
         }
 
         if (s.getGateRedstoneGateActivatedBlock() != null)
         {
-            /** gateRedstoneGateActivated - byte 8*/
+            /** gateRedstoneGateActivated - byte 8 */
             dataArr.put((byte) 1);
             /** gateRedstoneGateActivatedBlock - block 7 */
             dataArr.put(DataUtils.blockToBytes(s.getGateRedstoneGateActivatedBlock()));
         }
         else
         {
-            /** gateRedstoneGateActivated - byte 8*/
+            /** gateRedstoneGateActivated - byte 8 */
             dataArr.put((byte) 0);
             /** gateRedstoneGateActivatedBlock - block 7 */
             dataArr.put(emptyBlock);
         }
         /** gateRedstonePowered - byte 9 */
-        dataArr.put(s.isGateRedstonePowered() ?  (byte) 1 : (byte) 0);
-        
+        dataArr.put(s.isGateRedstonePowered() ? (byte) 1 : (byte) 0);
+
         dataArr.putInt(s.getGateStructureBlocks().size());
         for (int i = 0; i < s.getGateStructureBlocks().size(); i++)
         {

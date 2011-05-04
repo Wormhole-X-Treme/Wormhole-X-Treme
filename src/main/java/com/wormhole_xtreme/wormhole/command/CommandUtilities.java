@@ -146,6 +146,11 @@ class CommandUtilities
             }
             stargate.setupIrisLever(false);
         }
+        if (stargate.isGateRedstonePowered()) {
+            stargate.setupRedstoneDialWire(false);
+            stargate.setupRedstoneGateActivatedLever(false);
+            stargate.setupRedstoneSignDialWire(false);
+        }
         if (destroy)
         {
             stargate.deleteGateBlocks();

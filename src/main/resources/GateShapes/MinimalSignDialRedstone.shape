@@ -26,11 +26,11 @@ Version=2
 #			This block is not required, so shapes with this block can be either type. (sign or dial)
 #			Without this block a gateshape can only be /dial gate.
 #    :RD = Redstone activation block. A redstone charge next to this block will activate the gate.
-#			This block requires a :D block for targetting.
-#    :RS = Redstone sign dialer cycle block. 
-#			A redstone charge next to this block will cycle sign targets.
-#			This block requires a :D block for targetting.
+#			This block requires a :D block for targetting. This block should be on top of a [S] block.
+#    :RS = Redstone sign dialer cycle block. A redstone charge next to this block will cycle sign targets.
+#			This block requires a :D block for targetting. This block should be on top of a [S] block.
 #    :RA = Redstone gate Activated block. This block will provide redstone charge when the gate is activated.
+#           This block should be on top of a [S] block.
 #    :IA = Iris Activation Switch - Not required unless you want to be able to place an Iris on the gate.
 #
 #    RD, RS, RA, IA, D, N, and A cannot be the same block, and none of those can contain W
@@ -47,18 +47,20 @@ Version=2
 GateShape=
 
 Layer#1=
-[I:W#3][I][I]
-[P:W#2][I][I]
-[P:W#1][I][I]
-[S:L#1:EP][I][I]
-[I:RA][I][I:RS]
+[I][I:W#3][I]
+[S][P:W#2][S]
+[S][P:W#1][S]
+[S][S:L#1:EP][S]
+[I:RA][S][I:RS]
+[s][I][S]
 
 Layer#2=
 [I][I][I]
-[I][S:A][S:D]
-[I][S:IA][S]
-[I:EM][I][I]
+[S:A][I][S:D]
+[I][I][I]
+[I][S:EM][I]
 [I][I:RD][I]
+[I][S][I]
 
 # Number of ticks to wait before activating each # of the woosh. 1 tick = ~50ms
 WOOSH_TICKS = 3;

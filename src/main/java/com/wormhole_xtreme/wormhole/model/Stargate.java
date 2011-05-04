@@ -246,7 +246,7 @@ public class Stargate
 
         if (isGateRedstonePowered())
         {
-            setupRedstoneGateActivatedWire(true);
+            setupRedstoneGateActivatedLever(true);
             if (isGateSignPowered())
             {
                 setupRedstoneDialWire(true);
@@ -330,6 +330,7 @@ public class Stargate
             {
                 setGateActive(true);
                 toggleDialLeverState(false);
+                toggleRedstoneGateActivatedPower();
                 setGateRecentlyActive(false);
             }
             if ( !isGateLightsActive())
@@ -1466,62 +1467,80 @@ public class Stargate
     }
 
     /**
-     * Sets the up redstone dial torch.
+     * Sets the up redstone dial wire.
      * 
      * @param create
-     *            the new up redstone dial torch
+     *            the new redstone dial wire
      */
     public void setupRedstoneDialWire(final boolean create)
     {
-        if (create && (getGateRedstoneDialActivationBlock() != null))
+        if (getGateRedstoneDialActivationBlock() != null)
         {
-            getGateStructureBlocks().add(getGateRedstoneDialActivationBlock().getLocation());
-            getGateRedstoneDialActivationBlock().setTypeId(55);
-        }
-        else
-        {
-            getGateStructureBlocks().remove(getGateRedstoneDialActivationBlock().getLocation());
-            getGateRedstoneDialActivationBlock().setTypeId(0);
+            if (create)
+            {
+                getGateStructureBlocks().add(getGateRedstoneDialActivationBlock().getLocation());
+                getGateRedstoneDialActivationBlock().setTypeId(55);
+            }
+            else
+            {
+                if (getGateRedstoneGateActivatedBlock().getTypeId() == 55)
+                {
+                    getGateStructureBlocks().remove(getGateRedstoneDialActivationBlock().getLocation());
+                    getGateRedstoneDialActivationBlock().setTypeId(0);
+                }
+            }
         }
     }
 
     /**
-     * Sets the up redstone gate activated torch.
+     * Sets the up redstone gate activated Lever.
      * 
      * @param create
-     *            the new up redstone gate activated torch
+     *            the new redstone gate activated lever
      */
-    public void setupRedstoneGateActivatedWire(final boolean create)
+    public void setupRedstoneGateActivatedLever(final boolean create)
     {
-        if (create && (getGateRedstoneGateActivatedBlock() != null))
+        if (getGateRedstoneGateActivatedBlock() != null)
         {
-            getGateStructureBlocks().add(getGateRedstoneGateActivatedBlock().getLocation());
-            getGateRedstoneGateActivatedBlock().setTypeId(55);
-        }
-        else
-        {
-            getGateStructureBlocks().remove(getGateRedstoneGateActivatedBlock().getLocation());
-            getGateRedstoneGateActivatedBlock().setTypeId(0);
+            if (create)
+            {
+                getGateStructureBlocks().add(getGateRedstoneGateActivatedBlock().getLocation());
+                getGateRedstoneGateActivatedBlock().setTypeIdAndData(69, (byte) 0x5, false);
+            }
+            else
+            {
+                if (getGateRedstoneGateActivatedBlock().getTypeId() == 69)
+                {
+                    getGateStructureBlocks().remove(getGateRedstoneGateActivatedBlock().getLocation());
+                    getGateRedstoneGateActivatedBlock().setTypeId(0);
+                }
+            }
         }
     }
 
     /**
-     * Sets the up redstone sign dial torch.
+     * Sets the up redstone sign dial wire.
      * 
      * @param create
-     *            the new up redstone sign dial torch
+     *            the new redstone sign dial wire
      */
     public void setupRedstoneSignDialWire(final boolean create)
     {
-        if (create && (getGateRedstoneSignActivationBlock() != null))
+        if (getGateRedstoneSignActivationBlock() != null)
         {
-            getGateStructureBlocks().add(getGateRedstoneSignActivationBlock().getLocation());
-            getGateRedstoneSignActivationBlock().setTypeId(55);
-        }
-        else
-        {
-            getGateStructureBlocks().remove(getGateRedstoneSignActivationBlock().getLocation());
-            getGateRedstoneSignActivationBlock().setTypeId(0);
+            if (create)
+            {
+                getGateStructureBlocks().add(getGateRedstoneSignActivationBlock().getLocation());
+                getGateRedstoneSignActivationBlock().setTypeId(55);
+            }
+            else
+            {
+                if (getGateRedstoneGateActivatedBlock().getTypeId() == 55)
+                {
+                    getGateStructureBlocks().remove(getGateRedstoneSignActivationBlock().getLocation());
+                    getGateRedstoneSignActivationBlock().setTypeId(0);
+                }
+            }
         }
     }
 
@@ -1554,6 +1573,7 @@ public class Stargate
 
         lightStargate(false);
         toggleDialLeverState(false);
+        toggleRedstoneGateActivatedPower();
         // Only set back to air if iris isn't on.
         // If the iris should be on, we will make it that way.
         if (isGateIrisDefaultActive())
@@ -1854,6 +1874,18 @@ public class Stargate
         if (setDefault)
         {
             setGateIrisDefaultActive(isGateIrisActive());
+        }
+    }
+
+    /**
+     * Toggle redstone gate activated power.
+     */
+    public void toggleRedstoneGateActivatedPower()
+    {
+        if (isGateRedstonePowered() && (getGateRedstoneGateActivatedBlock() != null) && (getGateRedstoneGateActivatedBlock().getTypeId() == 69))
+        {
+            final byte leverState = getGateRedstoneGateActivatedBlock().getData();
+            getGateRedstoneGateActivatedBlock().setData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
         }
     }
 

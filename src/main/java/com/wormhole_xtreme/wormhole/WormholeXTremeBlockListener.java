@@ -93,6 +93,11 @@ class WormholeXTremeBlockListener extends BlockListener
                     {
                         stargate.setupIrisLever(false);
                     }
+                    if (stargate.isGateRedstonePowered()) {
+                        stargate.setupRedstoneDialWire(false);
+                        stargate.setupRedstoneGateActivatedLever(false);
+                        stargate.setupRedstoneSignDialWire(false);
+                    }
                     StargateManager.removeStargate(stargate);
                     player.sendMessage("Stargate Destroyed: " + stargate.getGateName());
                 }
@@ -114,28 +119,7 @@ class WormholeXTremeBlockListener extends BlockListener
         return true;
     }
 
-    /**
-     * Handle block damage.
-     * 
-     * @param player
-     *            the player
-     * @param stargate
-     *            the stargate
-     * @return true, if successful
-     */
-    private static boolean handleBlockDamage(final Player player, final Stargate stargate)
-    {
-        final boolean allowed = WXPermissions.checkWXPermissions(player, stargate, PermissionType.DAMAGE);
-        if (allowed)
-        {
-            return false;
-        }
-        else
-        {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied damage on: " + stargate.getGateName());
-            return true;
-        }
-    }
+
 
     /* (non-Javadoc)
      * @see org.bukkit.event.block.BlockListener#onBlockBreak(org.bukkit.event.block.BlockBreakEvent)
@@ -163,8 +147,6 @@ class WormholeXTremeBlockListener extends BlockListener
     {
         if ( !event.isCancelled())
         {
-            //if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
-            //{
             final Location current = event.getBlock().getLocation();
             final Stargate closest = StargateManager.findClosestStargate(current);
             //TODO This is bad, very bad for performance!
@@ -177,7 +159,6 @@ class WormholeXTremeBlockListener extends BlockListener
                     event.setCancelled(true);
                 }
             }
-            //}
         }
     }
 
@@ -189,17 +170,17 @@ class WormholeXTremeBlockListener extends BlockListener
     {
         if ( !event.isCancelled())
         {
-            final Block block = event.getBlock();
-            final Stargate stargate = StargateManager.getGateFromBlock(block);
+            final Stargate stargate = StargateManager.getGateFromBlock(event.getBlock());
             final Player player = event.getPlayer();
-
-            if ((stargate != null) && handleBlockDamage(player, stargate))
+            if ((stargate != null) && (player != null) && !WXPermissions.checkWXPermissions(player, stargate, PermissionType.DAMAGE))
             {
                 event.setCancelled(true);
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied damage on: " + stargate.getGateName());
             }
         }
     }
-
+    
+    
     /* (non-Javadoc)
      * @see org.bukkit.event.block.BlockListener#onBlockFlow(org.bukkit.event.block.BlockFromToEvent)
      */
@@ -208,8 +189,7 @@ class WormholeXTremeBlockListener extends BlockListener
     {
         if ( !event.isCancelled())
         {
-            final Stargate stargate = StargateManager.getGateFromBlock(event.getToBlock());
-            if ((stargate != null) || StargateManager.isBlockInGate(event.getBlock()))
+            if (StargateManager.isBlockInGate(event.getToBlock()) || StargateManager.isBlockInGate(event.getBlock()))
             {
                 event.setCancelled(true);
             }
@@ -224,8 +204,6 @@ class WormholeXTremeBlockListener extends BlockListener
     {
         if ( !event.isCancelled())
         {
-            //if (ConfigManager.getPortalMaterial().equals(Material.STATIONARY_LAVA))
-            //{
             final Location current = event.getBlock().getLocation();
             final Stargate closest = StargateManager.findClosestStargate(current);
             if ((closest != null) && (closest.isGateActive() || closest.isGateRecentlyActive()) && (closest.getGateShape().getShapePortalMaterial() == Material.STATIONARY_LAVA))
@@ -237,7 +215,6 @@ class WormholeXTremeBlockListener extends BlockListener
                     event.setCancelled(true);
                 }
             }
-            //}
         }
     }
 

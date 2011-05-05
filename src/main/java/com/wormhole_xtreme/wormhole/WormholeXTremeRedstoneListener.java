@@ -69,7 +69,9 @@ class WormholeXTremeRedstoneListener extends BlockListener
      */
     private static boolean isCurrentOn(final int oldCurrent, final int newCurrent)
     {
-        return (newCurrent > 0) && (oldCurrent == 0) ? true : false;
+        return (newCurrent > 0) && (oldCurrent == 0)
+            ? true
+            : false;
     }
 
     /* (non-Javadoc)

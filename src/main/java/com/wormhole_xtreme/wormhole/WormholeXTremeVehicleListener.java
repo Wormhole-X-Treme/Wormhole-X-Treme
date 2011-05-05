@@ -66,7 +66,9 @@ class WormholeXTremeVehicleListener extends VehicleListener
         final Block ch = l.getWorld().getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
         final Stargate st = StargateManager.getGateFromBlock(ch);
         if ((st != null) && st.isGateActive() && (st.getGateTarget() != null) && (ch.getType() == (st.isGateCustom()
-            ? st.getGateCustomPortalMaterial() : st.getGateShape() != null ? st.getGateShape().getShapePortalMaterial()
+            ? st.getGateCustomPortalMaterial()
+            : st.getGateShape() != null
+                ? st.getGateShape().getShapePortalMaterial()
                 : Material.STATIONARY_WATER)))
         {
             String gatenetwork;
@@ -100,7 +102,8 @@ class WormholeXTremeVehicleListener extends VehicleListener
                     {
                         p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Remote Iris is locked!");
                         veh.teleport(st.getGateMinecartTeleportLocation() != null
-                            ? st.getGateMinecartTeleportLocation() : st.getGatePlayerTeleportLocation());
+                            ? st.getGateMinecartTeleportLocation()
+                            : st.getGatePlayerTeleportLocation());
                         if (ConfigManager.getTimeoutShutdown() == 0)
                         {
                             st.shutdownStargate(true);
@@ -143,7 +146,8 @@ class WormholeXTremeVehicleListener extends VehicleListener
                                 p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Not enough " + currency + "! - Requires: \u00A72" + cost + " \u00A77- Available: \u00A74" + player_account.getBalance() + " \u00A77" + currency);
                                 //p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
                                 target = st.getGateMinecartTeleportLocation() != null
-                                    ? st.getGateMinecartTeleportLocation() : st.getGatePlayerTeleportLocation();
+                                    ? st.getGateMinecartTeleportLocation()
+                                    : st.getGatePlayerTeleportLocation();
                             }
                         }
                     }
@@ -172,7 +176,8 @@ class WormholeXTremeVehicleListener extends VehicleListener
             new_speed.multiply(speed * 5);
             if (st.getGateTarget().isGateIrisActive())
             {
-                target = st.getGateMinecartTeleportLocation() != null ? st.getGateMinecartTeleportLocation()
+                target = st.getGateMinecartTeleportLocation() != null
+                    ? st.getGateMinecartTeleportLocation()
                     : st.getGatePlayerTeleportLocation();
                 veh.teleport(target);
                 veh.setVelocity(new_speed);

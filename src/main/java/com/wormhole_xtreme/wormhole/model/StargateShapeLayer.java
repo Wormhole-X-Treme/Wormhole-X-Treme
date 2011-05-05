@@ -214,7 +214,9 @@ public class StargateShapeLayer
      */
     public int[] getLayerActivationPosition()
     {
-        return layerActivationPosition != null ? layerActivationPosition.clone() : new int[]{};
+        return layerActivationPosition != null
+            ? layerActivationPosition.clone()
+            : new int[]{};
     }
 
     /**
@@ -234,7 +236,9 @@ public class StargateShapeLayer
      */
     public int[] getLayerDialSignPosition()
     {
-        return layerDialSignPosition != null ? layerDialSignPosition.clone() : new int[]{};
+        return layerDialSignPosition != null
+            ? layerDialSignPosition.clone()
+            : new int[]{};
     }
 
     /**
@@ -244,7 +248,9 @@ public class StargateShapeLayer
      */
     public int[] getLayerIrisActivationPosition()
     {
-        return layerIrisActivationPosition != null ? layerIrisActivationPosition.clone() : new int[]{};
+        return layerIrisActivationPosition != null
+            ? layerIrisActivationPosition.clone()
+            : new int[]{};
     }
 
     /**
@@ -264,7 +270,9 @@ public class StargateShapeLayer
      */
     public int[] getLayerMinecartExitPosition()
     {
-        return layerMinecartExitPosition != null ? layerMinecartExitPosition.clone() : new int[]{};
+        return layerMinecartExitPosition != null
+            ? layerMinecartExitPosition.clone()
+            : new int[]{};
     }
 
     /**
@@ -274,7 +282,9 @@ public class StargateShapeLayer
      */
     public int[] getLayerNameSignPosition()
     {
-        return layerNameSignPosition != null ? layerNameSignPosition.clone() : new int[]{};
+        return layerNameSignPosition != null
+            ? layerNameSignPosition.clone()
+            : new int[]{};
     }
 
     /**
@@ -284,7 +294,9 @@ public class StargateShapeLayer
      */
     public int[] getLayerPlayerExitPosition()
     {
-        return layerPlayerExitPosition != null ? layerPlayerExitPosition.clone() : new int[]{};
+        return layerPlayerExitPosition != null
+            ? layerPlayerExitPosition.clone()
+            : new int[]{};
     }
 
     /**
@@ -304,7 +316,9 @@ public class StargateShapeLayer
      */
     public int[] getLayerRedstoneDialActivationPosition()
     {
-        return layerRedstoneDialActivationPosition != null ? layerRedstoneDialActivationPosition.clone() : new int[]{};
+        return layerRedstoneDialActivationPosition != null
+            ? layerRedstoneDialActivationPosition.clone()
+            : new int[]{};
     }
 
     /**
@@ -314,7 +328,9 @@ public class StargateShapeLayer
      */
     public int[] getLayerRedstoneGateActivatedPosition()
     {
-        return layerRedstoneGateActivatedPosition != null ? layerRedstoneGateActivatedPosition.clone() : new int[]{};
+        return layerRedstoneGateActivatedPosition != null
+            ? layerRedstoneGateActivatedPosition.clone()
+            : new int[]{};
     }
 
     /**
@@ -324,7 +340,9 @@ public class StargateShapeLayer
      */
     public int[] getLayerRedstoneSignActivationPosition()
     {
-        return layerRedstoneSignActivationPosition != null ? layerRedstoneSignActivationPosition.clone() : new int[]{};
+        return layerRedstoneSignActivationPosition != null
+            ? layerRedstoneSignActivationPosition.clone()
+            : new int[]{};
     }
 
     /**

@@ -130,8 +130,13 @@ public class WorldUtils
      */
     public static byte getLeverToggleByte(final byte leverState, final boolean isActive)
     {
-        return (byte) (isActive ? (leverState & 0x8) != 0x8 ? leverState ^ 0x8 : leverState : (leverState & 0x8) == 0x8
-            ? leverState ^ 0x8 : leverState);
+        return (byte) (isActive
+            ? (leverState & 0x8) != 0x8
+                ? leverState ^ 0x8
+                : leverState
+            : (leverState & 0x8) == 0x8
+                ? leverState ^ 0x8
+                : leverState);
     }
 
     /**

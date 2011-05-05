@@ -129,7 +129,9 @@ public class Dial implements CommandExecutor
         final String[] arguments = CommandUtilities.commandEscaper(args);
         if ((arguments.length < 3) && (arguments.length > 0))
         {
-            return CommandUtilities.playerCheck(sender) ? doDial((Player) sender, arguments) : true;
+            return CommandUtilities.playerCheck(sender)
+                ? doDial((Player) sender, arguments)
+                : true;
         }
         return false;
     }

@@ -1480,21 +1480,26 @@ public class StargateHelper
             s.setGateCustom(DataUtils.byteToBoolean(byteBuff.get()));
             final int gateCustomStructureMaterial = byteBuff.getInt();
             s.setGateCustomStructureMaterial(gateCustomStructureMaterial != -1
-                ? Material.getMaterial(gateCustomStructureMaterial) : null);
+                ? Material.getMaterial(gateCustomStructureMaterial)
+                : null);
             final int gateCustomPortalMaterial = byteBuff.getInt();
             s.setGateCustomPortalMaterial(gateCustomPortalMaterial != -1
-                ? Material.getMaterial(gateCustomPortalMaterial) : null);
+                ? Material.getMaterial(gateCustomPortalMaterial)
+                : null);
             final int gateCustomLightMaterial = byteBuff.getInt();
-            s.setGateCustomLightMaterial(gateCustomLightMaterial != -1 ? Material.getMaterial(gateCustomLightMaterial)
+            s.setGateCustomLightMaterial(gateCustomLightMaterial != -1
+                ? Material.getMaterial(gateCustomLightMaterial)
                 : null);
             final int gateCustomIrisMaterial = byteBuff.getInt();
-            s.setGateCustomIrisMaterial(gateCustomIrisMaterial != -1 ? Material.getMaterial(gateCustomIrisMaterial)
+            s.setGateCustomIrisMaterial(gateCustomIrisMaterial != -1
+                ? Material.getMaterial(gateCustomIrisMaterial)
                 : null);
             s.setGateCustomWooshTicks(byteBuff.getInt());
             s.setGateCustomLightTicks(byteBuff.getInt());
             s.setGateCustomWooshDepth(byteBuff.getInt());
             s.setGateCustomWooshDepthSquared(s.getGateCustomWooshDepth() >= 0
-                ? s.getGateCustomWooshDepth() * s.getGateCustomWooshDepth() : -1);
+                ? s.getGateCustomWooshDepth() * s.getGateCustomWooshDepth()
+                : -1);
 
             final int numStructureBlocks = byteBuff.getInt();
             for (int i = 0; i < numStructureBlocks; i++)
@@ -1687,9 +1692,12 @@ public class StargateHelper
         /** gateDialLeverBlock - block 1 */
         dataArr.put(DataUtils.blockToBytes(s.getGateDialLeverBlock()));
         /** gateIrisLeverBlock - block 2 */
-        dataArr.put(s.getGateIrisLeverBlock() != null ? DataUtils.blockToBytes(s.getGateIrisLeverBlock()) : emptyBlock);
+        dataArr.put(s.getGateIrisLeverBlock() != null
+            ? DataUtils.blockToBytes(s.getGateIrisLeverBlock())
+            : emptyBlock);
         /** gateNameBlockHolder - block 3 */
-        dataArr.put(s.getGateNameBlockHolder() != null ? DataUtils.blockToBytes(s.getGateNameBlockHolder())
+        dataArr.put(s.getGateNameBlockHolder() != null
+            ? DataUtils.blockToBytes(s.getGateNameBlockHolder())
             : emptyBlock);
         /** gatePlayerTeleportLocation - location 1 */
         dataArr.put(DataUtils.locationToBytes(s.getGatePlayerTeleportLocation()));
@@ -1707,7 +1715,9 @@ public class StargateHelper
             /** gateDialSignIndex - int 1 */
             dataArr.putInt(s.getGateDialSignIndex());
             /** gateDialSignTarget - long 1 */
-            dataArr.putLong(s.getGateDialSignTarget() != null ? s.getGateDialSignTarget().getGateId() : -1);
+            dataArr.putLong(s.getGateDialSignTarget() != null
+                ? s.getGateDialSignTarget().getGateId()
+                : -1);
         }
         else
         {
@@ -1743,9 +1753,13 @@ public class StargateHelper
         dataArr.putInt(utfIdcBytes.length);
         dataArr.put(utfIdcBytes);
         /** gateIrisActive - byte 4 */
-        dataArr.put(s.isGateIrisActive() ? (byte) 1 : (byte) 0);
+        dataArr.put(s.isGateIrisActive()
+            ? (byte) 1
+            : (byte) 0);
         /** gateLightsActive - byte 5 */
-        dataArr.put(s.isGateLightsActive() ? (byte) 1 : (byte) 0);
+        dataArr.put(s.isGateLightsActive()
+            ? (byte) 1
+            : (byte) 0);
 
         if (s.getGateRedstoneDialActivationBlock() != null)
         {
@@ -1792,22 +1806,34 @@ public class StargateHelper
             dataArr.put(emptyBlock);
         }
         /** gateRedstonePowered - byte 9 */
-        dataArr.put(s.isGateRedstonePowered() ? (byte) 1 : (byte) 0);
+        dataArr.put(s.isGateRedstonePowered()
+            ? (byte) 1
+            : (byte) 0);
 
         /** gateCustom - byte 10 */
-        dataArr.put(s.isGateCustom() ? (byte) 1 : (byte) 0);
+        dataArr.put(s.isGateCustom()
+            ? (byte) 1
+            : (byte) 0);
 
         /** gateCustomStructureMaterial - int 4 */
-        dataArr.putInt(s.getGateCustomStructureMaterial() != null ? s.getGateCustomStructureMaterial().getId() : -1);
+        dataArr.putInt(s.getGateCustomStructureMaterial() != null
+            ? s.getGateCustomStructureMaterial().getId()
+            : -1);
 
         /** gateCustomPortalMaterial - int 5 */
-        dataArr.putInt(s.getGateCustomPortalMaterial() != null ? s.getGateCustomPortalMaterial().getId() : -1);
+        dataArr.putInt(s.getGateCustomPortalMaterial() != null
+            ? s.getGateCustomPortalMaterial().getId()
+            : -1);
 
         /** gateCustomLightMaterial - int 6 */
-        dataArr.putInt(s.getGateCustomLightMaterial() != null ? s.getGateCustomLightMaterial().getId() : -1);
+        dataArr.putInt(s.getGateCustomLightMaterial() != null
+            ? s.getGateCustomLightMaterial().getId()
+            : -1);
 
         /** gateCustomIrisMaterial - int 7 */
-        dataArr.putInt(s.getGateCustomIrisMaterial() != null ? s.getGateCustomIrisMaterial().getId() : -1);
+        dataArr.putInt(s.getGateCustomIrisMaterial() != null
+            ? s.getGateCustomIrisMaterial().getId()
+            : -1);
 
         /** gateCustomWooshTicks - int 8 */
         dataArr.putInt(s.getGateCustomWooshTicks());

@@ -100,7 +100,18 @@ public class Wormhole implements CommandExecutor
     {
         if ((args.length == 2) || (args.length == 3))
         {
-            if (StargateManager.isStargate(args[1]))
+            if (args[1].equalsIgnoreCase("-all") && (args.length == 3) && (args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false")))
+            {
+                for (final Stargate stargate : StargateManager.getAllGates())
+                {
+                    setGateCustomAll(stargate, args[2].equalsIgnoreCase("true")
+                        ? true
+                        : false);
+                }
+                sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "All stargates with valid shapes have been set to custom mode: " + args[2]);
+                return true;
+            }
+            else if (StargateManager.isStargate(args[1]))
             {
                 final Stargate stargate = StargateManager.getStargate(args[1]);
                 if (args.length == 3)
@@ -109,43 +120,9 @@ public class Wormhole implements CommandExecutor
                     {
                         if (stargate.getGateShape() != null)
                         {
-                            stargate.setGateCustom(Boolean.valueOf(args[2].trim().toLowerCase()));
-                            if (stargate.isGateCustom())
-                            {
-                                if (stargate.getGateCustomIrisMaterial() == null)
-                                {
-                                    stargate.setGateCustomIrisMaterial(stargate.getGateShape().getShapeIrisMaterial());
-                                }
-                                if (stargate.getGateCustomLightMaterial() == null)
-                                {
-                                    stargate.setGateCustomLightMaterial(stargate.getGateShape().getShapeLightMaterial());
-                                }
-                                if (stargate.getGateCustomPortalMaterial() == null)
-                                {
-                                    stargate.setGateCustomPortalMaterial(stargate.getGateShape().getShapePortalMaterial());
-                                }
-                                if (stargate.getGateCustomStructureMaterial() == null)
-                                {
-                                    stargate.setGateCustomStructureMaterial(stargate.getGateShape().getShapeStructureMaterial());
-                                }
-                                if (stargate.getGateCustomLightTicks() == -1)
-                                {
-                                    stargate.setGateCustomLightTicks(stargate.getGateShape().getShapeLightTicks());
-                                }
-                                if (stargate.getGateCustomWooshTicks() == -1)
-                                {
-                                    stargate.setGateCustomWooshTicks(stargate.getGateShape().getShapeWooshTicks());
-                                }
-                                if (stargate.getGateCustomWooshDepth() == -1)
-                                {
-                                    stargate.setGateCustomWooshDepth(stargate.getGateShape().getShapeWooshDepth());
-                                }
-                                if (stargate.getGateCustomWooshDepthSquared() == -1)
-                                {
-                                    stargate.setGateCustomWooshDepthSquared(stargate.getGateShape().getShapeWooshDepthSquared());
-                                }
-                            }
-
+                            setGateCustomAll(stargate, args[2].equalsIgnoreCase("true")
+                                ? true
+                                : false);
                             sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Stargate is custom: " + stargate.isGateCustom());
                         }
                         else
@@ -157,7 +134,7 @@ public class Wormhole implements CommandExecutor
                     else
                     {
                         sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid boolean option: " + args[2]);
-                        sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Command: /wormhole custom [stargate] <boolean>");
+                        sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Command: /wormhole custom [stargate|-all] <boolean>");
                         sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid boolean options are: true and false");
                     }
                 }
@@ -170,17 +147,18 @@ public class Wormhole implements CommandExecutor
             else
             {
                 sender.sendMessage(ConfigManager.MessageStrings.targetInvalid.toString());
-                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Command: /wormhole custom [stargate] <boolean>");
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Command: /wormhole custom [stargate|-all] <boolean>");
                 sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid boolean options are: true and false");
             }
             return true;
         }
         else
         {
-            sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Command: /wormhole custom [stargate] <boolean>");
+            sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Command: /wormhole custom [stargate|-all] <boolean>");
             sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid boolean options are: true and false");
             return false;
         }
+
     }
 
     /**
@@ -654,6 +632,65 @@ public class Wormhole implements CommandExecutor
         return true;
     }
 
+    /**
+     * Sets the gate custom all.
+     * 
+     * @param stargate
+     *            the stargate
+     * @param customEnabled
+     *            the custom enabled
+     */
+    private static void setGateCustomAll(final Stargate stargate, final boolean customEnabled)
+    {
+        if (stargate.getGateShape() != null)
+        {
+            if (customEnabled)
+            {
+                stargate.setGateCustom(true);
+                if (stargate.getGateCustomIrisMaterial() == null)
+                {
+                    stargate.setGateCustomIrisMaterial(stargate.getGateShape().getShapeIrisMaterial());
+                }
+                if (stargate.getGateCustomLightMaterial() == null)
+                {
+                    stargate.setGateCustomLightMaterial(stargate.getGateShape().getShapeLightMaterial());
+                }
+                if (stargate.getGateCustomPortalMaterial() == null)
+                {
+                    stargate.setGateCustomPortalMaterial(stargate.getGateShape().getShapePortalMaterial());
+                }
+                if (stargate.getGateCustomStructureMaterial() == null)
+                {
+                    stargate.setGateCustomStructureMaterial(stargate.getGateShape().getShapeStructureMaterial());
+                }
+                if (stargate.getGateCustomLightTicks() == -1)
+                {
+                    stargate.setGateCustomLightTicks(stargate.getGateShape().getShapeLightTicks());
+                }
+                if (stargate.getGateCustomWooshTicks() == -1)
+                {
+                    stargate.setGateCustomWooshTicks(stargate.getGateShape().getShapeWooshTicks());
+                }
+                if (stargate.getGateCustomWooshDepth() == -1)
+                {
+                    stargate.setGateCustomWooshDepth(stargate.getGateShape().getShapeWooshDepth());
+                }
+                if (stargate.getGateCustomWooshDepthSquared() == -1)
+                {
+                    stargate.setGateCustomWooshDepthSquared(stargate.getGateShape().getShapeWooshDepthSquared());
+                }
+            }
+            else
+            {
+                stargate.setGateCustom(false);
+            }
+        }
+        else
+        {
+            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, stargate.getGateName() + " has no valid shape file. Unable to enable custom.");
+        }
+    }
+
     /* (non-Javadoc)
      * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
      */
@@ -661,7 +698,8 @@ public class Wormhole implements CommandExecutor
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args)
     {
         if (CommandUtilities.playerCheck(sender)
-            ? WXPermissions.checkWXPermissions((Player) sender, PermissionType.CONFIG) : true)
+            ? WXPermissions.checkWXPermissions((Player) sender, PermissionType.CONFIG)
+            : true)
         {
             final String[] a = CommandUtilities.commandEscaper(args);
             if ((a.length > 4) || (a.length == 0))

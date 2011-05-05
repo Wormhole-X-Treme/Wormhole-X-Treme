@@ -51,7 +51,8 @@ public class Force implements CommandExecutor
         if (a.length == 1)
         {
             if (CommandUtilities.playerCheck(sender)
-                ? WXPermissions.checkWXPermissions((Player) sender, PermissionType.CONFIG) : true)
+                ? WXPermissions.checkWXPermissions((Player) sender, PermissionType.CONFIG)
+                : true)
             {
                 if (a[0].equalsIgnoreCase("-all"))
                 {

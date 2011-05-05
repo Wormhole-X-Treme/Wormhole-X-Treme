@@ -173,10 +173,16 @@ public class Stargate
      */
     public void animateOpening()
     {
-        final Material wooshMaterial = isGateCustom() ? getGateCustomPortalMaterial() : getGateShape() != null
-            ? getGateShape().getShapePortalMaterial() : Material.STATIONARY_WATER;
-        final int wooshDepth = isGateCustom() ? getGateCustomWooshDepth() : getGateShape() != null
-            ? getGateShape().getShapeWooshDepth() : 0;
+        final Material wooshMaterial = isGateCustom()
+            ? getGateCustomPortalMaterial()
+            : getGateShape() != null
+                ? getGateShape().getShapePortalMaterial()
+                : Material.STATIONARY_WATER;
+        final int wooshDepth = isGateCustom()
+            ? getGateCustomWooshDepth()
+            : getGateShape() != null
+                ? getGateShape().getShapeWooshDepth()
+                : 0;
 
         if ((getGateWooshBlocks() != null) && (getGateWooshBlocks().size() > 0))
         {
@@ -205,7 +211,10 @@ public class Stargate
                     setGateAnimationStep3D(getGateAnimationStep3D() + 1);
                 }
                 WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH), isGateCustom()
-                    ? getGateCustomWooshTicks() : getGateShape() != null ? getGateShape().getShapeWooshTicks() : 2);
+                    ? getGateCustomWooshTicks()
+                    : getGateShape() != null
+                        ? getGateShape().getShapeWooshTicks()
+                        : 2);
             }
             else
             {
@@ -238,7 +247,10 @@ public class Stargate
                 {
                     setGateAnimationStep3D(getGateAnimationStep3D() - 1);
                     WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH), isGateCustom()
-                        ? getGateCustomWooshTicks() : getGateShape() != null ? getGateShape().getShapeWooshTicks() : 2);
+                        ? getGateCustomWooshTicks()
+                        : getGateShape() != null
+                            ? getGateShape().getShapeWooshTicks()
+                            : 2);
                 }
             }
         }
@@ -1076,8 +1088,11 @@ public class Stargate
                     for (final Location l : getGateLightBlocks().get(getGateLightingCurrentIteration()))
                     {
                         final Block b = getGateWorld().getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
-                        b.setType(isGateCustom() ? getGateCustomLightMaterial() : getGateShape() != null
-                            ? getGateShape().getShapeLightMaterial() : Material.GLOWSTONE);
+                        b.setType(isGateCustom()
+                            ? getGateCustomLightMaterial()
+                            : getGateShape() != null
+                                ? getGateShape().getShapeLightMaterial()
+                                : Material.GLOWSTONE);
                     }
                 }
 
@@ -1095,7 +1110,10 @@ public class Stargate
                 {
                     // Keep lighting
                     WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.LIGHTUP), isGateCustom()
-                        ? getGateCustomLightTicks() : getGateShape() != null ? getGateShape().getShapeLightTicks() : 2);
+                        ? getGateCustomLightTicks()
+                        : getGateShape() != null
+                            ? getGateShape().getShapeLightTicks()
+                            : 2);
                 }
             }
         }
@@ -1112,8 +1130,11 @@ public class Stargate
                         for (final Location l : getGateLightBlocks().get(i))
                         {
                             final Block b = getGateWorld().getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
-                            b.setType(isGateCustom() ? getGateCustomStructureMaterial() : getGateShape() != null
-                                ? getGateShape().getShapeStructureMaterial() : Material.OBSIDIAN);
+                            b.setType(isGateCustom()
+                                ? getGateCustomStructureMaterial()
+                                : getGateShape() != null
+                                    ? getGateShape().getShapeStructureMaterial()
+                                    : Material.OBSIDIAN);
                         }
                     }
                 }
@@ -1685,10 +1706,19 @@ public class Stargate
     private void setIrisState(final boolean irisactive)
     {
         setGateIrisActive(irisactive);
-        fillGateInterior(isGateIrisActive() ? isGateCustom() ? getGateCustomIrisMaterial() : getGateShape() != null
-            ? getGateShape().getShapeIrisMaterial() : Material.STONE : isGateActive() ? isGateCustom()
-            ? getGateCustomPortalMaterial() : getGateShape() != null ? getGateShape().getShapePortalMaterial()
-                : Material.STATIONARY_WATER : Material.AIR);
+        fillGateInterior(isGateIrisActive()
+            ? isGateCustom()
+                ? getGateCustomIrisMaterial()
+                : getGateShape() != null
+                    ? getGateShape().getShapeIrisMaterial()
+                    : Material.STONE
+            : isGateActive()
+                ? isGateCustom()
+                    ? getGateCustomPortalMaterial()
+                    : getGateShape() != null
+                        ? getGateShape().getShapePortalMaterial()
+                        : Material.STATIONARY_WATER
+                : Material.AIR);
         if ((getGateIrisLeverBlock() != null) && (getGateIrisLeverBlock().getType() == Material.LEVER))
         {
             getGateIrisLeverBlock().setData(WorldUtils.getLeverToggleByte(getGateIrisLeverBlock().getData(), isGateIrisActive()));

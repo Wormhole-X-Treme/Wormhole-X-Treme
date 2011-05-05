@@ -191,7 +191,9 @@ public class Stargate3DShape extends StargateShape
             }
         }
 
-        setShapeWooshDepth(wooshDepth > 0 ? wooshDepth : 0);
+        setShapeWooshDepth(wooshDepth > 0
+            ? wooshDepth
+            : 0);
         setShapeWooshDepthSquared(getShapeWooshDepth() * getShapeWooshDepth());
 
         if (getShapeEnterPosition().length != 3)

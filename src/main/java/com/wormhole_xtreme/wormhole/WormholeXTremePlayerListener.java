@@ -373,7 +373,7 @@ class WormholeXTremePlayerListener extends PlayerListener
                 return true;
             }
 
-            Location target = stargate.getGateTarget().getGatePlayerTeleportLocation();
+            final Location target = stargate.getGateTarget().getGatePlayerTeleportLocation();
             player.setNoDamageTicks(5);
             event.setFrom(target);
             event.setTo(target);

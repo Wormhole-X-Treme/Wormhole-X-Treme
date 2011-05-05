@@ -1,6 +1,8 @@
-To Install:
+Wormhole X-Treme v0.850
 
-0. Download the zip containing plugin and hsqldb.
+New Install:
+
+0. Download the zip containing plugin, hsqldb, and gate shape files.
 
 1. Unzip file into same directory that your craftbukkit.jar exists in. This should put 
    the hsqldb.jar into the lib/ folder, the WormholeXTreme.jar into the plugins/ folder,
@@ -8,34 +10,31 @@ To Install:
    
 2. start server
 
-3.1 (Optional) Stop the server and edit the newly generated /plugins/WormholeXTreme/settings.txt 
-   file as needed.
+3.   (Optional) Stop the server and edit the newly generated /plugins/WormholeXTreme/settings.txt 
+     file as needed.
+
+3.1. (Optional) Edit gate shapes in /plugins/WormholeXTreme/GateShapes/  
+
+3.2. (Optional) If using the Permissions plugin based plugin, set up the appropriate permissions.
+     If using SIMPLE_PERMISSIONS = true remember to use permissions from the Simple Mode list, 
+     otherwise use nodes from Complex Node.
    
-3.2 (Optional) If using the Permissions plugin based plugin, set up the appropriate permissions.
-   If using SIMPLE_PERMISSIONS = true remember to use permissions from the Simple Mode list, 
-   otherwise use nodes from Complex Node.
+3.3. (Optional) Start Server again
+
+
+Update:
+
+0.   Download the zip containing plugin, hsqldb, and gate shape files.
+
+1.   Extract WormholeXTreme.jar to your plugins/ folder, overwriting existing file.
+
+2.   If upgrading from v0.833 or earlier, start server before updating gate shapes. 
+2.1. From the console run '/wormhole custom -all true'
+2.2. Shut down, Replace gate shapes with new shapes from zip file. Edit shapes as needed.
    
-3.2 (Optional) Start Server again
+3.   Start server.
 
-
-To Update:
-
-0. Download the updated JAR.
-
-1. Rename file to WormholeXTreme.jar and place in your plugins/ folder, overwriting existing file.
-
-2. If upgrading from v0.750 or earlier either remove or update shapes in 
-   plugins/WormholeXTreme/GateShapes/ to the latest specifications.
-   
-3. If hsqldb.jar exists in minecraft/ folder and does not exist in minecraft/lib/, move it into 
-   minecraft/lib/ (or NPE).
-   
-4. If upgrading from v0.750 or earlier, CHANGE YOUR SETTINGS FOR WORMHOLE COST TO DOUBLE VALUES in 
-   plugins/WormholeXTreme/settings.txt. I.E. 0.0 or 1.0 or 10.0!!! OR CRASH!
-   
-5. Start server.
-
-6. If upgrading from v0.750 or earlier, Remove a gate with '/wxremove <gatename>' then re-add the gate. 
+4.   If gates act weird, remove them and re-add them.
 
 
 
@@ -65,26 +64,19 @@ Permissions Plugin Nodes: (Controlled by plugins/WormholeXTreme/settings.txt - S
 
 To Build:
 
--1. Install Maven and all of its dependencies. 
+ 0. Install Maven and all of its dependencies. 
 
- 0. Git clone the repo. (Or download the source zip)
+ 1.   Git clone the WX repo.
+ 1.1. Wormhole X-Treme git repo: git://github.com/Wormhole-X-Treme/Wormhole-X-Treme.git
+
+ 2.   Git clone Permissions. Do a mvn install for Permissions.
+ 2.1. Permissions git repo: git://github.com/TheYeti/Permissions.git
+
+ 3.   Force Help into your local repo.
+ 3.1  (example commands) 'mvn install:install-file -Dfile=Help.jar -DgroupId=me.taylorkelly -DartifactId=Help \
+                           -Dversion=0.2.4.1 -Dpackaging=jar -DgeneratePom=true'
+ 3.2  Help location: http://forums.bukkit.org/threads/13601/
  
- 1. Download iConomy version 4.63. Git pull Permissions, use tag 2.5.5. Do a mvn install for Permissions.
- 
- 2. Force iConomy into your local repo. 
- 
- 2.1 (example commands) 'mvn install:install-file -Dfile=iConomy.jar -DgroupId=com.nijiko.coelho.iConomy \
-     -DartifactId=iConomy -Dversion=4.63 -Dpackaging=jar -DgeneratePom=true'
-     
- 2.2 iConomy location: http://forums.bukkit.org/threads/40/
- 
- 3. Force Help into your local repo.
- 
- 3.1 (example commands) 'mvn install:install-file -Dfile=Help.jar -DgroupId=me.taylorkelly -DartifactId=Help \
-     -Dversion=0.2 -Dpackaging=jar -DgeneratePom=true'
- 
- 3.2 Help location: http://forums.bukkit.org/threads/13601/
- 
- 4. Run a 'mvn install' in the directory you ran the git clone into (or unpacked the source zip).
+ 4.   Run a 'mvn install' in the directory you ran the git clone of WX into.
   
- 5. Enjoy plugin that is now in target/. It will be a jar or a package zip.   
+ 5.   Enjoy plugin that is now in target/. It will be a jar or a package zip.   

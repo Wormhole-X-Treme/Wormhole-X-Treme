@@ -1,3 +1,33 @@
+Changes 0.850 :
+
+- iConomy support removed. I will not depend on plugins that decide to change their
+  package name 5 major versions in and basicially give everyone who depended on the 
+  package location the middle finger.
+  
+- 3d Gate shapes now implemented.
+
+- Custom gate settings now in place (read: per gate material settings).
+  This included the re-addition of the portalmaterial and irismaterial commands.
+  lightmaterial, redstone, and custom commands newly added.
+  
+- Massive internal overhaul, refactorings, cleanups, and general goodness.
+
+- Added support for Wormhole X-Treme Worlds. This allows Wormhole X-Treme to offload its
+  chunk loading and world loading to WXW, for worlds that exist in WXW.
+
+- Removed many superfluous chunk load requests. Added graceful chunk unload queue when we
+  are done with a chunk.
+  
+- Bumped supported version of permissions to include the 2.7 tree.
+
+- Updated help text for new/modified commands.
+
+- Added backwards compatibility, for those users who just don't want to upgrade to 3d shapes.
+
+- Added loads of failsafe settings, for when users don't have any shapes installed.
+
+
+
 Changes 0.833 (4/9/11 @ 23:36 PST):
 
 - Fixed iConomy double(or many many more) charging issue. Tried to do something awesome,

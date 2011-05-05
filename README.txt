@@ -29,7 +29,7 @@ Update:
 1.   Extract WormholeXTreme.jar to your plugins/ folder, overwriting existing file.
 
 2.   If upgrading from v0.833 or earlier, start server before updating gate shapes. 
-2.1. From the console run '/wormhole custom -all true'
+2.1. From the console run 'wormhole custom -all true'
 2.2. Shut down, Replace gate shapes with new shapes from zip file. Edit shapes as needed.
    
 3.   Start server.

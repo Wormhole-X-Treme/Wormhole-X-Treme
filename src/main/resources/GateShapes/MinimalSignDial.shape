@@ -60,7 +60,7 @@ Layer#1=
 Layer#2=
 [I][I][I]
 [I][S:A][S:D]
-[I][S:IA][S]
+[I][S][S]
 [I:EM][I][I]
 
 # Number of ticks to wait before activating each # of the woosh. 1 tick = ~50ms

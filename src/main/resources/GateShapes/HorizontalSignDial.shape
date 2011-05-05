@@ -1,5 +1,5 @@
 # The name for this shape
-Name=StandardSignDial
+Name=HorizontalSignDial
 # Version 2 of shape files allows for many new things.
 # 3D gates, new format for blocks, woosh and light order etc
 Version=2
@@ -52,45 +52,51 @@ Version=2
 GateShape=
 
 Layer#1=
-[I][I][S][S:L#1][S][I][I]
-[I][S:L#2][P][P][P][S:L#2][I]
-[S][P][P][P][P][P][S]
-[S:L#3][P][P][P][P][P][S:L#3]
-[S:N][P][P][P][P][P][S]
-[I][S:L#4][P][P][P][S:L#4][I]
-[I][I][S][S:L#5:EP][S][I][I]
+[I][I][I][I][I][I][I]
+[I][I][I][I][I][I][I]
+[I][I][I][I][I][I][I]
+[I][I][S][S:L#7][S][I][I]
 
 Layer#2=
 [I][I][I][I][I][I][I]
+[I][I][I][I:W#2][I][I][I]
 [I][I][I:W#1][I:W#1][I:W#1][I][I]
-[I][I:W#1][I:W#1][I:W#1][I:W#1][I:W#1][I]
-[I][I:W#1][I:W#1][I:W#1][I:W#1][I:W#1][I]
-[I][I:W#1][I:W#1][I:W#1][I:W#1][I:W#1][I]
-[I][I][I:W#1][I:W#1][I:W#1][I][I]
-[I][I][I][I:EM][I][I][I]
+[I][S:L#5][P][P][P][S:L#2][I]
 
 Layer#3=
-[I][I][I][I][I][I][I]
-[I][I][I][I:W#2][I][I][I]
+[I][I][I][I:W#3][I][I][I]
 [I][I][I:W#2][I:W#2][I:W#2][I][I]
-[I][I:W#2][I:W#2][I:W#2][I:W#2][I:W#2][I]
-[I][I][I:W#2][I:W#2][I:W#2][I][I]
-[I][I][I][I:W#2][I][I][I]
-[I][I][I][I][I][I][I]
+[I][I:W#1][I:W#1][I:W#1][I:W#1][I:W#1][I]
+[S][P][P][P][P][P][S]
 
 Layer#4=
+[I][I][I][I:W#3][I][I][I]
+[I][I][I:W#2][I:W#2][I:W#2][I][I]
+[I][I:W#1][I:W#1][I:W#1][I:W#1][I:W#1][I]
+[S:L#4][P][P][P:EP][P][P][S:L#6]
+
+Layer#5=
+[I][I][I][I:W#3][I][I][I]
+[I][I][I:W#2][I:W#2][I:W#2][I][I]
+[I][I:W#1][I:W#1][I:W#1][I:W#1][I:W#1][I]
+[S][P][P][P][P][P][S]
+
+Layer#6=
+[I][I][I][I][I][I][I]
+[I][I][I][I:W#2][I][I][I]
+[I][I][I:W#1][I:W#1][I:W#1][I][I]
+[I][S:N:L#3][P][P][P][S:L#1][I]
+
+Layer#7=
 [I][I][I][I][I][I][I]
 [I][I][I][I][I][I][I]
-[I][I][I][I:W#3][I][I][I]
-[I][I][I:W#3][I:W#3][I:W#3][I][I]
-[I][I][I][I:W#3][I][I][I]
-[I][I][I][I][I][S:A][S:D]
-[I][I][I][I][I][S][S]
+[I][I][I][I][I][I][I]
+[I][I][S:A][S:D:L#8][S:IA][I][I]
 
 # Number of ticks to wait before activating each # of the woosh. 1 tick = ~50ms
 WOOSH_TICKS = 3;
 # Number of ticks to wait before activating each # of the lights. 1 tick = ~50ms
-LIGHT_TICKS = 2;
+LIGHT_TICKS = 3;
 
 # None of the follow materials are required, they will default if not set.
 # Portal material the material the [P] blocks will be when gate is active.
@@ -99,7 +105,7 @@ PORTAL_MATERIAL=STATIONARY_WATER
 
 # Iris material is the material the [P] block become when iris is active
 # Suggested values are as follows: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, OBSIDIAN, GLOWSTONE and LAPIS_BLOCK
-IRIS_MATERIAL=STONE
+IRIS_MATERIAL=GLASS
 
 # Stargate material is the material the [O] blocks are made of
 # Reasonable values are as follows: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, OBSIDIAN, GLOWSTONE and LAPIS_BLOCK
@@ -109,5 +115,5 @@ STARGATE_MATERIAL=OBSIDIAN
 # Suggested Values are as follows: GLOWSTONE and GLOWING_REDSTONE_ORE
 ACTIVE_MATERIAL=GLOWSTONE
 
-# Redstone activated is the parameter to allow redstone to/from redstone locations.
+# Redstone activated is the parameter to allow redstone to the DHD lever to activate the gate.
 REDSTONE_ACTIVATED=FALSE

@@ -46,11 +46,11 @@ public class WXIDC implements CommandExecutor
         final String[] a = CommandUtilities.commandEscaper(args);
         if (a.length >= 1)
         {
-            
+
             if (StargateManager.isStargate(a[0]))
             {
                 final Stargate s = StargateManager.getStargate(a[0]);
-                if ( !s.isGateSignPowered() && s.getGateIrisLeverBlock() != null)
+                if ( !s.isGateSignPowered() && (s.getGateIrisLeverBlock() != null))
                 {
                     if (CommandUtilities.playerCheck(sender)
                         ? (WXPermissions.checkWXPermissions((Player) sender, PermissionType.CONFIG) || ((s.getGateOwner() != null) && s.getGateOwner().equals(((Player) sender).getName())))

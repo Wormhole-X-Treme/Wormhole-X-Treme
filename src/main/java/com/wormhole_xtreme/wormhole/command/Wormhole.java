@@ -634,9 +634,11 @@ public class Wormhole implements CommandExecutor
 
     /**
      * Do woosh depth.
-     *
-     * @param sender the sender
-     * @param args the args
+     * 
+     * @param sender
+     *            the sender
+     * @param args
+     *            the args
      * @return true, if successful
      */
     private static boolean doWooshDepth(final CommandSender sender, final String[] args)

@@ -1,7 +1,7 @@
-Changes 0.850 :
+Changes 0.850 (5/5/11 @ 16:15 PST):
 
 - iConomy support removed. I will not depend on plugins that decide to change their
-  package name 5 major versions in and basicially give everyone who depended on the 
+  package name 5 major versions in and basically give everyone who depended on the 
   package location the middle finger.
   
 - 3d Gate shapes now implemented.
@@ -13,7 +13,11 @@ Changes 0.850 :
 - Massive internal overhaul, refactorings, cleanups, general goodness and bugfixes.
 
 - Added support for Wormhole X-Treme Worlds. This allows Wormhole X-Treme to offload its
-  chunk loading and world loading to WXW, for worlds that exist in WXW.
+  chunk loading and world loading to WXW, for worlds that exist in WXW. Requires user to 
+  change Settings.txt option WORLDS_SUPPORT_ENABLED from false to true. This option requires
+  Wormhole X-Treme Worlds v0.5 to be installed, and preferably configured for every existing
+  world populated with stargates. If this option is set to true but WXW is not v0.5 (or not
+  installed), WX will not load its stargates from its database.
 
 - Removed many superfluous chunk load requests. Added graceful chunk unload queue when we
   are done with a chunk.
@@ -24,8 +28,10 @@ Changes 0.850 :
 
 - Added backwards compatibility, for those users who just don't want to upgrade to 3d shapes.
 
-- Added loads of failsafe settings, for when users don't have any shapes installed.
+- Added loads of failsafe settings, for when users don't have any shapes installed, but have
+  stargates already.
 
+- wxidc now only works on non-sign powered gates which have iris activation blocks set.
 
 Changes 0.833 (4/9/11 @ 23:36 PST):
 

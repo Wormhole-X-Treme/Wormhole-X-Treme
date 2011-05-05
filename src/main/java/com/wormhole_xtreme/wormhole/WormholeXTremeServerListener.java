@@ -42,10 +42,6 @@ class WormholeXTremeServerListener extends ServerListener
     @Override
     public void onPluginDisable(final PluginDisableEvent event)
     {
-//        if (event.getPlugin().getDescription().getName().equals("iConomy") && !ConfigManager.getIconomySupportDisable())
-//        {
-//            IConomySupport.disableIconomy();
-//        }
         if (event.getPlugin().getDescription().getName().equals("Permissions") && !ConfigManager.getPermissionsSupportDisable())
         {
             PermissionsSupport.disablePermissions();
@@ -66,10 +62,6 @@ class WormholeXTremeServerListener extends ServerListener
     @Override
     public void onPluginEnable(final PluginEnableEvent event)
     {
-//        if (event.getPlugin().getDescription().getName().equals("iConomy") && !ConfigManager.getIconomySupportDisable())
-//        {
-//            IConomySupport.enableIconomy();
-//        }
         if (event.getPlugin().getDescription().getName().equals("Permissions") && !ConfigManager.getPermissionsSupportDisable())
         {
             PermissionsSupport.enablePermissions();

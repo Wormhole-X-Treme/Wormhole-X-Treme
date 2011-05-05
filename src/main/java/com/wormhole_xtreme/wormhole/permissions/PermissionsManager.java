@@ -57,9 +57,6 @@ public class PermissionsManager
         WORMHOLE_NO_PERMISSION
     }
 
-    //private static HashMap<String, PermissionLevel> group_general_permission = new HashMap<String, PermissionLevel>();
-    //private static Object group_lock = new Object();
-
     /** The player_general_permission. */
     private static ConcurrentHashMap<String, PermissionLevel> player_general_permission = new ConcurrentHashMap<String, PermissionLevel>();
 
@@ -237,7 +234,6 @@ public class PermissionsManager
     public static void loadPermissions()
     {
         player_general_permission = StargateDBManager.getAllIndividualPermissions();
-        // StargateDBManager.GetAllGroupPermissions();
     }
 
     /**

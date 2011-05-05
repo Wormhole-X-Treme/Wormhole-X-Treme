@@ -374,48 +374,6 @@ class WormholeXTremePlayerListener extends PlayerListener
             }
 
             Location target = stargate.getGateTarget().getGatePlayerTeleportLocation();
-//            if (WormholeXTreme.getIconomy() != null)
-//            {
-//                final double cost = ConfigManager.getIconomyWormholeUseCost();
-//                boolean charge = true;
-//                if ((ConfigManager.getIconomyOpsExcempt() && player.isOp()) || (ConfigManager.getIconomyOwnerExempt() && (stargate.getGateOwner() != null) && stargate.getGateOwner().equals(player.getName())))
-//                {
-//                    charge = false;
-//                }
-//                if (charge && (cost > 0.0))
-//                {
-//                    final Account playerAccount = iConomy.getBank().getAccount(player.getName());
-//                    final double balance = playerAccount.getBalance();
-//                    final String currency = iConomy.getBank().getCurrency();
-//                    if (balance >= cost)
-//                    {
-//                        playerAccount.subtract(cost);
-//                        // player_account.save();
-//                        player.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole Use \u00A7F- \u00A72" + cost + " \u00A77" + currency);
-//                        //p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
-//                        final double ownerPercent = ConfigManager.getIconomyWormholeOwnerPercent();
-//
-//                        if ((ownerPercent != 0.0) && (stargate.getGateOwner() != null))
-//                        {
-//                            if (iConomy.getBank().hasAccount(stargate.getGateOwner()))
-//                            {
-//                                final Account ownAcc = iConomy.getBank().getAccount(stargate.getGateOwner());
-//                                ownAcc.add(cost * ownerPercent);
-//                                // own_acc.save();
-//                            }
-//                        }
-//                    }
-//                    else
-//                    {
-//                        player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Not enough " + currency + "! - Requires: \u00A72" + cost + " \u00A77- Available: \u00A74" + playerAccount.getBalance() + " \u00A77" + currency);
-//                        //p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
-//                        target = stargate.getGatePlayerTeleportLocation();
-//                    }
-//                }
-//            }
-        
-            
-        
             player.setNoDamageTicks(5);
             event.setFrom(target);
             event.setTo(target);

@@ -126,39 +126,26 @@ public class Configuration
             }
             else
             {
-//                try
-//                {
-//                    // Check if this is a number
-//                    Setting s = new Setting(element.getName(), Integer.parseInt(value), element.getDescription(), "WormholeXTreme");
-//                    if ((s.getName() == ConfigKeys.ICONOMY_WORMHOLE_BUILD_COST) || (s.getName() == ConfigKeys.ICONOMY_WORMHOLE_USE_COST))
-//                    {
-//                        s = new Setting(element.getName(), Double.parseDouble(value + ".0"), element.getDescription(), "WormholeXTreme");
-//                    }
-//                    ConfigManager.configurations.put(s.getName(), s);
-//                }
-//                catch (final NumberFormatException e)
-//                {
-                    Setting s = null;
-                    try
+                Setting s = null;
+                try
+                {
+                    s = new Setting(element.getName(), Double.parseDouble(value), element.getDescription(), "WormholeXTreme");
+                }
+                catch (final NumberFormatException nfe)
+                {
+                    // Probably an enum
+                    if (element.getName() == ConfigKeys.BUILT_IN_DEFAULT_PERMISSION_LEVEL)
                     {
-                        s = new Setting(element.getName(), Double.parseDouble(value), element.getDescription(), "WormholeXTreme");
+                        s = new Setting(element.getName(), PermissionLevel.valueOf(value), element.getDescription(), "WormholeXTreme");
                     }
-                    catch (final NumberFormatException nfe)
+                    else
                     {
-                        // Probably an enum
-                        if (element.getName() == ConfigKeys.BUILT_IN_DEFAULT_PERMISSION_LEVEL)
-                        {
-                            s = new Setting(element.getName(), PermissionLevel.valueOf(value), element.getDescription(), "WormholeXTreme");
-                        }
-                        else
-                        {
-                            // I guess its a string
-                            s = new Setting(element.getName(), value, element.getDescription(), "WormholeXTreme");
-                        }
+                        // I guess its a string
+                        s = new Setting(element.getName(), value, element.getDescription(), "WormholeXTreme");
                     }
+                }
 
-                    ConfigManager.configurations.put(s.getName(), s);
-//                }
+                ConfigManager.configurations.put(s.getName(), s);
             }
         }
     }

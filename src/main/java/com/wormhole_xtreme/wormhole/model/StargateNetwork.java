@@ -36,19 +36,16 @@ public class StargateNetwork
     private String networkName;
 
     /** The gate list. */
-    private ArrayList<Stargate> networkGateList = new ArrayList<Stargate>();
+    private final ArrayList<Stargate> networkGateList = new ArrayList<Stargate>();
 
     /** The sign gate list. */
-    private ArrayList<Stargate> networkSignGateList = new ArrayList<Stargate>();
+    private final ArrayList<Stargate> networkSignGateList = new ArrayList<Stargate>();
 
     /** The gate lock. */
     private Object networkGateLock = new Object();
 
     /** The individual permissions. */
-    private HashMap<String, PermissionsManager.PermissionLevel> networkIndividualPermissions = new HashMap<String, PermissionsManager.PermissionLevel>();
-
-    /** The group permissions. */
-    private HashMap<String, PermissionsManager.PermissionLevel> networkGroupPermissions = new HashMap<String, PermissionsManager.PermissionLevel>();
+    private final HashMap<String, PermissionsManager.PermissionLevel> networkIndividualPermissions = new HashMap<String, PermissionsManager.PermissionLevel>();
 
     /**
      * Gets the network gate list.
@@ -68,16 +65,6 @@ public class StargateNetwork
     public Object getNetworkGateLock()
     {
         return networkGateLock;
-    }
-
-    /**
-     * Gets the network group permissions.
-     * 
-     * @return the network group permissions
-     */
-    public HashMap<String, PermissionsManager.PermissionLevel> getNetworkGroupPermissions()
-    {
-        return networkGroupPermissions;
     }
 
     /**
@@ -111,17 +98,6 @@ public class StargateNetwork
     }
 
     /**
-     * Sets the network gate list.
-     * 
-     * @param networkGateList
-     *            the new network gate list
-     */
-    public void setNetworkGateList(final ArrayList<Stargate> networkGateList)
-    {
-        this.networkGateList = networkGateList;
-    }
-
-    /**
      * Sets the network gate lock.
      * 
      * @param networkGateLock
@@ -133,28 +109,6 @@ public class StargateNetwork
     }
 
     /**
-     * Sets the network group permissions.
-     * 
-     * @param networkGroupPermissions
-     *            the network group permissions
-     */
-    public void setNetworkGroupPermissions(final HashMap<String, PermissionsManager.PermissionLevel> networkGroupPermissions)
-    {
-        this.networkGroupPermissions = networkGroupPermissions;
-    }
-
-    /**
-     * Sets the network individual permissions.
-     * 
-     * @param networkIndividualPermissions
-     *            the network individual permissions
-     */
-    public void setNetworkIndividualPermissions(final HashMap<String, PermissionsManager.PermissionLevel> networkIndividualPermissions)
-    {
-        this.networkIndividualPermissions = networkIndividualPermissions;
-    }
-
-    /**
      * Sets the network name.
      * 
      * @param networkName
@@ -163,16 +117,5 @@ public class StargateNetwork
     public void setNetworkName(final String networkName)
     {
         this.networkName = networkName;
-    }
-
-    /**
-     * Sets the network sign gate list.
-     * 
-     * @param networkSignGateList
-     *            the new network sign gate list
-     */
-    public void setNetworkSignGateList(final ArrayList<Stargate> networkSignGateList)
-    {
-        this.networkSignGateList = networkSignGateList;
     }
 }

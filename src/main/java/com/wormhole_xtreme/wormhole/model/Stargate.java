@@ -439,16 +439,6 @@ public class Stargate
                 // Just skip top woosh if already lit (/dial gate)
                 WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH));
             }
-            // Show water if you are dialing out OR if the iris isn't active
-            /*if ( this.target != null || !this.irisActive )
-            {
-                this.fillGateInterior(this.gateShape.portalMaterial);
-
-                if ( this.gateShape.wooshDepth > 0 )
-                {
-                    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH));
-                }
-            }*/
         }
         else
         {

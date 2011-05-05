@@ -79,9 +79,6 @@ public class WormholeXTreme extends JavaPlugin
     /** The Permissions. */
     private static PermissionHandler permissions = null;
 
-//    /** The Iconomy. */
-//    private static iConomy iconomy = null;
-
     /** The Help. */
     private static Help help = null;
 
@@ -106,16 +103,6 @@ public class WormholeXTreme extends JavaPlugin
     {
         return help;
     }
-
-//    /**
-//     * Gets the iconomy.
-//     * 
-//     * @return the iconomy
-//     */
-//    public static iConomy getIconomy()
-//    {
-//        return iconomy;
-//    }
 
     /**
      * Gets the logger.
@@ -238,17 +225,6 @@ public class WormholeXTreme extends JavaPlugin
         WormholeXTreme.help = help;
     }
 
-//    /**
-//     * Sets the iconomy.
-//     * 
-//     * @param iconomy
-//     *            the new iconomy
-//     */
-//    public static void setIconomy(final iConomy iconomy)
-//    {
-//        WormholeXTreme.iconomy = iconomy;
-//    }
-
     /**
      * Sets the log.
      * 
@@ -357,7 +333,6 @@ public class WormholeXTreme extends JavaPlugin
         try
         {
             PermissionsSupport.enablePermissions();
-//            IConomySupport.enableIconomy();
             HelpSupport.enableHelp();
             if (ConfigManager.isWormholeWorldsSupportEnabled())
             {

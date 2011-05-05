@@ -60,13 +60,13 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.nijiko.coelho.iConomy</groupId>
-			<artifactId>iConomy</artifactId>
-			<version>4.63</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.nijiko.coelho.iConomy</groupId> -->
+<!-- 			<artifactId>iConomy</artifactId> -->
+<!-- 			<version>4.63</version> -->
+<!-- 			<type>jar</type> -->
+<!-- 			<scope>compile</scope> -->
+<!-- 		</dependency> -->
 		<dependency>
 			<groupId>com.nijikokun.bukkit</groupId>
 			<artifactId>Permissions</artifactId>

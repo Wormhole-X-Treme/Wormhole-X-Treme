@@ -27,10 +27,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import com.nijiko.coelho.iConomy.iConomy;
-import com.nijiko.coelho.iConomy.system.Account;
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
-import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.logic.StargateUpdateRunnable;
 import com.wormhole_xtreme.wormhole.logic.StargateUpdateRunnable.ActionToTake;
 
@@ -209,27 +206,27 @@ public class StargateManager
         final Stargate posDupe = StargateManager.getStargate(s.getGateName());
         if (posDupe == null)
         {
-            if (WormholeXTreme.getIconomy() != null)
-            {
-                final boolean exempt = ConfigManager.getIconomyOpsExcempt();
-                if ( !exempt || !p.isOp())
-                {
-                    final Account playerAccount = iConomy.getBank().getAccount(p.getName());
-                    final double balance = playerAccount.getBalance();
-                    final double cost = ConfigManager.getIconomyWormholeBuildCost();
-                    if (balance >= cost)
-                    {
-                        playerAccount.subtract(cost);
-//						player_account.save();
-                        p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to build a wormhole.");
-                    }
-                    else
-                    {
-                        p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to build - requires: " + cost);
-                        return false;
-                    }
-                }
-            }
+//            if (WormholeXTreme.getIconomy() != null)
+//            {
+//                final boolean exempt = ConfigManager.getIconomyOpsExcempt();
+//                if ( !exempt || !p.isOp())
+//                {
+//                    final Account playerAccount = iConomy.getBank().getAccount(p.getName());
+//                    final double balance = playerAccount.getBalance();
+//                    final double cost = ConfigManager.getIconomyWormholeBuildCost();
+//                    if (balance >= cost)
+//                    {
+//                        playerAccount.subtract(cost);
+////						player_account.save();
+//                        p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to build a wormhole.");
+//                    }
+//                    else
+//                    {
+//                        p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to build - requires: " + cost);
+//                        return false;
+//                    }
+//                }
+//            }
 
             s.setGateOwner(p.getName());
             s.completeGate(s.getGateName(), "");
@@ -261,27 +258,27 @@ public class StargateManager
 
         if (complete != null)
         {
-            if (WormholeXTreme.getIconomy() != null)
-            {
-                final boolean exempt = ConfigManager.getIconomyOpsExcempt();
-                if ( !exempt || !p.isOp())
-                {
-                    final Account playerAccount = iConomy.getBank().getAccount(p.getName());
-                    final double balance = playerAccount.getBalance();
-                    final double cost = ConfigManager.getIconomyWormholeBuildCost();
-                    if (balance >= cost)
-                    {
-                        playerAccount.subtract(cost);
-//						player_account.save();
-                        p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to build a wormhole.");
-                    }
-                    else
-                    {
-                        p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to build - requires: " + cost);
-                        return false;
-                    }
-                }
-            }
+//            if (WormholeXTreme.getIconomy() != null)
+//            {
+//                final boolean exempt = ConfigManager.getIconomyOpsExcempt();
+//                if ( !exempt || !p.isOp())
+//                {
+//                    final Account playerAccount = iConomy.getBank().getAccount(p.getName());
+//                    final double balance = playerAccount.getBalance();
+//                    final double cost = ConfigManager.getIconomyWormholeBuildCost();
+//                    if (balance >= cost)
+//                    {
+//                        playerAccount.subtract(cost);
+////						player_account.save();
+//                        p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to build a wormhole.");
+//                    }
+//                    else
+//                    {
+//                        p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to build - requires: " + cost);
+//                        return false;
+//                    }
+//                }
+//            }
 
             if ( !network.equals(""))
             {

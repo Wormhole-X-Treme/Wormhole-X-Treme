@@ -24,7 +24,6 @@ import org.bukkit.event.server.ServerListener;
 
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.plugin.HelpSupport;
-import com.wormhole_xtreme.wormhole.plugin.IConomySupport;
 import com.wormhole_xtreme.wormhole.plugin.PermissionsSupport;
 import com.wormhole_xtreme.wormhole.plugin.WormholeWorldsSupport;
 
@@ -43,15 +42,15 @@ class WormholeXTremeServerListener extends ServerListener
     @Override
     public void onPluginDisable(final PluginDisableEvent event)
     {
-        if (event.getPlugin().getDescription().getName().equals("iConomy") && !ConfigManager.getIconomySupportDisable())
-        {
-            IConomySupport.disableIconomy();
-        }
+//        if (event.getPlugin().getDescription().getName().equals("iConomy") && !ConfigManager.getIconomySupportDisable())
+//        {
+//            IConomySupport.disableIconomy();
+//        }
         if (event.getPlugin().getDescription().getName().equals("Permissions") && !ConfigManager.getPermissionsSupportDisable())
         {
             PermissionsSupport.disablePermissions();
         }
-        if (event.getPlugin().getDescription().getName().equals("Help") && !ConfigManager.getHelpSupportDisable())
+        else if (event.getPlugin().getDescription().getName().equals("Help") && !ConfigManager.getHelpSupportDisable())
         {
             HelpSupport.disableHelp();
         }
@@ -67,11 +66,11 @@ class WormholeXTremeServerListener extends ServerListener
     @Override
     public void onPluginEnable(final PluginEnableEvent event)
     {
-        if (event.getPlugin().getDescription().getName().equals("iConomy") && !ConfigManager.getIconomySupportDisable())
-        {
-            IConomySupport.enableIconomy();
-        }
-        else if (event.getPlugin().getDescription().getName().equals("Permissions") && !ConfigManager.getPermissionsSupportDisable())
+//        if (event.getPlugin().getDescription().getName().equals("iConomy") && !ConfigManager.getIconomySupportDisable())
+//        {
+//            IConomySupport.enableIconomy();
+//        }
+        if (event.getPlugin().getDescription().getName().equals("Permissions") && !ConfigManager.getPermissionsSupportDisable())
         {
             PermissionsSupport.enablePermissions();
         }

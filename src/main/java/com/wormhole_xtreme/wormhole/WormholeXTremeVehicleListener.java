@@ -32,8 +32,6 @@ import org.bukkit.event.vehicle.VehicleListener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.util.Vector;
 
-import com.nijiko.coelho.iConomy.iConomy;
-import com.nijiko.coelho.iConomy.system.Account;
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.event.StargateMinecartTeleportEvent;
 import com.wormhole_xtreme.wormhole.model.Stargate;
@@ -110,47 +108,47 @@ class WormholeXTremeVehicleListener extends VehicleListener
                         }
                         return false;
                     }
-                    if (WormholeXTreme.getIconomy() != null)
-                    {
-                        final double cost = ConfigManager.getIconomyWormholeUseCost();
-                        boolean charge = true;
-                        if ((ConfigManager.getIconomyOpsExcempt() && p.isOp()) || (ConfigManager.getIconomyOwnerExempt() && (st.getGateOwner() != null) && st.getGateOwner().equals(p.getName())))
-                        {
-                            charge = false;
-                        }
-                        if (charge && (cost > 0.0))
-                        {
-                            final Account player_account = iConomy.getBank().getAccount(p.getName());
-                            final double balance = player_account.getBalance();
-                            final String currency = iConomy.getBank().getCurrency();
-                            if (balance >= cost)
-                            {
-                                player_account.subtract(cost);
-                                //  player_account.save();
-                                p.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole Use \u00A7F- \u00A72" + cost + " \u00A77" + currency);
-                                //p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
-                                final double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
-
-                                if ((owner_percent != 0.0) && (st.getGateOwner() != null))
-                                {
-                                    if (iConomy.getBank().hasAccount(st.getGateOwner()))
-                                    {
-                                        final Account own_acc = iConomy.getBank().getAccount(st.getGateOwner());
-                                        own_acc.add(cost * owner_percent);
-                                        // own_acc.save();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Not enough " + currency + "! - Requires: \u00A72" + cost + " \u00A77- Available: \u00A74" + player_account.getBalance() + " \u00A77" + currency);
-                                //p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
-                                target = st.getGateMinecartTeleportLocation() != null
-                                    ? st.getGateMinecartTeleportLocation()
-                                    : st.getGatePlayerTeleportLocation();
-                            }
-                        }
-                    }
+//                    if (WormholeXTreme.getIconomy() != null)
+//                    {
+//                        final double cost = ConfigManager.getIconomyWormholeUseCost();
+//                        boolean charge = true;
+//                        if ((ConfigManager.getIconomyOpsExcempt() && p.isOp()) || (ConfigManager.getIconomyOwnerExempt() && (st.getGateOwner() != null) && st.getGateOwner().equals(p.getName())))
+//                        {
+//                            charge = false;
+//                        }
+//                        if (charge && (cost > 0.0))
+//                        {
+//                            final Account player_account = iConomy.getBank().getAccount(p.getName());
+//                            final double balance = player_account.getBalance();
+//                            final String currency = iConomy.getBank().getCurrency();
+//                            if (balance >= cost)
+//                            {
+//                                player_account.subtract(cost);
+//                                //  player_account.save();
+//                                p.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole Use \u00A7F- \u00A72" + cost + " \u00A77" + currency);
+//                                //p.sendMessage("You were charged " + cost + " " + iConomy.getBank().getCurrency() + " to use wormhole." );
+//                                final double owner_percent = ConfigManager.getIconomyWormholeOwnerPercent();
+//
+//                                if ((owner_percent != 0.0) && (st.getGateOwner() != null))
+//                                {
+//                                    if (iConomy.getBank().hasAccount(st.getGateOwner()))
+//                                    {
+//                                        final Account own_acc = iConomy.getBank().getAccount(st.getGateOwner());
+//                                        own_acc.add(cost * owner_percent);
+//                                        // own_acc.save();
+//                                    }
+//                                }
+//                            }
+//                            else
+//                            {
+//                                p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Not enough " + currency + "! - Requires: \u00A72" + cost + " \u00A77- Available: \u00A74" + player_account.getBalance() + " \u00A77" + currency);
+//                                //p.sendMessage("Not enough " + iConomy.getBank().getCurrency() + " to use - requires: " + cost);
+//                                target = st.getGateMinecartTeleportLocation() != null
+//                                    ? st.getGateMinecartTeleportLocation()
+//                                    : st.getGatePlayerTeleportLocation();
+//                            }
+//                        }
+//                    }
                 }
             }
 

@@ -126,18 +126,18 @@ public class Configuration
             }
             else
             {
-                try
-                {
-                    // Check if this is a number
-                    Setting s = new Setting(element.getName(), Integer.parseInt(value), element.getDescription(), "WormholeXTreme");
-                    if ((s.getName() == ConfigKeys.ICONOMY_WORMHOLE_BUILD_COST) || (s.getName() == ConfigKeys.ICONOMY_WORMHOLE_USE_COST))
-                    {
-                        s = new Setting(element.getName(), Double.parseDouble(value + ".0"), element.getDescription(), "WormholeXTreme");
-                    }
-                    ConfigManager.configurations.put(s.getName(), s);
-                }
-                catch (final NumberFormatException e)
-                {
+//                try
+//                {
+//                    // Check if this is a number
+//                    Setting s = new Setting(element.getName(), Integer.parseInt(value), element.getDescription(), "WormholeXTreme");
+//                    if ((s.getName() == ConfigKeys.ICONOMY_WORMHOLE_BUILD_COST) || (s.getName() == ConfigKeys.ICONOMY_WORMHOLE_USE_COST))
+//                    {
+//                        s = new Setting(element.getName(), Double.parseDouble(value + ".0"), element.getDescription(), "WormholeXTreme");
+//                    }
+//                    ConfigManager.configurations.put(s.getName(), s);
+//                }
+//                catch (final NumberFormatException e)
+//                {
                     Setting s = null;
                     try
                     {
@@ -158,7 +158,7 @@ public class Configuration
                     }
 
                     ConfigManager.configurations.put(s.getName(), s);
-                }
+//                }
             }
         }
     }

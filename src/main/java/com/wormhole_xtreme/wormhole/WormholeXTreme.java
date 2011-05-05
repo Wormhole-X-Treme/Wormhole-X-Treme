@@ -30,7 +30,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import com.nijiko.coelho.iConomy.iConomy;
 import com.nijiko.permissions.PermissionHandler;
 import com.wormhole_xtreme.worlds.handler.WorldHandler;
 import com.wormhole_xtreme.wormhole.command.Build;
@@ -51,7 +50,6 @@ import com.wormhole_xtreme.wormhole.model.StargateDBManager;
 import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.permissions.PermissionsManager;
 import com.wormhole_xtreme.wormhole.plugin.HelpSupport;
-import com.wormhole_xtreme.wormhole.plugin.IConomySupport;
 import com.wormhole_xtreme.wormhole.plugin.PermissionsSupport;
 import com.wormhole_xtreme.wormhole.plugin.WormholeWorldsSupport;
 import com.wormhole_xtreme.wormhole.utils.DBUpdateUtil;
@@ -81,8 +79,8 @@ public class WormholeXTreme extends JavaPlugin
     /** The Permissions. */
     private static PermissionHandler permissions = null;
 
-    /** The Iconomy. */
-    private static iConomy iconomy = null;
+//    /** The Iconomy. */
+//    private static iConomy iconomy = null;
 
     /** The Help. */
     private static Help help = null;
@@ -109,15 +107,15 @@ public class WormholeXTreme extends JavaPlugin
         return help;
     }
 
-    /**
-     * Gets the iconomy.
-     * 
-     * @return the iconomy
-     */
-    public static iConomy getIconomy()
-    {
-        return iconomy;
-    }
+//    /**
+//     * Gets the iconomy.
+//     * 
+//     * @return the iconomy
+//     */
+//    public static iConomy getIconomy()
+//    {
+//        return iconomy;
+//    }
 
     /**
      * Gets the logger.
@@ -240,16 +238,16 @@ public class WormholeXTreme extends JavaPlugin
         WormholeXTreme.help = help;
     }
 
-    /**
-     * Sets the iconomy.
-     * 
-     * @param iconomy
-     *            the new iconomy
-     */
-    public static void setIconomy(final iConomy iconomy)
-    {
-        WormholeXTreme.iconomy = iconomy;
-    }
+//    /**
+//     * Sets the iconomy.
+//     * 
+//     * @param iconomy
+//     *            the new iconomy
+//     */
+//    public static void setIconomy(final iConomy iconomy)
+//    {
+//        WormholeXTreme.iconomy = iconomy;
+//    }
 
     /**
      * Sets the log.
@@ -359,7 +357,7 @@ public class WormholeXTreme extends JavaPlugin
         try
         {
             PermissionsSupport.enablePermissions();
-            IConomySupport.enableIconomy();
+//            IConomySupport.enableIconomy();
             HelpSupport.enableHelp();
             if (ConfigManager.isWormholeWorldsSupportEnabled())
             {

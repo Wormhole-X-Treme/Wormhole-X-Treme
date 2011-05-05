@@ -71,7 +71,7 @@ class WormholeXTremeBlockListener extends BlockListener
                     stargate.setGateDialSign(null);
                 }
                 else if (block.getType().equals(stargate.isGateCustom() ? stargate.getGateCustomIrisMaterial()
-                    : stargate.getGateShape().getShapeIrisMaterial()))
+                    : stargate.getGateShape() != null ? stargate.getGateShape().getShapeIrisMaterial() : Material.STONE))
                 {
                     return true;
                 }
@@ -149,12 +149,14 @@ class WormholeXTremeBlockListener extends BlockListener
             final Stargate closest = StargateManager.findClosestStargate(current);
             //TODO This is bad, very bad for performance!
             if ((closest != null) && (closest.isGateActive() || closest.isGateRecentlyActive()) && ((closest.isGateCustom()
-                ? closest.getGateCustomPortalMaterial() : closest.getGateShape().getShapePortalMaterial()) == Material.STATIONARY_LAVA))
+                ? closest.getGateCustomPortalMaterial() : closest.getGateShape() != null
+                    ? closest.getGateShape().getShapePortalMaterial() : Material.STATIONARY_WATER) == Material.STATIONARY_LAVA))
             {
                 final double blockDistanceSquared = StargateManager.distanceSquaredToClosestGateBlock(current, closest);
                 if (((blockDistanceSquared <= (closest.isGateCustom() ? closest.getGateCustomWooshDepthSquared()
-                    : closest.getGateShape().getShapeWooshDepthSquared())) && ((closest.isGateCustom()
-                    ? closest.getGateCustomWooshDepth() : closest.getGateShape().getShapeWooshDepth()) != 0)) || (blockDistanceSquared <= 25))
+                    : closest.getGateShape() != null ? closest.getGateShape().getShapeWooshDepthSquared() : 0)) && ((closest.isGateCustom()
+                    ? closest.getGateCustomWooshDepth() : closest.getGateShape() != null
+                        ? closest.getGateShape().getShapeWooshDepth() : 0) != 0)) || (blockDistanceSquared <= 25))
                 {
                     WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.getGateName() + "\" Proximity Block Burn Distance Squared: \"" + blockDistanceSquared + "\"");
                     event.setCancelled(true);
@@ -207,12 +209,14 @@ class WormholeXTremeBlockListener extends BlockListener
             final Location current = event.getBlock().getLocation();
             final Stargate closest = StargateManager.findClosestStargate(current);
             if ((closest != null) && (closest.isGateActive() || closest.isGateRecentlyActive()) && ((closest.isGateCustom()
-                ? closest.getGateCustomPortalMaterial() : closest.getGateShape().getShapePortalMaterial()) == Material.STATIONARY_LAVA))
+                ? closest.getGateCustomPortalMaterial() : closest.getGateShape() != null
+                    ? closest.getGateShape().getShapePortalMaterial() : Material.STATIONARY_WATER) == Material.STATIONARY_LAVA))
             {
                 final double blockDistanceSquared = StargateManager.distanceSquaredToClosestGateBlock(current, closest);
                 if (((blockDistanceSquared <= (closest.isGateCustom() ? closest.getGateCustomWooshDepthSquared()
                     : closest.getGateShape().getShapeWooshDepthSquared())) && ((closest.isGateCustom()
-                    ? closest.getGateCustomWooshDepth() : closest.getGateShape().getShapeWooshDepth()) != 0)) || (blockDistanceSquared <= 25))
+                    ? closest.getGateCustomWooshDepth() : closest.getGateShape() != null
+                        ? closest.getGateShape().getShapeWooshDepth() : 0) != 0)) || (blockDistanceSquared <= 25))
                 {
                     WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Blocked Gate: \"" + closest.getGateName() + "\" Block Type: \"" + event.getBlock().getType().toString() + "\" Proximity Block Ignite: \"" + event.getCause().toString() + "\" Distance Squared: \"" + blockDistanceSquared + "\"");
                     event.setCancelled(true);

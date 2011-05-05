@@ -667,7 +667,7 @@ public class StargateHelper
      * 
      * @return the shapes
      */
-    public static ConcurrentHashMap<String, StargateShape> getStargateShapes()
+    private static ConcurrentHashMap<String, StargateShape> getStargateShapes()
     {
         return stargateShapes;
     }

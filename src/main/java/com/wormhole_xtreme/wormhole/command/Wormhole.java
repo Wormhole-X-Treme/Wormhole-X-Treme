@@ -107,44 +107,52 @@ public class Wormhole implements CommandExecutor
                 {
                     if (args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false"))
                     {
-                        stargate.setGateCustom(Boolean.valueOf(args[2].trim().toLowerCase()));
-                        if (stargate.isGateCustom())
+                        if (stargate.getGateShape() != null)
                         {
-                            if (stargate.getGateCustomIrisMaterial() == null)
+                            stargate.setGateCustom(Boolean.valueOf(args[2].trim().toLowerCase()));
+                            if (stargate.isGateCustom())
                             {
-                                stargate.setGateCustomIrisMaterial(stargate.getGateShape().getShapeIrisMaterial());
+                                if (stargate.getGateCustomIrisMaterial() == null)
+                                {
+                                    stargate.setGateCustomIrisMaterial(stargate.getGateShape().getShapeIrisMaterial());
+                                }
+                                if (stargate.getGateCustomLightMaterial() == null)
+                                {
+                                    stargate.setGateCustomLightMaterial(stargate.getGateShape().getShapeLightMaterial());
+                                }
+                                if (stargate.getGateCustomPortalMaterial() == null)
+                                {
+                                    stargate.setGateCustomPortalMaterial(stargate.getGateShape().getShapePortalMaterial());
+                                }
+                                if (stargate.getGateCustomStructureMaterial() == null)
+                                {
+                                    stargate.setGateCustomStructureMaterial(stargate.getGateShape().getShapeStructureMaterial());
+                                }
+                                if (stargate.getGateCustomLightTicks() == -1)
+                                {
+                                    stargate.setGateCustomLightTicks(stargate.getGateShape().getShapeLightTicks());
+                                }
+                                if (stargate.getGateCustomWooshTicks() == -1)
+                                {
+                                    stargate.setGateCustomWooshTicks(stargate.getGateShape().getShapeWooshTicks());
+                                }
+                                if (stargate.getGateCustomWooshDepth() == -1)
+                                {
+                                    stargate.setGateCustomWooshDepth(stargate.getGateShape().getShapeWooshDepth());
+                                }
+                                if (stargate.getGateCustomWooshDepthSquared() == -1)
+                                {
+                                    stargate.setGateCustomWooshDepthSquared(stargate.getGateShape().getShapeWooshDepthSquared());
+                                }
                             }
-                            if (stargate.getGateCustomLightMaterial() == null)
-                            {
-                                stargate.setGateCustomLightMaterial(stargate.getGateShape().getShapeLightMaterial());
-                            }
-                            if (stargate.getGateCustomPortalMaterial() == null)
-                            {
-                                stargate.setGateCustomPortalMaterial(stargate.getGateShape().getShapePortalMaterial());
-                            }
-                            if (stargate.getGateCustomStructureMaterial() == null)
-                            {
-                                stargate.setGateCustomStructureMaterial(stargate.getGateShape().getShapeStructureMaterial());
-                            }
-                            if (stargate.getGateCustomLightTicks() == -1)
-                            {
-                                stargate.setGateCustomLightTicks(stargate.getGateShape().getShapeLightTicks());
-                            }
-                            if (stargate.getGateCustomWooshTicks() == -1)
-                            {
-                                stargate.setGateCustomWooshTicks(stargate.getGateShape().getShapeWooshTicks());
-                            }
-                            if (stargate.getGateCustomWooshDepth() == -1)
-                            {
-                                stargate.setGateCustomWooshDepth(stargate.getGateShape().getShapeWooshDepth());
-                            }
-                            if (stargate.getGateCustomWooshDepthSquared() == -1)
-                            {
-                                stargate.setGateCustomWooshDepthSquared(stargate.getGateShape().getShapeWooshDepthSquared());
-                            }
-                        }
 
-                        sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Stargate is custom: " + stargate.isGateCustom());
+                            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Stargate is custom: " + stargate.isGateCustom());
+                        }
+                        else
+                        {
+                            sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "No gate shape to base custom data off of!");
+                            sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Make sure the proper shape file is available!");
+                        }
                     }
                     else
                     {

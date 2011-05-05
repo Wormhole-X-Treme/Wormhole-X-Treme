@@ -65,7 +65,7 @@ public class StargateShape
     private int shapeWooshDepth = 0;
 
     /** The square of the woosh_depth, used in comparisions with squared distance. */
-    private int shapeWooshDepthSquared;
+    private int shapeWooshDepthSquared = 0;
 
     /** The portal material. */
     private Material shapePortalMaterial = Material.STATIONARY_WATER;
@@ -90,8 +90,8 @@ public class StargateShape
      */
     public StargateShape()
     {
-        setShapeWooshDepth(3);
-        setShapeWooshDepthSquared(9);
+//        setShapeWooshDepth(3);
+//        setShapeWooshDepthSquared(9);
     }
 
     /**
@@ -110,7 +110,7 @@ public class StargateShape
         final ArrayList<Integer> lightPositions = new ArrayList<Integer>();
 
         int numBlocks = 0;
-        int curWooshDepth = 3;
+        int curWooshDepth = 0;
 
         // 1. scan all lines for lines beginning with [  - that is the height of the gate
         int height = 0;

@@ -343,8 +343,9 @@ class WormholeXTremePlayerListener extends PlayerListener
         final Block gateBlockFinal = toLocFinal.getWorld().getBlockAt(toLocFinal.getBlockX(), toLocFinal.getBlockY(), toLocFinal.getBlockZ());
         final Stargate stargate = StargateManager.getGateFromBlock(gateBlockFinal);
 
-        if ((stargate != null) && stargate.isGateActive() && (stargate.getGateTarget() != null) && (stargate.getGateShape() != null) && (gateBlockFinal.getType() == (stargate.isGateCustom()
-            ? stargate.getGateCustomPortalMaterial() : stargate.getGateShape().getShapePortalMaterial())))
+        if ((stargate != null) && stargate.isGateActive() && (stargate.getGateTarget() != null) && (gateBlockFinal.getType() == (stargate.isGateCustom()
+            ? stargate.getGateCustomPortalMaterial() : stargate.getGateShape() != null
+                ? stargate.getGateShape().getShapePortalMaterial() : Material.STATIONARY_WATER)))
         {
             String gatenetwork;
             if (stargate.getGateNetwork() != null)

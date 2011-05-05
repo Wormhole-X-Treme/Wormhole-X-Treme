@@ -21,6 +21,7 @@ package com.wormhole_xtreme.wormhole;
 import java.util.logging.Level;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -64,8 +65,9 @@ class WormholeXTremeVehicleListener extends VehicleListener
         final Location l = event.getTo();
         final Block ch = l.getWorld().getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
         final Stargate st = StargateManager.getGateFromBlock(ch);
-        if ((st != null) && st.isGateActive() && (st.getGateTarget() != null) && (st.getGateShape() != null) && (ch.getType() == (st.isGateCustom()
-            ? st.getGateCustomPortalMaterial() : st.getGateShape().getShapePortalMaterial())))
+        if ((st != null) && st.isGateActive() && (st.getGateTarget() != null) && (ch.getType() == (st.isGateCustom()
+            ? st.getGateCustomPortalMaterial() : st.getGateShape() != null ? st.getGateShape().getShapePortalMaterial()
+                : Material.STATIONARY_WATER)))
         {
             String gatenetwork;
             if (st.getGateNetwork() != null)

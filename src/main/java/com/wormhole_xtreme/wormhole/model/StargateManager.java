@@ -34,6 +34,7 @@ import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.logic.StargateUpdateRunnable;
 import com.wormhole_xtreme.wormhole.logic.StargateUpdateRunnable.ActionToTake;
 
+// TODO: Auto-generated Javadoc
 /**
  * WormholeXtreme Stargate Manager.
  * 
@@ -63,7 +64,7 @@ public class StargateManager
 
     // List of blocks that are part of an active animation. Only use this to make sure water doesn't flow everywhere.
     /** The Constant opening_animation_blocks. */
-    protected static final ConcurrentHashMap<Location, Block> openingAnimationBlocks = new ConcurrentHashMap<Location, Block>();
+    private static final ConcurrentHashMap<Location, Block> openingAnimationBlocks = new ConcurrentHashMap<Location, Block>();
 
     /**
      * This method adds a stargate that has been activated but not dialed by a player.
@@ -76,7 +77,7 @@ public class StargateManager
     public static void addActivatedStargate(final Player p, final Stargate s)
     {
         // s.ActivateStargate();
-        activatedStargates.put(p, s);
+        getActivatedStargates().put(p, s);
     }
 
     /**
@@ -93,7 +94,7 @@ public class StargateManager
     {
         if ((b != null) && (s != null))
         {
-            allGateBlocks.put(b.getLocation(), s);
+            getAllGateBlocks().put(b.getLocation(), s);
         }
     }
 
@@ -107,13 +108,13 @@ public class StargateManager
      */
     public static void addGateToNetwork(final Stargate gate, final String network)
     {
-        if ( !stargateNetworks.containsKey(network))
+        if ( !getStargateNetworks().containsKey(network))
         {
             addStargateNetwork(network);
         }
 
         StargateNetwork net;
-        if ((net = stargateNetworks.get(network)) != null)
+        if ((net = getStargateNetworks().get(network)) != null)
         {
             synchronized (net.getNetworkGateLock())
             {
@@ -136,7 +137,7 @@ public class StargateManager
      */
     public static void addIncompleteStargate(final Player p, final Stargate s)
     {
-        incompleteStargates.put(p, s);
+        getIncompleteStargates().put(p, s);
     }
 
     /**
@@ -149,7 +150,7 @@ public class StargateManager
      */
     public static void addPlayerBuilderShape(final Player p, final StargateShape shape)
     {
-        playerBuilders.put(p, shape);
+        getPlayerBuilders().put(p, shape);
     }
 
     /**
@@ -160,14 +161,14 @@ public class StargateManager
      */
     protected static void addStargate(final Stargate s)
     {
-        stargateList.put(s.getGateName(), s);
+        getStargateList().put(s.getGateName(), s);
         for (final Location b : s.getGateStructureBlocks())
         {
-            allGateBlocks.put(b, s);
+            getAllGateBlocks().put(b, s);
         }
         for (final Location b : s.getGatePortalBlocks())
         {
-            allGateBlocks.put(b, s);
+            getAllGateBlocks().put(b, s);
         }
     }
 
@@ -181,16 +182,16 @@ public class StargateManager
      */
     public static StargateNetwork addStargateNetwork(final String name)
     {
-        if ( !stargateNetworks.containsKey(name))
+        if ( !getStargateNetworks().containsKey(name))
         {
             final StargateNetwork sn = new StargateNetwork();
             sn.setNetworkName(name);
-            stargateNetworks.put(name, sn);
+            getStargateNetworks().put(name, sn);
             return sn;
         }
         else
         {
-            return stargateNetworks.get(name);
+            return getStargateNetworks().get(name);
         }
     }
 
@@ -256,7 +257,7 @@ public class StargateManager
      */
     public static boolean completeStargate(final Player p, final String name, final String idc, final String network)
     {
-        final Stargate complete = incompleteStargates.remove(p);
+        final Stargate complete = getIncompleteStargates().remove(p);
 
         if (complete != null)
         {
@@ -360,6 +361,26 @@ public class StargateManager
     }
 
     /**
+     * Gets the activated stargates.
+     * 
+     * @return the activated stargates
+     */
+    private static ConcurrentHashMap<Player, Stargate> getActivatedStargates()
+    {
+        return activatedStargates;
+    }
+
+    /**
+     * Gets the all gate blocks.
+     * 
+     * @return the all gate blocks
+     */
+    private static ConcurrentHashMap<Location, Stargate> getAllGateBlocks()
+    {
+        return allGateBlocks;
+    }
+
+    /**
      * Get all gates.
      * This is more expensive than some other methods so it probably shouldn't be called a lot.
      * 
@@ -369,7 +390,7 @@ public class StargateManager
     {
         final ArrayList<Stargate> gates = new ArrayList<Stargate>();
 
-        final Enumeration<Stargate> keys = stargateList.elements();
+        final Enumeration<Stargate> keys = getStargateList().elements();
 
         while (keys.hasMoreElements())
         {
@@ -388,12 +409,42 @@ public class StargateManager
      */
     public static Stargate getGateFromBlock(final Block b)
     {
-        if (allGateBlocks.containsKey(b.getLocation()))
+        if (getAllGateBlocks().containsKey(b.getLocation()))
         {
-            return allGateBlocks.get(b.getLocation());
+            return getAllGateBlocks().get(b.getLocation());
         }
 
         return null;
+    }
+
+    /**
+     * Gets the incomplete stargates.
+     * 
+     * @return the incomplete stargates
+     */
+    private static ConcurrentHashMap<Player, Stargate> getIncompleteStargates()
+    {
+        return incompleteStargates;
+    }
+
+    /**
+     * Gets the opening animation blocks.
+     * 
+     * @return the opening animation blocks
+     */
+    protected static ConcurrentHashMap<Location, Block> getOpeningAnimationBlocks()
+    {
+        return openingAnimationBlocks;
+    }
+
+    /**
+     * Gets the player builders.
+     * 
+     * @return the player builders
+     */
+    private static ConcurrentHashMap<Player, StargateShape> getPlayerBuilders()
+    {
+        return playerBuilders;
     }
 
     /**
@@ -405,9 +456,9 @@ public class StargateManager
      */
     public static StargateShape getPlayerBuilderShape(final Player p)
     {
-        if (playerBuilders.containsKey(p))
+        if (getPlayerBuilders().containsKey(p))
         {
-            return playerBuilders.remove(p);
+            return getPlayerBuilders().remove(p);
         }
         else
         {
@@ -444,14 +495,24 @@ public class StargateManager
      */
     public static Stargate getStargate(final String name)
     {
-        if (stargateList.containsKey(name))
+        if (getStargateList().containsKey(name))
         {
-            return stargateList.get(name);
+            return getStargateList().get(name);
         }
         else
         {
             return null;
         }
+    }
+
+    /**
+     * Gets the stargate list.
+     * 
+     * @return the stargate list
+     */
+    private static ConcurrentHashMap<String, Stargate> getStargateList()
+    {
+        return stargateList;
     }
 
     /**
@@ -463,14 +524,24 @@ public class StargateManager
      */
     public static StargateNetwork getStargateNetwork(final String name)
     {
-        if (stargateNetworks.containsKey(name))
+        if (getStargateNetworks().containsKey(name))
         {
-            return stargateNetworks.get(name);
+            return getStargateNetworks().get(name);
         }
         else
         {
             return null;
         }
+    }
+
+    /**
+     * Gets the stargate networks.
+     * 
+     * @return the stargate networks
+     */
+    private static ConcurrentHashMap<String, StargateNetwork> getStargateNetworks()
+    {
+        return stargateNetworks;
     }
 
     // If block is a "gate" block this returns true.
@@ -485,7 +556,7 @@ public class StargateManager
      */
     public static boolean isBlockInGate(final Block b)
     {
-        return allGateBlocks.containsKey(b.getLocation()) || openingAnimationBlocks.containsKey(b.getLocation());
+        return getAllGateBlocks().containsKey(b.getLocation()) || getOpeningAnimationBlocks().containsKey(b.getLocation());
     }
 
     /**
@@ -497,7 +568,7 @@ public class StargateManager
      */
     public static boolean isStargate(final String name)
     {
-        return stargateList.containsKey(name);
+        return getStargateList().containsKey(name);
     }
 
     /**
@@ -510,7 +581,7 @@ public class StargateManager
      */
     public static Stargate removeActivatedStargate(final Player p)
     {
-        final Stargate s = activatedStargates.remove(p);
+        final Stargate s = getActivatedStargates().remove(p);
         //	if ( s != null )
         //		s.DeActivateStargate();
         return s;
@@ -528,7 +599,7 @@ public class StargateManager
     {
         if (b != null)
         {
-            allGateBlocks.remove(b.getLocation());
+            getAllGateBlocks().remove(b.getLocation());
         }
     }
 
@@ -540,7 +611,7 @@ public class StargateManager
      */
     public static void removeIncompleteStargate(final Player p)
     {
-        incompleteStargates.remove(p);
+        getIncompleteStargates().remove(p);
     }
 
     /**
@@ -552,7 +623,7 @@ public class StargateManager
      */
     public static void removeStargate(final Stargate s)
     {
-        stargateList.remove(s.getGateName());
+        getStargateList().remove(s.getGateName());
         StargateDBManager.removeStargateFromSQL(s);
         if (s.getGateNetwork() != null)
         {
@@ -582,12 +653,12 @@ public class StargateManager
 
         for (final Location b : s.getGateStructureBlocks())
         {
-            allGateBlocks.remove(b);
+            getAllGateBlocks().remove(b);
         }
 
         for (final Location b : s.getGatePortalBlocks())
         {
-            allGateBlocks.remove(b);
+            getAllGateBlocks().remove(b);
         }
     }
 }

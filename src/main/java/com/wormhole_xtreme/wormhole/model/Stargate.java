@@ -120,8 +120,10 @@ public class Stargate
     private int gateShutdownTaskId;
     /** The gate after shutdown scheduler task id. */
     private int gateAfterShutdownTaskId;
-    /** The animation_step. */
-    private int gateAnimationStep = 1;
+    /** The gate animation step 3d. */
+    private int gateAnimationStep3D = 1;
+    /** The gate animation step 2d. */
+    private int gateAnimationStep2D = 0;
     /** The animation removing. */
     private boolean gateAnimationRemoving = false;
     /** The current_lighting_iteration. */
@@ -171,11 +173,14 @@ public class Stargate
      */
     public void animateOpening()
     {
-        final Material wooshMaterial = isGateCustom() ? getGateCustomPortalMaterial()
-            : getGateShape().getShapePortalMaterial();
+        final Material wooshMaterial = isGateCustom() ? getGateCustomPortalMaterial() : getGateShape() != null
+            ? getGateShape().getShapePortalMaterial() : Material.STATIONARY_WATER;
+        final int wooshDepth = isGateCustom() ? getGateCustomWooshDepth() : getGateShape() != null
+            ? getGateShape().getShapeWooshDepth() : 0;
+
         if ((getGateWooshBlocks() != null) && (getGateWooshBlocks().size() > 0))
         {
-            final ArrayList<Location> wooshBlockStep = getGateWooshBlocks().get(getGateAnimationStep());
+            final ArrayList<Location> wooshBlockStep = getGateWooshBlocks().get(getGateAnimationStep3D());
             if ( !isGateAnimationRemoving())
             {
                 if (wooshBlockStep != null)
@@ -184,23 +189,23 @@ public class Stargate
                     {
                         final Block b = getGateWorld().getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
                         getGateAnimatedBlocks().add(b);
-                        StargateManager.openingAnimationBlocks.put(l, b);
+                        StargateManager.getOpeningAnimationBlocks().put(l, b);
                         b.setType(wooshMaterial);
                     }
 
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, getGateName() + " Woosh Adding: " + getGateAnimationStep() + " Woosh Block Size: " + wooshBlockStep.size());
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, getGateName() + " Woosh Adding: " + getGateAnimationStep3D() + " Woosh Block Size: " + wooshBlockStep.size());
                 }
 
-                if (getGateWooshBlocks().size() == getGateAnimationStep() + 1)
+                if (getGateWooshBlocks().size() == getGateAnimationStep3D() + 1)
                 {
                     setGateAnimationRemoving(true);
                 }
                 else
                 {
-                    setGateAnimationStep(getGateAnimationStep() + 1);
+                    setGateAnimationStep3D(getGateAnimationStep3D() + 1);
                 }
                 WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH), isGateCustom()
-                    ? getGateCustomWooshTicks() : getGateShape().getShapeWooshTicks());
+                    ? getGateCustomWooshTicks() : getGateShape() != null ? getGateShape().getShapeWooshTicks() : 2);
             }
             else
             {
@@ -210,40 +215,95 @@ public class Stargate
                     for (final Location l : wooshBlockStep)
                     {
                         final Block b = getGateWorld().getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
-                        StargateManager.openingAnimationBlocks.remove(l, b);
+                        StargateManager.getOpeningAnimationBlocks().remove(l, b);
                         getGateAnimatedBlocks().remove(b);
                         if ( !StargateManager.isBlockInGate(b))
                         {
                             b.setType(Material.AIR);
                         }
                     }
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, getGateName() + " Woosh Removing: " + getGateAnimationStep() + " Woosh Block Size: " + wooshBlockStep.size());
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, getGateName() + " Woosh Removing: " + getGateAnimationStep3D() + " Woosh Block Size: " + wooshBlockStep.size());
                 }
 
                 // If this is the last step to animate, we now add all the portal blocks in.
-                if (getGateAnimationStep() == 1)
+                if (getGateAnimationStep3D() == 1)
                 {
                     setGateAnimationRemoving(false);
                     if (isGateLightsActive() && isGateActive())
                     {
-                        fillGateInterior(isGateCustom() ? getGateCustomPortalMaterial()
-                            : getGateShape().getShapePortalMaterial());
+                        fillGateInterior(wooshMaterial);
                     }
                 }
                 else
                 {
-                    setGateAnimationStep(getGateAnimationStep() - 1);
+                    setGateAnimationStep3D(getGateAnimationStep3D() - 1);
                     WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH), isGateCustom()
-                        ? getGateCustomWooshTicks() : getGateShape().getShapeWooshTicks());
+                        ? getGateCustomWooshTicks() : getGateShape() != null ? getGateShape().getShapeWooshTicks() : 2);
                 }
             }
         }
         else
         {
-            if (isGateActive())
+            if ((getGateAnimationStep2D() == 0) && (wooshDepth > 0))
             {
-                fillGateInterior(isGateCustom() ? getGateCustomPortalMaterial()
-                    : getGateShape().getShapePortalMaterial());
+                for (final Location block : getGatePortalBlocks())
+                {
+                    final Block r = getGateWorld().getBlockAt(block.getBlockX(), block.getBlockY(), block.getBlockZ()).getRelative(getGateFacing());
+                    r.setType(wooshMaterial);
+                    getGateAnimatedBlocks().add(r);
+                    StargateManager.getOpeningAnimationBlocks().put(r.getLocation(), r);
+                }
+                setGateAnimationStep2D(getGateAnimationStep2D() + 1);
+                WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH), 4);
+            }
+            else if (getGateAnimationStep2D() < wooshDepth)
+            {
+                final int size = getGateAnimatedBlocks().size();
+                final int start = getGatePortalBlocks().size();
+                for (int i = (size - start); i < size; i++)
+                {
+                    final Block b = getGateAnimatedBlocks().get(i);
+                    final Block r = b.getRelative(getGateFacing());
+                    r.setType(wooshMaterial);
+                    getGateAnimatedBlocks().add(r);
+                    StargateManager.getOpeningAnimationBlocks().put(r.getLocation(), r);
+                }
+                setGateAnimationStep2D(getGateAnimationStep2D() + 1);
+                if (getGateAnimationStep2D() == wooshDepth)
+                {
+                    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH), 8);
+                }
+                else
+                {
+                    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH), 4);
+                }
+            }
+            else if (getGateAnimationStep2D() >= wooshDepth)
+            {
+                for (int i = 0; i < getGatePortalBlocks().size(); i++)
+                {
+                    final int index = getGateAnimatedBlocks().size() - 1;
+                    if (index >= 0)
+                    {
+                        final Block b = getGateAnimatedBlocks().get(index);
+                        b.setType(Material.AIR);
+                        getGateAnimatedBlocks().remove(index);
+                        StargateManager.getOpeningAnimationBlocks().remove(b.getLocation());
+                    }
+                }
+                if (getGateAnimationStep2D() < ((wooshDepth * 2) - 1))
+                {
+                    setGateAnimationStep2D(getGateAnimationStep2D() + 1);
+                    WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.ANIMATE_WOOSH), 3);
+                }
+                else
+                {
+                    setGateAnimationStep2D(0);
+                    if (isGateActive())
+                    {
+                        fillGateInterior(wooshMaterial);
+                    }
+                }
             }
         }
     }
@@ -432,7 +492,7 @@ public class Stargate
      * @param typeId
      *            the type id
      */
-    public void fillGateInterior(final int typeId)
+    private void fillGateInterior(final int typeId)
     {
         for (final Location bc : getGatePortalBlocks())
         {
@@ -487,13 +547,23 @@ public class Stargate
     }
 
     /**
+     * Gets the gate animation step 2d.
+     * 
+     * @return the gate animation step 2d
+     */
+    public int getGateAnimationStep2D()
+    {
+        return gateAnimationStep2D;
+    }
+
+    /**
      * Gets the gate animation step.
      * 
      * @return the gate animation step
      */
-    private int getGateAnimationStep()
+    private int getGateAnimationStep3D()
     {
-        return gateAnimationStep;
+        return gateAnimationStep3D;
     }
 
     /**
@@ -1006,8 +1076,8 @@ public class Stargate
                     for (final Location l : getGateLightBlocks().get(getGateLightingCurrentIteration()))
                     {
                         final Block b = getGateWorld().getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
-                        b.setType(isGateCustom() ? getGateCustomLightMaterial()
-                            : getGateShape().getShapeLightMaterial());
+                        b.setType(isGateCustom() ? getGateCustomLightMaterial() : getGateShape() != null
+                            ? getGateShape().getShapeLightMaterial() : Material.GLOWSTONE);
                     }
                 }
 
@@ -1025,7 +1095,7 @@ public class Stargate
                 {
                     // Keep lighting
                     WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.LIGHTUP), isGateCustom()
-                        ? getGateCustomLightTicks() : getGateShape().getShapeLightTicks());
+                        ? getGateCustomLightTicks() : getGateShape() != null ? getGateShape().getShapeLightTicks() : 2);
                 }
             }
         }
@@ -1042,8 +1112,8 @@ public class Stargate
                         for (final Location l : getGateLightBlocks().get(i))
                         {
                             final Block b = getGateWorld().getBlockAt(l.getBlockX(), l.getBlockY(), l.getBlockZ());
-                            b.setType(isGateCustom() ? getGateCustomStructureMaterial()
-                                : getGateShape().getShapeStructureMaterial());
+                            b.setType(isGateCustom() ? getGateCustomStructureMaterial() : getGateShape() != null
+                                ? getGateShape().getShapeStructureMaterial() : Material.OBSIDIAN);
                         }
                     }
                 }
@@ -1121,14 +1191,25 @@ public class Stargate
     }
 
     /**
+     * Sets the gate animation step 2d.
+     * 
+     * @param gateAnimationStep2D
+     *            the new gate animation step 2d
+     */
+    public void setGateAnimationStep2D(final int gateAnimationStep2D)
+    {
+        this.gateAnimationStep2D = gateAnimationStep2D;
+    }
+
+    /**
      * Sets the gate animation step.
      * 
      * @param gateAnimationStep
      *            the new gate animation step
      */
-    private void setGateAnimationStep(final int gateAnimationStep)
+    private void setGateAnimationStep3D(final int gateAnimationStep3D)
     {
-        this.gateAnimationStep = gateAnimationStep;
+        this.gateAnimationStep3D = gateAnimationStep3D;
     }
 
     /**
@@ -1604,9 +1685,10 @@ public class Stargate
     private void setIrisState(final boolean irisactive)
     {
         setGateIrisActive(irisactive);
-        fillGateInterior(isGateIrisActive() ? isGateCustom() ? getGateCustomIrisMaterial()
-            : getGateShape().getShapeIrisMaterial() : isGateActive() ? isGateCustom() ? getGateCustomPortalMaterial()
-            : getGateShape().getShapePortalMaterial() : Material.AIR);
+        fillGateInterior(isGateIrisActive() ? isGateCustom() ? getGateCustomIrisMaterial() : getGateShape() != null
+            ? getGateShape().getShapeIrisMaterial() : Material.STONE : isGateActive() ? isGateCustom()
+            ? getGateCustomPortalMaterial() : getGateShape() != null ? getGateShape().getShapePortalMaterial()
+                : Material.STATIONARY_WATER : Material.AIR);
         if ((getGateIrisLeverBlock() != null) && (getGateIrisLeverBlock().getType() == Material.LEVER))
         {
             getGateIrisLeverBlock().setData(WorldUtils.getLeverToggleByte(getGateIrisLeverBlock().getData(), isGateIrisActive()));

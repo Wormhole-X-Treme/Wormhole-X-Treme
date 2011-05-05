@@ -8,9 +8,9 @@ Changes 0.850 :
 
 - Custom gate settings now in place (read: per gate material settings).
   This included the re-addition of the portalmaterial and irismaterial commands.
-  lightmaterial, redstone, and custom commands newly added.
+  lightmaterial, redstone, wooshdepth, and custom commands newly added.
   
-- Massive internal overhaul, refactorings, cleanups, and general goodness.
+- Massive internal overhaul, refactorings, cleanups, general goodness and bugfixes.
 
 - Added support for Wormhole X-Treme Worlds. This allows Wormhole X-Treme to offload its
   chunk loading and world loading to WXW, for worlds that exist in WXW.
@@ -25,7 +25,6 @@ Changes 0.850 :
 - Added backwards compatibility, for those users who just don't want to upgrade to 3d shapes.
 
 - Added loads of failsafe settings, for when users don't have any shapes installed.
-
 
 
 Changes 0.833 (4/9/11 @ 23:36 PST):

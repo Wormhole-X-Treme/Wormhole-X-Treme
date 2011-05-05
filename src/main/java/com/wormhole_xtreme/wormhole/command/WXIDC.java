@@ -46,38 +46,46 @@ public class WXIDC implements CommandExecutor
         final String[] a = CommandUtilities.commandEscaper(args);
         if (a.length >= 1)
         {
-            final Stargate s = StargateManager.getStargate(a[0]);
-            if (s != null)
+            
+            if (StargateManager.isStargate(a[0]))
             {
-                if (CommandUtilities.playerCheck(sender)
-                    ? (WXPermissions.checkWXPermissions((Player) sender, PermissionType.CONFIG) || ((s.getGateOwner() != null) && s.getGateOwner().equals(((Player) sender).getName())))
-                    : true)
+                final Stargate s = StargateManager.getStargate(a[0]);
+                if ( !s.isGateSignPowered() && s.getGateIrisLeverBlock() != null)
                 {
-                    // 2. if args other than name - do a set                
-                    if (a.length >= 2)
+                    if (CommandUtilities.playerCheck(sender)
+                        ? (WXPermissions.checkWXPermissions((Player) sender, PermissionType.CONFIG) || ((s.getGateOwner() != null) && s.getGateOwner().equals(((Player) sender).getName())))
+                        : true)
                     {
-                        if (a[1].equals("-clear"))
+                        // 2. if args other than name - do a set                
+                        if (a.length >= 2)
                         {
-                            // Remove from big list of all blocks
-                            StargateManager.removeBlockIndex(s.getGateIrisLeverBlock());
-                            // Set code to "" and then remove it from stargates block list
-                            s.setIrisDeactivationCode("");
+                            if (a[1].equals("-clear"))
+                            {
+                                // Remove from big list of all blocks
+                                StargateManager.removeBlockIndex(s.getGateIrisLeverBlock());
+                                // Set code to "" and then remove it from stargates block list
+                                s.setIrisDeactivationCode("");
+                            }
+                            else
+                            {
+                                // Set code
+                                s.setIrisDeactivationCode(a[1]);
+                                // Make sure that block is in index
+                                StargateManager.addBlockIndex(s.getGateIrisLeverBlock(), s);
+                            }
                         }
-                        else
-                        {
-                            // Set code
-                            s.setIrisDeactivationCode(a[1]);
-                            // Make sure that block is in index
-                            StargateManager.addBlockIndex(s.getGateIrisLeverBlock(), s);
-                        }
-                    }
 
-                    // 3. always display current value at end.
-                    sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "IDC for gate: " + s.getGateName() + " is:" + s.getGateIrisDeactivationCode());
+                        // 3. always display current value at end.
+                        sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "IDC for gate: " + s.getGateName() + " is:" + s.getGateIrisDeactivationCode());
+                    }
+                    else
+                    {
+                        sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+                    }
                 }
                 else
                 {
-                    sender.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+                    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Iris not available for sign powered stargates or gates without an iris activation block.");
                 }
             }
             else

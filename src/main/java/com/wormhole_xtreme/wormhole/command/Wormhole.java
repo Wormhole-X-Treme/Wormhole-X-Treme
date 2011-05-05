@@ -633,6 +633,72 @@ public class Wormhole implements CommandExecutor
     }
 
     /**
+     * Do woosh depth.
+     *
+     * @param sender the sender
+     * @param args the args
+     * @return true, if successful
+     */
+    private static boolean doWooshDepth(final CommandSender sender, final String[] args)
+    {
+        if ((args.length == 3) || (args.length == 2))
+        {
+            if (StargateManager.isStargate(args[1]))
+            {
+                final Stargate stargate = StargateManager.getStargate(args[1]);
+                if (stargate.isGateCustom())
+                {
+                    if (args.length == 3)
+                    {
+                        try
+                        {
+                            final int wooshDepth = Integer.parseInt(args[2].trim());
+                            if ((wooshDepth >= 0) && (wooshDepth <= 5))
+                            {
+                                stargate.setGateCustomWooshDepth(wooshDepth);
+                                stargate.setGateCustomWooshDepthSquared(wooshDepth * wooshDepth);
+                                sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + args[1] + " woosh depth set to: " + stargate.getGateCustomWooshDepth());
+                            }
+                            else
+                            {
+                                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid woosh depth: " + args[2]);
+                                sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid depth: 0 - 5");
+                            }
+                        }
+                        catch (final NumberFormatException e)
+                        {
+                            sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid woosh depth: " + args[2]);
+                            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid depth: 0 - 5");
+                        }
+                    }
+                    else
+                    {
+                        sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + args[1] + " woosh depth is currently: " + stargate.getGateCustomWooshDepth());
+                        sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid depth: 0 - 5");
+                    }
+                }
+                else
+                {
+                    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Stargate is not in custom mode. Set it with the '/wormhole custom' command");
+                }
+            }
+            else
+            {
+                sender.sendMessage(ConfigManager.MessageStrings.targetInvalid.toString());
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Command: /wormhole wooshdepth [stargate] <depth>");
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid depth: 0 - 5");
+            }
+            return true;
+        }
+        else
+        {
+            sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Command: /wormhole wooshdepth [stargate] <depth>");
+            sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid depth: 0 - 5");
+            return false;
+        }
+    }
+
+    /**
      * Sets the gate custom all.
      * 
      * @param stargate
@@ -750,10 +816,14 @@ public class Wormhole implements CommandExecutor
             {
                 return doLightMaterial(sender, a);
             }
+            else if (a[0].equalsIgnoreCase("wooshdepth"))
+            {
+                return doWooshDepth(sender, a);
+            }
             else
             {
                 sender.sendMessage(ConfigManager.MessageStrings.requestInvalid.toString() + ": " + a[0]);
-                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'lightmaterial', 'shutdown_timeout', 'activate_timeout', 'simple', 'regenerate', 'redstone' & 'custom'.");
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'lightmaterial', 'shutdown_timeout', 'activate_timeout', 'simple', 'regenerate', 'redstone', 'wooshdepth' & 'custom'.");
             }
         }
         else

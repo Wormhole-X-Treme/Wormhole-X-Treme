@@ -126,26 +126,35 @@ public class Configuration
             }
             else
             {
-                Setting s = null;
                 try
                 {
-                    s = new Setting(element.getName(), Double.parseDouble(value), element.getDescription(), "WormholeXTreme");
+                    // Check if this is a number
+                    Setting s = new Setting(element.getName(), Integer.parseInt(value), element.getDescription(), "WormholeXTreme");
+                    ConfigManager.configurations.put(s.getName(), s);
                 }
-                catch (final NumberFormatException nfe)
+                catch (final NumberFormatException e)
                 {
-                    // Probably an enum
-                    if (element.getName() == ConfigKeys.BUILT_IN_DEFAULT_PERMISSION_LEVEL)
+                    Setting s = null;
+                    try
                     {
-                        s = new Setting(element.getName(), PermissionLevel.valueOf(value), element.getDescription(), "WormholeXTreme");
+                        s = new Setting(element.getName(), Double.parseDouble(value), element.getDescription(), "WormholeXTreme");
                     }
-                    else
+                    catch (final NumberFormatException nfe)
                     {
-                        // I guess its a string
-                        s = new Setting(element.getName(), value, element.getDescription(), "WormholeXTreme");
+                        // Probably an enum
+                        if (element.getName() == ConfigKeys.BUILT_IN_DEFAULT_PERMISSION_LEVEL)
+                        {
+                            s = new Setting(element.getName(), PermissionLevel.valueOf(value), element.getDescription(), "WormholeXTreme");
+                        }
+                        else
+                        {
+                            // I guess its a string
+                            s = new Setting(element.getName(), value, element.getDescription(), "WormholeXTreme");
+                        }
                     }
-                }
 
-                ConfigManager.configurations.put(s.getName(), s);
+                    ConfigManager.configurations.put(s.getName(), s);
+                }
             }
         }
     }

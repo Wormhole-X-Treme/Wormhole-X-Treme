@@ -36,6 +36,7 @@ import com.wormhole_xtreme.wormhole.logic.StargateHelper;
 import com.wormhole_xtreme.wormhole.model.Stargate;
 import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.model.StargateShape;
+import com.wormhole_xtreme.wormhole.permissions.StargateRestrictions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 import com.wormhole_xtreme.wormhole.utils.WorldUtils;
@@ -363,6 +364,21 @@ class WormholeXTremePlayerListener extends PlayerListener
                 player.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
                 return false;
             }
+
+            if (ConfigManager.isUseCooldownEnabled())
+            {
+                if (StargateRestrictions.isPlayerUseCooldown(player))
+                {
+                    player.sendMessage(ConfigManager.MessageStrings.playerUseCooldownRestricted.toString());
+                    player.sendMessage(ConfigManager.MessageStrings.playerUseCooldownWaitTime.toString() + StargateRestrictions.checkPlayerUseCooldownRemaining(player));
+                    return false;
+                }
+                else
+                {
+                    StargateRestrictions.addPlayerUseCooldown(player);
+                }
+            }
+
             if (stargate.getGateTarget().isGateIrisActive())
             {
                 player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Remote Iris is locked!");

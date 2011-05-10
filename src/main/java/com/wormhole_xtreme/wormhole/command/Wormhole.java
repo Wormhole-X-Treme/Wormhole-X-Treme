@@ -88,6 +88,123 @@ public class Wormhole implements CommandExecutor
     }
 
     /**
+     * Do cooldown.
+     * 
+     * @param sender
+     *            the sender
+     * @param args
+     *            the args
+     * @return true, if successful
+     */
+    private static boolean doCooldown(final CommandSender sender, final String[] args)
+    {
+        if ((args.length >= 2) && isValidGroupName(args[1]))
+        {
+            if (args.length == 3)
+            {
+                try
+                {
+                    final int timeout = Integer.parseInt(args[2]);
+                    if ((timeout >= 15) && (timeout <= 3600))
+                    {
+                        doCooldownGroup(args[1], true, timeout);
+                        sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole cooldown time set to: " + args[2]);
+                    }
+                    else
+                    {
+                        sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid cooldown time: " + args[2]);
+                        sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid cooldown times are between 15 and 3600 seconds.");
+                    }
+                }
+                catch (final NumberFormatException e)
+                {
+                    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid cooldown time: " + args[2]);
+                    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid cooldown times are between 15 and 3600 seconds.");
+                }
+            }
+            else
+            {
+                sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Current cooldown time is: " + doCooldownGroup(args[1], false, 0));
+                sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid cooldown times are between 15 and 3600 seconds.");
+            }
+        }
+        else if ((args.length == 2) && CommandUtilities.isBoolean(args[1]))
+        {
+            ConfigManager.setUseCooldownEnabled(Boolean.valueOf(args[1].toLowerCase()));
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole use cooldowns set to: " + args[1].toLowerCase());
+        }
+        else
+        {
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Command: /wormhole cooldown [false|true|group] <time>");
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid groups are 'one', 'two', and 'three'.");
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid cooldown times are between 15 and 3600 seconds.");
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole use cooldowns currently enabled: " + ConfigManager.isUseCooldownEnabled());
+        }
+        return true;
+    }
+
+    /**
+     * Do cooldown group.
+     * 
+     * @param groupName
+     *            the group name
+     * @param set
+     *            the set
+     * @param timeoutValue
+     *            the timeout value
+     * @return the int
+     */
+    private static int doCooldownGroup(final String groupName, final boolean set, final int timeoutValue)
+    {
+        int group = 0;
+        int oldValue = 0;
+        if (groupName.equalsIgnoreCase("one"))
+        {
+            group = 1;
+        }
+        else if (groupName.equalsIgnoreCase("two"))
+        {
+            group = 2;
+        }
+        else if (groupName.equalsIgnoreCase("three"))
+        {
+            group = 3;
+        }
+        switch (group)
+        {
+            case 1 :
+                if (set)
+                {
+                    oldValue = ConfigManager.getUseCooldownGroupOne();
+                    ConfigManager.setUseCooldownGroupOne(timeoutValue);
+                }
+                return set
+                    ? oldValue
+                    : ConfigManager.getUseCooldownGroupOne();
+            case 2 :
+                if (set)
+                {
+                    oldValue = ConfigManager.getUseCooldownGroupTwo();
+                    ConfigManager.setUseCooldownGroupTwo(timeoutValue);
+                }
+                return set
+                    ? oldValue
+                    : ConfigManager.getUseCooldownGroupTwo();
+            case 3 :
+                if (set)
+                {
+                    oldValue = ConfigManager.getUseCooldownGroupThree();
+                    ConfigManager.setUseCooldownGroupThree(timeoutValue);
+                }
+                return set
+                    ? oldValue
+                    : ConfigManager.getUseCooldownGroupThree();
+            default :
+                return -1;
+        }
+    }
+
+    /**
      * Do custom.
      * 
      * @param sender
@@ -100,7 +217,7 @@ public class Wormhole implements CommandExecutor
     {
         if ((args.length == 2) || (args.length == 3))
         {
-            if (args[1].equalsIgnoreCase("-all") && (args.length == 3) && (args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false")))
+            if (args[1].equalsIgnoreCase("-all") && (args.length == 3) && CommandUtilities.isBoolean(args[2]))
             {
                 for (final Stargate stargate : StargateManager.getAllGates())
                 {
@@ -116,7 +233,7 @@ public class Wormhole implements CommandExecutor
                 final Stargate stargate = StargateManager.getStargate(args[1]);
                 if (args.length == 3)
                 {
-                    if (args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false"))
+                    if (CommandUtilities.isBoolean(args[2]))
                     {
                         if (stargate.getGateShape() != null)
                         {
@@ -431,7 +548,7 @@ public class Wormhole implements CommandExecutor
                 final Stargate stargate = StargateManager.getStargate(args[1]);
                 if (args.length == 3)
                 {
-                    if (args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false"))
+                    if (CommandUtilities.isBoolean(args[2]))
                     {
                         stargate.setGateRedstonePowered(Boolean.valueOf(args[2].trim().toLowerCase()));
                         if (stargate.isGateRedstonePowered())
@@ -701,6 +818,18 @@ public class Wormhole implements CommandExecutor
     }
 
     /**
+     * Checks if is valid group name.
+     * 
+     * @param groupName
+     *            the group name
+     * @return true, if is valid group name
+     */
+    private static boolean isValidGroupName(final String groupName)
+    {
+        return groupName.equalsIgnoreCase("one") || groupName.equalsIgnoreCase("two") || groupName.equalsIgnoreCase("three");
+    }
+
+    /**
      * Sets the gate custom all.
      * 
      * @param stargate
@@ -822,10 +951,14 @@ public class Wormhole implements CommandExecutor
             {
                 return doWooshDepth(sender, a);
             }
+            else if (a[0].equalsIgnoreCase("cooldown"))
+            {
+                return doCooldown(sender, a);
+            }
             else
             {
                 sender.sendMessage(ConfigManager.MessageStrings.requestInvalid.toString() + ": " + a[0]);
-                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'lightmaterial', 'shutdown_timeout', 'activate_timeout', 'simple', 'regenerate', 'redstone', 'wooshdepth' & 'custom'.");
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'lightmaterial', 'shutdown_timeout', 'activate_timeout', 'simple', 'regenerate', 'redstone', 'wooshdepth', 'cooldown', & 'custom'.");
             }
         }
         else

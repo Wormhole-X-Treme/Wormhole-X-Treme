@@ -179,6 +179,18 @@ class CommandUtilities
     }
 
     /**
+     * Checks if is boolean.
+     * 
+     * @param booleanString
+     *            the boolean string
+     * @return true, if is boolean
+     */
+    static boolean isBoolean(final String booleanString)
+    {
+        return booleanString.equalsIgnoreCase("true") || booleanString.equalsIgnoreCase("false");
+    }
+
+    /**
      * Player check.
      * 
      * @param sender

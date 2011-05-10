@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.model.Stargate;
+import com.wormhole_xtreme.wormhole.permissions.StargateRestrictions;
 
 /**
  * WormholeXtreme Runnable thread for updating stargates.
@@ -55,7 +56,9 @@ public class StargateUpdateRunnable implements Runnable
         SIGNCLICK,
 
         /** Action to iterate over lighting up blocks during activation. */
-        LIGHTUP
+        LIGHTUP,
+
+        COOLDOWN_REMOVE;
     }
 
     /** The stargate. */
@@ -66,6 +69,11 @@ public class StargateUpdateRunnable implements Runnable
 
     /** The action. */
     private final ActionToTake action;
+
+    public StargateUpdateRunnable(final Player player, final ActionToTake action)
+    {
+        this(null, player, action);
+    }
 
     /**
      * Instantiates a new stargate update runnable.
@@ -103,7 +111,9 @@ public class StargateUpdateRunnable implements Runnable
     @Override
     public void run()
     {
-        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Run Action \"" + action.toString() + "\" Stargate \"" + stargate.getGateName() + "\"");
+        WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Run Action \"" + action.toString() + (stargate != null
+            ? "\" Stargate \"" + stargate.getGateName()
+            : "") + "\"");
         switch (action)
         {
             case SHUTDOWN :
@@ -135,6 +145,9 @@ public class StargateUpdateRunnable implements Runnable
                 break;
             case LIGHTUP :
                 stargate.lightStargate(true);
+                break;
+            case COOLDOWN_REMOVE :
+                StargateRestrictions.removePlayerUseCooldown(player);
                 break;
             default :
                 break;

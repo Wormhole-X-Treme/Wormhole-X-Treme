@@ -58,6 +58,30 @@ public class ConfigManager
         /** The TIMEOU t_ shutdown. */
         TIMEOUT_SHUTDOWN,
 
+        /** The BUIL d_ restrictio n_ enabled. */
+        BUILD_RESTRICTION_ENABLED,
+
+        /** The BUIL d_ restrictio n_ grou p_ one. */
+        BUILD_RESTRICTION_GROUP_ONE,
+
+        /** The BUIL d_ restrictio n_ grou p_ two. */
+        BUILD_RESTRICTION_GROUP_TWO,
+
+        /** The BUIL d_ restrictio n_ grou p_ three. */
+        BUILD_RESTRICTION_GROUP_THREE,
+
+        /** The US e_ cooldow n_ enabled. */
+        USE_COOLDOWN_ENABLED,
+
+        /** The US e_ cooldow n_ grou p_ one. */
+        USE_COOLDOWN_GROUP_ONE,
+
+        /** The US e_ cooldow n_ grou p_ two. */
+        USE_COOLDOWN_GROUP_TWO,
+
+        /** The US e_ cooldow n_ grou p_ three. */
+        USE_COOLDOWN_GROUP_THREE,
+
         /** The HELP SUPPORT DISABLE. */
         HELP_SUPPORT_DISABLE,
 
@@ -126,7 +150,16 @@ public class ConfigManager
         requestInvalid(errorHeader + "Invalid Request"),
 
         /** The gate not specified. */
-        gateNotSpecified(errorHeader + "No gate name specified.");
+        gateNotSpecified(errorHeader + "No gate name specified."),
+
+        /** The player build count restricted. */
+        playerBuildCountRestricted(errorHeader + "You are at your max number of built gates."),
+
+        /** The player use cooldown restricted. */
+        playerUseCooldownRestricted(errorHeader + "You must wait longer before using a stargate."),
+
+        /** The player use cooldown wait time. */
+        playerUseCooldownWaitTime(errorHeader + "Current Wait (in seconds): ");
 
         /** The m. */
         private final String m;
@@ -153,7 +186,43 @@ public class ConfigManager
     }
 
     /** The Constant configurations. */
-    protected static final ConcurrentHashMap<ConfigKeys, Setting> configurations = new ConcurrentHashMap<ConfigKeys, Setting>();
+    private static final ConcurrentHashMap<ConfigKeys, Setting> configurations = new ConcurrentHashMap<ConfigKeys, Setting>();
+
+    /**
+     * Gets the builds the restriction group one.
+     * 
+     * @return the builds the restriction group one
+     */
+    public static int getBuildRestrictionGroupOne()
+    {
+        return isConfigurationKey(ConfigKeys.BUILD_RESTRICTION_GROUP_ONE)
+            ? getSetting(ConfigKeys.BUILD_RESTRICTION_GROUP_ONE).getIntValue()
+            : 1;
+    }
+
+    /**
+     * Gets the builds the restriction group three.
+     * 
+     * @return the builds the restriction group three
+     */
+    public static int getBuildRestrictionGroupThree()
+    {
+        return isConfigurationKey(ConfigKeys.BUILD_RESTRICTION_GROUP_THREE)
+            ? getSetting(ConfigKeys.BUILD_RESTRICTION_GROUP_THREE).getIntValue()
+            : 3;
+    }
+
+    /**
+     * Gets the builds the restriction group two.
+     * 
+     * @return the builds the restriction group two
+     */
+    public static int getBuildRestrictionGroupTwo()
+    {
+        return isConfigurationKey(ConfigKeys.BUILD_RESTRICTION_GROUP_TWO)
+            ? getSetting(ConfigKeys.BUILD_RESTRICTION_GROUP_TWO).getIntValue()
+            : 2;
+    }
 
     /**
      * Get Built in default permission level settings from ConfigKeys. Return sane PermissionLevel.
@@ -164,7 +233,7 @@ public class ConfigManager
     public static PermissionLevel getBuiltInDefaultPermissionLevel()
     {
         Setting bidpl;
-        if ((bidpl = ConfigManager.configurations.get(ConfigKeys.BUILT_IN_DEFAULT_PERMISSION_LEVEL)) != null)
+        if ((bidpl = ConfigManager.getConfigurations().get(ConfigKeys.BUILT_IN_DEFAULT_PERMISSION_LEVEL)) != null)
         {
             return bidpl.getPermissionLevel();
         }
@@ -183,7 +252,7 @@ public class ConfigManager
     public static boolean getBuiltInPermissionsEnabled()
     {
         Setting bipe;
-        if ((bipe = ConfigManager.configurations.get(ConfigKeys.BUILT_IN_PERMISSIONS_ENABLED)) != null)
+        if ((bipe = ConfigManager.getConfigurations().get(ConfigKeys.BUILT_IN_PERMISSIONS_ENABLED)) != null)
         {
             return bipe.getBooleanValue();
         }
@@ -194,6 +263,16 @@ public class ConfigManager
     }
 
     /**
+     * Gets the configurations.
+     * 
+     * @return the configurations
+     */
+    protected static ConcurrentHashMap<ConfigKeys, Setting> getConfigurations()
+    {
+        return configurations;
+    }
+
+    /**
      * Gets the Help plugin support status.
      * 
      * @return true, if Help plugin support is disabled.
@@ -201,7 +280,7 @@ public class ConfigManager
     public static boolean getHelpSupportDisable()
     {
         Setting hsd;
-        if ((hsd = ConfigManager.configurations.get(ConfigKeys.HELP_SUPPORT_DISABLE)) != null)
+        if ((hsd = ConfigManager.getConfigurations().get(ConfigKeys.HELP_SUPPORT_DISABLE)) != null)
         {
             return hsd.getBooleanValue();
         }
@@ -220,7 +299,7 @@ public class ConfigManager
     public static Level getLogLevel()
     {
         Setting ll;
-        if ((ll = ConfigManager.configurations.get(ConfigKeys.LOG_LEVEL)) != null)
+        if ((ll = ConfigManager.getConfigurations().get(ConfigKeys.LOG_LEVEL)) != null)
         {
             return ll.getLevel();
         }
@@ -238,7 +317,7 @@ public class ConfigManager
     public static boolean getPermissionsSupportDisable()
     {
         Setting psd;
-        if ((psd = ConfigManager.configurations.get(ConfigKeys.PERMISSIONS_SUPPORT_DISABLE)) != null)
+        if ((psd = ConfigManager.getConfigurations().get(ConfigKeys.PERMISSIONS_SUPPORT_DISABLE)) != null)
         {
             return psd.getBooleanValue();
         }
@@ -249,6 +328,18 @@ public class ConfigManager
     }
 
     /**
+     * Gets the setting.
+     * 
+     * @param configKey
+     *            the config key
+     * @return the setting
+     */
+    protected static Setting getSetting(final ConfigKeys configKey)
+    {
+        return getConfigurations().get(configKey);
+    }
+
+    /**
      * Gets the simple permissions.
      * 
      * @return the simple permissions
@@ -256,7 +347,7 @@ public class ConfigManager
     public static boolean getSimplePermissions()
     {
         Setting sp;
-        if ((sp = ConfigManager.configurations.get(ConfigKeys.SIMPLE_PERMISSIONS)) != null)
+        if ((sp = ConfigManager.getConfigurations().get(ConfigKeys.SIMPLE_PERMISSIONS)) != null)
         {
             return sp.getBooleanValue();
         }
@@ -275,14 +366,13 @@ public class ConfigManager
     public static int getTimeoutActivate()
     {
         Setting ta;
-        if ((ta = ConfigManager.configurations.get(ConfigKeys.TIMEOUT_ACTIVATE)) != null)
+        if ((ta = ConfigManager.getConfigurations().get(ConfigKeys.TIMEOUT_ACTIVATE)) != null)
         {
             return ta.getIntValue();
         }
         else
         {
-            final int i = 30;
-            return i;
+            return 30;
         }
     }
 
@@ -295,15 +385,50 @@ public class ConfigManager
     public static int getTimeoutShutdown()
     {
         Setting ts;
-        if ((ts = ConfigManager.configurations.get(ConfigKeys.TIMEOUT_SHUTDOWN)) != null)
+        if ((ts = ConfigManager.getConfigurations().get(ConfigKeys.TIMEOUT_SHUTDOWN)) != null)
         {
             return ts.getIntValue();
         }
         else
         {
-            final int i = 38;
-            return i;
+            return 38;
         }
+    }
+
+    /**
+     * Gets the use cooldown group one.
+     * 
+     * @return the use cooldown group one
+     */
+    public static int getUseCooldownGroupOne()
+    {
+        return isConfigurationKey(ConfigKeys.USE_COOLDOWN_GROUP_ONE)
+            ? getSetting(ConfigKeys.USE_COOLDOWN_GROUP_ONE).getIntValue()
+            : 120;
+    }
+
+    /**
+     * Gets the use cooldown group three.
+     * 
+     * @return the use cooldown group three
+     */
+    public static int getUseCooldownGroupThree()
+    {
+        return isConfigurationKey(ConfigKeys.USE_COOLDOWN_GROUP_THREE)
+            ? getSetting(ConfigKeys.USE_COOLDOWN_GROUP_THREE).getIntValue()
+            : 60;
+    }
+
+    /**
+     * Gets the use cooldown group two.
+     * 
+     * @return the use cooldown group two
+     */
+    public static int getUseCooldownGroupTwo()
+    {
+        return isConfigurationKey(ConfigKeys.USE_COOLDOWN_GROUP_TWO)
+            ? getSetting(ConfigKeys.USE_COOLDOWN_GROUP_TWO).getIntValue()
+            : 30;
     }
 
     /*
@@ -318,7 +443,7 @@ public class ConfigManager
     public static boolean getWormholeUseIsTeleport()
     {
         Setting bipe;
-        if ((bipe = ConfigManager.configurations.get(ConfigKeys.WORMHOLE_USE_IS_TELEPORT)) != null)
+        if ((bipe = ConfigManager.getConfigurations().get(ConfigKeys.WORMHOLE_USE_IS_TELEPORT)) != null)
         {
             return bipe.getBooleanValue();
         }
@@ -328,10 +453,51 @@ public class ConfigManager
         }
     }
 
+    /**
+     * Checks if is builds the restriction enabled.
+     * 
+     * @return true, if is builds the restriction enabled
+     */
+    public static boolean isBuildRestrictionEnabled()
+    {
+        return ConfigManager.getConfigurations().get(ConfigKeys.BUILD_RESTRICTION_ENABLED) != null
+            ? ConfigManager.getConfigurations().get(ConfigKeys.BUILD_RESTRICTION_ENABLED).getBooleanValue()
+            : false;
+    }
+
+    /**
+     * Checks if is configuration key.
+     * 
+     * @param configKey
+     *            the config key
+     * @return true, if is configuration key
+     */
+    private static boolean isConfigurationKey(final ConfigKeys configKey)
+    {
+        return getConfigurations().containsKey(configKey);
+    }
+
+    /**
+     * Checks if is use cooldown enabled.
+     * 
+     * @return true, if is use cooldown enabled
+     */
+    public static boolean isUseCooldownEnabled()
+    {
+        return ConfigManager.getConfigurations().get(ConfigKeys.USE_COOLDOWN_ENABLED) != null
+            ? ConfigManager.getConfigurations().get(ConfigKeys.USE_COOLDOWN_ENABLED).getBooleanValue()
+            : false;
+    }
+
+    /**
+     * Checks if is wormhole worlds support enabled.
+     * 
+     * @return true, if is wormhole worlds support enabled
+     */
     public static boolean isWormholeWorldsSupportEnabled()
     {
         Setting wsd;
-        if ((wsd = ConfigManager.configurations.get(ConfigKeys.WORLDS_SUPPORT_ENABLED)) != null)
+        if ((wsd = ConfigManager.getConfigurations().get(ConfigKeys.WORLDS_SUPPORT_ENABLED)) != null)
         {
             return wsd.getBooleanValue();
         }
@@ -339,6 +505,50 @@ public class ConfigManager
         {
             return false;
         }
+    }
+
+    /**
+     * Sets the builds the restriction enabled.
+     * 
+     * @param b
+     *            the new builds the restriction enabled
+     */
+    public static void setBuildRestrictionEnabled(final boolean b)
+    {
+        ConfigManager.setConfigValue(ConfigKeys.BUILD_RESTRICTION_ENABLED, b);
+    }
+
+    /**
+     * Sets the builds the restriction group one.
+     * 
+     * @param count
+     *            the new builds the restriction group one
+     */
+    public static void setBuildRestrictionGroupOne(final int count)
+    {
+        setConfigValue(ConfigKeys.BUILD_RESTRICTION_GROUP_ONE, count);
+    }
+
+    /**
+     * Sets the builds the restriction group three.
+     * 
+     * @param count
+     *            the new builds the restriction group three
+     */
+    public static void setBuildRestrictionGroupThree(final int count)
+    {
+        setConfigValue(ConfigKeys.BUILD_RESTRICTION_GROUP_THREE, count);
+    }
+
+    /**
+     * Sets the builds the restriction group two.
+     * 
+     * @param count
+     *            the new builds the restriction group two
+     */
+    public static void setBuildRestrictionGroupTwo(final int count)
+    {
+        setConfigValue(ConfigKeys.BUILD_RESTRICTION_GROUP_TWO, count);
     }
 
     /**
@@ -351,14 +561,9 @@ public class ConfigManager
      */
     public static void setConfigValue(final ConfigKeys key, final Object value)
     {
-        final Setting s = configurations.get(key);
-        if (value != null)
+        if ((key != null) && isConfigurationKey(key) && (value != null))
         {
-            s.setValue(value);
-        }
-        else
-        {
-            //TODO SCREAM BLOODY MURDER IN LOGS ABOUT NULL VALUE
+            getConfigurations().get(key).setValue(value);
         }
     }
 
@@ -404,5 +609,49 @@ public class ConfigManager
     public static void setupConfigs(final PluginDescriptionFile pdf)
     {
         Configuration.loadConfiguration(pdf);
+    }
+
+    /**
+     * Sets the use cooldown enabled.
+     * 
+     * @param b
+     *            the new use cooldown enabled
+     */
+    public static void setUseCooldownEnabled(final boolean b)
+    {
+        ConfigManager.setConfigValue(ConfigKeys.USE_COOLDOWN_ENABLED, b);
+    }
+
+    /**
+     * Sets the use cooldown group one.
+     * 
+     * @param time
+     *            the new use cooldown group one
+     */
+    public static void setUseCooldownGroupOne(final int time)
+    {
+        setConfigValue(ConfigKeys.USE_COOLDOWN_GROUP_ONE, time);
+    }
+
+    /**
+     * Sets the use cooldown group three.
+     * 
+     * @param time
+     *            the new use cooldown group three
+     */
+    public static void setUseCooldownGroupThree(final int time)
+    {
+        setConfigValue(ConfigKeys.USE_COOLDOWN_GROUP_THREE, time);
+    }
+
+    /**
+     * Sets the use cooldown group two.
+     * 
+     * @param time
+     *            the new use cooldown group two
+     */
+    public static void setUseCooldownGroupTwo(final int time)
+    {
+        setConfigValue(ConfigKeys.USE_COOLDOWN_GROUP_TWO, time);
     }
 }

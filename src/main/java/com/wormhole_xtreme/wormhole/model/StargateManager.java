@@ -614,4 +614,5 @@ public class StargateManager
             getAllGateBlocks().remove(b);
         }
     }
+
 }

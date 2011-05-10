@@ -36,6 +36,7 @@ import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.event.StargateMinecartTeleportEvent;
 import com.wormhole_xtreme.wormhole.model.Stargate;
 import com.wormhole_xtreme.wormhole.model.StargateManager;
+import com.wormhole_xtreme.wormhole.permissions.StargateRestrictions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 
@@ -85,30 +86,56 @@ class WormholeXTremeVehicleListener extends VehicleListener
             final Vector v = veh.getVelocity();
             veh.setVelocity(nospeed);
             final Entity e = veh.getPassenger();
-            if (e != null)
+            if ((e != null) && (e instanceof Player))
             {
-                if (e instanceof Player)
+                final Player p = (Player) e;
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Minecart Player in gate:" + st.getGateName() + " gate Active: " + st.isGateActive() + " Target Gate: " + st.getGateTarget().getGateName() + " Network: " + gatenetwork);
+                if (ConfigManager.getWormholeUseIsTeleport() && ((st.isGateSignPowered() && !WXPermissions.checkWXPermissions(p, st, PermissionType.SIGN)) || ( !st.isGateSignPowered() && !WXPermissions.checkWXPermissions(p, st, PermissionType.DIALER))))
                 {
-                    final Player p = (Player) e;
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Minecart Player in gate:" + st.getGateName() + " gate Active: " + st.isGateActive() + " Target Gate: " + st.getGateTarget().getGateName() + " Network: " + gatenetwork);
-                    if (ConfigManager.getWormholeUseIsTeleport() && ((st.isGateSignPowered() && !WXPermissions.checkWXPermissions(p, st, PermissionType.SIGN)) || ( !st.isGateSignPowered() && !WXPermissions.checkWXPermissions(p, st, PermissionType.DIALER))))
+                    p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+                    return false;
+                }
+                if (st.getGateTarget().isGateIrisActive())
+                {
+                    p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Remote Iris is locked!");
+                    veh.teleport(st.getGateMinecartTeleportLocation() != null
+                        ? st.getGateMinecartTeleportLocation()
+                        : st.getGatePlayerTeleportLocation());
+                    if (ConfigManager.getTimeoutShutdown() == 0)
                     {
-                        p.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
+                        st.shutdownStargate(true);
+                    }
+                    return false;
+                }
+                if (ConfigManager.isUseCooldownEnabled())
+                {
+                    if (StargateRestrictions.isPlayerUseCooldown(p))
+                    {
+                        p.sendMessage(ConfigManager.MessageStrings.playerUseCooldownRestricted.toString());
+                        p.sendMessage(ConfigManager.MessageStrings.playerUseCooldownWaitTime.toString() + StargateRestrictions.checkPlayerUseCooldownRemaining(p));
                         return false;
                     }
-                    if (st.getGateTarget().isGateIrisActive())
+                    else
                     {
-                        p.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Remote Iris is locked!");
-                        veh.teleport(st.getGateMinecartTeleportLocation() != null
-                            ? st.getGateMinecartTeleportLocation()
-                            : st.getGatePlayerTeleportLocation());
-                        if (ConfigManager.getTimeoutShutdown() == 0)
-                        {
-                            st.shutdownStargate(true);
-                        }
-                        return false;
+                        StargateRestrictions.addPlayerUseCooldown(p);
                     }
                 }
+            }
+            else
+            {
+                if (st.getGateTarget().isGateIrisActive())
+                {
+                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Minecart in gate:" + st.getGateName() + " gate Active: " + st.isGateActive() + " Target Gate: " + st.getGateTarget().getGateName() + " Network: " + gatenetwork);
+                    veh.teleport(st.getGateMinecartTeleportLocation() != null
+                        ? st.getGateMinecartTeleportLocation()
+                        : st.getGatePlayerTeleportLocation());
+                    if (ConfigManager.getTimeoutShutdown() == 0)
+                    {
+                        st.shutdownStargate(true);
+                    }
+                    return false;
+                }
+
             }
 
             final double speed = v.length();

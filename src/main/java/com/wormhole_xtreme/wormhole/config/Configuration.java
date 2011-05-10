@@ -122,15 +122,15 @@ public class Configuration
             if (value.toLowerCase().contains("true") || value.toLowerCase().contains("false"))
             {
                 final Setting s = new Setting(element.getName(), Boolean.parseBoolean(value), element.getDescription(), "WormholeXTreme");
-                ConfigManager.configurations.put(s.getName(), s);
+                ConfigManager.getConfigurations().put(s.getName(), s);
             }
             else
             {
                 try
                 {
                     // Check if this is a number
-                    Setting s = new Setting(element.getName(), Integer.parseInt(value), element.getDescription(), "WormholeXTreme");
-                    ConfigManager.configurations.put(s.getName(), s);
+                    final Setting s = new Setting(element.getName(), Integer.parseInt(value), element.getDescription(), "WormholeXTreme");
+                    ConfigManager.getConfigurations().put(s.getName(), s);
                 }
                 catch (final NumberFormatException e)
                 {
@@ -153,7 +153,7 @@ public class Configuration
                         }
                     }
 
-                    ConfigManager.configurations.put(s.getName(), s);
+                    ConfigManager.getConfigurations().put(s.getName(), s);
                 }
             }
         }
@@ -259,12 +259,12 @@ public class Configuration
 
             ConfigurationFlatFile.createNewHeader(bufferedwriter, desc.getName() + " " + desc.getVersion(), desc.getName() + " Config Settings", true);
 
-            final Set<ConfigKeys> keys = ConfigManager.configurations.keySet();
+            final Set<ConfigKeys> keys = ConfigManager.getConfigurations().keySet();
             final ArrayList<ConfigKeys> list = new ArrayList<ConfigKeys>(keys);
             Collections.sort(list);
             for (final ConfigKeys key : list)
             {
-                final Setting s = ConfigManager.configurations.get(key);
+                final Setting s = ConfigManager.getConfigurations().get(key);
                 if (s != null)
                 {
                     ConfigurationFlatFile.createNewSetting(bufferedwriter, s.getName(), s.getValue().toString(), s.getDescription());

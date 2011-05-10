@@ -18,8 +18,6 @@
  */
 package com.wormhole_xtreme.wormhole.permissions;
 
-import java.util.logging.Level;
-
 import org.bukkit.entity.Player;
 
 import com.wormhole_xtreme.wormhole.WormholeXTreme;
@@ -69,252 +67,13 @@ public class WXPermissions
         GO,
 
         /** The COMPASS permission. */
-        COMPASS
-    }
+        COMPASS,
 
-    /**
-     * Check build permission.
-     * 
-     * @param player
-     *            the player
-     * @param stargate
-     *            the stargate
-     * @param network
-     *            the network
-     * @return true, if successful
-     */
-    private static boolean checkBuildPermission(final Player player, final Stargate stargate, final String network)
-    {
-        if ((stargate != null) || (network != null))
-        {
-            String gatenet;
-            if (stargate != null)
-            {
-                if (stargate.getGateNetwork() != null)
-                {
-                    gatenet = stargate.getGateNetwork().getNetworkName();
-                }
-                else
-                {
-                    gatenet = "Public";
-                }
-            }
-            else
-            {
-                if (network != null)
-                {
-                    gatenet = network;
-                }
-                else
-                {
-                    gatenet = "Public";
-                }
-            }
-            if (permSimpleBuild(player) || (permComplexBuild(player) && (gatenet.equals("Public") || ( !gatenet.equals("Public") && permComplexNetworkBuild(player, gatenet)))))
-            {
-                if (stargate != null)
-                {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " allowed build permission on: " + stargate.getGateName());
-                }
-                else
-                {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " allowed build permission.");
-                }
-                return true;
-            }
-            else
-            {
-                if (stargate != null)
-                {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied config permission on: " + stargate.getGateName());
-                }
-                else
-                {
-                    WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied config permission.");
-                }
-            }
-        }
-        return false;
-    }
+        USE_COOLDOWN_GROUP_ONE,
 
-    /**
-     * Check compass permission.
-     * 
-     * @param player
-     *            the player
-     * @return true, if successful
-     */
-    private static boolean checkCompassPermission(final Player player)
-    {
-        if (permSimpleUse(player) || permComplexCompass(player))
-        {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " allowed compass permission.");
-            return true;
-        }
-        else
-        {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied compass permission.");
-            return false;
-        }
-    }
+        USE_COOLDOWN_GROUP_TWO,
 
-    /**
-     * Check config permission.
-     * 
-     * @param player
-     *            the player
-     * @return true, if successful
-     */
-    private static boolean checkConfigPermission(final Player player)
-    {
-        if (permSimpleConfig(player) || permComplexConfig(player))
-        {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " allowed config permission.");
-            return true;
-        }
-        else
-        {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied config permission.");
-            return false;
-        }
-    }
-
-    /**
-     * Check dialer permission.
-     * 
-     * @param player
-     *            the player
-     * @param stargate
-     *            the stargate
-     * @return true, if successful
-     */
-    private static boolean checkDialerPermission(final Player player, final Stargate stargate)
-    {
-        if (stargate != null)
-        {
-            String gatenet;
-            if (stargate.getGateNetwork() != null)
-            {
-                gatenet = stargate.getGateNetwork().getNetworkName();
-            }
-            else
-            {
-                gatenet = "Public";
-            }
-            if (permSimpleUse(player) || (permComplexUseDialer(player) && (gatenet.equals("Public") || ( !gatenet.equals("Public") && permComplexNetworkUse(player, gatenet)))))
-            {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " allowed dialer permission on: " + stargate.getGateName());
-                return true;
-            }
-            else
-            {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied dialer permission on: " + stargate.getGateName());
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Check go permission.
-     * 
-     * @param player
-     *            the player
-     * @return true, if successful
-     */
-    private static boolean checkGoPermission(final Player player)
-    {
-        if (permSimpleConfig(player) || permComplexGo(player))
-        {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " allowed go permission.");
-            return true;
-        }
-        else
-        {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied go permission.");
-            return false;
-        }
-    }
-
-    /**
-     * Check list permission.
-     * 
-     * @param player
-     *            the player
-     * @return true, if successful
-     */
-    private static boolean checkListPermission(final Player player)
-    {
-        if (permSimpleConfig(player) || permSimpleUse(player) || permComplexConfig(player) || permComplexList(player))
-        {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " allowed list permission.");
-            return true;
-        }
-        else
-        {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied list permission.");
-            return false;
-        }
-    }
-
-    /**
-     * Check remove permission.
-     * 
-     * @param player
-     *            the player
-     * @param stargate
-     *            the stargate
-     * @return true, if successful
-     */
-    private static boolean checkRemovePermission(final Player player, final Stargate stargate)
-    {
-        if (stargate != null)
-        {
-            if (permComplexRemoveAll(player) || ((stargate.getGateOwner() != null) && stargate.getGateOwner().equals(player.getName()) && permComplexRemoveOwn(player)) || permSimpleRemove(player))
-            {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " allowed Remove on: " + stargate.getGateName());
-                return true;
-            }
-            else
-            {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied Remove on: " + stargate.getGateName());
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Check sign permission.
-     * 
-     * @param player
-     *            the player
-     * @param stargate
-     *            the stargate
-     * @return true, if successful
-     */
-    private static boolean checkSignPermission(final Player player, final Stargate stargate)
-    {
-        if (stargate != null)
-        {
-            String gatenet;
-            if (stargate.getGateNetwork() != null)
-            {
-                gatenet = stargate.getGateNetwork().getNetworkName();
-            }
-            else
-            {
-                gatenet = "Public";
-            }
-            if (permSimpleUse(player) || (permComplexUseSign(player) && (gatenet.equals("Public") || ( !gatenet.equals("Public") && permComplexNetworkUse(player, gatenet)))))
-            {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " allowed sign permission on: " + stargate.getGateName());
-                return true;
-            }
-            else
-            {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Player: " + player.getName() + " denied sign permission on: " + stargate.getGateName());
-            }
-        }
-        return false;
+        USE_COOLDOWN_GROUP_THREE;
     }
 
     /**
@@ -368,77 +127,144 @@ public class WXPermissions
         }
         if (player.isOp())
         {
-            return true;
+            switch (permissiontype)
+            {
+                case DAMAGE :
+                case REMOVE :
+                case CONFIG :
+                case GO :
+                case SIGN :
+                case DIALER :
+                case USE :
+                case LIST :
+                case COMPASS :
+                case BUILD :
+                    return true;
+                default :
+                    return false;
+            }
         }
-        else if (WormholeXTreme.getPermissions() != null)
+        else if ( !ConfigManager.getPermissionsSupportDisable() && (WormholeXTreme.getPermissions() != null))
         {
-            if ((permissiontype == PermissionType.DAMAGE) || (permissiontype == PermissionType.REMOVE))
+
+            if (ConfigManager.getSimplePermissions())
             {
-                if (checkRemovePermission(player, stargate) || checkConfigPermission(player))
+                switch (permissiontype)
                 {
-                    return true;
+                    case LIST :
+                        return (SimplePermission.CONFIG.checkPermission(player) || SimplePermission.USE.checkPermission(player));
+                    case GO :
+                    case CONFIG :
+                        return SimplePermission.CONFIG.checkPermission(player);
+                    case DAMAGE :
+                    case REMOVE :
+                        return (SimplePermission.REMOVE.checkPermission(player) || SimplePermission.CONFIG.checkPermission(player));
+                    case COMPASS :
+                    case SIGN :
+                    case DIALER :
+                    case USE :
+                        return SimplePermission.USE.checkPermission(player);
+                    case BUILD :
+                        return SimplePermission.BUILD.checkPermission(player);
+                    default :
+                        return false;
                 }
-                else
+            }
+            else
+            {
+                String networkName = "Public";
+                switch (permissiontype)
                 {
-                    return false;
-                }
-            }
-            else if (permissiontype == PermissionType.SIGN)
-            {
-                return checkSignPermission(player, stargate);
-            }
-            else if (permissiontype == PermissionType.BUILD)
-            {
-                return checkBuildPermission(player, stargate, network);
-            }
-            else if (permissiontype == PermissionType.DIALER)
-            {
-                return checkDialerPermission(player, stargate);
-            }
-            else if (permissiontype == PermissionType.LIST)
-            {
-                return checkListPermission(player);
-            }
-            else if (permissiontype == PermissionType.CONFIG)
-            {
-                return checkConfigPermission(player);
-            }
-            else if (permissiontype == PermissionType.GO)
-            {
-                return checkGoPermission(player);
-            }
-            else if (permissiontype == PermissionType.COMPASS)
-            {
-                return checkCompassPermission(player);
-            }
-            else if (permissiontype == PermissionType.USE)
-            {
-                if (checkDialerPermission(player, stargate) || checkSignPermission(player, stargate))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
+                    case LIST :
+                        return (ComplexPermission.LIST.checkPermission(player) || ComplexPermission.CONFIG.checkPermission(player));
+                    case CONFIG :
+                        return ComplexPermission.CONFIG.checkPermission(player);
+                    case GO :
+                        return ComplexPermission.GO.checkPermission(player);
+                    case COMPASS :
+                        return ComplexPermission.USE_COMPASS.checkPermission(player);
+                    case DAMAGE :
+                    case REMOVE :
+                        return (ComplexPermission.CONFIG.checkPermission(player) || ComplexPermission.REMOVE_ALL.checkPermission(player) || ComplexPermission.REMOVE_OWN.checkPermission(player, stargate));
+                    case SIGN :
+                        if ((stargate != null) && (stargate.getGateNetwork() != null))
+                        {
+                            networkName = stargate.getGateNetwork().getNetworkName();
+                        }
+                        return ((ComplexPermission.USE_SIGN.checkPermission(player) && (networkName.equals("Public") || ( !networkName.equals("Public") && ComplexPermission.NETWORK_USE.checkPermission(player, networkName)))));
+                    case DIALER :
+                        if ((stargate != null) && (stargate.getGateNetwork() != null))
+                        {
+                            networkName = stargate.getGateNetwork().getNetworkName();
+                        }
+                        return ((ComplexPermission.USE_DIALER.checkPermission(player) && (networkName.equals("Public") || ( !networkName.equals("Public") && ComplexPermission.NETWORK_USE.checkPermission(player, networkName)))));
+                    case USE :
+                        if ((stargate != null) && (stargate.getGateNetwork() != null))
+                        {
+                            networkName = stargate.getGateNetwork().getNetworkName();
+                        }
+                        return (((ComplexPermission.USE_SIGN.checkPermission(player) && (networkName.equals("Public") || ( !networkName.equals("Public") && ComplexPermission.NETWORK_USE.checkPermission(player, networkName)))) || (ComplexPermission.USE_DIALER.checkPermission(player) && (networkName.equals("Public") || ( !networkName.equals("Public") && ComplexPermission.NETWORK_USE.checkPermission(player, networkName))))));
+                    case BUILD :
+                        if (stargate != null)
+                        {
+                            if (stargate.getGateNetwork() != null)
+                            {
+                                networkName = stargate.getGateNetwork().getNetworkName();
+                            }
+                        }
+                        else
+                        {
+                            if (network != null)
+                            {
+                                networkName = network;
+                            }
+                        }
+                        return ((ComplexPermission.BUILD.checkPermission(player) && (networkName.equals("Public") || ( !networkName.equals("Public") && ComplexPermission.NETWORK_BUILD.checkPermission(player, networkName)))));
+                    case USE_COOLDOWN_GROUP_ONE :
+                        if (ConfigManager.getSimplePermissions())
+                        {
+                            return false;
+                        }
+                        return ComplexPermission.USE_COOLDOWN_GROUP_ONE.checkPermission(player);
+                    case USE_COOLDOWN_GROUP_TWO :
+                        if (ConfigManager.getSimplePermissions())
+                        {
+                            return false;
+                        }
+                        return ComplexPermission.USE_COOLDOWN_GROUP_TWO.checkPermission(player);
+                    case USE_COOLDOWN_GROUP_THREE :
+                        if (ConfigManager.getSimplePermissions())
+                        {
+                            return false;
+                        }
+                        return ComplexPermission.USE_COOLDOWN_GROUP_THREE.checkPermission(player);
+                    default :
+                        return false;
                 }
             }
         }
         else
         {
-            if ((permissiontype == PermissionType.DAMAGE) || (permissiontype == PermissionType.REMOVE) || (permissiontype == PermissionType.CONFIG) || (permissiontype == PermissionType.GO))
+            switch (permissiontype)
             {
-                return permBuiltInCheckFull(player, stargate);
-            }
-            else if ((permissiontype == PermissionType.SIGN) || (permissiontype == PermissionType.DIALER) || (permissiontype == PermissionType.USE) || (permissiontype == PermissionType.LIST) || (permissiontype == PermissionType.COMPASS))
-            {
-                return permBuiltInCheckAny(player, stargate);
-            }
-            else if (permissiontype == PermissionType.BUILD)
-            {
-                return permBuiltInCheckBuild(player, stargate);
+                case DAMAGE :
+                case REMOVE :
+                case CONFIG :
+                case GO :
+                    return permBuiltInCheckFull(player, stargate);
+                case SIGN :
+                case DIALER :
+                case USE :
+                case LIST :
+                case COMPASS :
+                    return permBuiltInCheckAny(player, stargate);
+                case BUILD :
+                    return permBuiltInCheckBuild(player, stargate);
+                default :
+                    return false;
+
             }
         }
-        return false;
     }
 
     /**
@@ -520,294 +346,5 @@ public class WXPermissions
             }
         }
         return false;
-    }
-
-    /**
-     * Perm complex build.
-     * 
-     * @param player
-     *            the player
-     * @return true, if successful
-     */
-    private static boolean permComplexBuild(final Player player)
-    {
-        if ( !ConfigManager.getSimplePermissions() && WormholeXTreme.getPermissions().has(player, "wormhole.build"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * Perm complex compass.
-     * 
-     * @param player
-     *            the player
-     * @return true, if successful
-     */
-    private static boolean permComplexCompass(final Player player)
-    {
-        if ( !ConfigManager.getSimplePermissions() && WormholeXTreme.getPermissions().has(player, "wormhole.use.compass"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * Perm complex config.
-     * 
-     * @param player
-     *            the player
-     * @return true, if successful
-     */
-    private static boolean permComplexConfig(final Player player)
-    {
-        if ( !ConfigManager.getSimplePermissions() && WormholeXTreme.getPermissions().has(player, "wormhole.config"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * Perm complex go.
-     * 
-     * @param player
-     *            the player
-     * @return true, if successful
-     */
-    private static boolean permComplexGo(final Player player)
-    {
-        if ( !ConfigManager.getSimplePermissions() && WormholeXTreme.getPermissions().has(player, "wormhole.go"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * Perm complex list.
-     * 
-     * @param player
-     *            the player
-     * @return true, if successful
-     */
-    private static boolean permComplexList(final Player player)
-    {
-        if ( !ConfigManager.getSimplePermissions() && WormholeXTreme.getPermissions().has(player, "wormhole.list"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * Perm complex network build.
-     * 
-     * @param player
-     *            the player
-     * @param network
-     *            the network
-     * @return true, if successful
-     */
-    private static boolean permComplexNetworkBuild(final Player player, final String network)
-    {
-        if ( !ConfigManager.getSimplePermissions() && WormholeXTreme.getPermissions().has(player, "wormhole.network.build." + network))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * Perm complex network use.
-     * 
-     * @param player
-     *            the player
-     * @param network
-     *            the network
-     * @return true, if successful
-     */
-    private static boolean permComplexNetworkUse(final Player player, final String network)
-    {
-        if ( !ConfigManager.getSimplePermissions() && WormholeXTreme.getPermissions().has(player, "wormhole.network.use." + network))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * Perm complex remove all.
-     * 
-     * @param player
-     *            the player
-     * @return true, if successful
-     */
-    private static boolean permComplexRemoveAll(final Player player)
-    {
-        if ( !ConfigManager.getSimplePermissions() && WormholeXTreme.getPermissions().has(player, "wormhole.remove.all"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * Perm complex remove own.
-     * 
-     * @param player
-     *            the player
-     * @return true, if successful
-     */
-    private static boolean permComplexRemoveOwn(final Player player)
-    {
-        if ( !ConfigManager.getSimplePermissions() && WormholeXTreme.getPermissions().has(player, "wormhole.remove.own"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * Perm complex use dialer.
-     * 
-     * @param player
-     *            the player
-     * @return true, if successful
-     */
-    private static boolean permComplexUseDialer(final Player player)
-    {
-        if ( !ConfigManager.getSimplePermissions() && WormholeXTreme.getPermissions().has(player, "wormhole.use.dialer"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * Perm complex use sign.
-     * 
-     * @param player
-     *            the player
-     * @return true, if successful
-     */
-    private static boolean permComplexUseSign(final Player player)
-    {
-        if ( !ConfigManager.getSimplePermissions() && WormholeXTreme.getPermissions().has(player, "wormhole.use.sign"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * Perm simple build.
-     * 
-     * @param player
-     *            the player
-     * @return true, if successful
-     */
-    private static boolean permSimpleBuild(final Player player)
-    {
-        if (ConfigManager.getSimplePermissions() && WormholeXTreme.getPermissions().has(player, "wormhole.simple.build"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * Perm simple config.
-     * 
-     * @param player
-     *            the player
-     * @return true, if successful
-     */
-    private static boolean permSimpleConfig(final Player player)
-    {
-        if (ConfigManager.getSimplePermissions() && WormholeXTreme.getPermissions().has(player, "wormhole.simple.config"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * Perm simple remove.
-     * 
-     * @param player
-     *            the player
-     * @return true, if successful
-     */
-    private static boolean permSimpleRemove(final Player player)
-    {
-        if (ConfigManager.getSimplePermissions() && WormholeXTreme.getPermissions().has(player, "wormhole.simple.remove"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    /**
-     * Perm simple use.
-     * 
-     * @param player
-     *            the player
-     * @return true, if successful
-     */
-    private static boolean permSimpleUse(final Player player)
-    {
-        if (ConfigManager.getSimplePermissions() && WormholeXTreme.getPermissions().has(player, "wormhole.simple.use"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
     }
 }

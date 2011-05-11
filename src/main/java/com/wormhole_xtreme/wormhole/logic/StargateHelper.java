@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -697,9 +698,9 @@ public class StargateHelper
     public static void loadShapes()
     {
         final File directory = new File("plugins" + File.separator + "WormholeXTreme" + File.separator + "GateShapes" + File.separator);
+
         if ( !directory.exists())
         {
-
             try
             {
                 directory.mkdir();
@@ -708,24 +709,42 @@ public class StargateHelper
             {
                 WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Unable to make directory: " + e.getMessage());
             }
+        }
+
+        final FilenameFilter filenameFilter = new FilenameFilter()
+        {
+            @Override
+            public boolean accept(final File dir, final String name)
+            {
+                return !name.startsWith(".") && name.endsWith(".shape");
+            }
+        };
+
+        if (directory.exists() && (directory.listFiles(filenameFilter).length == 0))
+        {
             BufferedReader br = null;
             BufferedWriter bw = null;
+            final String[] defaultShapeNames = {"Standard.shape", "StandardSignDial.shape", "Minimal.shape",
+                "MinimalSignDial.shape"};
             try
             {
-                final File standardShapeFile = new File("plugins" + File.separator + "WormholeXTreme" + File.separator + "GateShapes" + File.separator + "Standard.shape");
-                final InputStream is = WormholeXTreme.class.getResourceAsStream("/GateShapes/Standard.shape");
-                br = new BufferedReader(new InputStreamReader(is));
-                bw = new BufferedWriter(new FileWriter(standardShapeFile));
-
-                for (String s = ""; (s = br.readLine()) != null;)
+                for (final String shape : defaultShapeNames)
                 {
-                    bw.write(s);
-                    bw.write("\n");
-                }
+                    final File defaultShapeFile = new File("plugins" + File.separator + "WormholeXTreme" + File.separator + "GateShapes" + File.separator + shape);
+                    final InputStream is = WormholeXTreme.class.getResourceAsStream("/GateShapes/3d/" + shape);
+                    br = new BufferedReader(new InputStreamReader(is));
+                    bw = new BufferedWriter(new FileWriter(defaultShapeFile));
 
-                br.close();
-                bw.close();
-                is.close();
+                    for (String s = ""; (s = br.readLine()) != null;)
+                    {
+                        bw.write(s);
+                        bw.write("\n");
+                    }
+
+                    br.close();
+                    bw.close();
+                    is.close();
+                }
             }
             catch (final IOException e)
             {
@@ -762,7 +781,7 @@ public class StargateHelper
             }
         }
 
-        final File[] shapeFiles = directory.listFiles();
+        final File[] shapeFiles = directory.listFiles(filenameFilter);
         for (final File fi : shapeFiles)
         {
             if (fi.getName().contains(".shape"))
@@ -880,7 +899,6 @@ public class StargateHelper
                     try
                     {
                         s.setGateDialSign((Sign) s.getGateDialSignBlock().getState());
-                        s.tryClickTeleportSign(s.getGateDialSignBlock());
                     }
                     catch (final Exception e)
                     {
@@ -960,7 +978,6 @@ public class StargateHelper
                     try
                     {
                         s.setGateDialSign((Sign) s.getGateDialSignBlock().getState());
-                        s.tryClickTeleportSign(s.getGateDialSignBlock());
                     }
                     catch (final Exception e)
                     {
@@ -1040,7 +1057,6 @@ public class StargateHelper
                     try
                     {
                         s.setGateDialSign((Sign) s.getGateDialSignBlock().getState());
-                        s.tryClickTeleportSign(s.getGateDialSignBlock());
                     }
                     catch (final Exception e)
                     {
@@ -1137,7 +1153,6 @@ public class StargateHelper
                     try
                     {
                         s.setGateDialSign((Sign) s.getGateDialSignBlock().getState());
-                        s.tryClickTeleportSign(s.getGateDialSignBlock());
                     }
                     catch (final Exception e)
                     {
@@ -1275,7 +1290,6 @@ public class StargateHelper
                     try
                     {
                         s.setGateDialSign((Sign) s.getGateDialSignBlock().getState());
-                        s.tryClickTeleportSign(s.getGateDialSignBlock());
                     }
                     catch (final Exception e)
                     {
@@ -1423,7 +1437,6 @@ public class StargateHelper
                     try
                     {
                         s.setGateDialSign((Sign) s.getGateDialSignBlock().getState());
-                        s.tryClickTeleportSign(s.getGateDialSignBlock());
                     }
                     catch (final Exception e)
                     {
@@ -1589,7 +1602,7 @@ public class StargateHelper
 
             stargate.setGateNetwork(net);
             stargate.setGateDialSignIndex( -1);
-            WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(stargate, ActionToTake.SIGNCLICK));
+            WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(stargate, ActionToTake.DIAL_SIGN_CLICK));
         }
     }
 

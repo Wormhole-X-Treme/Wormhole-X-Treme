@@ -33,7 +33,7 @@ import com.wormhole_xtreme.wormhole.config.ConfigManager;
  * 
  * @author alron
  */
-public enum SimplePermission
+enum SimplePermission
 {
 
     /** The USE. */
@@ -69,7 +69,7 @@ public enum SimplePermission
      *            the simple permission node
      * @return the simple permission
      */
-    public static SimplePermission fromSimplePermissionNode(final String simplePermissionNode)
+    public static SimplePermission fromSimplePermissionNode(final String simplePermissionNode) // NO_UCD
     {
         return simplePermissionMap.get(simplePermissionNode);
     }
@@ -92,7 +92,7 @@ public enum SimplePermission
      *            the player
      * @return true, if successful
      */
-    public boolean checkPermission(final Player player)
+    protected boolean checkPermission(final Player player)
     {
         if ((player != null) && !ConfigManager.getPermissionsSupportDisable() && (WormholeXTreme.getPermissions() != null) && ConfigManager.getSimplePermissions())
         {

@@ -643,6 +643,123 @@ public class Wormhole implements CommandExecutor
     }
 
     /**
+     * Do restrict.
+     * 
+     * @param sender
+     *            the sender
+     * @param args
+     *            the args
+     * @return true, if successful
+     */
+    private static boolean doRestrict(final CommandSender sender, final String[] args)
+    {
+        if ((args.length >= 2) && isValidGroupName(args[1]))
+        {
+            if (args.length == 3)
+            {
+                try
+                {
+                    final int gateCount = Integer.parseInt(args[2]);
+                    if ((gateCount >= 1) && (gateCount <= 200))
+                    {
+                        doCooldownGroup(args[1], true, gateCount);
+                        sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole build restriction count: " + args[2]);
+                    }
+                    else
+                    {
+                        sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Build restriction count: " + args[2]);
+                        sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid restriction values are between 1 and 200.");
+                    }
+                }
+                catch (final NumberFormatException e)
+                {
+                    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Invalid restriction count: " + args[2]);
+                    sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid restriction values are between 1 and 200.");
+                }
+            }
+            else
+            {
+                sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Current restriction count is: " + doRestrictionGroup(args[1], false, 0));
+                sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid restriction values are between 1 and 200.");
+            }
+        }
+        else if ((args.length == 2) && CommandUtilities.isBoolean(args[1]))
+        {
+            ConfigManager.setBuildRestrictionEnabled(Boolean.valueOf(args[1].toLowerCase()));
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole build count restrictions set to: " + args[1].toLowerCase());
+        }
+        else
+        {
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Command: /wormhole restrict [false|true|group] <count>");
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid groups are 'one', 'two', and 'three'.");
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Valid restriction count values are between 1 and 200.");
+            sender.sendMessage(ConfigManager.MessageStrings.normalHeader.toString() + "Wormhole build count restriction enabled: " + ConfigManager.isBuildRestrictionEnabled());
+        }
+        return true;
+    }
+
+    /**
+     * Do restriction group.
+     * 
+     * @param groupName
+     *            the group name
+     * @param set
+     *            the set
+     * @param gateCount
+     *            the gate count
+     * @return the int
+     */
+    private static int doRestrictionGroup(final String groupName, final boolean set, final int gateCount)
+    {
+        int group = 0;
+        int oldValue = 0;
+        if (groupName.equalsIgnoreCase("one"))
+        {
+            group = 1;
+        }
+        else if (groupName.equalsIgnoreCase("two"))
+        {
+            group = 2;
+        }
+        else if (groupName.equalsIgnoreCase("three"))
+        {
+            group = 3;
+        }
+        switch (group)
+        {
+            case 1 :
+                if (set)
+                {
+                    oldValue = ConfigManager.getBuildRestrictionGroupOne();
+                    ConfigManager.setBuildRestrictionGroupOne(gateCount);
+                }
+                return set
+                    ? oldValue
+                    : ConfigManager.getBuildRestrictionGroupOne();
+            case 2 :
+                if (set)
+                {
+                    oldValue = ConfigManager.getBuildRestrictionGroupTwo();
+                    ConfigManager.setBuildRestrictionGroupTwo(gateCount);
+                }
+                return set
+                    ? oldValue
+                    : ConfigManager.getBuildRestrictionGroupTwo();
+            case 3 :
+                if (set)
+                {
+                    oldValue = ConfigManager.getBuildRestrictionGroupThree();
+                    ConfigManager.setBuildRestrictionGroupThree(gateCount);
+                }
+                return set
+                    ? oldValue
+                    : ConfigManager.getBuildRestrictionGroupThree();
+            default :
+                return -1;
+        }
+    }
+
+    /**
      * Do shutdown timeout.
      * 
      * @param sender
@@ -955,10 +1072,14 @@ public class Wormhole implements CommandExecutor
             {
                 return doCooldown(sender, a);
             }
+            else if (a[0].equalsIgnoreCase("restrict"))
+            {
+                return doRestrict(sender, a);
+            }
             else
             {
                 sender.sendMessage(ConfigManager.MessageStrings.requestInvalid.toString() + ": " + a[0]);
-                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'lightmaterial', 'shutdown_timeout', 'activate_timeout', 'simple', 'regenerate', 'redstone', 'wooshdepth', 'cooldown', & 'custom'.");
+                sender.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Valid commands are 'owner', 'perms', 'portalmaterial', 'irismaterial', 'lightmaterial', 'shutdown_timeout', 'activate_timeout', 'simple', 'regenerate', 'redstone', 'wooshdepth', 'cooldown', 'restrict', & 'custom'.");
             }
         }
         else

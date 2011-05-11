@@ -26,6 +26,8 @@ import com.wormhole_xtreme.wormhole.WormholeXTreme;
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.logic.StargateUpdateRunnable;
 import com.wormhole_xtreme.wormhole.logic.StargateUpdateRunnable.ActionToTake;
+import com.wormhole_xtreme.wormhole.model.Stargate;
+import com.wormhole_xtreme.wormhole.model.StargateManager;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 
 /**
@@ -49,7 +51,10 @@ public class StargateRestrictions
         CD_GROUP_TWO(ConfigManager.getUseCooldownGroupTwo()),
 
         /** The cooldown group 3 */
-        CD_GROUP_THREE(ConfigManager.getUseCooldownGroupThree());
+        CD_GROUP_THREE(ConfigManager.getUseCooldownGroupThree()),
+        BR_GROUP_ONE(ConfigManager.getBuildRestrictionGroupOne()),
+        BR_GROUP_TWO(ConfigManager.getBuildRestrictionGroupTwo()),
+        BR_GROUP_THREE(ConfigManager.getBuildRestrictionGroupThree());
 
         /** The restriction group node. */
         private final long restrictionGroupNode;
@@ -150,6 +155,43 @@ public class StargateRestrictions
     private static ConcurrentHashMap<Player, Long> getPlayerUseCooldownStart()
     {
         return playerUseCooldownStart;
+    }
+
+    /**
+     * Checks if is player build restricted.
+     * 
+     * @param player
+     *            the player
+     * @return true, if is player build restricted
+     */
+    public static boolean isPlayerBuildRestricted(final Player player)
+    {
+        if (ConfigManager.isBuildRestrictionEnabled())
+        {
+            RestrictionGroup restrictionGroup = null;
+            if (WXPermissions.checkWXPermissions(player, PermissionType.BUILD_RESTRICTION_GROUP_ONE))
+            {
+                restrictionGroup = RestrictionGroup.BR_GROUP_ONE;
+            }
+            else if (WXPermissions.checkWXPermissions(player, PermissionType.BUILD_RESTRICTION_GROUP_TWO))
+            {
+                restrictionGroup = RestrictionGroup.BR_GROUP_TWO;
+            }
+            else if (WXPermissions.checkWXPermissions(player, PermissionType.BUILD_RESTRICTION_GROUP_THREE))
+            {
+                restrictionGroup = RestrictionGroup.BR_GROUP_THREE;
+            }
+            int gateCount = 0;
+            for (final Stargate stargate : StargateManager.getAllGates())
+            {
+                if ((stargate.getGateOwner() != null) && stargate.getGateOwner().equalsIgnoreCase(player.getName()))
+                {
+                    gateCount++;
+                }
+            }
+            return (restrictionGroup != null) && (gateCount != 0) && (gateCount >= restrictionGroup.getGroupValue());
+        }
+        return false;
     }
 
     /**

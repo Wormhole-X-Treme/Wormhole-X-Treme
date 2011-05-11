@@ -269,7 +269,6 @@ public class StargateDBManager
             final ArrayList<Stargate> gateList = StargateManager.getAllGates();
             for (final Stargate s : gateList)
             {
-                final World w = s.getGateWorld();
 
                 if (s.isGateLightsActive() && !s.isGateActive())
                 {
@@ -299,14 +298,6 @@ public class StargateDBManager
                             s.setGateDialSignTarget(t);
                             break;
                         }
-                    }
-                }
-
-                if (s.isGateSignPowered() && (s.getGateDialSignTarget() == null))
-                {
-                    if (w.isChunkLoaded(s.getGateDialSignBlock().getChunk()))
-                    {
-                        s.tryClickTeleportSign(s.getGateDialSignBlock());
                     }
                 }
             }

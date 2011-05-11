@@ -128,7 +128,7 @@ class WormholeXTremePlayerListener extends PlayerListener
 
             if (newGate != null)
             {
-                if (WXPermissions.checkWXPermissions(player, newGate, PermissionType.BUILD))
+                if (WXPermissions.checkWXPermissions(player, newGate, PermissionType.BUILD) && !StargateRestrictions.isPlayerBuildRestricted(player))
                 {
                     if (newGate.isGateSignPowered())
                     {
@@ -168,17 +168,13 @@ class WormholeXTremePlayerListener extends PlayerListener
                 {
                     if (newGate.isGateSignPowered())
                     {
-                        newGate.getGateNetwork().getNetworkGateList().remove(newGate);
-                        newGate.getGateNetwork().getNetworkSignGateList().remove(newGate);
-                        newGate.getGateDialSign().setLine(0, newGate.getGateName());
-                        if (newGate.getGateNetwork() != null)
-                        {
-                            newGate.getGateDialSign().setLine(1, newGate.getGateNetwork().getNetworkName());
-                        }
-                        newGate.getGateDialSign().setData(newGate.getGateDialSign().getData());
-                        newGate.getGateDialSign().update();
+                        newGate.resetTeleportSign();
                     }
                     StargateManager.removeIncompleteStargate(player);
+                    if (StargateRestrictions.isPlayerBuildRestricted(player))
+                    {
+                        player.sendMessage(ConfigManager.MessageStrings.playerBuildCountRestricted.toString());
+                    }
                     player.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
                     return true;
                 }

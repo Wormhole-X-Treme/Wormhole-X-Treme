@@ -596,7 +596,7 @@ public class StargateManager
                         if (s.getGateNetwork().getNetworkSignGateList().size() > 1)
                         {
                             s2.setGateDialSignIndex(0);
-                            WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(s2, ActionToTake.SIGNCLICK));
+                            WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(s2, ActionToTake.DIAL_SIGN_CLICK));
                             // s2.teleportSignClicked();
                         }
                     }

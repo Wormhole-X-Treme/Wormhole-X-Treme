@@ -25,6 +25,7 @@ import org.bukkit.entity.Player;
 
 import com.wormhole_xtreme.wormhole.config.ConfigManager;
 import com.wormhole_xtreme.wormhole.model.StargateManager;
+import com.wormhole_xtreme.wormhole.permissions.StargateRestrictions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions;
 import com.wormhole_xtreme.wormhole.permissions.WXPermissions.PermissionType;
 
@@ -68,20 +69,27 @@ public class Complete implements CommandExecutor
             }
             if (WXPermissions.checkWXPermissions(player, network, PermissionType.BUILD))
             {
-                if (StargateManager.getStargate(name) == null)
+                if ( !StargateRestrictions.isPlayerBuildRestricted(player))
                 {
-                    if (StargateManager.completeStargate(player, name, idc, network))
+                    if (StargateManager.getStargate(name) == null)
                     {
-                        player.sendMessage(ConfigManager.MessageStrings.constructSuccess.toString());
+                        if (StargateManager.completeStargate(player, name, idc, network))
+                        {
+                            player.sendMessage(ConfigManager.MessageStrings.constructSuccess.toString());
+                        }
+                        else
+                        {
+                            player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Construction Failed!?");
+                        }
                     }
                     else
                     {
-                        player.sendMessage(ConfigManager.MessageStrings.errorHeader.toString() + "Construction Failed!?");
+                        player.sendMessage(ConfigManager.MessageStrings.constructNameTaken.toString() + "\"" + name + "\"");
                     }
                 }
                 else
                 {
-                    player.sendMessage(ConfigManager.MessageStrings.constructNameTaken.toString() + "\"" + name + "\"");
+                    player.sendMessage(ConfigManager.MessageStrings.playerBuildCountRestricted.toString());
                 }
             }
             else

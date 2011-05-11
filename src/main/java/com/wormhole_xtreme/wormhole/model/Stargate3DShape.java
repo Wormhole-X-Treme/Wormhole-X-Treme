@@ -198,7 +198,8 @@ public class Stargate3DShape extends StargateShape
 
         if (getShapeEnterPosition().length != 3)
         {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Shape: \"" + getShapeName() + "\" does not have an enterance point for players to teleport in. This will cause errors.");
+            WormholeXTreme.getThisPlugin().prettyLog(Level.SEVERE, false, "Shape: \"" + getShapeName() + "\" does not have an enterance/exit point for players to teleport in. This will cause errors.");
+            throw new IllegalArgumentException("Shape: \"" + getShapeName() + "\" does not have an enterance point for players to teleport in. This will cause errors.");
         }
 
         WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Finished parsing shape: \"" + getShapeName() + "\"");

@@ -1133,11 +1133,13 @@ public class Stargate
     }
 
     /**
-     * Reset teleport sign.
+     * Reset sign.
+     *
+     * @param teleportSign the teleport sign
      */
-    public void resetTeleportSign()
+    public void resetSign(final boolean teleportSign)
     {
-        if ((getGateDialSignBlock() != null) && (getGateDialSign() != null))
+        if (teleportSign)
         {
             getGateDialSignBlock().setTypeIdAndData(68, WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()), false);
             setGateDialSign((Sign) getGateDialSignBlock().getState());
@@ -1154,7 +1156,18 @@ public class Stargate
             getGateDialSign().setLine(3, "");
             getGateDialSign().update(true);
         }
+    }
 
+    /**
+     * Reset teleport sign.
+     */
+    public void resetTeleportSign()
+    {
+        if ((getGateDialSignBlock() != null) && (getGateDialSign() != null))
+        {
+            getGateDialSignBlock().setTypeId(0);
+            WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, ActionToTake.DIAL_SIGN_RESET), 2);
+        }
     }
 
     /**
@@ -2264,12 +2277,12 @@ public class Stargate
             {
                 setGateDialSignIndex( -1);
                 setGateDialSign((Sign) getGateDialSignBlock().getState());
-                WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, player, ActionToTake.SIGNCLICK));
+                WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, player, ActionToTake.DIAL_SIGN_CLICK));
             }
         }
         else if (WorldUtils.isSameBlock(clicked, getGateDialSignBlock()))
         {
-            WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, player, ActionToTake.SIGNCLICK));
+            WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, player, ActionToTake.DIAL_SIGN_CLICK));
             return true;
         }
 

@@ -19,8 +19,15 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>${project.basedir}/src/main/resources/GateShapes/</directory>
-            <outputDirectory>/plugins/WormholeXTreme/GateShapes/</outputDirectory>
+            <directory>${project.basedir}/src/main/resources/GateShapes/2d/</directory>
+            <outputDirectory>/plugins/WormholeXTreme/GateShapes/2d/</outputDirectory>
+            <includes>
+                <include>*.shape</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/GateShapes/3d/</directory>
+            <outputDirectory>/plugins/WormholeXTreme/GateShapes/3d/</outputDirectory>
             <includes>
                 <include>*.shape</include>
             </includes>

@@ -334,7 +334,7 @@ public class ConfigManager
      *            the config key
      * @return the setting
      */
-    protected static Setting getSetting(final ConfigKeys configKey)
+    private static Setting getSetting(final ConfigKeys configKey)
     {
         return getConfigurations().get(configKey);
     }

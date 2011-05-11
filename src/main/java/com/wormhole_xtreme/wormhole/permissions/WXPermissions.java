@@ -73,7 +73,11 @@ public class WXPermissions
 
         USE_COOLDOWN_GROUP_TWO,
 
-        USE_COOLDOWN_GROUP_THREE;
+        USE_COOLDOWN_GROUP_THREE,
+
+        BUILD_RESTRICTION_GROUP_ONE,
+        BUILD_RESTRICTION_GROUP_TWO,
+        BUILD_RESTRICTION_GROUP_THREE;
     }
 
     /**
@@ -221,23 +225,17 @@ public class WXPermissions
                         }
                         return ((ComplexPermission.BUILD.checkPermission(player) && (networkName.equals("Public") || ( !networkName.equals("Public") && ComplexPermission.NETWORK_BUILD.checkPermission(player, networkName)))));
                     case USE_COOLDOWN_GROUP_ONE :
-                        if (ConfigManager.getSimplePermissions())
-                        {
-                            return false;
-                        }
                         return ComplexPermission.USE_COOLDOWN_GROUP_ONE.checkPermission(player);
                     case USE_COOLDOWN_GROUP_TWO :
-                        if (ConfigManager.getSimplePermissions())
-                        {
-                            return false;
-                        }
                         return ComplexPermission.USE_COOLDOWN_GROUP_TWO.checkPermission(player);
                     case USE_COOLDOWN_GROUP_THREE :
-                        if (ConfigManager.getSimplePermissions())
-                        {
-                            return false;
-                        }
                         return ComplexPermission.USE_COOLDOWN_GROUP_THREE.checkPermission(player);
+                    case BUILD_RESTRICTION_GROUP_ONE :
+                        return ComplexPermission.BUILD_RESTRICTION_GROUP_ONE.checkPermission(player);
+                    case BUILD_RESTRICTION_GROUP_TWO :
+                        return ComplexPermission.BUILD_RESTRICTION_GROUP_TWO.checkPermission(player);
+                    case BUILD_RESTRICTION_GROUP_THREE :
+                        return ComplexPermission.BUILD_RESTRICTION_GROUP_THREE.checkPermission(player);
                     default :
                         return false;
                 }
@@ -245,26 +243,34 @@ public class WXPermissions
         }
         else
         {
-            switch (permissiontype)
+            if (stargate != null)
             {
-                case DAMAGE :
-                case REMOVE :
-                case CONFIG :
-                case GO :
-                    return permBuiltInCheckFull(player, stargate);
-                case SIGN :
-                case DIALER :
-                case USE :
-                case LIST :
-                case COMPASS :
-                    return permBuiltInCheckAny(player, stargate);
-                case BUILD :
-                    return permBuiltInCheckBuild(player, stargate);
-                default :
-                    return false;
+                PermissionLevel lvl = null;
+                switch (permissiontype)
+                {
+                    case DAMAGE :
+                    case REMOVE :
+                    case CONFIG :
+                    case GO :
+                        lvl = PermissionsManager.getPermissionLevel(player, stargate);
+                        return (lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION);
+                    case SIGN :
+                    case DIALER :
+                    case USE :
+                    case LIST :
+                    case COMPASS :
+                        lvl = PermissionsManager.getPermissionLevel(player, stargate);
+                        return (lvl == PermissionLevel.WORMHOLE_CREATE_PERMISSION) || (lvl == PermissionLevel.WORMHOLE_USE_PERMISSION) || (lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION);
+                    case BUILD :
+                        lvl = PermissionsManager.getPermissionLevel(player, stargate);
+                        return (lvl == PermissionLevel.WORMHOLE_CREATE_PERMISSION) || (lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION);
+                    default :
+                        return false;
 
+                }
             }
         }
+        return false;
     }
 
     /**
@@ -281,70 +287,5 @@ public class WXPermissions
     public static boolean checkWXPermissions(final Player player, final String network, final PermissionType permissiontype)
     {
         return checkWXPermissions(player, null, network, permissiontype);
-    }
-
-    /**
-     * Check any permission built in.
-     * 
-     * @param player
-     *            the player
-     * @param stargate
-     *            the stargate
-     * @return true, if successful
-     */
-    private static boolean permBuiltInCheckAny(final Player player, final Stargate stargate)
-    {
-        if (stargate != null)
-        {
-            final PermissionLevel lvl = PermissionsManager.getPermissionLevel(player, stargate);
-            if (((lvl == PermissionLevel.WORMHOLE_CREATE_PERMISSION) || (lvl == PermissionLevel.WORMHOLE_USE_PERMISSION) || (lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION)))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Check build permission built in.
-     * 
-     * @param player
-     *            the player
-     * @param stargate
-     *            the stargate
-     * @return true, if successful
-     */
-    private static boolean permBuiltInCheckBuild(final Player player, final Stargate stargate)
-    {
-        if (stargate != null)
-        {
-            final PermissionLevel lvl = PermissionsManager.getPermissionLevel(player, stargate);
-            if (((lvl == PermissionLevel.WORMHOLE_CREATE_PERMISSION) || (lvl == PermissionLevel.WORMHOLE_FULL_PERMISSION)))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Check full permission built in.
-     * 
-     * @param player
-     *            the player
-     * @param stargate
-     *            the stargate
-     * @return true, if successful
-     */
-    private static boolean permBuiltInCheckFull(final Player player, final Stargate stargate)
-    {
-        if (stargate != null)
-        {
-            if (PermissionsManager.getPermissionLevel(player, stargate) == PermissionLevel.WORMHOLE_FULL_PERMISSION)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 }

@@ -34,7 +34,7 @@ import com.wormhole_xtreme.wormhole.model.Stargate;
  * 
  * @author alron
  */
-public enum ComplexPermission
+enum ComplexPermission
 {
 
     /** Sign Dialer Use */
@@ -65,13 +65,13 @@ public enum ComplexPermission
     BUILD("wormhole.build"),
 
     /** Build Restriction Group one. */
-    BUILD_GROUP_ONE("wormhole.build.groupone"),
+    BUILD_RESTRICTION_GROUP_ONE("wormhole.build.groupone"),
 
     /** Build Restriction Group two. */
-    BUILD_GROUP_TWO("wormhole.build.grouptwo"),
+    BUILD_RESTRICTION_GROUP_TWO("wormhole.build.grouptwo"),
 
     /** Build Restriction Group three. */
-    BUILD_GROUP_THREE("wormhole.build.groupthree"),
+    BUILD_RESTRICTION_GROUP_THREE("wormhole.build.groupthree"),
 
     /** Config */
     CONFIG("wormhole.config"),
@@ -109,7 +109,7 @@ public enum ComplexPermission
      *            the complex permission node
      * @return the complex permission
      */
-    public static ComplexPermission fromComplexPermissionNode(final String complexPermissionNode)
+    public static ComplexPermission fromComplexPermissionNode(final String complexPermissionNode) // NO_UCD
     {
         return complexPermissionMap.get(complexPermissionNode);
     }
@@ -132,7 +132,7 @@ public enum ComplexPermission
      *            the player
      * @return true, if successful
      */
-    public boolean checkPermission(final Player player)
+    protected boolean checkPermission(final Player player)
     {
         return checkPermission(player, null, null);
     }
@@ -146,7 +146,7 @@ public enum ComplexPermission
      *            the stargate
      * @return true, if successful
      */
-    public boolean checkPermission(final Player player, final Stargate stargate)
+    protected boolean checkPermission(final Player player, final Stargate stargate)
     {
         return checkPermission(player, stargate, null);
     }
@@ -204,7 +204,7 @@ public enum ComplexPermission
      *            the network name
      * @return true, if successful
      */
-    public boolean checkPermission(final Player player, final String networkName)
+    protected boolean checkPermission(final Player player, final String networkName)
     {
         return checkPermission(player, null, networkName);
     }

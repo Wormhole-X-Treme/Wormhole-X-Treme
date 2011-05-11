@@ -53,12 +53,13 @@ public class StargateUpdateRunnable implements Runnable
         AFTERSHUTDOWN,
 
         /** The SIGNCLICK. */
-        SIGNCLICK,
+        DIAL_SIGN_CLICK,
 
         /** Action to iterate over lighting up blocks during activation. */
         LIGHTUP,
 
-        COOLDOWN_REMOVE;
+        COOLDOWN_REMOVE,
+        DIAL_SIGN_RESET;
     }
 
     /** The stargate. */
@@ -128,7 +129,7 @@ public class StargateUpdateRunnable implements Runnable
             case AFTERSHUTDOWN :
                 stargate.stopAfterShutdownTimer();
                 break;
-            case SIGNCLICK :
+            case DIAL_SIGN_CLICK :
                 stargate.teleportSignClicked();
                 if (player != null)
                 {
@@ -142,6 +143,9 @@ public class StargateUpdateRunnable implements Runnable
                         player.sendMessage("No available target to set dialer to.");
                     }
                 }
+                break;
+            case DIAL_SIGN_RESET :
+                stargate.resetSign(true);
                 break;
             case LIGHTUP :
                 stargate.lightStargate(true);

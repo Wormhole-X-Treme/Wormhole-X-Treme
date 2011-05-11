@@ -1,3 +1,39 @@
+Changes 0.851 (5/10/11 @ 21:56 PST):
+
+- Complete revamp of how we handle permissions checks. Lots more case statements, lots less
+  if/else if. Much better. This is what enums are for.
+  
+- Added new gate use cooldowns. This feature will only work on complex permissions enabled 
+  servers. There are three groups you can assign a player to; 'wormhole.cooldown.groupone',
+  'wormhole.cooldown.grouptwo', and 'wormhole.cooldown.groupthree'. If you have an '*' on any
+  user/group, remember to '-wormhole.cooldown.groupone' etc. There is a new command to
+  enable, disable, and modify cooldowns; 'wormhole cooldown [true|false|group] <time>', valid
+  groups being 'one', 'two', and 'three', valid time being between 15 and 3600 seconds. There 
+  are also Settings.txt options for all of these new settings. Cooldowns are set when a player 
+  enters a stargate, not when they /dial. Cooldowns are removed via timer events, and even if
+  the timer event fails, we do a fall back calculation when a player enters a stargate, and gets
+  denied access.
+  
+- Added new gate build count restrictions. This feature will only work on complex permissions
+  enabled servers. There are three groups you can assign a player to; 'wormhole.build.groupone',
+  'wormhole.build.grouptwo', and 'wormhole.build.groupthree'. If you have an '*' on any
+  user/group, remember to '-wormhole.build.groupone' etc. There is a new command to enable,
+  disable, and modify build count restrictions; 'wormhole restrict [true|false|group] <count>',
+  valid groups being 'one', 'two', and 'three', valid count being between 1 and 200. There are 
+  also Settings.txt options for all of these new settings.
+
+- Updated the stargate sign dial sign reset code to be more reliable at causing the client to
+  notice update changes.
+  
+- Added a thrown exception during stargate 3d shape parsing if the shape doesn't have an exit
+  point. We depend on this location for pretty much everything. If it isn't there, really bad
+  bad bad things happen.
+
+- Now we have more than just Standard as our default shape. We extract Standard, 
+  StandardSignDial, Minimal, and MinimalSignDial to the gateShape folder if it is missing shapes.
+  
+- Now we don't toggle stargate signs when we start. 
+
 Changes 0.850 (5/5/11 @ 16:15 PST):
 
 - iConomy support removed. I will not depend on plugins that decide to change their

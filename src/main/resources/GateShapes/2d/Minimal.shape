@@ -1,0 +1,54 @@
+# The name for this shape
+Name=Minimal
+
+# GateShape= needs a newline after it before starting the shape
+# Acceptable blocks are:
+#    [A] = Air
+#    [O] = Obsidian
+#    [P] = Air blocks that will turn into the portal material when activated.
+#    Extra parameters:
+#    [L] = Block that will light when gate is activated
+#    [S] = Block where the name sign will be created. This is optional.
+#    [E] = Block from where the the teleport-in location starts from.
+#			The program goes one block in the direction the gate faces and then up until it hits air.
+#			This means your exit will be 1 block forward from where it is on the diagram. (and up until it hits air).
+#	 The bare minimum for a gate that goes in and out would probably be something like this:
+#    [P]
+#    [P]
+#    [O:E]
+#
+#    You could have a gate like this for only incoming wormholes (as there is no material to go out of).
+#    You would need to create a DHD to make the gate and then remove it afterwards.
+#	 [O:E]
+
+GateShape=
+[P]
+[P]
+[O:E:L]
+
+# These values are the relative positions of the button to the lower right corner of the design.
+# In the standard gate the corner is 1 down (-1 up) from the button, 1 to the right of the button, and 4 away. 
+# Note that the DHD counts as a block, so in the standard gate there is the DHD block + 3 = total of 4 away.
+BUTTON_UP=-2
+BUTTON_RIGHT=-1
+BUTTON_AWAY=2
+
+#Woosh depth is how many blocks of portal material shoot out when gate is activated
+WOOSH_DEPTH=0
+
+# None of the follow materials are required, they will default if not set.
+# Portal material the material the [P] blocks will be when gate is active.
+# Suggested values are as follows: STATIONARY_WATER, STATIONARY_LAVA, PORTAL, and AIR
+PORTAL_MATERIAL=STATIONARY_WATER
+
+# Iris material is the material the [P] block become when iris is active
+# Suggested values are as follows: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, OBSIDIAN, GLOWSTONE and LAPIS_BLOCK
+IRIS_MATERIAL=STONE
+
+# Stargate material is the material the [O] blocks are made of
+# Reasonable values are as follows: STONE, DIAMOND_BLOCK, GLASS, IRON_BLOCK, BEDROCK, OBSIDIAN, GLOWSTONE and LAPIS_BLOCK
+STARGATE_MATERIAL=OBSIDIAN
+
+# Active material is the material that :L blocks become when gate is active
+# Suggested Values are as follows: GLOWSTONE and GLOWING_REDSTONE_ORE
+ACTIVE_MATERIAL=GLOWSTONE

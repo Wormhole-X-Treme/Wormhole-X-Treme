@@ -232,7 +232,7 @@ public class StargateHelper
                         {
                             while (tempGate.getGateLightBlocks().size() < 2)
                             {
-                                tempGate.getGateLightBlocks().add(null);
+                                tempGate.getGateLightBlocks().add(new ArrayList<Location>());
                             }
                             // In 2d gate all lights go in first iteration!
                             tempGate.getGateLightBlocks().get(1).add(maybeBlock.getLocation());

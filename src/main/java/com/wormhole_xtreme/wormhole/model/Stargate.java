@@ -1134,8 +1134,9 @@ public class Stargate
 
     /**
      * Reset sign.
-     *
-     * @param teleportSign the teleport sign
+     * 
+     * @param teleportSign
+     *            the teleport sign
      */
     public void resetSign(final boolean teleportSign)
     {

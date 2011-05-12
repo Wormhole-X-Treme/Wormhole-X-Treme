@@ -1,4 +1,4 @@
-Wormhole X-Treme v0.851
+Wormhole X-Treme v0.852
 
 New Install:
 
@@ -13,7 +13,7 @@ New Install:
 3.   (Optional) Stop the server and edit the newly generated /plugins/WormholeXTreme/settings.txt 
      file as needed.
 
-3.1. (Optional) Edit gate shapes in /plugins/WormholeXTreme/GateShapes/  
+3.1. (Optional) Edit gate shapes in /plugins/WormholeXTreme/GateShapes/
 
 3.2. (Optional) If using the Permissions plugin based plugin, set up the appropriate permissions.
      If using SIMPLE_PERMISSIONS = true remember to use permissions from the Simple Mode list, 
@@ -28,9 +28,13 @@ Update:
 
 1.   Extract WormholeXTreme.jar to your plugins/ folder, overwriting existing file.
 
-2.   If upgrading from v0.833 or earlier, start server before updating gate shapes. 
-2.1. From the console run 'wormhole custom -all true'
-2.2. Shut down, Replace gate shapes with new shapes from zip file. Edit shapes as needed.
+2.   (Optional, if upgrading to 3d shapes) If upgrading from v0.833 or earlier, start server before 
+     updating gate shapes. 
+     
+2.1. (Optional, if upgrading to 3d shapes) From the console run 'wormhole custom -all true'
+
+2.2. (Optional, if upgrading to 3d shapes) Shut down, Replace gate shapes with new shapes from 3d
+     GateShapes/3d/ folder. Edit shapes as needed.
    
 3.   Start server.
 
@@ -53,6 +57,12 @@ Permissions Plugin Nodes: (Controlled by plugins/WormholeXTreme/settings.txt - S
     wormhole.network.use.NETWORKNAME - Able to use wormholes on NETWORKNAME
     wormhole.network.build.NETWORKNAME - Able to build wormholes on NETWORKNAME
     wormhole.go - allows user to use '/wxgo' command.
+    wormhole.build.groupone - Part of build restriction group one.
+    wormhole.build.grouptwo - Part of build restriction group two.
+    wormhole.build.groupthree - Part of build restriction group three.
+    wormhole.cooldown.groupone - Part of wormhole use cooldown group one.
+    wormhole.cooldown.grouptwo - Part of wormhole use cooldown group two.
+    wormhole.cooldown.groupthree - Part of wormhole use cooldown group three.
 
     SIMPLE_PERMISSIONS = true
     Simple Mode:

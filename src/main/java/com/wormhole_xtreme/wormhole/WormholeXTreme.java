@@ -364,7 +364,7 @@ public class WormholeXTreme extends JavaPlugin
         setLog(getThisPlugin().getServer().getLogger());
         setScheduler(getThisPlugin().getServer().getScheduler());
 
-        prettyLog(Level.INFO, true, getThisPlugin().getDescription().getAuthors().toString() + "Load Beginning.");
+        prettyLog(Level.INFO, true, "Load Beginning.");
         // Load our config files and set logging level right away.
         ConfigManager.setupConfigs(getThisPlugin().getDescription());
         WormholeXTreme.setPrettyLogLevel(ConfigManager.getLogLevel());
@@ -401,11 +401,11 @@ public class WormholeXTreme extends JavaPlugin
         if (version)
         {
             prettyLogLine += prettyVersion;
-            getLog().log(severity, prettyLogLine + message);
+            getLog().log(severity, prettyLogLine + " " + message);
         }
         else
         {
-            getLog().log(severity, prettyLogLine + message);
+            getLog().log(severity, prettyLogLine + " " + message);
         }
     }
 

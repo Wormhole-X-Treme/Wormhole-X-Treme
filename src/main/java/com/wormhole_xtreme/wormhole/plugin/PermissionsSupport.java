@@ -43,9 +43,9 @@ public class PermissionsSupport
     private static void checkPermissionsVersion(final String version)
     {
         final String v = version;
-        if ( !v.startsWith("2.5") && !v.startsWith("2.6") && !v.startsWith("2.7"))
+        if ( !v.startsWith("2.5") && !v.startsWith("2.6") && !v.startsWith("2.7") && !v.startsWith("3.0"))
         {
-            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Not a supported version of Permissions. Recommended is 2.7.x");
+            WormholeXTreme.getThisPlugin().prettyLog(Level.WARNING, false, "Not a supported version of Permissions. Recommended is 3.0.x");
         }
 
     }

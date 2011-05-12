@@ -1,3 +1,13 @@
+Changes 0.852 (5/12/11 @ 07:55 PST):
+
+- Added support for upcoming Permissions 3.0.x release.
+
+- Fixed a NPE in 2d shape code dealing with light block positions.
+
+- Added soft dependencies to plugin.yml.
+
+- Minor log format changes for readability.
+
 Changes 0.851 (5/10/11 @ 21:56 PST):
 
 - Complete revamp of how we handle permissions checks. Lots more case statements, lots less

@@ -70,11 +70,11 @@ class WormholeXTremeBlockListener extends BlockListener
                     player.sendMessage("You can rebuild it later.");
                     stargate.setGateDialSign(null);
                 }
-                else if (block.getType().equals(stargate.isGateCustom()
-                    ? stargate.getGateCustomIrisMaterial()
+                else if (block.getTypeId() == (stargate.isGateCustom()
+                    ? stargate.getGateCustomIrisMaterial().getId()
                     : stargate.getGateShape() != null
-                        ? stargate.getGateShape().getShapeIrisMaterial()
-                        : Material.STONE))
+                        ? stargate.getGateShape().getShapeIrisMaterial().getId()
+                        : 1))
                 {
                     return true;
                 }

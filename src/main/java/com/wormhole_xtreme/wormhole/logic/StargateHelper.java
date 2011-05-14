@@ -268,7 +268,7 @@ public class StargateHelper
             // First go forward one
             Block bLoc = teleBlock.getRelative(facing);
             // Now go up until we hit air or water.
-            while ((bLoc.getType() != Material.AIR) && (bLoc.getType() != Material.WATER))
+            while ((bLoc.getTypeId() != 0) && (bLoc.getTypeId() != 8))
             {
                 bLoc = bLoc.getRelative(BlockFace.UP);
             }
@@ -289,7 +289,7 @@ public class StargateHelper
                     bVect[2] * directionVector[2] * -1};
 
                 final Block maybeBlock = w.getBlockAt(blockLocation[0] + startingPosition[0], blockLocation[1] + startingPosition[1], blockLocation[2] + startingPosition[2]);
-                if (maybeBlock.getType() == Material.AIR)
+                if (maybeBlock.getTypeId() == 0)
                 {
                     tempGate.getGatePortalBlocks().add(maybeBlock.getLocation());
                 }
@@ -467,7 +467,7 @@ public class StargateHelper
                 maybeBlock.setType(Material.AIR);
             }
 
-            if (maybeBlock.getType() == Material.AIR)
+            if (maybeBlock.getTypeId() == 0)
             {
                 tempGate.getGatePortalBlocks().add(maybeBlock.getLocation());
             }
@@ -485,7 +485,7 @@ public class StargateHelper
             // First go forward one
             // Block bLoc = teleBlock.getRelative(tempGate.getGateFacing());
             // Now go up until we hit air or water.
-            while ((teleBlock.getType() != Material.AIR) && (teleBlock.getType() != Material.WATER))
+            while ((teleBlock.getTypeId() != 0) && (teleBlock.getTypeId() != 8))
             {
                 teleBlock = teleBlock.getRelative(BlockFace.UP);
             }
@@ -509,7 +509,7 @@ public class StargateHelper
             // First go forward one
             //Block bLoc = teleBlock.getRelative(tempGate.getGateFacing());
             // Now go up until we hit air or water.
-            while ((teleBlock.getType() != Material.AIR) && (teleBlock.getType() != Material.WATER))
+            while ((teleBlock.getTypeId() != 0) && (teleBlock.getTypeId() != 8))
             {
                 teleBlock = teleBlock.getRelative(BlockFace.UP);
             }
@@ -684,7 +684,7 @@ public class StargateHelper
      */
     private static boolean isStargateMaterial(final Block b, final StargateShape s)
     {
-        return b.getType() == s.getShapeStructureMaterial();
+        return b.getTypeId() == s.getShapeStructureMaterial().getId();
     }
 
     public static boolean isStargateShape(final String name)
@@ -1926,7 +1926,7 @@ public class StargateHelper
     private static boolean tryCreateGateSign(final Block signBlock, final Stargate tempGate)
     {
 
-        if (signBlock.getType() == Material.WALL_SIGN)
+        if (signBlock.getTypeId() == 68)
         {
             tempGate.setGateSignPowered(true);
             tempGate.setGateDialSignBlock(signBlock);

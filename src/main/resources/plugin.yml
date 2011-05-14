@@ -1,6 +1,6 @@
 name: WormholeXTreme
 main: com.wormhole_xtreme.wormhole.WormholeXTreme
-version: 0.852
+version: 0.853
 authors: [Lologarithm, alron]
 softdepend: [Permissions, Help, WormholeXTremeWorlds]
 description: >

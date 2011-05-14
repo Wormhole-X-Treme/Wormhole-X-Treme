@@ -1723,7 +1723,7 @@ public class Stargate
                         ? getGateShape().getShapePortalMaterial()
                         : Material.STATIONARY_WATER
                 : Material.AIR);
-        if ((getGateIrisLeverBlock() != null) && (getGateIrisLeverBlock().getType() == Material.LEVER))
+        if ((getGateIrisLeverBlock() != null) && (getGateIrisLeverBlock().getTypeId() == 69))
         {
             getGateIrisLeverBlock().setData(WorldUtils.getLeverToggleByte(getGateIrisLeverBlock().getData(), isGateIrisActive()));
         }
@@ -2194,29 +2194,29 @@ public class Stargate
     {
         if (getGateDialLeverBlock() != null)
         {
-            Material material = getGateDialLeverBlock().getType();
+            int materialId = getGateDialLeverBlock().getTypeId();
             if (regenerate)
             {
-                getGateDialLeverBlock().setType(Material.LEVER);
+                getGateDialLeverBlock().setTypeId(69);
                 getGateDialLeverBlock().setData(WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()));
-                material = getGateDialLeverBlock().getType();
+                materialId = getGateDialLeverBlock().getTypeId();
             }
             final byte leverState = getGateDialLeverBlock().getData();
-            switch (material)
+            switch (materialId)
             {
-                case STONE_BUTTON :
-                    getGateDialLeverBlock().setType(Material.LEVER);
+                case 77 :
+                    getGateDialLeverBlock().setTypeId(69);
                     getGateDialLeverBlock().setData(leverState);
                     WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Automaticially replaced Button on gate \"" + getGateName() + "\" with Lever.");
                     getGateDialLeverBlock().setData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
                     break;
-                case LEVER :
+                case 69 :
                     getGateDialLeverBlock().setData(WorldUtils.getLeverToggleByte(leverState, isGateActive()));
                     break;
                 default :
                     break;
             }
-            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Dial Button Lever Gate: \"" + getGateName() + "\" Material: \"" + material.toString() + "\" State: \"" + leverState + "\"");
+            WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Dial Button Lever Gate: \"" + getGateName() + "\" Material: \"" + Material.getMaterial(materialId).toString() + "\" State: \"" + leverState + "\"");
         }
     }
 
@@ -2274,7 +2274,7 @@ public class Stargate
     {
         if ((getGateDialSign() == null) && (getGateDialSignBlock() != null))
         {
-            if (getGateDialSignBlock().getType() == Material.WALL_SIGN)
+            if (getGateDialSignBlock().getTypeId() == 68)
             {
                 setGateDialSignIndex( -1);
                 setGateDialSign((Sign) getGateDialSignBlock().getState());

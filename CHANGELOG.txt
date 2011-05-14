@@ -1,3 +1,10 @@
+Changes 0.853 (5/13/11 @ 23:05 PST):
+
+- Fix for /dial gates breaking when a user who doesn't have dialer permission hit the lever.
+
+- Switched to getTypeId() from getType(), hopefully this works around the getType() == Air bug
+  that might be lingering. (doubt it :| )
+
 Changes 0.852 (5/12/11 @ 07:55 PST):
 
 - Added support for upcoming Permissions 3.0.x release.

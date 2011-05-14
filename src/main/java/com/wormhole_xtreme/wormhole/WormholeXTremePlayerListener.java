@@ -67,22 +67,18 @@ class WormholeXTremePlayerListener extends PlayerListener
 
         if (stargate != null)
         {
-            if (WXPermissions.checkWXPermissions(player, stargate, PermissionType.USE))
+            if (WorldUtils.isSameBlock(stargate.getGateDialLeverBlock(), clickedBlock) && ((stargate.isGateSignPowered() && WXPermissions.checkWXPermissions(player, stargate, PermissionType.SIGN)) || ( !stargate.isGateSignPowered() && WXPermissions.checkWXPermissions(player, stargate, PermissionType.DIALER))))
             {
-                if (WorldUtils.isSameBlock(stargate.getGateDialLeverBlock(), clickedBlock))
-                {
-                    handleGateActivationSwitch(stargate, player);
-                }
-                else if (WorldUtils.isSameBlock(stargate.getGateIrisLeverBlock(), clickedBlock))
-                {
-                    stargate.toggleIrisActive(true);
-                }
+                handleGateActivationSwitch(stargate, player);
             }
-            else
+            else if (WorldUtils.isSameBlock(stargate.getGateIrisLeverBlock(), clickedBlock) && ( !stargate.isGateSignPowered() && WXPermissions.checkWXPermissions(player, stargate, PermissionType.DIALER)))
+            {
+                stargate.toggleIrisActive(true);
+            }
+            else if (WorldUtils.isSameBlock(stargate.getGateIrisLeverBlock(), clickedBlock) || WorldUtils.isSameBlock(stargate.getGateDialLeverBlock(), clickedBlock))
             {
                 player.sendMessage(ConfigManager.MessageStrings.permissionNo.toString());
             }
-
             return true;
         }
         else
@@ -295,14 +291,14 @@ class WormholeXTremePlayerListener extends PlayerListener
         final Block clickedBlock = event.getClickedBlock();
         final Player player = event.getPlayer();
 
-        if ((clickedBlock != null) && ((clickedBlock.getType() == Material.STONE_BUTTON) || (clickedBlock.getType() == Material.LEVER)))
+        if ((clickedBlock != null) && ((clickedBlock.getTypeId() == 77) || (clickedBlock.getTypeId() == 69)))
         {
             if (buttonLeverHit(player, clickedBlock, null))
             {
                 return true;
             }
         }
-        else if ((clickedBlock != null) && (clickedBlock.getType() == Material.WALL_SIGN))
+        else if ((clickedBlock != null) && (clickedBlock.getTypeId() == 68))
         {
             final Stargate stargate = StargateManager.getGateFromBlock(clickedBlock);
             if (stargate != null)
@@ -338,11 +334,11 @@ class WormholeXTremePlayerListener extends PlayerListener
         final Block gateBlockFinal = toLocFinal.getWorld().getBlockAt(toLocFinal.getBlockX(), toLocFinal.getBlockY(), toLocFinal.getBlockZ());
         final Stargate stargate = StargateManager.getGateFromBlock(gateBlockFinal);
 
-        if ((stargate != null) && stargate.isGateActive() && (stargate.getGateTarget() != null) && (gateBlockFinal.getType() == (stargate.isGateCustom()
-            ? stargate.getGateCustomPortalMaterial()
+        if ((stargate != null) && stargate.isGateActive() && (stargate.getGateTarget() != null) && (gateBlockFinal.getTypeId() == (stargate.isGateCustom()
+            ? stargate.getGateCustomPortalMaterial().getId()
             : stargate.getGateShape() != null
-                ? stargate.getGateShape().getShapePortalMaterial()
-                : Material.STATIONARY_WATER)))
+                ? stargate.getGateShape().getShapePortalMaterial().getId()
+                : Material.STATIONARY_WATER.getId())))
         {
             String gatenetwork;
             if (stargate.getGateNetwork() != null)

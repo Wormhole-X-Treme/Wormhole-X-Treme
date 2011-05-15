@@ -395,10 +395,7 @@ public class Stargate
      */
     private void dialStargate()
     {
-        if (WormholeXTreme.getWorldHandler() != null)
-        {
-            WormholeXTreme.getWorldHandler().addStickyChunk(getGatePlayerTeleportLocation().getBlock().getChunk(), "WormholeXTreme");
-        }
+        // WorldUtils.scheduleChunkLoad(getGatePlayerTeleportLocation().getBlock());
         if (getGateShutdownTaskId() > 0)
         {
             WormholeXTreme.getScheduler().cancelTask(getGateShutdownTaskId());
@@ -465,7 +462,6 @@ public class Stargate
 
         if ( !target.isGateLightsActive() || force)
         {
-            WorldUtils.scheduleChunkLoad(target.getGateDialLeverBlock());
             setGateTarget(target);
             dialStargate();
             getGateTarget().dialStargate();
@@ -1948,7 +1944,7 @@ public class Stargate
             startAfterShutdownTimer();
         }
 
-        WorldUtils.scheduleChunkUnload(getGatePlayerTeleportLocation().getBlock());
+        // WorldUtils.scheduleChunkUnload(getGatePlayerTeleportLocation().getBlock());
     }
 
     /**
@@ -2024,9 +2020,11 @@ public class Stargate
     {
         synchronized (getGateNetwork().getNetworkGateLock())
         {
+            getGateDialSignBlock().setTypeIdAndData(68, WorldUtils.getSignFacingByteFromBlockFace(getGateFacing()), false);
+            setGateDialSign((Sign) getGateDialSignBlock().getState());
+            getGateDialSign().setLine(0, "-" + getGateName() + "-");
             if (getGateDialSignIndex() == -1)
             {
-                getGateDialSign().setLine(0, "-" + getGateName() + "-");
                 setGateDialSignIndex(getGateDialSignIndex() + 1);
             }
             if ((getGateNetwork().getNetworkSignGateList().size() == 0) || (getGateNetwork().getNetworkSignGateList().size() == 1))
@@ -2197,8 +2195,7 @@ public class Stargate
             int materialId = getGateDialLeverBlock().getTypeId();
             if (regenerate)
             {
-                getGateDialLeverBlock().setTypeId(69);
-                getGateDialLeverBlock().setData(WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()));
+                getGateDialLeverBlock().setTypeIdAndData(69, WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()),false);
                 materialId = getGateDialLeverBlock().getTypeId();
             }
             final byte leverState = getGateDialLeverBlock().getData();
@@ -2277,12 +2274,13 @@ public class Stargate
             if (getGateDialSignBlock().getTypeId() == 68)
             {
                 setGateDialSignIndex( -1);
-                setGateDialSign((Sign) getGateDialSignBlock().getState());
+                getGateDialSignBlock().setTypeId(0);
                 WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, player, ActionToTake.DIAL_SIGN_CLICK));
             }
         }
         else if (WorldUtils.isSameBlock(clicked, getGateDialSignBlock()))
         {
+            getGateDialSignBlock().setTypeId(0);
             WormholeXTreme.getScheduler().scheduleSyncDelayedTask(WormholeXTreme.getThisPlugin(), new StargateUpdateRunnable(this, player, ActionToTake.DIAL_SIGN_CLICK));
             return true;
         }

@@ -1,3 +1,7 @@
+Changes 0.854 (5/15/11 @ 02:05 PST):
+
+- Removed all chunk loading. ALL. If we still get gettypeid == 0, no bloody clue. 
+
 Changes 0.853 (5/13/11 @ 23:05 PST):
 
 - Fix for /dial gates breaking when a user who doesn't have dialer permission hit the lever.

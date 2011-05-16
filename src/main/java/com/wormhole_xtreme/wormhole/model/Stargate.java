@@ -395,7 +395,7 @@ public class Stargate
      */
     private void dialStargate()
     {
-        // WorldUtils.scheduleChunkLoad(getGatePlayerTeleportLocation().getBlock());
+        WorldUtils.scheduleChunkLoad(getGatePlayerTeleportLocation().getBlock());
         if (getGateShutdownTaskId() > 0)
         {
             WormholeXTreme.getScheduler().cancelTask(getGateShutdownTaskId());
@@ -495,7 +495,7 @@ public class Stargate
         for (final Location bc : getGatePortalBlocks())
         {
             final Block b = getGateWorld().getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
-            b.setTypeId(typeId,false);
+            b.setTypeId(typeId, false);
         }
     }
 
@@ -1069,7 +1069,7 @@ public class Stargate
             // Light up blocks
             if (getGateLightBlocks() != null)
             {
-                if (getGateLightBlocks().size() > 0 && getGateLightBlocks().get(getGateLightingCurrentIteration()) != null)
+                if ((getGateLightBlocks().size() > 0) && (getGateLightBlocks().get(getGateLightingCurrentIteration()) != null))
                 {
                     for (final Location l : getGateLightBlocks().get(getGateLightingCurrentIteration()))
                     {
@@ -1786,7 +1786,8 @@ public class Stargate
      */
     public void setupIrisLever(final boolean create)
     {
-        if (getGateIrisLeverBlock() == null && getGateShape() != null && !(getGateShape() instanceof Stargate3DShape)) {
+        if ((getGateIrisLeverBlock() == null) && (getGateShape() != null) && !(getGateShape() instanceof Stargate3DShape))
+        {
             setGateIrisLeverBlock(getGateDialLeverBlock().getFace(BlockFace.DOWN));
         }
         if (getGateIrisLeverBlock() != null)
@@ -1947,7 +1948,7 @@ public class Stargate
             startAfterShutdownTimer();
         }
 
-        // WorldUtils.scheduleChunkUnload(getGatePlayerTeleportLocation().getBlock());
+        WorldUtils.scheduleChunkUnload(getGatePlayerTeleportLocation().getBlock());
     }
 
     /**
@@ -2195,10 +2196,14 @@ public class Stargate
     {
         if (getGateDialLeverBlock() != null)
         {
+            if (isGateActive())
+            {
+                WorldUtils.scheduleChunkLoad(getGateDialLeverBlock());
+            }
             int materialId = getGateDialLeverBlock().getTypeId();
             if (regenerate)
             {
-                getGateDialLeverBlock().setTypeIdAndData(69, WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()),false);
+                getGateDialLeverBlock().setTypeIdAndData(69, WorldUtils.getLeverFacingByteFromBlockFace(getGateFacing()), false);
                 materialId = getGateDialLeverBlock().getTypeId();
             }
             final byte leverState = getGateDialLeverBlock().getData();
@@ -2215,6 +2220,10 @@ public class Stargate
                     break;
                 default :
                     break;
+            }
+            if ( !isGateActive())
+            {
+                WorldUtils.scheduleChunkUnload(getGateDialLeverBlock());
             }
             WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Dial Button Lever Gate: \"" + getGateName() + "\" Material: \"" + Material.getMaterial(materialId).toString() + "\" State: \"" + leverState + "\"");
         }

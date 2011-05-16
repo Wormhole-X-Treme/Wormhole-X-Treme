@@ -236,7 +236,7 @@ public class WorldUtils
             final int cZ = c.getZ();
             if ( !w.isChunkLoaded(cX, cZ))
             {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Loading chunk: " + c.toString() + " on: " + w.getName());
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Loading chunk: " + c.toString() + " on: " + w.getName());
                 w.loadChunk(cX, cZ);
             }
         }
@@ -262,7 +262,7 @@ public class WorldUtils
             final int cZ = c.getZ();
             if (w.isChunkLoaded(cX, cZ))
             {
-                WormholeXTreme.getThisPlugin().prettyLog(Level.INFO, false, "Scheduling chunk unload: " + c.toString() + " on: " + w.getName());
+                WormholeXTreme.getThisPlugin().prettyLog(Level.FINE, false, "Scheduling chunk unload: " + c.toString() + " on: " + w.getName());
                 w.unloadChunkRequest(cX, cZ);
             }
         }

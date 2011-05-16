@@ -240,7 +240,7 @@ public class Stargate
                     setGateAnimationRemoving(false);
                     if (isGateLightsActive() && isGateActive())
                     {
-                        fillGateInterior(wooshMaterial);
+                        fillGateInterior(wooshMaterial.getId());
                     }
                 }
                 else
@@ -313,7 +313,7 @@ public class Stargate
                     setGateAnimationStep2D(0);
                     if (isGateActive())
                     {
-                        fillGateInterior(wooshMaterial);
+                        fillGateInterior(wooshMaterial.getId());
                     }
                 }
             }
@@ -490,29 +490,29 @@ public class Stargate
      * @param typeId
      *            the type id
      */
-    private void fillGateInterior(final int typeId)
+    public void fillGateInterior(final int typeId)
     {
         for (final Location bc : getGatePortalBlocks())
         {
             final Block b = getGateWorld().getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
-            b.setTypeId(typeId);
+            b.setTypeId(typeId,false);
         }
     }
 
-    /**
-     * Fill gate interior.
-     * 
-     * @param material
-     *            the material
-     */
-    public void fillGateInterior(final Material material)
-    {
-        for (final Location bc : getGatePortalBlocks())
-        {
-            final Block b = getGateWorld().getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
-            b.setType(material);
-        }
-    }
+//    /**
+//     * Fill gate interior.
+//     * 
+//     * @param material
+//     *            the material
+//     */
+//    public void fillGateInterior(final Material material)
+//    {
+//        for (final Location bc : getGatePortalBlocks())
+//        {
+//            final Block b = getGateWorld().getBlockAt(bc.getBlockX(), bc.getBlockY(), bc.getBlockZ());
+//            b.setType(material);
+//        }
+//    }
 
     /**
      * Gets the gate activate task id.
@@ -1069,7 +1069,7 @@ public class Stargate
             // Light up blocks
             if (getGateLightBlocks() != null)
             {
-                if (getGateLightBlocks().get(getGateLightingCurrentIteration()) != null)
+                if (getGateLightBlocks().size() > 0 && getGateLightBlocks().get(getGateLightingCurrentIteration()) != null)
                 {
                     for (final Location l : getGateLightBlocks().get(getGateLightingCurrentIteration()))
                     {
@@ -1708,17 +1708,17 @@ public class Stargate
         setGateIrisActive(irisactive);
         fillGateInterior(isGateIrisActive()
             ? isGateCustom()
-                ? getGateCustomIrisMaterial()
+                ? getGateCustomIrisMaterial().getId()
                 : getGateShape() != null
-                    ? getGateShape().getShapeIrisMaterial()
-                    : Material.STONE
+                    ? getGateShape().getShapeIrisMaterial().getId()
+                    : 1
             : isGateActive()
                 ? isGateCustom()
-                    ? getGateCustomPortalMaterial()
+                    ? getGateCustomPortalMaterial().getId()
                     : getGateShape() != null
-                        ? getGateShape().getShapePortalMaterial()
-                        : Material.STATIONARY_WATER
-                : Material.AIR);
+                        ? getGateShape().getShapePortalMaterial().getId()
+                        : 9
+                : 0);
         if ((getGateIrisLeverBlock() != null) && (getGateIrisLeverBlock().getTypeId() == 69))
         {
             getGateIrisLeverBlock().setData(WorldUtils.getLeverToggleByte(getGateIrisLeverBlock().getData(), isGateIrisActive()));
@@ -1786,6 +1786,9 @@ public class Stargate
      */
     public void setupIrisLever(final boolean create)
     {
+        if (getGateIrisLeverBlock() == null && getGateShape() != null && !(getGateShape() instanceof Stargate3DShape)) {
+            setGateIrisLeverBlock(getGateDialLeverBlock().getFace(BlockFace.DOWN));
+        }
         if (getGateIrisLeverBlock() != null)
         {
             if (create)

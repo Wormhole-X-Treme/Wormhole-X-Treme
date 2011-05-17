@@ -1,6 +1,14 @@
-Changes 0.854 (5/15/11 @ 02:05 PST):
+Changes 0.854 (5/17/11 @ 16:13 PST):
 
-- Removed all chunk loading. ALL. If we still get gettypeid == 0, no bloody clue. 
+- Updated chunk (un)loading to happen when gate (de)activates and when dial lever state
+  changes happen. 
+
+- Fixed iris levers not being added properly with 2d gates. (Oops, guess that code WAS needed)
+
+- Fixed IndexOutOfBoundsException on 3d gate shapes without lighting blocks.
+
+- Hamfisted fix for signs not updating. Now we nuke the sign and build it from scratch every
+  time a gate sign is toggled. Causes a flash, but... who cares. It works EVERY time now. 
 
 Changes 0.853 (5/13/11 @ 23:05 PST):
 

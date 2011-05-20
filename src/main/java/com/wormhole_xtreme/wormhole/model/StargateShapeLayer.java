@@ -150,8 +150,7 @@ public class StargateShapeLayer
                     }
                     else if (mod.contains("L") || mod.contains("l"))
                     {
-                        final String[] light_parts = mod.split("#");
-                        final int light_iteration = Integer.parseInt(light_parts[1]);
+                        final int light_iteration = mod.contains("#") ? Integer.parseInt(mod.split("#")[1]) : 1;
 
                         while (getLayerLightPositions().size() <= light_iteration)
                         {
@@ -165,12 +164,11 @@ public class StargateShapeLayer
                         }
 
                         getLayerLightPositions().get(light_iteration).add(point);
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Light Material Position (Order:" + light_parts[1] + " Position:" + Arrays.toString(point) + ")");
+                        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Light Material Position (Order:" + light_iteration + " Position:" + Arrays.toString(point) + ")");
                     }
                     else if (mod.contains("W") || mod.contains("w"))
                     {
-                        final String[] w_parts = mod.split("#");
-                        final int w_iteration = Integer.parseInt(w_parts[1]);
+                        final int w_iteration = mod.contains("#") ? Integer.parseInt(mod.split("#")[1]) : 1;
 
                         while (getLayerWooshPositions().size() <= w_iteration)
                         {
@@ -184,7 +182,7 @@ public class StargateShapeLayer
                         }
 
                         getLayerWooshPositions().get(w_iteration).add(point);
-                        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Woosh Position (Order:" + w_parts[1] + " Position:" + Arrays.toString(point) + ")");
+                        WormholeXTreme.getThisPlugin().prettyLog(Level.CONFIG, false, "Woosh Position (Order:" + w_iteration + " Position:" + Arrays.toString(point) + ")");
                     }
                 }
                 j++;
